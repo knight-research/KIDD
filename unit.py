@@ -25,22 +25,19 @@ if REGION == True:
 
 #WIFI-CHECK------------------------------
 SYSTEM = sys.platform
-if SYSTEM == "linux":
-    def check_router():
-        cmd = os.system('ping 10.0.0.1 -w 4 > clear') 
-        if cmd == 0:
-            time.sleep(2)
-            wifi_status = True
-            return
-        else:
-            wifi_status = False
-            print (".")
-            check_router()
+def check_router():
+    cmd = os.system('ping 10.0.0.1 -w 4 > clear') 
+    if cmd == 0:
+        time.sleep(2)
+        wifi_status = True
+        return
+    else:
+        wifi_status = False
+        print (".")
+        check_router()
 
 #GLOBALS---------------------------------
 if REGION == True:
-    SIM_PI = ""
-    SIM_HW = ""
     thisfolder = os.path.dirname(os.path.abspath(__file__))
     wifi_status = ""
     #COMMUNICATION-------------------------------------------
@@ -86,14 +83,30 @@ if REGION == True:
     THEME_BTN_W = 139
     THEME_BTN_H = 59
 
+    def update_configuration():
+        global data_file
+        config = configparser.ConfigParser()
+        data_file = os.path.join(thisfolder, 'data/data.ini')
+        config.read(data_file)
+        #CONFIG
+        global enable_rb01
+        global enable_rb02
+        global enable_rb03
+        global enable_ai01
+        enable_rb01 = config.get("CONFIG","enable_rb01")
+        enable_rb02 = config.get("CONFIG","enable_rb02")
+        enable_rb03 = config.get("CONFIG","enable_rb03")
+        enable_ai01 = config.get("CONFIG","enable_ai01")
+    update_configuration()
+
 #SIMULATION-AND-OS-SETTINGS--------------
 if SYSTEM == "win32" or SYSTEM == "win64":
-    SIM_PI = 1
-    SIM_HW = 1
     import _fake_GPIO as GPIO
+    enable_rb01 = "False"
+    enable_rb02 = "False"
+    enable_rb03 = "False"
+    enable_ai01 = "False"
 elif SYSTEM == "linux":
-    SIM_PI = 0
-    SIM_HW = 0
     import psutil
     import RPi.GPIO as GPIO
     import board
@@ -102,10 +115,17 @@ elif SYSTEM == "linux":
     from adafruit_ads1x15.analog_in import AnalogIn
     from digitalio import Direction
     from adafruit_mcp230xx.mcp23017 import MCP23017 
-    if SIM_HW == 0:
+    if enable_rb01 == "True":
         i2c = busio.I2C(board.SCL, board.SDA)
         rb01 = MCP23017(i2c, address=0x20)
+    if enable_rb02 == "True":
+        i2c = busio.I2C(board.SCL, board.SDA)
         rb02 = MCP23017(i2c, address=0x21)
+    if enable_rb03 == "True":
+        i2c = busio.I2C(board.SCL, board.SDA)
+        rb03 = MCP23017(i2c, address=0x22)
+    if enable_ai01 == "True":
+        i2c = busio.I2C(board.SCL, board.SDA)
         ads = ADS.ADS1115(i2c, address=0x48)
 
 #WEBSOCKET-SWPD-COMMUNICATION------------
@@ -183,6 +203,22 @@ if REGION == True:
     rb02_r13 = False
     rb02_r14 = False
     rb02_r15 = False
+    rb03_r00 = False
+    rb03_r01 = False
+    rb03_r02 = False
+    rb03_r03 = False
+    rb03_r04 = False
+    rb03_r05 = False
+    rb03_r06 = False
+    rb03_r07 = False
+    rb03_r08 = False
+    rb03_r09 = False
+    rb03_r10 = False
+    rb03_r11 = False
+    rb03_r12 = False
+    rb03_r13 = False
+    rb03_r14 = False
+    rb03_r15 = False
 
     #SETUP SIMULATIONS
     sim_IB01_I1 = False
@@ -356,8 +392,10 @@ if REGION == True:
     img_V_LED_SIM_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_SIM_ON.png')
     img_V_LED_SIMULATION_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_SIMULATION.png')
     img_V_LED_LIVE_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_LIVE.png')
-    img_V_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_OFF.png')
-    img_V_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_ON.png')
+    img_R_OFF_LARGE_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_OFF_LARGE.png')
+    img_R_ON_LARGE_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_ON_LARGE.png')
+    img_R_OFF_SMALL_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_OFF_SMALL.png')
+    img_R_ON_SMALL_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_ON_SMALL.png')
     img_RD_RPM_BG_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/RD_RPM_BG.png')
     img_BU_RPM_BG_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/BU_RPM_BG.png')
     img_PROGNO_BG_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/PROGNO_BG.png') 
@@ -2771,10 +2809,14 @@ class DASH(tk.Frame):
                 self.Canvas1.LED_V_LED_OFF_LBL = LED_V_LED_OFF_LBL
                 LED_V_LED_ON_LBL = tk.PhotoImage(file=img_V_LED_ON_SRC)
                 self.Canvas1.LED_V_LED_ON_LBL = LED_V_LED_ON_LBL
-                LED_V_OFF_LBL = tk.PhotoImage(file=img_V_OFF_SRC)
-                self.Canvas1.LED_V_OFF_LBL = LED_V_OFF_LBL
-                LED_V_ON_LBL = tk.PhotoImage(file=img_V_ON_SRC)
-                self.Canvas1.LED_V_ON_LBL = LED_V_ON_LBL
+                R_OFF_LARGE_LBL = tk.PhotoImage(file=img_R_OFF_LARGE_SRC)
+                self.Canvas1.R_OFF_LARGE_LBL = R_OFF_LARGE_LBL
+                R_ON_LARGE_LBL = tk.PhotoImage(file=img_R_ON_LARGE_SRC)
+                self.Canvas1.R_ON_LARGE_LBL = R_ON_LARGE_LBL
+                R_OFF_SMALL_LBL = tk.PhotoImage(file=img_R_OFF_SMALL_SRC)
+                self.Canvas1.R_OFF_SMALL_LBL = R_OFF_SMALL_LBL
+                R_ON_SMALL_LBL = tk.PhotoImage(file=img_R_ON_SMALL_SRC)
+                self.Canvas1.R_ON_SMALL_LBL = R_ON_SMALL_LBL
                 LED_RPM_BG_LBL = tk.PhotoImage(file=img_RD_RPM_BG_SRC)
                 self.Canvas1.LED_RPM_BG_LBL = LED_RPM_BG_LBL
                 LED_PROGNO_BG_LBL = tk.PhotoImage(file=img_PROGNO_BG_SRC)
@@ -3300,7 +3342,7 @@ class DASH(tk.Frame):
                 else: 
                     self.LG06B.configure(image=LG01_ON02_LBL)         
             elif theme == "S05":
-                if SIM_HW == 0 :
+                if SYSTEM == "linux":
                     #RAM CPU AND DISK USAGE
                     total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
                     # Getting loadover15 minutes
@@ -4424,7 +4466,7 @@ class DASH(tk.Frame):
                 mixer.music.load(soundobject02)
                 mixer.music.play()
 
-            if SIM_HW == 0:
+            if enable_ai01 == "True":
                 a_chan0 = AnalogIn(ads, ADS.P0) #DATA FROM ANALOG INPUT 0
             #LIVEDATA ANALOG
             if procedures == "LIVE":
@@ -4440,7 +4482,7 @@ class DASH(tk.Frame):
                 g_LG12V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
                 g_LG13V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
                 g_LG14V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                if SIM_HW == 0:
+                if enable_ai01 == "True":
                     try:
                         g_LG06V = '%.0f'% (float(a_chan0.value)*57/32768.0) #TANKINHALT 0-57 LITER
                     except:
@@ -6398,7 +6440,7 @@ class DASH(tk.Frame):
                 else:
                     self.LG18B.configure(image=LG03_OFF04_LBL) 
             elif theme == "S05":
-                if SIM_PI == 0 :
+                if SYSTEM == "linux":
                     #RAM CPU AND DISK USAGE
                     total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
                     # Getting loadover15 minutes
@@ -7331,7 +7373,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r08 = tk.Label()
             self.lbl_rb01_r08.place(x=665, y=280, width="180", height="30")
             self.lbl_rb01_r08.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r08.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS08'))
+            self.lbl_rb01_r08.configure(text=file_text.get('rb01', 'r08'))
 
             self.btn_rb01_r09 = tk.Button()
             self.btn_rb01_r09.place(x=877, y=214, width=RB01W, height=RB01H)
@@ -7340,7 +7382,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r09 = tk.Label()
             self.lbl_rb01_r09.place(x=864, y=280, width="180", height="30")
             self.lbl_rb01_r09.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r09.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS09'))
+            self.lbl_rb01_r09.configure(text=file_text.get('rb01', 'r09'))
 
             self.btn_rb01_r10 = tk.Button()
             self.btn_rb01_r10.place(x=1076, y=214, width=RB01W, height=RB01H)
@@ -7349,7 +7391,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r10 = tk.Label()
             self.lbl_rb01_r10.place(x=1063, y=280, width="180", height=30)
             self.lbl_rb01_r10.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r10.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS10'))
+            self.lbl_rb01_r10.configure(text=file_text.get('rb01', 'r10'))
 
             self.btn_rb01_r11 = tk.Button()
             self.btn_rb01_r11.place(x=678, y=395, width=RB01W, height=RB01H)
@@ -7358,7 +7400,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r11 = tk.Label()
             self.lbl_rb01_r11.place(x=665, y=460, width="180", height=30)
             self.lbl_rb01_r11.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r11.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS11'))
+            self.lbl_rb01_r11.configure(text=file_text.get('rb01', 'r11'))
 
             self.btn_rb01_r12 = tk.Button()
             self.btn_rb01_r12.place(x=877, y=395, width=RB01W, height=RB01H)
@@ -7367,7 +7409,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r12 = tk.Label()
             self.lbl_rb01_r12.place(x=864, y=460, width="180", height="30")
             self.lbl_rb01_r12.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r12.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS12'))
+            self.lbl_rb01_r12.configure(text=file_text.get('rb01', 'r12'))
 
             self.btn_rb02_r08 = tk.Button()
             self.btn_rb02_r08.place(x=1076, y=395, width=RB01W, height=RB01H)
@@ -7376,7 +7418,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb02_r08 = tk.Label()
             self.lbl_rb02_r08.place(x=1063, y=460, width="180", height="30")
             self.lbl_rb02_r08.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb02_r08.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS08'))
+            self.lbl_rb02_r08.configure(text=file_text.get('rb02', 'r08'))
 
             self.btn_rb02_r04 = tk.Button()
             self.btn_rb02_r04.place(x=1620, y=200, width="150", height="150")
@@ -7410,36 +7452,36 @@ class CONTROL_PAGE(tk.Frame):
         LED_UP_ON_LBL = tk.PhotoImage(file=img_UP_ON_SRC)
         self.Canvas1.LED_UP_ON_LBL = LED_UP_ON_LBL
         
-        LED_V_OFF_LBL = tk.PhotoImage(file=img_V_OFF_SRC)
-        self.Canvas1.LED_V_OFF_LBL = LED_V_OFF_LBL
-        LED_V_ON_LBL = tk.PhotoImage(file=img_V_ON_SRC)
-        self.Canvas1.LED_V_ON_LBL = LED_V_ON_LBL        
+        R_OFF_LARGE_LBL = tk.PhotoImage(file=img_R_OFF_LARGE_SRC)
+        self.Canvas1.R_OFF_LARGE_LBL = R_OFF_LARGE_LBL
+        R_ON_LARGE_LBL = tk.PhotoImage(file=img_R_ON_LARGE_SRC)
+        self.Canvas1.R_ON_LARGE_LBL = R_ON_LARGE_LBL        
         
         if unit == "UNIT02":
             if rb01_r08 == 0:
-                self.btn_rb01_r08.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r08.configure(image=R_OFF_LARGE_LBL)
             else: 
-                self.btn_rb01_r08.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r08.configure(image=R_ON_LARGE_LBL)
             if rb01_r09 == False:
-                self.btn_rb01_r09.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r09.configure(image=R_OFF_LARGE_LBL)
             else: 
-                self.btn_rb01_r09.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r09.configure(image=R_ON_LARGE_LBL)
             if rb01_r10 == False:
-                self.btn_rb01_r10.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r10.configure(image=R_OFF_LARGE_LBL)
             else: 
-                self.btn_rb01_r10.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r10.configure(image=R_ON_LARGE_LBL)
             if rb01_r11 == False:
-                self.btn_rb01_r11.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r11.configure(image=R_OFF_LARGE_LBL)
             else: 
-                self.btn_rb01_r11.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r11.configure(image=R_ON_LARGE_LBL)
             if rb01_r12 == 0:
-                self.btn_rb01_r12.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r12.configure(image=R_OFF_LARGE_LBL)
             else: 
-                self.btn_rb01_r12.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r12.configure(image=R_ON_LARGE_LBL)
             if rb02_r08 == 0:
-                self.btn_rb02_r08.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r08.configure(image=R_OFF_LARGE_LBL)
             else: 
-                self.btn_rb02_r08.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r08.configure(image=R_ON_LARGE_LBL)
             if rb02_r04 == 0:
                 self.btn_rb02_r04.configure(image=LED_UP_OFF_LBL)
             else: 
@@ -7610,10 +7652,10 @@ class SETUP_PAGE_U02(tk.Frame):
         lbl_style_relais = {'foreground':MYCOLOR_AQUA,'background':MYCOLOR_AQUA_DK,'anchor':"c",'font':font_SRVC}
         btn_style_relais = {'borderwidth':0,'highlightthickness':0}
         #RELAIS BUTTONS AND LABEL POSITIONES        
-        L01W = 152
+        L01W = 100
         L01H = 26
         L01X = 1300
-        L01CX = 170
+        L01CX = 130
         L01Y = 45 
         L02Y = 140
         L03Y = 235
@@ -7621,10 +7663,10 @@ class SETUP_PAGE_U02(tk.Frame):
         L05Y = 425
         L06Y = 520
         L07Y = 615
-        RB01W = 152
-        RB01H = 52
+        RB01W = 100
+        RB01H = 40
         RB01X = 1300 #XPOS 1. LED
-        RB01CX = 170 #SPACING TO NEXT LED IN THIS GAUGE
+        RB01CX = 130 #SPACING TO NEXT LED IN THIS GAUGE
         RB01Y1 = 70 #YPOS
         RB01Y2 = 165 #YPOS
         RB01Y3 = 260 #YPOS
@@ -7677,401 +7719,517 @@ class SETUP_PAGE_U02(tk.Frame):
         self.btn_BACK.configure(command=lambda: master.switch_frame(CONTROL_PAGE))
 
         if unit == "UNIT02":
-            self.btn_IB01_I1 = tk.Button()
-            self.btn_IB01_I1.place(x=40, y=527, width=80, height=38)
-            self.btn_IB01_I1.configure(borderwidth=0)
-            self.btn_IB01_I1.configure(highlightthickness=0)
-            self.btn_IB01_I1.configure(command=lambda:[read.input_sim("IB01_I1")])
-            self.lbl_IB01_I1 = tk.Label()
-            self.lbl_IB01_I1.place(x=125, y=527, width=80, height=38)
-            self.Canvas1.create_text(210, 550, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I1'), anchor='w', font=(font_SRVC))
+            #INPUTS
+            if REGION == True:                
+                self.btn_IB01_I1 = tk.Button()
+                self.btn_IB01_I1.place(x=40, y=527, width=80, height=38)
+                self.btn_IB01_I1.configure(borderwidth=0)
+                self.btn_IB01_I1.configure(highlightthickness=0)
+                self.btn_IB01_I1.configure(command=lambda:[read.input_sim("IB01_I1")])
+                self.lbl_IB01_I1 = tk.Label()
+                self.lbl_IB01_I1.place(x=125, y=527, width=80, height=38)
+                self.Canvas1.create_text(210, 550, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I1'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB01_I2 = tk.Button()
-            self.btn_IB01_I2.place(x=40, y=572, width=80, height=38)
-            self.btn_IB01_I2.configure(borderwidth=0)
-            self.btn_IB01_I2.configure(highlightthickness=0)
-            self.btn_IB01_I2.configure(command=lambda:[read.input_sim("IB01_I2")])     
-            self.lbl_IB01_I2 = tk.Label()
-            self.lbl_IB01_I2.place(x=125, y=572, width=80, height=38)
-            self.Canvas1.create_text(210, 595, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I2'), anchor='w', font=(font_SRVC))
+                self.btn_IB01_I2 = tk.Button()
+                self.btn_IB01_I2.place(x=40, y=572, width=80, height=38)
+                self.btn_IB01_I2.configure(borderwidth=0)
+                self.btn_IB01_I2.configure(highlightthickness=0)
+                self.btn_IB01_I2.configure(command=lambda:[read.input_sim("IB01_I2")])     
+                self.lbl_IB01_I2 = tk.Label()
+                self.lbl_IB01_I2.place(x=125, y=572, width=80, height=38)
+                self.Canvas1.create_text(210, 595, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I2'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB01_I3 = tk.Button()
-            self.btn_IB01_I3.place(x=40, y=617, width=80, height=38)
-            self.btn_IB01_I3.configure(borderwidth=0)
-            self.btn_IB01_I3.configure(highlightthickness=0)
-            self.btn_IB01_I3.configure(command=lambda:[read.input_sim("IB01_I3")])
-            self.lbl_IB01_I3 = tk.Label()
-            self.lbl_IB01_I3.place(x=125, y=617, width=80, height=38)
-            self.Canvas1.create_text(210, 640, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I3'), anchor='w', font=(font_SRVC))
+                self.btn_IB01_I3 = tk.Button()
+                self.btn_IB01_I3.place(x=40, y=617, width=80, height=38)
+                self.btn_IB01_I3.configure(borderwidth=0)
+                self.btn_IB01_I3.configure(highlightthickness=0)
+                self.btn_IB01_I3.configure(command=lambda:[read.input_sim("IB01_I3")])
+                self.lbl_IB01_I3 = tk.Label()
+                self.lbl_IB01_I3.place(x=125, y=617, width=80, height=38)
+                self.Canvas1.create_text(210, 640, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I3'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB01_I4 = tk.Button()
-            self.btn_IB01_I4.place(x=40, y=662, width=80, height=38)
-            self.btn_IB01_I4.configure(borderwidth=0)
-            self.btn_IB01_I4.configure(highlightthickness=0)
-            self.btn_IB01_I4.configure(command=lambda:[read.input_sim("IB01_I4")])
-            self.lbl_IB01_I4 = tk.Label()
-            self.lbl_IB01_I4.place(x=125, y=662, width=80, height=38)
-            self.Canvas1.create_text(210, 685, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I4'), anchor='w', font=(font_SRVC))
+                self.btn_IB01_I4 = tk.Button()
+                self.btn_IB01_I4.place(x=40, y=662, width=80, height=38)
+                self.btn_IB01_I4.configure(borderwidth=0)
+                self.btn_IB01_I4.configure(highlightthickness=0)
+                self.btn_IB01_I4.configure(command=lambda:[read.input_sim("IB01_I4")])
+                self.lbl_IB01_I4 = tk.Label()
+                self.lbl_IB01_I4.place(x=125, y=662, width=80, height=38)
+                self.Canvas1.create_text(210, 685, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I4'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB02_I1 = tk.Button()
-            self.btn_IB02_I1.place(x=460, y=527, width=80, height=38)
-            self.btn_IB02_I1.configure(borderwidth=0)
-            self.btn_IB02_I1.configure(highlightthickness=0)
-            self.btn_IB02_I1.configure(command=lambda:[read.input_sim("IB02_I1")])           
-            self.lbl_IB02_I1 = tk.Label()
-            self.lbl_IB02_I1.place(x=545, y=527, width=80, height=38)
-            self.Canvas1.create_text(630, 550, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I1'), anchor='w', font=(font_SRVC))
+                self.btn_IB02_I1 = tk.Button()
+                self.btn_IB02_I1.place(x=460, y=527, width=80, height=38)
+                self.btn_IB02_I1.configure(borderwidth=0)
+                self.btn_IB02_I1.configure(highlightthickness=0)
+                self.btn_IB02_I1.configure(command=lambda:[read.input_sim("IB02_I1")])           
+                self.lbl_IB02_I1 = tk.Label()
+                self.lbl_IB02_I1.place(x=545, y=527, width=80, height=38)
+                self.Canvas1.create_text(630, 550, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I1'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB02_I2 = tk.Button()
-            self.btn_IB02_I2.place(x=460, y=572, width=80, height=38)
-            self.btn_IB02_I2.configure(borderwidth=0)
-            self.btn_IB02_I2.configure(highlightthickness=0)
-            self.btn_IB02_I2.configure(command=lambda:[read.input_sim("IB02_I2")])
-            self.lbl_IB02_I2 = tk.Label()
-            self.lbl_IB02_I2.place(x=545, y=572, width=80, height=38)
-            self.Canvas1.create_text(630, 595, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I2'), anchor='w', font=(font_SRVC))
+                self.btn_IB02_I2 = tk.Button()
+                self.btn_IB02_I2.place(x=460, y=572, width=80, height=38)
+                self.btn_IB02_I2.configure(borderwidth=0)
+                self.btn_IB02_I2.configure(highlightthickness=0)
+                self.btn_IB02_I2.configure(command=lambda:[read.input_sim("IB02_I2")])
+                self.lbl_IB02_I2 = tk.Label()
+                self.lbl_IB02_I2.place(x=545, y=572, width=80, height=38)
+                self.Canvas1.create_text(630, 595, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I2'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB02_I3 = tk.Button()
-            self.btn_IB02_I3.place(x=460, y=617, width=80, height=38)
-            self.btn_IB02_I3.configure(borderwidth=0)
-            self.btn_IB02_I3.configure(highlightthickness=0)
-            self.btn_IB02_I3.configure(command=lambda:[read.input_sim("IB02_I3")])
-            self.lbl_IB02_I3 = tk.Label()
-            self.lbl_IB02_I3.place(x=545, y=617, width=80, height=38)
-            self.Canvas1.create_text(630, 640, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I3'), anchor='w', font=(font_SRVC))
+                self.btn_IB02_I3 = tk.Button()
+                self.btn_IB02_I3.place(x=460, y=617, width=80, height=38)
+                self.btn_IB02_I3.configure(borderwidth=0)
+                self.btn_IB02_I3.configure(highlightthickness=0)
+                self.btn_IB02_I3.configure(command=lambda:[read.input_sim("IB02_I3")])
+                self.lbl_IB02_I3 = tk.Label()
+                self.lbl_IB02_I3.place(x=545, y=617, width=80, height=38)
+                self.Canvas1.create_text(630, 640, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I3'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB02_I4 = tk.Button()
-            self.btn_IB02_I4.place(x=460, y=662, width=80, height=38)
-            self.btn_IB02_I4.configure(borderwidth=0)
-            self.btn_IB02_I4.configure(highlightthickness=0)
-            self.btn_IB02_I4.configure(command=lambda:[read.input_sim("IB02_I4")])
-            self.lbl_IB02_I4 = tk.Label()
-            self.lbl_IB02_I4.place(x=545, y=662, width=80, height=38)
-            self.Canvas1.create_text(630, 685, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I4'), anchor='w', font=(font_SRVC))
+                self.btn_IB02_I4 = tk.Button()
+                self.btn_IB02_I4.place(x=460, y=662, width=80, height=38)
+                self.btn_IB02_I4.configure(borderwidth=0)
+                self.btn_IB02_I4.configure(highlightthickness=0)
+                self.btn_IB02_I4.configure(command=lambda:[read.input_sim("IB02_I4")])
+                self.lbl_IB02_I4 = tk.Label()
+                self.lbl_IB02_I4.place(x=545, y=662, width=80, height=38)
+                self.Canvas1.create_text(630, 685, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I4'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB03_I1 = tk.Button()
-            self.btn_IB03_I1.place(x=880, y=527, width=80, height=38)
-            self.btn_IB03_I1.configure(borderwidth=0)
-            self.btn_IB03_I1.configure(highlightthickness=0)
-            self.btn_IB03_I1.configure(command=lambda:[read.input_sim("IB03_I1")])
-            self.lbl_IB03_I1 = tk.Label()
-            self.lbl_IB03_I1.place(x=965, y=527, width=80, height=38)
-            self.Canvas1.create_text(1050, 550, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I1'), anchor='w', font=(font_SRVC))
+                self.btn_IB03_I1 = tk.Button()
+                self.btn_IB03_I1.place(x=880, y=527, width=80, height=38)
+                self.btn_IB03_I1.configure(borderwidth=0)
+                self.btn_IB03_I1.configure(highlightthickness=0)
+                self.btn_IB03_I1.configure(command=lambda:[read.input_sim("IB03_I1")])
+                self.lbl_IB03_I1 = tk.Label()
+                self.lbl_IB03_I1.place(x=965, y=527, width=80, height=38)
+                self.Canvas1.create_text(1050, 550, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I1'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB03_I2 = tk.Button()
-            self.btn_IB03_I2.place(x=880, y=572, width=80, height=38)
-            self.btn_IB03_I2.configure(borderwidth=0)
-            self.btn_IB03_I2.configure(highlightthickness=0)
-            self.btn_IB03_I2.configure(command=lambda:[read.input_sim("IB03_I2")])
-            self.lbl_IB03_I2 = tk.Label()
-            self.lbl_IB03_I2.place(x=965, y=572, width=80, height=38)
-            self.Canvas1.create_text(1050, 595, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I2'), anchor='w', font=(font_SRVC))
+                self.btn_IB03_I2 = tk.Button()
+                self.btn_IB03_I2.place(x=880, y=572, width=80, height=38)
+                self.btn_IB03_I2.configure(borderwidth=0)
+                self.btn_IB03_I2.configure(highlightthickness=0)
+                self.btn_IB03_I2.configure(command=lambda:[read.input_sim("IB03_I2")])
+                self.lbl_IB03_I2 = tk.Label()
+                self.lbl_IB03_I2.place(x=965, y=572, width=80, height=38)
+                self.Canvas1.create_text(1050, 595, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I2'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB03_I3 = tk.Button()
-            self.btn_IB03_I3.place(x=880, y=617, width=80, height=38)
-            self.btn_IB03_I3.configure(borderwidth=0)
-            self.btn_IB03_I3.configure(highlightthickness=0)
-            self.btn_IB03_I3.configure(command=lambda:[read.input_sim("IB03_I3")])
-            self.lbl_IB03_I3 = tk.Label()
-            self.lbl_IB03_I3.place(x=965, y=617, width=80, height=38)
-            self.Canvas1.create_text(1050, 640, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I3'), anchor='w', font=(font_SRVC))
+                self.btn_IB03_I3 = tk.Button()
+                self.btn_IB03_I3.place(x=880, y=617, width=80, height=38)
+                self.btn_IB03_I3.configure(borderwidth=0)
+                self.btn_IB03_I3.configure(highlightthickness=0)
+                self.btn_IB03_I3.configure(command=lambda:[read.input_sim("IB03_I3")])
+                self.lbl_IB03_I3 = tk.Label()
+                self.lbl_IB03_I3.place(x=965, y=617, width=80, height=38)
+                self.Canvas1.create_text(1050, 640, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I3'), anchor='w', font=(font_SRVC))
 
-            self.btn_IB03_I4 = tk.Button()
-            self.btn_IB03_I4.place(x=880, y=662, width=80, height=38)
-            self.btn_IB03_I4.configure(borderwidth=0)
-            self.btn_IB03_I4.configure(highlightthickness=0)
-            self.btn_IB03_I4.configure(command=lambda:[read.input_sim("IB03_I4")])
-            self.lbl_IB03_I4 = tk.Label()
-            self.lbl_IB03_I4.place(x=965, y=662, width=80, height=38)
-            self.Canvas1.create_text(1050, 685, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I4'), anchor='w', font=(font_SRVC))
+                self.btn_IB03_I4 = tk.Button()
+                self.btn_IB03_I4.place(x=880, y=662, width=80, height=38)
+                self.btn_IB03_I4.configure(borderwidth=0)
+                self.btn_IB03_I4.configure(highlightthickness=0)
+                self.btn_IB03_I4.configure(command=lambda:[read.input_sim("IB03_I4")])
+                self.lbl_IB03_I4 = tk.Label()
+                self.lbl_IB03_I4.place(x=965, y=662, width=80, height=38)
+                self.Canvas1.create_text(1050, 685, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I4'), anchor='w', font=(font_SRVC))
 
-            self.lbl_rb01_r00 = tk.Label()
-            self.lbl_rb01_r00.place(x=L01X, y=L02Y, width=L01W, height=L01H)
-            self.lbl_rb01_r00.configure(**lbl_style_relais)
-            self.lbl_rb01_r00.configure(text=file_text.get('16CH_RELAISBOARD_01', 'relais00'))
-            self.btn_rb01_r00 = tk.Button()
-            self.btn_rb01_r00.place(x=RB01X, y=RB01Y2, width=RB01W, height=RB01H)
-            self.btn_rb01_r00.configure(**btn_style_relais)
-            self.btn_rb01_r00.configure(command=lambda:[read.switch_rb01(0)])
-
-            self.lbl_rb01_r01 = tk.Label()
-            self.lbl_rb01_r01.place(x=L01X+L01CX, y=L02Y, width=L01W, height=L01H)
-            self.lbl_rb01_r01.configure(**lbl_style_relais)
-            self.lbl_rb01_r01.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS01'))
-            self.btn_rb01_r01 = tk.Button()
-            self.btn_rb01_r01.place(x=RB01X+RB01CX, y=RB01Y2, width=RB01W, height=RB01H)
-            self.btn_rb01_r01.configure(**btn_style_relais)
-            self.btn_rb01_r01.configure(command=lambda:[read.switch_rb01(1)])
-
-            self.lbl_rb01_r02 = tk.Label()
-            self.lbl_rb01_r02.place(x=L01X+(2*L01CX), y=L02Y, width=L01W, height=L01H)
-            self.lbl_rb01_r02.configure(**lbl_style_relais)
-            self.lbl_rb01_r02.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS02'))
-            self.btn_rb01_r02 = tk.Button()
-            self.btn_rb01_r02.place(x=RB01X+(2*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-            self.btn_rb01_r02.configure(**btn_style_relais)
-            self.btn_rb01_r02.configure(command=lambda:[read.switch_rb01(2)])
-
-            self.lbl_rb01_r03 = tk.Label()
-            self.lbl_rb01_r03.place(x=L01X+(3*L01CX), y=L02Y, width=L01W, height=L01H)
-            self.lbl_rb01_r03.configure(**lbl_style_relais)
-            self.lbl_rb01_r03.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS03'))
-            self.btn_rb01_r03 = tk.Button()
-            self.btn_rb01_r03.place(x=RB01X+(3*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-            self.btn_rb01_r03.configure(**btn_style_relais)
-            self.btn_rb01_r03.configure(command=lambda:[read.switch_rb01(3)])
-
-            self.lbl_rb01_r04 = tk.Label()
-            self.lbl_rb01_r04.place(x=L01X+(4*L01CX), y=L02Y, width=L01W, height=L01H)
-            self.lbl_rb01_r04.configure(**lbl_style_relais)
-            self.lbl_rb01_r04.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS04'))
-            self.btn_rb01_r04 = tk.Button()
-            self.btn_rb01_r04.place(x=RB01X+(4*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-            self.btn_rb01_r04.configure(**btn_style_relais)
-            self.btn_rb01_r04.configure(command=lambda:[read.switch_rb01(4)])
-
-            self.lbl_rb01_r05 = tk.Label()
-            self.lbl_rb01_r05.place(x=L01X+(5*L01CX), y=L02Y, width=L01W, height=L01H)
-            self.lbl_rb01_r05.configure(**lbl_style_relais)
-            self.lbl_rb01_r05.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS05'))
-            self.btn_rb01_r05 = tk.Button()
-            self.btn_rb01_r05.place(x=RB01X+(5*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-            self.btn_rb01_r05.configure(**btn_style_relais)
-            self.btn_rb01_r05.configure(command=lambda:[read.switch_rb01(5)])
-                                                                                          
-            self.lbl_rb01_r06 = tk.Label()
-            self.lbl_rb01_r06.place(x=L01X, y=L03Y, width=L01W, height=L01H)
-            self.lbl_rb01_r06.configure(**lbl_style_relais)
-            self.lbl_rb01_r06.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS06'))
-            self.btn_rb01_r06 = tk.Button()
-            self.btn_rb01_r06.place(x=RB01X, y=RB01Y3, width=RB01W, height=RB01H)
-            self.btn_rb01_r06.configure(**btn_style_relais)
-            self.btn_rb01_r06.configure(command=lambda:[read.switch_rb01(6)])
-
-            self.lbl_rb01_r07 = tk.Label()
-            self.lbl_rb01_r07.place(x=L01X+(1*L01CX), y=L03Y, width=L01W, height=L01H)
-            self.lbl_rb01_r07.configure(**lbl_style_relais)
-            self.lbl_rb01_r07.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS07'))
-            self.btn_rb01_r07 = tk.Button()
-            self.btn_rb01_r07.place(x=RB01X+(1*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-            self.btn_rb01_r07.configure(**btn_style_relais)
-            self.btn_rb01_r07.configure(command=lambda:[read.switch_rb01(7)])
-
-            self.lbl_rb01_r08 = tk.Label()
-            self.lbl_rb01_r08.place(x=L01X+(2*L01CX), y=L03Y, width=L01W, height=L01H)
-            self.lbl_rb01_r08.configure(**lbl_style_relais)
-            self.lbl_rb01_r08.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS08'))
-            self.btn_rb01_r08 = tk.Button()
-            self.btn_rb01_r08.place(x=RB01X+(2*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-            self.btn_rb01_r08.configure(**btn_style_relais)
-            self.btn_rb01_r08.configure(command=lambda:[read.switch_rb01(8)])
-
-            self.lbl_rb01_r09 = tk.Label()
-            self.lbl_rb01_r09.place(x=L01X+(3*L01CX), y=L03Y, width=L01W, height=L01H)
-            self.lbl_rb01_r09.configure(**lbl_style_relais)
-            self.lbl_rb01_r09.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS09'))
-            self.btn_rb01_r09 = tk.Button()
-            self.btn_rb01_r09.place(x=RB01X+(3*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-            self.btn_rb01_r09.configure(**btn_style_relais)
-            self.btn_rb01_r09.configure(command=lambda:[read.switch_rb01(9)])
-
-            self.lbl_rb01_r10 = tk.Label()
-            self.lbl_rb01_r10.place(x=L01X+(4*L01CX), y=L03Y, width=L01W, height=L01H)
-            self.lbl_rb01_r10.configure(**lbl_style_relais)
-            self.lbl_rb01_r10.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS10'))
-            self.btn_rb01_r10 = tk.Button()
-            self.btn_rb01_r10.place(x=RB01X+(4*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-            self.btn_rb01_r10.configure(**btn_style_relais)
-            self.btn_rb01_r10.configure(command=lambda:[read.switch_rb01(10)])
-
-            self.lbl_rb01_r11 = tk.Label()
-            self.lbl_rb01_r11.place(x=L01X+(5*L01CX), y=L03Y, width=L01W, height=L01H)
-            self.lbl_rb01_r11.configure(**lbl_style_relais)
-            self.lbl_rb01_r11.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS11'))
-            self.btn_rb01_r11 = tk.Button()
-            self.btn_rb01_r11.place(x=RB01X+(5*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-            self.btn_rb01_r11.configure(**btn_style_relais)
-            self.btn_rb01_r11.configure(command=lambda:[read.switch_rb01(11)])
-
-            self.lbl_rb01_r12 = tk.Label()
-            self.lbl_rb01_r12.place(x=L01X, y=L04Y, width=L01W, height=L01H)
-            self.lbl_rb01_r12.configure(**lbl_style_relais)
-            self.lbl_rb01_r12.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS12'))
-            self.btn_rb01_r12 = tk.Button()
-            self.btn_rb01_r12.place(x=RB01X, y=RB01Y4, width=RB01W, height=RB01H)
-            self.btn_rb01_r12.configure(**btn_style_relais)
-            self.btn_rb01_r12.configure(command=lambda:[read.switch_rb01(12)])
-
-            self.lbl_rb01_r13 = tk.Label()
-            self.lbl_rb01_r13.place(x=L01X+(1*L01CX), y=L04Y, width=L01W, height=L01H)
-            self.lbl_rb01_r13.configure(**lbl_style_relais)
-            self.lbl_rb01_r13.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS13'))
-            self.btn_rb01_r13 = tk.Button()
-            self.btn_rb01_r13.place(x=RB01X+(1*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-            self.btn_rb01_r13.configure(**btn_style_relais)
-            self.btn_rb01_r13.configure(command=lambda:[read.switch_rb01(13)])
-
-            self.lbl_rb01_r14 = tk.Label()
-            self.lbl_rb01_r14.place(x=L01X+(2*L01CX), y=L04Y, width=L01W, height=L01H)
-            self.lbl_rb01_r14.configure(**lbl_style_relais)
-            self.lbl_rb01_r14.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS14'))
-            self.btn_rb01_r14 = tk.Button()
-            self.btn_rb01_r14.place(x=RB01X+(2*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-            self.btn_rb01_r14.configure(**btn_style_relais)
-            self.btn_rb01_r14.configure(command=lambda:[read.switch_rb01(14)])
-
-            self.lbl_rb01_r15 = tk.Label()
-            self.lbl_rb01_r15.place(x=L01X+(3*L01CX), y=L04Y, width=L01W, height=L01H)
-            self.lbl_rb01_r15.configure(**lbl_style_relais)
-            self.lbl_rb01_r15.configure(text=file_text.get('16CH_RELAISBOARD_01', 'RELAIS15'))
-            self.btn_rb01_r15 = tk.Button()
-            self.btn_rb01_r15.place(x=RB01X+(3*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-            self.btn_rb01_r15.configure(**btn_style_relais)
-            self.btn_rb01_r15.configure(command=lambda:[read.switch_rb01(15)])
-
-            self.lbl_rb02_r00 = tk.Label()
-            self.lbl_rb02_r00.place(x=L01X+(4*L01CX), y=L04Y, width=L01W, height=L01H)
-            self.lbl_rb02_r00.configure(**lbl_style_relais)
-            self.lbl_rb02_r00.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS00'))
-            self.btn_rb02_r00 = tk.Button()
-            self.btn_rb02_r00.place(x=RB01X+(4*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-            self.btn_rb02_r00.configure(**btn_style_relais)
-            self.btn_rb02_r00.configure(command=lambda:[read.switch_rb02(0)])        
-
-            self.lbl_rb02_r01 = tk.Label()
-            self.lbl_rb02_r01.place(x=L01X+(5*L01CX), y=L04Y, width=L01W, height=L01H)
-            self.lbl_rb02_r01.configure(**lbl_style_relais)
-            self.lbl_rb02_r01.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS01'))
-            self.btn_rb02_r01 = tk.Button()
-            self.btn_rb02_r01.place(x=RB01X+(5*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-            self.btn_rb02_r01.configure(**btn_style_relais)
-            self.btn_rb02_r01.configure(command=lambda:[read.switch_rb02(1)])        
-
-            self.lbl_rb02_r02 = tk.Label()
-            self.lbl_rb02_r02.place(x=L01X, y=L05Y, width=L01W, height=L01H)
-            self.lbl_rb02_r02.configure(**lbl_style_relais)
-            self.lbl_rb02_r02.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS02'))
-            self.btn_rb02_r02 = tk.Button()
-            self.btn_rb02_r02.place(x=RB01X, y=RB01Y5, width=RB01W, height=RB01H)
-            self.btn_rb02_r02.configure(**btn_style_relais)
-            self.btn_rb02_r02.configure(command=lambda:[read.switch_rb02(2)])        
-
-            self.lbl_rb02_r03 = tk.Label()
-            self.lbl_rb02_r03.place(x=L01X+(1*L01CX), y=L05Y, width=L01W, height=L01H)
-            self.lbl_rb02_r03.configure(**lbl_style_relais)
-            self.lbl_rb02_r03.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS03'))
-            self.btn_rb02_r03 = tk.Button()
-            self.btn_rb02_r03.place(x=RB01X+(1*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-            self.btn_rb02_r03.configure(**btn_style_relais)
-            self.btn_rb02_r03.configure(command=lambda:[read.switch_rb02(3)])        
-
-            self.lbl_rb02_r04 = tk.Label()
-            self.lbl_rb02_r04.place(x=L01X+(2*L01CX), y=L05Y, width=L01W, height=L01H)
-            self.lbl_rb02_r04.configure(**lbl_style_relais)
-            self.lbl_rb02_r04.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS04'))
-            self.btn_rb02_r04 = tk.Button()
-            self.btn_rb02_r04.place(x=RB01X+(2*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-            self.btn_rb02_r04.configure(**btn_style_relais)
-            self.btn_rb02_r04.configure(command=lambda:[read.switch_rb02(4)])        
-
-            self.lbl_rb02_r05 = tk.Label()
-            self.lbl_rb02_r05.place(x=L01X+(3*L01CX), y=L05Y, width=L01W, height=L01H)
-            self.lbl_rb02_r05.configure(**lbl_style_relais)
-            self.lbl_rb02_r05.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS05'))
-            self.btn_rb02_r05 = tk.Button()
-            self.btn_rb02_r05.place(x=RB01X+(3*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-            self.btn_rb02_r05.configure(**btn_style_relais)
-            self.btn_rb02_r05.configure(command=lambda:[read.switch_rb02(5)])        
-
-            self.lbl_rb02_r06 = tk.Label()
-            self.lbl_rb02_r06.place(x=L01X+(4*L01CX), y=L05Y, width=L01W, height=L01H)
-            self.lbl_rb02_r06.configure(**lbl_style_relais)
-            self.lbl_rb02_r06.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS06'))        
-            self.btn_rb02_r06 = tk.Button()
-            self.btn_rb02_r06.place(x=RB01X+(4*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-            self.btn_rb02_r06.configure(**btn_style_relais)
-            self.btn_rb02_r06.configure(command=lambda:[read.switch_rb02(6)])        
-
-            self.lbl_rb02_r07 = tk.Label()
-            self.lbl_rb02_r07.place(x=L01X+(5*L01CX), y=L05Y, width=L01W, height=L01H)
-            self.lbl_rb02_r07.configure(**lbl_style_relais)
-            self.lbl_rb02_r07.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS07'))
-            self.btn_rb02_r07 = tk.Button()
-            self.btn_rb02_r07.place(x=RB01X+(5*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-            self.btn_rb02_r07.configure(**btn_style_relais)
-            self.btn_rb02_r07.configure(command=lambda:[read.switch_rb02(7)])        
-
-            self.lbl_rb02_r08 = tk.Label()
-            self.lbl_rb02_r08.place(x=L01X, y=L06Y, width=L01W, height=L01H)
-            self.lbl_rb02_r08.configure(**lbl_style_relais)
-            self.lbl_rb02_r08.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS08'))
-            self.btn_rb02_r08 = tk.Button()
-            self.btn_rb02_r08.place(x=RB01X, y=RB01Y6, width=RB01W, height=RB01H)
-            self.btn_rb02_r08.configure(**btn_style_relais)
-            self.btn_rb02_r08.configure(command=lambda:[read.switch_rb02(8)]) 
-
-            self.lbl_rb02_r09 = tk.Label()
-            self.lbl_rb02_r09.place(x=L01X+(1*L01CX), y=L06Y, width=L01W, height=L01H)
-            self.lbl_rb02_r09.configure(**lbl_style_relais)
-            self.lbl_rb02_r09.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS09'))
-            self.btn_rb02_r09 = tk.Button()
-            self.btn_rb02_r09.place(x=RB01X+(1*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-            self.btn_rb02_r09.configure(**btn_style_relais)
-            self.btn_rb02_r09.configure(command=lambda:[read.switch_rb02(9)]) 
-
-            self.lbl_rb02_r10 = tk.Label()
-            self.lbl_rb02_r10.place(x=L01X+(2*L01CX), y=L06Y, width=L01W, height=L01H)
-            self.lbl_rb02_r10.configure(**lbl_style_relais)
-            self.lbl_rb02_r10.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS10'))
-            self.btn_rb02_r10 = tk.Button()
-            self.btn_rb02_r10.place(x=RB01X+(2*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-            self.btn_rb02_r10.configure(**btn_style_relais)
-            self.btn_rb02_r10.configure(command=lambda:[read.switch_rb02(10)]) 
-
-            self.lbl_rb02_r11 = tk.Label()
-            self.lbl_rb02_r11.place(x=L01X+(3*L01CX), y=L06Y, width=L01W, height=L01H)
-            self.lbl_rb02_r11.configure(**lbl_style_relais)
-            self.lbl_rb02_r11.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS11'))
-            self.btn_rb02_r11 = tk.Button()
-            self.btn_rb02_r11.place(x=RB01X+(3*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-            self.btn_rb02_r11.configure(**btn_style_relais)
-            self.btn_rb02_r11.configure(command=lambda:[read.switch_rb02(11)]) 
-
-            self.lbl_rb02_r12 = tk.Label()
-            self.lbl_rb02_r12.place(x=L01X+(4*L01CX), y=L06Y, width=L01W, height=L01H)
-            self.lbl_rb02_r12.configure(**lbl_style_relais)
-            self.lbl_rb02_r12.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS12'))
-            self.btn_rb02_r12 = tk.Button()
-            self.btn_rb02_r12.place(x=RB01X+(4*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-            self.btn_rb02_r12.configure(**btn_style_relais)
-            self.btn_rb02_r12.configure(command=lambda:[read.switch_rb02(12)])
-
-            self.lbl_rb02_r13 = tk.Label()
-            self.lbl_rb02_r13.place(x=L01X+(5*L01CX), y=L06Y, width=L01W, height=L01H)
-            self.lbl_rb02_r13.configure(**lbl_style_relais)
-            self.lbl_rb02_r13.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS13'))
-            self.btn_rb02_r13 = tk.Button()
-            self.btn_rb02_r13.place(x=RB01X+(5*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-            self.btn_rb02_r13.configure(**btn_style_relais)
-            self.btn_rb02_r13.configure(command=lambda:[read.switch_rb02(13)])
-
-            self.lbl_rb02_r14 = tk.Label()
-            self.lbl_rb02_r14.place(x=L01X, y=L07Y, width=L01W, height=L01H)
-            self.lbl_rb02_r14.configure(**lbl_style_relais)
-            self.lbl_rb02_r14.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS14'))
-            self.btn_rb02_r14 = tk.Button()
-            self.btn_rb02_r14.place(x=RB01X, y=RB01Y7, width=RB01W, height=RB01H)
-            self.btn_rb02_r14.configure(**btn_style_relais)
-            self.btn_rb02_r14.configure(command=lambda:[read.switch_rb02(14)])
-
-            self.lbl_rb02_r15 = tk.Label()
-            self.lbl_rb02_r15.place(x=L01X+(1*L01CX), y=L07Y, width=L01W, height=L01H)
-            self.lbl_rb02_r15.configure(**lbl_style_relais)
-            self.lbl_rb02_r15.configure(text=file_text.get('16CH_RELAISBOARD_02', 'RELAIS15'))
-            self.btn_rb02_r15 = tk.Button()
-            self.btn_rb02_r15.place(x=RB01X+(1*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
-            self.btn_rb02_r15.configure(**btn_style_relais)
-            self.btn_rb02_r15.configure(command=lambda:[read.switch_rb02(15)])
+            #LABELS CREATE
+            if REGION == True:
+                self.lbl_rb01_r00 = tk.Label()
+                self.lbl_rb01_r01 = tk.Label()
+                self.lbl_rb01_r02 = tk.Label()
+                self.lbl_rb01_r03 = tk.Label()
+                self.lbl_rb01_r04 = tk.Label()
+                self.lbl_rb01_r05 = tk.Label()
+                self.lbl_rb01_r06 = tk.Label()
+                self.lbl_rb01_r07 = tk.Label()
+                self.lbl_rb01_r08 = tk.Label()
+                self.lbl_rb01_r09 = tk.Label()
+                self.lbl_rb01_r10 = tk.Label()
+                self.lbl_rb01_r11 = tk.Label()
+                self.lbl_rb01_r12 = tk.Label()
+                self.lbl_rb01_r13 = tk.Label()
+                self.lbl_rb01_r14 = tk.Label()
+                self.lbl_rb01_r15 = tk.Label()
+                self.lbl_rb02_r00 = tk.Label()
+                self.lbl_rb02_r01 = tk.Label()
+                self.lbl_rb02_r02 = tk.Label()
+                self.lbl_rb02_r03 = tk.Label()
+                self.lbl_rb02_r04 = tk.Label()
+                self.lbl_rb02_r05 = tk.Label()
+                self.lbl_rb02_r06 = tk.Label()
+                self.lbl_rb02_r07 = tk.Label()
+                self.lbl_rb02_r08 = tk.Label()
+                self.lbl_rb02_r09 = tk.Label()
+                self.lbl_rb02_r10 = tk.Label()
+                self.lbl_rb02_r11 = tk.Label()
+                self.lbl_rb02_r12 = tk.Label()
+                self.lbl_rb02_r13 = tk.Label()
+                self.lbl_rb02_r14 = tk.Label()
+                self.lbl_rb02_r15 = tk.Label()
+                self.lbl_rb03_r00 = tk.Label()
+                self.lbl_rb03_r01 = tk.Label()
+                self.lbl_rb03_r02 = tk.Label()
+                self.lbl_rb03_r03 = tk.Label()
+                self.lbl_rb03_r04 = tk.Label()
+                self.lbl_rb03_r05 = tk.Label()
+                self.lbl_rb03_r06 = tk.Label()
+                self.lbl_rb03_r07 = tk.Label()
+                self.lbl_rb03_r08 = tk.Label()
+                self.lbl_rb03_r09 = tk.Label()
+                self.lbl_rb03_r10 = tk.Label()
+                self.lbl_rb03_r11 = tk.Label()
+                self.lbl_rb03_r12 = tk.Label()
+                self.lbl_rb03_r13 = tk.Label()
+                self.lbl_rb03_r14 = tk.Label()
+                self.lbl_rb03_r15 = tk.Label()
+            #LABELS STYLE
+            if REGION == True:
+                self.lbl_rb01_r00.configure(**lbl_style_relais)
+                self.lbl_rb01_r01.configure(**lbl_style_relais)
+                self.lbl_rb01_r02.configure(**lbl_style_relais)
+                self.lbl_rb01_r03.configure(**lbl_style_relais)
+                self.lbl_rb01_r04.configure(**lbl_style_relais)
+                self.lbl_rb01_r05.configure(**lbl_style_relais)
+                self.lbl_rb01_r06.configure(**lbl_style_relais)
+                self.lbl_rb01_r07.configure(**lbl_style_relais)
+                self.lbl_rb01_r08.configure(**lbl_style_relais)
+                self.lbl_rb01_r09.configure(**lbl_style_relais)
+                self.lbl_rb01_r10.configure(**lbl_style_relais)
+                self.lbl_rb01_r11.configure(**lbl_style_relais)
+                self.lbl_rb01_r12.configure(**lbl_style_relais)
+                self.lbl_rb01_r13.configure(**lbl_style_relais)
+                self.lbl_rb01_r14.configure(**lbl_style_relais)
+                self.lbl_rb01_r15.configure(**lbl_style_relais)
+                self.lbl_rb02_r00.configure(**lbl_style_relais)
+                self.lbl_rb02_r01.configure(**lbl_style_relais)
+                self.lbl_rb02_r02.configure(**lbl_style_relais)
+                self.lbl_rb02_r03.configure(**lbl_style_relais)
+                self.lbl_rb02_r04.configure(**lbl_style_relais)
+                self.lbl_rb02_r05.configure(**lbl_style_relais)
+                self.lbl_rb02_r06.configure(**lbl_style_relais)
+                self.lbl_rb02_r07.configure(**lbl_style_relais)
+                self.lbl_rb02_r08.configure(**lbl_style_relais)
+                self.lbl_rb02_r09.configure(**lbl_style_relais)
+                self.lbl_rb02_r10.configure(**lbl_style_relais)
+                self.lbl_rb02_r11.configure(**lbl_style_relais)
+                self.lbl_rb02_r12.configure(**lbl_style_relais)
+                self.lbl_rb02_r13.configure(**lbl_style_relais)
+                self.lbl_rb02_r14.configure(**lbl_style_relais)
+                self.lbl_rb02_r15.configure(**lbl_style_relais)
+                self.lbl_rb03_r00.configure(**lbl_style_relais)
+                self.lbl_rb03_r01.configure(**lbl_style_relais)
+                self.lbl_rb03_r02.configure(**lbl_style_relais)
+                self.lbl_rb03_r03.configure(**lbl_style_relais)
+                self.lbl_rb03_r04.configure(**lbl_style_relais)
+                self.lbl_rb03_r05.configure(**lbl_style_relais)
+                self.lbl_rb03_r06.configure(**lbl_style_relais)
+                self.lbl_rb03_r07.configure(**lbl_style_relais)
+                self.lbl_rb03_r08.configure(**lbl_style_relais)
+                self.lbl_rb03_r09.configure(**lbl_style_relais)
+                self.lbl_rb03_r10.configure(**lbl_style_relais)
+                self.lbl_rb03_r11.configure(**lbl_style_relais)
+                self.lbl_rb03_r12.configure(**lbl_style_relais)
+                self.lbl_rb03_r13.configure(**lbl_style_relais)
+                self.lbl_rb03_r14.configure(**lbl_style_relais)
+                self.lbl_rb03_r15.configure(**lbl_style_relais)
+            #LABELS TEXT
+            if REGION == True:
+               self.lbl_rb01_r00.configure(text=file_text.get('rb01', 'r00'))
+               self.lbl_rb01_r01.configure(text=file_text.get('rb01', 'r01'))
+               self.lbl_rb01_r02.configure(text=file_text.get('rb01', 'r02'))
+               self.lbl_rb01_r03.configure(text=file_text.get('rb01', 'r03'))
+               self.lbl_rb01_r04.configure(text=file_text.get('rb01', 'r04'))
+               self.lbl_rb01_r05.configure(text=file_text.get('rb01', 'r05'))
+               self.lbl_rb01_r06.configure(text=file_text.get('rb01', 'r06'))
+               self.lbl_rb01_r07.configure(text=file_text.get('rb01', 'r07'))
+               self.lbl_rb01_r08.configure(text=file_text.get('rb01', 'r08'))
+               self.lbl_rb01_r09.configure(text=file_text.get('rb01', 'r09'))
+               self.lbl_rb01_r10.configure(text=file_text.get('rb01', 'r10'))
+               self.lbl_rb01_r11.configure(text=file_text.get('rb01', 'r11'))
+               self.lbl_rb01_r12.configure(text=file_text.get('rb01', 'r12'))
+               self.lbl_rb01_r13.configure(text=file_text.get('rb01', 'r13'))
+               self.lbl_rb01_r14.configure(text=file_text.get('rb01', 'r14'))
+               self.lbl_rb01_r15.configure(text=file_text.get('rb01', 'r15'))
+               self.lbl_rb02_r00.configure(text=file_text.get('rb02', 'r00'))
+               self.lbl_rb02_r01.configure(text=file_text.get('rb02', 'r01'))
+               self.lbl_rb02_r02.configure(text=file_text.get('rb02', 'r02'))
+               self.lbl_rb02_r03.configure(text=file_text.get('rb02', 'r03'))
+               self.lbl_rb02_r04.configure(text=file_text.get('rb02', 'r04'))
+               self.lbl_rb02_r05.configure(text=file_text.get('rb02', 'r05'))
+               self.lbl_rb02_r06.configure(text=file_text.get('rb02', 'r06'))
+               self.lbl_rb02_r07.configure(text=file_text.get('rb02', 'r07'))
+               self.lbl_rb02_r08.configure(text=file_text.get('rb02', 'r08'))
+               self.lbl_rb02_r09.configure(text=file_text.get('rb02', 'r09'))
+               self.lbl_rb02_r10.configure(text=file_text.get('rb02', 'r10'))
+               self.lbl_rb02_r11.configure(text=file_text.get('rb02', 'r11'))
+               self.lbl_rb02_r12.configure(text=file_text.get('rb02', 'r12'))
+               self.lbl_rb02_r13.configure(text=file_text.get('rb02', 'r13'))
+               self.lbl_rb02_r14.configure(text=file_text.get('rb02', 'r14'))
+               self.lbl_rb02_r15.configure(text=file_text.get('rb02', 'r15'))
+               self.lbl_rb03_r00.configure(text=file_text.get('rb03', 'r00'))
+               self.lbl_rb03_r01.configure(text=file_text.get('rb03', 'r01'))
+               self.lbl_rb03_r02.configure(text=file_text.get('rb03', 'r02'))
+               self.lbl_rb03_r03.configure(text=file_text.get('rb03', 'r03'))
+               self.lbl_rb03_r04.configure(text=file_text.get('rb03', 'r04'))
+               self.lbl_rb03_r05.configure(text=file_text.get('rb03', 'r05'))
+               self.lbl_rb03_r06.configure(text=file_text.get('rb03', 'r06'))
+               self.lbl_rb03_r07.configure(text=file_text.get('rb03', 'r07'))
+               self.lbl_rb03_r08.configure(text=file_text.get('rb03', 'r08'))
+               self.lbl_rb03_r09.configure(text=file_text.get('rb03', 'r09'))
+               self.lbl_rb03_r10.configure(text=file_text.get('rb03', 'r10'))
+               self.lbl_rb03_r11.configure(text=file_text.get('rb03', 'r11'))
+               self.lbl_rb03_r12.configure(text=file_text.get('rb03', 'r12'))
+               self.lbl_rb03_r13.configure(text=file_text.get('rb03', 'r13'))
+               self.lbl_rb03_r14.configure(text=file_text.get('rb03', 'r14'))
+               self.lbl_rb03_r15.configure(text=file_text.get('rb03', 'r15'))
+            #LABELS POSITION
+            if REGION == True:
+                self.lbl_rb01_r00.place(x=L01X, y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r01.place(x=L01X+L01CX, y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r02.place(x=L01X+(2*L01CX), y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r03.place(x=L01X+(3*L01CX), y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r04.place(x=L01X+(4*L01CX), y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r05.place(x=L01X+(5*L01CX), y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r06.place(x=L01X+(6*L01CX), y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r07.place(x=L01X+(7*L01CX), y=L02Y, width=L01W, height=L01H)
+                self.lbl_rb01_r08.place(x=L01X, y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb01_r09.place(x=L01X+L01CX, y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb01_r10.place(x=L01X+(2*L01CX), y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb01_r11.place(x=L01X+(3*L01CX), y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb01_r12.place(x=L01X+(4*L01CX), y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb01_r13.place(x=L01X+(5*L01CX), y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb01_r14.place(x=L01X+(6*L01CX), y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb01_r15.place(x=L01X+(7*L01CX), y=L03Y, width=L01W, height=L01H)
+                self.lbl_rb02_r00.place(x=L01X, y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r01.place(x=L01X+L01CX, y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r02.place(x=L01X+(2*L01CX), y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r03.place(x=L01X+(3*L01CX), y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r04.place(x=L01X+(4*L01CX), y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r05.place(x=L01X+(5*L01CX), y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r06.place(x=L01X+(6*L01CX), y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r07.place(x=L01X+(7*L01CX), y=L04Y, width=L01W, height=L01H)
+                self.lbl_rb02_r08.place(x=L01X, y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb02_r09.place(x=L01X+L01CX, y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb02_r10.place(x=L01X+(2*L01CX), y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb02_r11.place(x=L01X+(3*L01CX), y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb02_r12.place(x=L01X+(4*L01CX), y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb02_r13.place(x=L01X+(5*L01CX), y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb02_r14.place(x=L01X+(6*L01CX), y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb02_r15.place(x=L01X+(7*L01CX), y=L05Y, width=L01W, height=L01H)
+                self.lbl_rb03_r00.place(x=L01X, y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r01.place(x=L01X+L01CX, y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r02.place(x=L01X+(2*L01CX), y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r03.place(x=L01X+(3*L01CX), y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r04.place(x=L01X+(4*L01CX), y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r05.place(x=L01X+(5*L01CX), y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r06.place(x=L01X+(6*L01CX), y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r07.place(x=L01X+(7*L01CX), y=L06Y, width=L01W, height=L01H)
+                self.lbl_rb03_r08.place(x=L01X, y=L07Y, width=L01W, height=L01H)
+                self.lbl_rb03_r09.place(x=L01X+L01CX, y=L07Y, width=L01W, height=L01H)
+                self.lbl_rb03_r10.place(x=L01X+(2*L01CX), y=L07Y, width=L01W, height=L01H)
+                self.lbl_rb03_r11.place(x=L01X+(3*L01CX), y=L07Y, width=L01W, height=L01H)
+                self.lbl_rb03_r12.place(x=L01X+(4*L01CX), y=L07Y, width=L01W, height=L01H)
+                self.lbl_rb03_r13.place(x=L01X+(5*L01CX), y=L07Y, width=L01W, height=L01H)
+                self.lbl_rb03_r14.place(x=L01X+(6*L01CX), y=L07Y, width=L01W, height=L01H)
+                self.lbl_rb03_r15.place(x=L01X+(7*L01CX), y=L07Y, width=L01W, height=L01H)
+            
+            #BUTTONS CREATE
+            if REGION == True:
+                self.btn_rb01_r00 = tk.Button()
+                self.btn_rb01_r01 = tk.Button()
+                self.btn_rb01_r02 = tk.Button()
+                self.btn_rb01_r03 = tk.Button()
+                self.btn_rb01_r04 = tk.Button()
+                self.btn_rb01_r05 = tk.Button()
+                self.btn_rb01_r06 = tk.Button()
+                self.btn_rb01_r07 = tk.Button()
+                self.btn_rb01_r08 = tk.Button()
+                self.btn_rb01_r09 = tk.Button()
+                self.btn_rb01_r10 = tk.Button()
+                self.btn_rb01_r11 = tk.Button()
+                self.btn_rb01_r12 = tk.Button()
+                self.btn_rb01_r13 = tk.Button()
+                self.btn_rb01_r14 = tk.Button()
+                self.btn_rb01_r15 = tk.Button()
+                self.btn_rb02_r00 = tk.Button()
+                self.btn_rb02_r01 = tk.Button()
+                self.btn_rb02_r02 = tk.Button()
+                self.btn_rb02_r03 = tk.Button()
+                self.btn_rb02_r04 = tk.Button()
+                self.btn_rb02_r05 = tk.Button()
+                self.btn_rb02_r06 = tk.Button()
+                self.btn_rb02_r07 = tk.Button()
+                self.btn_rb02_r08 = tk.Button()
+                self.btn_rb02_r09 = tk.Button()
+                self.btn_rb02_r10 = tk.Button()
+                self.btn_rb02_r11 = tk.Button()
+                self.btn_rb02_r12 = tk.Button()
+                self.btn_rb02_r13 = tk.Button()
+                self.btn_rb02_r14 = tk.Button()
+                self.btn_rb02_r15 = tk.Button()
+                self.btn_rb03_r00 = tk.Button()
+                self.btn_rb03_r01 = tk.Button()
+                self.btn_rb03_r02 = tk.Button()
+                self.btn_rb03_r03 = tk.Button()
+                self.btn_rb03_r04 = tk.Button()
+                self.btn_rb03_r05 = tk.Button()
+                self.btn_rb03_r06 = tk.Button()
+                self.btn_rb03_r07 = tk.Button()
+                self.btn_rb03_r08 = tk.Button()
+                self.btn_rb03_r09 = tk.Button()
+                self.btn_rb03_r10 = tk.Button()
+                self.btn_rb03_r11 = tk.Button()
+                self.btn_rb03_r12 = tk.Button()
+                self.btn_rb03_r13 = tk.Button()
+                self.btn_rb03_r14 = tk.Button()
+                self.btn_rb03_r15 = tk.Button()
+            #BUTTONS STYLE
+            if REGION == True:
+                self.btn_rb01_r00.configure(**btn_style_relais)
+                self.btn_rb01_r01.configure(**btn_style_relais)
+                self.btn_rb01_r02.configure(**btn_style_relais)
+                self.btn_rb01_r03.configure(**btn_style_relais)
+                self.btn_rb01_r04.configure(**btn_style_relais)
+                self.btn_rb01_r05.configure(**btn_style_relais)
+                self.btn_rb01_r06.configure(**btn_style_relais)
+                self.btn_rb01_r07.configure(**btn_style_relais)
+                self.btn_rb01_r08.configure(**btn_style_relais)
+                self.btn_rb01_r09.configure(**btn_style_relais)
+                self.btn_rb01_r10.configure(**btn_style_relais)
+                self.btn_rb01_r11.configure(**btn_style_relais)
+                self.btn_rb01_r12.configure(**btn_style_relais)
+                self.btn_rb01_r13.configure(**btn_style_relais)
+                self.btn_rb01_r14.configure(**btn_style_relais)
+                self.btn_rb01_r15.configure(**btn_style_relais)
+                self.btn_rb02_r00.configure(**btn_style_relais)
+                self.btn_rb02_r01.configure(**btn_style_relais)
+                self.btn_rb02_r02.configure(**btn_style_relais)
+                self.btn_rb02_r03.configure(**btn_style_relais)
+                self.btn_rb02_r04.configure(**btn_style_relais)
+                self.btn_rb02_r05.configure(**btn_style_relais)
+                self.btn_rb02_r06.configure(**btn_style_relais)
+                self.btn_rb02_r07.configure(**btn_style_relais)
+                self.btn_rb02_r08.configure(**btn_style_relais)
+                self.btn_rb02_r09.configure(**btn_style_relais)
+                self.btn_rb02_r10.configure(**btn_style_relais)
+                self.btn_rb02_r11.configure(**btn_style_relais)
+                self.btn_rb02_r12.configure(**btn_style_relais)
+                self.btn_rb02_r13.configure(**btn_style_relais)
+                self.btn_rb02_r14.configure(**btn_style_relais)
+                self.btn_rb02_r15.configure(**btn_style_relais)
+                self.btn_rb03_r00.configure(**btn_style_relais)
+                self.btn_rb03_r01.configure(**btn_style_relais)
+                self.btn_rb03_r02.configure(**btn_style_relais)
+                self.btn_rb03_r03.configure(**btn_style_relais)
+                self.btn_rb03_r04.configure(**btn_style_relais)
+                self.btn_rb03_r05.configure(**btn_style_relais)
+                self.btn_rb03_r06.configure(**btn_style_relais)
+                self.btn_rb03_r07.configure(**btn_style_relais)
+                self.btn_rb03_r08.configure(**btn_style_relais)
+                self.btn_rb03_r09.configure(**btn_style_relais)
+                self.btn_rb03_r10.configure(**btn_style_relais)
+                self.btn_rb03_r11.configure(**btn_style_relais)
+                self.btn_rb03_r12.configure(**btn_style_relais)
+                self.btn_rb03_r13.configure(**btn_style_relais)
+                self.btn_rb03_r14.configure(**btn_style_relais)
+                self.btn_rb03_r15.configure(**btn_style_relais)                
+            #BUTTON COMMAND
+            if REGION == True:
+                self.btn_rb01_r00.configure(command=lambda:[read.switch_rb01(0)])
+                self.btn_rb01_r01.configure(command=lambda:[read.switch_rb01(1)])
+                self.btn_rb01_r02.configure(command=lambda:[read.switch_rb01(2)])
+                self.btn_rb01_r03.configure(command=lambda:[read.switch_rb01(3)])
+                self.btn_rb01_r04.configure(command=lambda:[read.switch_rb01(4)])
+                self.btn_rb01_r05.configure(command=lambda:[read.switch_rb01(5)])
+                self.btn_rb01_r06.configure(command=lambda:[read.switch_rb01(6)])
+                self.btn_rb01_r07.configure(command=lambda:[read.switch_rb01(7)])
+                self.btn_rb01_r08.configure(command=lambda:[read.switch_rb01(8)])
+                self.btn_rb01_r09.configure(command=lambda:[read.switch_rb01(9)])
+                self.btn_rb01_r10.configure(command=lambda:[read.switch_rb01(10)])
+                self.btn_rb01_r11.configure(command=lambda:[read.switch_rb01(11)])
+                self.btn_rb01_r12.configure(command=lambda:[read.switch_rb01(12)])
+                self.btn_rb01_r13.configure(command=lambda:[read.switch_rb01(13)])
+                self.btn_rb01_r14.configure(command=lambda:[read.switch_rb01(14)])
+                self.btn_rb01_r15.configure(command=lambda:[read.switch_rb01(15)])
+                self.btn_rb02_r00.configure(command=lambda:[read.switch_rb02(0)])
+                self.btn_rb02_r01.configure(command=lambda:[read.switch_rb02(1)])
+                self.btn_rb02_r02.configure(command=lambda:[read.switch_rb02(2)])
+                self.btn_rb02_r03.configure(command=lambda:[read.switch_rb02(3)])
+                self.btn_rb02_r04.configure(command=lambda:[read.switch_rb02(4)])
+                self.btn_rb02_r05.configure(command=lambda:[read.switch_rb02(5)])
+                self.btn_rb02_r06.configure(command=lambda:[read.switch_rb02(6)])
+                self.btn_rb02_r07.configure(command=lambda:[read.switch_rb02(7)])
+                self.btn_rb02_r08.configure(command=lambda:[read.switch_rb02(8)])
+                self.btn_rb02_r09.configure(command=lambda:[read.switch_rb02(9)])
+                self.btn_rb02_r10.configure(command=lambda:[read.switch_rb02(10)])
+                self.btn_rb02_r11.configure(command=lambda:[read.switch_rb02(11)])
+                self.btn_rb02_r12.configure(command=lambda:[read.switch_rb02(12)])
+                self.btn_rb02_r13.configure(command=lambda:[read.switch_rb02(13)])
+                self.btn_rb02_r14.configure(command=lambda:[read.switch_rb02(14)])
+                self.btn_rb02_r15.configure(command=lambda:[read.switch_rb02(15)])
+                self.btn_rb03_r00.configure(command=lambda:[read.switch_rb03(0)])
+                self.btn_rb03_r01.configure(command=lambda:[read.switch_rb03(1)])
+                self.btn_rb03_r02.configure(command=lambda:[read.switch_rb03(2)])
+                self.btn_rb03_r03.configure(command=lambda:[read.switch_rb03(3)])
+                self.btn_rb03_r04.configure(command=lambda:[read.switch_rb03(4)])
+                self.btn_rb03_r05.configure(command=lambda:[read.switch_rb03(5)])
+                self.btn_rb03_r06.configure(command=lambda:[read.switch_rb03(6)])
+                self.btn_rb03_r07.configure(command=lambda:[read.switch_rb03(7)])
+                self.btn_rb03_r08.configure(command=lambda:[read.switch_rb03(8)])
+                self.btn_rb03_r09.configure(command=lambda:[read.switch_rb03(9)])
+                self.btn_rb03_r10.configure(command=lambda:[read.switch_rb03(10)])
+                self.btn_rb03_r11.configure(command=lambda:[read.switch_rb03(11)])
+                self.btn_rb03_r12.configure(command=lambda:[read.switch_rb03(12)])
+                self.btn_rb03_r13.configure(command=lambda:[read.switch_rb03(13)])
+                self.btn_rb03_r14.configure(command=lambda:[read.switch_rb03(14)])
+                self.btn_rb03_r15.configure(command=lambda:[read.switch_rb03(15)])
+            #BUTTON POSITION
+            if REGION == True:
+                self.btn_rb01_r00.place(x=RB01X, y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r01.place(x=RB01X+RB01CX, y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r02.place(x=RB01X+(2*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r03.place(x=RB01X+(3*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r04.place(x=RB01X+(4*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r05.place(x=RB01X+(5*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r06.place(x=RB01X+(6*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r07.place(x=RB01X+(7*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
+                self.btn_rb01_r08.place(x=RB01X, y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb01_r09.place(x=RB01X+RB01CX, y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb01_r10.place(x=RB01X+(2*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb01_r11.place(x=RB01X+(3*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb01_r12.place(x=RB01X+(4*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb01_r13.place(x=RB01X+(5*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb01_r14.place(x=RB01X+(6*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb01_r15.place(x=RB01X+(7*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
+                self.btn_rb02_r00.place(x=RB01X, y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r01.place(x=RB01X+RB01CX, y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r02.place(x=RB01X+(2*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r03.place(x=RB01X+(3*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r04.place(x=RB01X+(4*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r05.place(x=RB01X+(5*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r06.place(x=RB01X+(6*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r07.place(x=RB01X+(7*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
+                self.btn_rb02_r08.place(x=RB01X, y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb02_r09.place(x=RB01X+RB01CX, y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb02_r10.place(x=RB01X+(2*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb02_r11.place(x=RB01X+(3*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb02_r12.place(x=RB01X+(4*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb02_r13.place(x=RB01X+(5*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb02_r14.place(x=RB01X+(6*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb02_r15.place(x=RB01X+(7*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
+                self.btn_rb03_r00.place(x=RB01X, y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r01.place(x=RB01X+RB01CX, y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r02.place(x=RB01X+(2*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r03.place(x=RB01X+(3*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r04.place(x=RB01X+(4*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r05.place(x=RB01X+(5*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r06.place(x=RB01X+(6*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r07.place(x=RB01X+(7*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
+                self.btn_rb03_r08.place(x=RB01X, y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb03_r09.place(x=RB01X+RB01CX, y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb03_r10.place(x=RB01X+(2*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb03_r11.place(x=RB01X+(3*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb03_r12.place(x=RB01X+(4*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb03_r13.place(x=RB01X+(5*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb03_r14.place(x=RB01X+(6*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb03_r15.place(x=RB01X+(7*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
         self.digital()
     def digital(self):
         read = myfunctions()
@@ -8086,11 +8244,10 @@ class SETUP_PAGE_U02(tk.Frame):
         self.Canvas1.LED_UP_OFF_LBL = LED_UP_OFF_LBL
         LED_UP_ON_LBL = tk.PhotoImage(file=img_UP_ON_SRC)
         self.Canvas1.LED_UP_ON_LBL = LED_UP_ON_LBL
-        LED_V_OFF_LBL = tk.PhotoImage(file=img_V_OFF_SRC)
-        self.Canvas1.LED_V_OFF_LBL = LED_V_OFF_LBL
-        LED_V_ON_LBL = tk.PhotoImage(file=img_V_ON_SRC)
-        self.Canvas1.LED_V_ON_LBL = LED_V_ON_LBL
-
+        R_OFF_SMALL_LBL = tk.PhotoImage(file=img_R_OFF_SMALL_SRC)
+        self.Canvas1.R_OFF_SMALL_LBL = R_OFF_SMALL_LBL
+        R_ON_SMALL_LBL = tk.PhotoImage(file=img_R_ON_LARGE_SRC)
+        self.Canvas1.R_ON_SMALL_LBL = R_ON_SMALL_LBL
         LED_V_LED_OFF_LBL = tk.PhotoImage(file=img_V_LED_OFF_SRC)
         self.Canvas1.LED_V_LED_OFF_LBL = LED_V_LED_OFF_LBL
         LED_V_LED_ON_LBL = tk.PhotoImage(file=img_V_LED_ON_SRC)
@@ -8204,134 +8361,199 @@ class SETUP_PAGE_U02(tk.Frame):
                 self.lbl_IB03_I4.configure(image=LED_V_LED_OFF_LBL) 
             #RB01
             if rb01_r00 == False:
-                self.btn_rb01_r00.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r00.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r00.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r00.configure(image=R_ON_SMALL_LBL)
             if rb01_r01 == False:
-                self.btn_rb01_r01.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r01.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r01.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r01.configure(image=R_ON_SMALL_LBL)
             if rb01_r02 == False:
-                self.btn_rb01_r02.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r02.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r02.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r02.configure(image=R_ON_SMALL_LBL)
             if rb01_r03 == False:
-                self.btn_rb01_r03.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r03.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r03.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r03.configure(image=R_ON_SMALL_LBL)
             if rb01_r04 == False:
-                self.btn_rb01_r04.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r04.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r04.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r04.configure(image=R_ON_SMALL_LBL)
             if rb01_r05 == False:
-                self.btn_rb01_r05.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r05.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r05.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r05.configure(image=R_ON_SMALL_LBL)
             if rb01_r06 == False:
-                self.btn_rb01_r06.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r06.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r06.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r06.configure(image=R_ON_SMALL_LBL)
             if rb01_r07 == False:
-                self.btn_rb01_r07.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r07.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r07.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r07.configure(image=R_ON_SMALL_LBL)
             if rb01_r08 == False:
-                self.btn_rb01_r08.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r08.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r08.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r08.configure(image=R_ON_SMALL_LBL)
             if rb01_r09 == False:
-                self.btn_rb01_r09.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r09.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r09.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r09.configure(image=R_ON_SMALL_LBL)
             if rb01_r10 == False:
-                self.btn_rb01_r10.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r10.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r10.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r10.configure(image=R_ON_SMALL_LBL)
             if rb01_r11 == False:
-                self.btn_rb01_r11.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r11.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r11.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r11.configure(image=R_ON_SMALL_LBL)
             if rb01_r12 == False:
-                self.btn_rb01_r12.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r12.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r12.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r12.configure(image=R_ON_SMALL_LBL)
             if rb01_r13 == False:
-                self.btn_rb01_r13.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r13.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r13.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r13.configure(image=R_ON_SMALL_LBL)
             if rb01_r14 == False:
-                self.btn_rb01_r14.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r14.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r14.configure(image=LED_V_ON_LBL)
+                self.btn_rb01_r14.configure(image=R_ON_SMALL_LBL)
             if rb01_r15 == False:
-                self.btn_rb01_r15.configure(image=LED_V_OFF_LBL)
+                self.btn_rb01_r15.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb01_r15.configure(image=LED_V_ON_LBL)
-            #RB02
+                self.btn_rb01_r15.configure(image=R_ON_SMALL_LBL)
+            #rb02
             if rb02_r00 == False:
-                self.btn_rb02_r00.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r00.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r00.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r00.configure(image=R_ON_SMALL_LBL)
             if rb02_r01 == False:
-                self.btn_rb02_r01.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r01.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r01.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r01.configure(image=R_ON_SMALL_LBL)
             if rb02_r02 == False:
-                self.btn_rb02_r02.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r02.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r02.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r02.configure(image=R_ON_SMALL_LBL)
             if rb02_r03 == False:
-                self.btn_rb02_r03.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r03.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r03.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r03.configure(image=R_ON_SMALL_LBL)
             if rb02_r04 == False:
-                self.btn_rb02_r04.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r04.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r04.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r04.configure(image=R_ON_SMALL_LBL)
             if rb02_r05 == False:
-                self.btn_rb02_r05.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r05.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r05.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r05.configure(image=R_ON_SMALL_LBL)
             if rb02_r06 == False:
-                self.btn_rb02_r06.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r06.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r06.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r06.configure(image=R_ON_SMALL_LBL)
             if rb02_r07 == False:
-                self.btn_rb02_r07.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r07.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r07.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r07.configure(image=R_ON_SMALL_LBL)
             if rb02_r08 == False:
-                self.btn_rb02_r08.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r08.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r08.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r08.configure(image=R_ON_SMALL_LBL)
             if rb02_r09 == False:
-                self.btn_rb02_r09.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r09.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r09.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r09.configure(image=R_ON_SMALL_LBL)
             if rb02_r10 == False:
-                self.btn_rb02_r10.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r10.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r10.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r10.configure(image=R_ON_SMALL_LBL)
             if rb02_r11 == False:
-                self.btn_rb02_r11.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r11.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r11.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r11.configure(image=R_ON_SMALL_LBL)
             if rb02_r12 == False:
-                self.btn_rb02_r12.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r12.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r12.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r12.configure(image=R_ON_SMALL_LBL)
             if rb02_r13 == False:
-                self.btn_rb02_r13.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r13.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r13.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r13.configure(image=R_ON_SMALL_LBL)
             if rb02_r14 == False:
-                self.btn_rb02_r14.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r14.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r14.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r14.configure(image=R_ON_SMALL_LBL)
             if rb02_r15 == False:
-                self.btn_rb02_r15.configure(image=LED_V_OFF_LBL)
+                self.btn_rb02_r15.configure(image=R_OFF_SMALL_LBL)
             else: 
-                self.btn_rb02_r15.configure(image=LED_V_ON_LBL)
+                self.btn_rb02_r15.configure(image=R_ON_SMALL_LBL)
+            #rb03
+            if rb03_r00 == False:
+                self.btn_rb03_r00.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r00.configure(image=R_ON_SMALL_LBL)
+            if rb03_r01 == False:
+                self.btn_rb03_r01.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r01.configure(image=R_ON_SMALL_LBL)
+            if rb03_r02 == False:
+                self.btn_rb03_r02.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r02.configure(image=R_ON_SMALL_LBL)
+            if rb03_r03 == False:
+                self.btn_rb03_r03.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r03.configure(image=R_ON_SMALL_LBL)
+            if rb03_r04 == False:
+                self.btn_rb03_r04.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r04.configure(image=R_ON_SMALL_LBL)
+            if rb03_r05 == False:
+                self.btn_rb03_r05.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r05.configure(image=R_ON_SMALL_LBL)
+            if rb03_r06 == False:
+                self.btn_rb03_r06.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r06.configure(image=R_ON_SMALL_LBL)
+            if rb03_r07 == False:
+                self.btn_rb03_r07.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r07.configure(image=R_ON_SMALL_LBL)
+            if rb03_r08 == False:
+                self.btn_rb03_r08.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r08.configure(image=R_ON_SMALL_LBL)
+            if rb03_r09 == False:
+                self.btn_rb03_r09.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r09.configure(image=R_ON_SMALL_LBL)
+            if rb03_r10 == False:
+                self.btn_rb03_r10.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r10.configure(image=R_ON_SMALL_LBL)
+            if rb03_r11 == False:
+                self.btn_rb03_r11.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r11.configure(image=R_ON_SMALL_LBL)
+            if rb03_r12 == False:
+                self.btn_rb03_r12.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r12.configure(image=R_ON_SMALL_LBL)
+            if rb03_r13 == False:
+                self.btn_rb03_r13.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r13.configure(image=R_ON_SMALL_LBL)
+            if rb03_r14 == False:
+                self.btn_rb03_r14.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r14.configure(image=R_ON_SMALL_LBL)
+            if rb03_r15 == False:
+                self.btn_rb03_r15.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_rb03_r15.configure(image=R_ON_SMALL_LBL)
         self.after(UPDATE_INTERVAL_DIGITAL_SETUP, self.digital)
 
 #MYFUNCTIONS-----------------------------
@@ -8356,6 +8578,10 @@ class myfunctions():
         global acscl01
         global acscl02
         global acscl03
+        global enable_rb01
+        global enable_rb02
+        global enable_rb03
+        global enable_ai01
         unit = config.get("CONFIG","unit")
         style = config.get("CONFIG","style")
         theme = config.get("CONFIG","theme")
@@ -8367,6 +8593,10 @@ class myfunctions():
         acscl01 = config.get("CONFIG","acscl01")
         acscl02 = config.get("CONFIG","acscl02")
         acscl03 = config.get("CONFIG","acscl03")
+        enable_rb01 = config.get("CONFIG","enable_rb01")
+        enable_rb02 = config.get("CONFIG","enable_rb02")
+        enable_rb03 = config.get("CONFIG","enable_rb03")
+        enable_ai01 = config.get("CONFIG","enable_ai01")
         #COMPASS
         global nswo
         global latitude
@@ -9082,7 +9312,7 @@ class myfunctions():
         global rb01_r15 
         global info_lbl
 
-        if SIM_HW == 0:
+        if enable_rb01 == "True":
             relno = rb01.get_pin(var)
             relno.direction = Direction.OUTPUT
             if var == 0:
@@ -9199,7 +9429,7 @@ class myfunctions():
         global rb02_r14
         global rb02_r15  
 
-        if SIM_HW == 0:
+        if enable_rb02 == "True":
             relno = rb02.get_pin(var)
             relno.direction = Direction.OUTPUT
             if var == 0:
@@ -9298,6 +9528,123 @@ class myfunctions():
                 else:
                     relno.value = True
                 rb02_r15 = not relno.value
+    def switch_rb03(self, var):
+            global rb03_r00
+            global rb03_r01
+            global rb03_r02
+            global rb03_r03
+            global rb03_r04
+            global rb03_r05
+            global rb03_r06
+            global rb03_r07
+            global rb03_r08
+            global rb03_r09
+            global rb03_r10
+            global rb03_r11
+            global rb03_r12
+            global rb03_r13
+            global rb03_r14
+            global rb03_r15  
+
+            if enable_rb03 == "True":
+                relno = rb03.get_pin(var)
+                relno.direction = Direction.OUTPUT
+                if var == 0:
+                    if rb03_r00 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r00 = not relno.value
+                elif var == 1:
+                    if rb03_r01 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r01 = not relno.value            
+                elif var == 2:
+                    if rb03_r02 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r02 = not relno.value
+                elif var == 3:
+                    if rb03_r03 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r03 = not relno.value
+                elif var == 4:
+                    if rb03_r04 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r04 = not relno.value
+                elif var == 5:
+                    if rb03_r05 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r05 = not relno.value
+                elif var == 6:
+                    if rb03_r06 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r06 = not relno.value
+                elif var == 7:
+                    if rb03_r07 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r07 = not relno.value
+                elif var == 8:
+                    if rb03_r08 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r08 = not relno.value
+                elif var == 9:
+                    if rb03_r09 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r09 = not relno.value
+                elif var == 10:
+                    if rb03_r10 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r10 = not relno.value
+                elif var == 11:
+                    if rb03_r11 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r11 = not relno.value
+                elif var == 12:
+                    if rb03_r12 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r12 = not relno.value
+                elif var == 13:
+                    if rb03_r13 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r13 = not relno.value
+                elif var == 14:
+                    if rb03_r14 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r14 = not relno.value
+                elif var == 15:
+                    if rb03_r15 == False:
+                        relno.value = False
+                    else:
+                        relno.value = True
+                    rb03_r15 = not relno.value
 #END-----------------------------------------------------------------------------
 if __name__ == "__main__":
     websocket.enableTrace(True)
