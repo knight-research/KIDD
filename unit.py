@@ -1,8 +1,10 @@
 ﻿#!/usr/bin/env python3
-debug = False #PRINT INFORMATIONS TO CONSOLE
 REGION = True #I AM JUST HERE FOR A BETTER VIEW
+debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V1.3.5"
-unit = "UNIT02"
+unit = "UNIT01"
+#unit = "UNIT02"
+
 
 #WIFI-CHECK------------------------------
 def check_router():
@@ -132,6 +134,8 @@ if REGION == True:
 
 #SETUPO HARDWARE-------------------------
 if REGION == True:
+    if debug == True:
+        print("SETUP HARDWARE")
     #SETUP DIGITAL INPUTS      
     GPIO.setmode(GPIO.BCM)  #SETUP GPIO BY "NAME"
     GPIO.setup(17, GPIO.IN) #TURN LEFT
@@ -197,6 +201,8 @@ if REGION == True:
 
 #LOAD IMAGES-----------------------------
 if REGION == True:
+    if debug == True:
+        print("LOAD IMAGES")
     #BACKGROUNDS
     BG_CARFUNCTIONS_IMG = file = os.path.join(thisfolder, 'images/bg/U02_CARFUNCTIONS.png')
     BG_KNIGHTFUNCTIONS_IMG = file = os.path.join(thisfolder, 'images/bg/U02_KNIGHTFUNCTIONS.png')
@@ -631,6 +637,8 @@ if REGION == True:
 #SAMPLEAPP-------------------------------
 class SampleApp(tk.Tk):
     def __init__(self):
+        if debug == True:
+            print("SampleApp_init")
         tk.Tk.__init__(self)        
         self.wm_geometry(sWidth+"x"+sHeight+"+"+sLeft+"+"+sTop)        
         self.title(version)
@@ -645,6 +653,8 @@ class SampleApp(tk.Tk):
             self._frame = None
             self.switch_frame(DASH)            
     def switch_frame(self, frame_class):
+        if debug == True:
+            print("SampleApp_switch_frame")
         read = myfunctions()
         read.update_data()
         read.update_defaults()
@@ -653,10 +663,14 @@ class SampleApp(tk.Tk):
             self._frame.destroy()
         self._frame = new_frame
         self._frame.place(x=sLeft, y=sTop, width=sWidth, height=sHeight)
+        if debug == True:
+            print(sLeft, sTop, sWidth, sHeight)
 
 #DASH------------------------------------
 class DASH(tk.Frame):
     def __init__(self, master): #wird nur einmal beim aufruf des Frames abgearbeitet
+        if debug == True:
+            print("DASH_init")
         read = myfunctions()
         read.update_aldl()
         read.update_data()       
@@ -1077,11 +1091,13 @@ class DASH(tk.Frame):
 
             #LOAD VOICEBOX
             if theme == "S01":
+                return
                 if style == "KARR":
                     self.VB_KARRS01()  
                 elif style == "KITT":
                     self.VB_KITTS01()
-            elif theme == "S02" or theme == "S03" or theme == "S04" or theme == "S05":
+            elif theme == "S02" or theme == "S03" or theme == "S04" or theme == "S05":   
+                return
                 if style == "KARR":
                     self.VB_KARRS02()
                 elif style == "KITT":
@@ -2114,6 +2130,8 @@ class DASH(tk.Frame):
             self.counters()
             self.digital()
     def counters(self):
+        if debug == True:
+            print("DASH_counter")
         global count
         global count_ign_off
         global count_ign_enable
@@ -2131,6 +2149,8 @@ class DASH(tk.Frame):
 
         self.after(UPDATE_INTERVAL_COUNTER, self.counters)
     def VB_KARRS01(self):
+        if debug == True:
+            print("DASH_vbkarrs01")
         if procedures == "LIVE":
             g_voicebox_value = g_voicebox_value_2
         else:
@@ -2158,6 +2178,8 @@ class DASH(tk.Frame):
             self.Canvas1.create_image((1405, 70), image=LED_YE00_LBL, anchor='nw') #C10
         self.after(UPDATE_INTERVAL_VBS01, self.VB_KARRS01)
     def VB_KITTS01(self):
+        if debug == True:
+            print("DASH_vbkitts01")
         if procedures == "LIVE":
             g_voicebox_value = g_voicebox_value_2
         else:
@@ -2185,6 +2207,8 @@ class DASH(tk.Frame):
             self.Canvas1.create_image((1405, 70), image=LED_RD00_LBL, anchor='nw') #C10
         self.after(UPDATE_INTERVAL_VBS01, self.VB_KITTS01)
     def VB_KARRS02(self):
+        if debug == True:
+            print("DASH_vbkarrs02")
         if procedures == "LIVE":
             g_voicebox_value = g_voicebox_value_2
         else:
@@ -2443,6 +2467,8 @@ class DASH(tk.Frame):
             self.Canvas1.create_image((1560, 203), image=img_YE06RWA_LBL, anchor='nw') #R11
         self.after(UPDATE_INTERVAL_VB, self.VB_KARRS02)
     def VB_KITTS02(self):
+        if debug == True:
+            print("DASH_vbkitts02")
         if procedures == "LIVE":
             g_voicebox_value = g_voicebox_value_2
         else:
@@ -2702,6 +2728,8 @@ class DASH(tk.Frame):
             self.Canvas1.create_image((1560, 365), image=img_RD06RWA_LBL, anchor='nw') #R20
         self.after(UPDATE_INTERVAL_VB, self.VB_KITTS02)
     def digital(self):
+        if debug == True:
+            print("DASH_digital")
         read = myfunctions() 
         read.update_data()
         read.update_defaults()
