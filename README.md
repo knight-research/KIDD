@@ -1,4 +1,5 @@
 # KIDD
+# some sample videos of this software: https://www.youtube.com/knightresearch_
 
 --------------------------------------------------------------
 # INSTALL ON WINDOWS:  
