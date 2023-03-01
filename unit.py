@@ -2,7 +2,7 @@
 
 REGION = True #I AM JUST HERE FOR A BETTER VIEW
 debug = False #PRINT INFORMATIONS TO CONSOLE
-version = "V1.3.7"
+version = "V1.3.6"
 #INFOS-----------------------------------
 # VARIABLE SHORTINFORMATIONS
 # g_ global Variable
