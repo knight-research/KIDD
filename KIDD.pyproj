@@ -82,8 +82,8 @@
     <Content Include="data\bak\text.ini" />
     <Content Include="data\bak\text_U01.ini" />
     <Content Include="data\data.ini" />
-    <Content Include="data\text.ini" />
     <Content Include="data\text_U01.ini" />
+    <Content Include="data\text_U02.ini" />
     <Content Include="fonts\BankGothic Regular.ttf" />
     <Content Include="fonts\ccar7seg.ttf" />
     <Content Include="fonts\CheapsmanFreeOutlineRegular-VG75Z.ttf" />
