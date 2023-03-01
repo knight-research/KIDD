@@ -2,7 +2,7 @@
 
 REGION = True #I AM JUST HERE FOR A BETTER VIEW
 debug = False #PRINT INFORMATIONS TO CONSOLE
-version = "V1.3.6"
+version = "V1.3.7"
 #INFOS-----------------------------------
 # VARIABLE SHORTINFORMATIONS
 # g_ global Variable
@@ -63,9 +63,9 @@ if REGION == True:
     g_r_file_aldl.read(g_file_aldl)                             #read the file
     #TEXT----------------------------------------------------
     g_r_file_text = configparser.ConfigParser()
-    g_file_text = os.path.join(g_folder, 'data/text.ini')
-    g_file_textU01 = os.path.join(g_folder, 'data/text_U01.ini')
-    g_r_file_text.read(g_file_text)
+    g_file_text_U01 = os.path.join(g_folder, 'data/text_U01.ini')
+    g_file_text_U02 = os.path.join(g_folder, 'data/text_U02.ini')
+    #g_r_file_text.read(g_file_text)
     #DISPLAY-SETTINGS----------------------------------------
     g_app_left   =  "%s" % 0
     g_app_top    =  "%s" % 0
@@ -575,9 +575,16 @@ class DASH(tk.Frame):
             print("DASH_init")
         read = myfunctions()
         read.update_aldl()
-        read.update_data()       
-        read.update_text()
-        
+        read.update_data()
+
+        if unit == "UNIT01":
+            g_r_file_text.read(g_file_text_U01)  
+            read.update_text()
+
+        if unit == "UNIT02":
+            g_r_file_text.read(g_file_text_U02)
+            read.update_text() 
+            
         try:
             self.ser = serial.Serial('/dev/ttyACM0', 9600)
         except serial.serialutil.SerialException:
@@ -8887,55 +8894,6 @@ class myfunctions():
         MITRIPRANGEFONT_S12 = ("DSEG7 Classic", 96, "italic")
         MITRIPRANGEFONT_S34 = ("DSEG7 Classic Mini", 60, "bold")     
         TOTALFONT_S34 = ("DSEG7 Classic Mini", 60, "bold")
-    def update_textU01(self):
-        global lg01_txt
-        global lg0102_txt
-        global lg0103_txt
-        global lg0104_txt
-        global lg0105_txt
-        global lg02_txt
-        global lg03_txt
-        global lg04_txt
-        global lg05_txt
-        global lg06_txt
-        global lg07_txt
-        global lg08_txt
-        global lg09_txt
-        global lg10_txt
-        global lg11_txt
-        global lg12_txt
-        global lg13_txt
-        global lg14_txt
-        global lg15_txt
-        global lg16_txt
-        global lg17_txt
-        global lg18_txt
-        global lg19_txt
-        g_r_file_text.read(g_file_textU01)     
-        text_config = dict(g_r_file_text.items(theme))
-        lg01_txt = text_config['lg01']
-        lg0102_txt = text_config['lg0102']
-        lg0103_txt = text_config['lg0103']
-        lg0104_txt = text_config['lg0104']
-        lg0105_txt = text_config['lg0105']
-        lg02_txt = text_config['lg02']
-        lg03_txt = text_config['lg03']
-        lg04_txt = text_config['lg04']
-        lg05_txt = text_config['lg05']
-        lg06_txt = text_config['lg06']
-        lg07_txt = text_config['lg07']
-        lg08_txt = text_config['lg08']
-        lg09_txt = text_config['lg09']
-        lg10_txt = text_config['lg10']
-        lg11_txt = text_config['lg11']
-        lg12_txt = text_config['lg12']
-        lg13_txt = text_config['lg13']
-        lg14_txt = text_config['lg14']
-        lg15_txt = text_config['lg15']
-        lg16_txt = text_config['lg16']
-        lg17_txt = text_config['lg17']
-        lg18_txt = text_config['lg18']
-        lg19_txt = text_config['lg19']
     def update_text(self):
         global lg01_txt
         global lg0102_txt
@@ -8959,8 +8917,7 @@ class myfunctions():
         global lg16_txt
         global lg17_txt
         global lg18_txt
-        global lg19_txt
-        g_r_file_text.read(g_file_text)     
+        global lg19_txt    
         text_config = dict(g_r_file_text.items(theme))
         lg01_txt = text_config['lg01']
         lg0102_txt = text_config['lg0102']
