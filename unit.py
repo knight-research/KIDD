@@ -1,7 +1,15 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
+
 REGION = True #I AM JUST HERE FOR A BETTER VIEW
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V1.3.6"
+#INFOS-----------------------------------
+# VARIABLE SHORTINFORMATIONS
+# g_ global Variable
+# i_ integer (1)
+# f_ float (1.234)
+# s_ string ("Text")
+# b_ bool (True / False)
 
 #IMPORTS---------------------------------
 if REGION == True:
@@ -22,47 +30,53 @@ if REGION == True:
     from tkinter import HORIZONTAL
     import threading    
     import websocket
+    import serial
+    import pynmea2
+    import math
 
 #WIFI-CHECK------------------------------
 SYSTEM = sys.platform
-def check_router():
-    cmd = os.system('ping 10.0.0.1 -w 4 > clear') 
-    if cmd == 0:
-        time.sleep(2)
-        wifi_status = True
-        return
-    else:
-        wifi_status = False
-        print (".")
-        check_router()
+
+#CHECK SIGNAL EXCHANGE TODO
+#def check_router():
+#    cmd = os.system('ping 10.0.0.201 -w 4 > clear') 
+#    if cmd == 0:
+#        time.sleep(2)
+#        g_wifi_state = True
+#        return
+#    else:
+#        g_wifi_state = False
+#        print (".")
+#        check_router()
 
 #GLOBALS---------------------------------
 if REGION == True:
-    thisfolder = os.path.dirname(os.path.abspath(__file__))
-    wifi_status = ""
+    g_folder = os.path.dirname(os.path.abspath(__file__))
+    g_wifi_state = True
     #COMMUNICATION-------------------------------------------
-    socketdata01 = "EMPTY"
-    socketdata02 = "EMPTY"
+    g_com_swpdle = "EMPTY"
+    g_com_swpdre = "EMPTY"
     #ALDL----------------------------------------------------
-    aldl_file = os.path.join(thisfolder, 'data/aldl.ini')
-    file_aldl = configparser.ConfigParser()
-    file_aldl.read(aldl_file)
+    #todo replace with variables no textfile
+    g_r_file_aldl = configparser.ConfigParser()                 #create read file object
+    g_file_aldl = os.path.join(g_folder, 'data/aldl.ini')       #load file
+    g_r_file_aldl.read(g_file_aldl)                             #read the file
     #TEXT----------------------------------------------------
-    text_file = os.path.join(thisfolder, 'data/text.ini')
-    text_fileU01 = os.path.join(thisfolder, 'data/text_U01.ini')
-    file_text = configparser.ConfigParser()
-    file_text.read(text_file)
+    g_r_file_text = configparser.ConfigParser()
+    g_file_text = os.path.join(g_folder, 'data/text.ini')
+    g_file_textU01 = os.path.join(g_folder, 'data/text_U01.ini')
+    g_r_file_text.read(g_file_text)
     #DISPLAY-SETTINGS----------------------------------------
-    sLeft   =  "%s" % 0
-    sTop    =  "%s" % 0
-    sWidth  =  "%s" % 2560
-    sHeight =  "%s" % 800 
+    g_app_left   =  "%s" % 0
+    g_app_top    =  "%s" % 0
+    g_app_width  =  "%s" % 2560
+    g_app_height =  "%s" % 800 
     #CYCLE-TIMES---------------------------------------------
-    UPDATE_INTERVAL_COUNTER = 1000 #in ms
-    UPDATE_INTERVAL_DIGITAL = 10
-    UPDATE_INTERVAL_DIGITAL_SETUP = 1000
-    UPDATE_INTERVAL_VB = 1  # in ms.
-    UPDATE_INTERVAL_VBS01 = 50  # in ms.
+    g_time_upd_cnt = 1000 #in ms
+    g_time_upd_dig = 10
+    g_time_upd_conf = 1000
+    g_time_upd_vb = 1  # in ms.
+    g_time_upd_vb_s01 = 50  # in ms.
     #COUNTER-------------------------------------------------
     count = 0
     count_ign_off = 20
@@ -70,42 +84,78 @@ if REGION == True:
     muted = 0
     volume_var = 0
     #TEXTLISTS-----------------------------------------------
-    global_boot = 0
-    global_menu = ["CALIBRATE", "PRESEN", "TBI", "MILES", "TRIP", "RANGE", "FUEL"]
-    global_menu_options = ["ON", "OFF", "HIGH", "LOW", "C", "F"]
+    g_msg_center = ["CALIBRATE", "PRESEN", "TBI", "MILES", "TRIP", "RANGE", "FUEL"]
+    g_states = ["ON", "OFF", "HIGH", "LOW", "UP", "DOWN"]
+    g_units_eu = ["KPHc", "KPHg", "KM", "C", "BAR", "LTR"]
+    g_units_us = ["MPHc", "MPHg", "MLS", "F", "PSI", "GAL"]
     #FUNCTIONS-----------------------------------------------
-    spm = False
-    ebs = False
+    g_fnc_spm = False
+    g_fnc_ebs = False
     #STYLES--------------------------------------------------
     MENU_BTN_W = 159
     MENU_BTN_H = 39
     SND_BTN_W = 139
     THEME_BTN_W = 139
     THEME_BTN_H = 59
+    #SCANNER-------------------------------------------------
+    StepCounter = 0
+    StepDir = 1
+    WaitTime = 0.2
+    
+    # One LED
+    StepCount1 = 8
+    Seq1 = []
+    Seq1 = list(range(0,StepCount1))
+    Seq1[0] =[1,0,0,0,0,0,0,0]
+    Seq1[1] =[0,1,0,0,0,0,0,0]
+    Seq1[2] =[0,0,1,0,0,0,0,0]
+    Seq1[3] =[0,0,0,1,0,0,0,0]
+    Seq1[4] =[0,0,0,0,1,0,0,0]
+    Seq1[5] =[0,0,0,0,0,1,0,0]
+    Seq1[6] =[0,0,0,0,0,0,1,0]
+    Seq1[7] =[0,0,0,0,0,0,0,1]
+  
+    # Double LEDs
+    StepCount2 = 8
+    Seq2 = []
+    Seq2 = list(range(0,StepCount2))
+    Seq2[0] =[1,0,0,0,0,0,0,0]
+    Seq2[1] =[1,1,0,0,0,0,0,0]
+    Seq2[2] =[0,1,1,0,0,0,0,0]
+    Seq2[3] =[0,0,1,1,0,0,0,0]
+    Seq2[4] =[0,0,0,1,1,0,0,0]
+    Seq2[5] =[0,0,0,0,1,1,0,0]
+    Seq2[6] =[0,0,0,0,0,1,1,0]
+    Seq2[7] =[0,0,0,0,0,0,1,1]
+
+    Seq = Seq1
+    StepCount = StepCount1
+
 
     def update_configuration():
+        #muss hier für ersten start sein...
         global data_file
         config = configparser.ConfigParser()
-        data_file = os.path.join(thisfolder, 'data/data.ini')
+        data_file = os.path.join(g_folder, 'data/data.ini')
         config.read(data_file)
         #CONFIG
         global enable_rb01
         global enable_rb02
         global enable_rb03
         global enable_ai01
+        global enable_scanner
+        global enable_gps
         enable_rb01 = config.get("CONFIG","enable_rb01")
         enable_rb02 = config.get("CONFIG","enable_rb02")
         enable_rb03 = config.get("CONFIG","enable_rb03")
         enable_ai01 = config.get("CONFIG","enable_ai01")
+        enable_scanner = config.get("CONFIG","enable_scanner")
+        enable_gps = config.get("CONFIG","enable_gps")
     update_configuration()
 
 #SIMULATION-AND-OS-SETTINGS--------------
 if SYSTEM == "win32" or SYSTEM == "win64":
     import _fake_GPIO as GPIO
-    enable_rb01 = "False"
-    enable_rb02 = "False"
-    enable_rb03 = "False"
-    enable_ai01 = "False"
 elif SYSTEM == "linux":
     import psutil
     import RPi.GPIO as GPIO
@@ -115,6 +165,7 @@ elif SYSTEM == "linux":
     from adafruit_ads1x15.analog_in import AnalogIn
     from digitalio import Direction
     from adafruit_mcp230xx.mcp23017 import MCP23017 
+    import Adafruit_PCA9685
     if enable_rb01 == "True":
         i2c = busio.I2C(board.SCL, board.SDA)
         rb01 = MCP23017(i2c, address=0x20)
@@ -127,16 +178,42 @@ elif SYSTEM == "linux":
     if enable_ai01 == "True":
         i2c = busio.I2C(board.SCL, board.SDA)
         ads = ADS.ADS1115(i2c, address=0x48)
+    if enable_scanner == "True":
+        #https://tutorials-raspberrypi.de/mehrere-servo-motoren-steuern-raspberry-pi-pca9685/
+        scan01 = Adafruit_PCA9685.PCA9685(address=0x40)
+        scan01.set_pwm_freq(50)
 
 #WEBSOCKET-SWPD-COMMUNICATION------------
 def get_data_SWPDLE(ws, message):
     print (message)
-    global socketdata01
-    socketdata01 = message
+    global g_com_swpdle
+    g_com_swpdle = message
 def get_data_SWPDRI(ws2, message):
     print (message)
-    global socketdata02
-    socketdata02 = message
+    global g_com_swpdre
+    g_com_swpdre = message
+
+#SCANNER---------------------------------
+def scannerbar(ws3, message):
+    print (message)
+    print("-- Step : "+ str(StepCounter) +" --")
+    for pinref in range(0, 8):
+        #xpin=RpiGPIO[pinref]#
+        # Check if LED should be on or off
+        if Seq[StepCounter][pinref]!=0:
+            print(" Enable " + str(xpin))
+            #GPIO.output(xpin, True)
+        else:
+            print(" Disable " + str(xpin))
+            #GPIO.output(xpin, False)
+  
+    StepCounter += StepDir
+  
+    # If we reach the end of the sequence reverse the direction and step the other way
+    if (StepCounter==StepCount) or (StepCounter<0):
+        StepDir = StepDir * -1
+        StepCounter = StepCounter + StepDir + StepDir
+        time.sleep(WaitTime)
 
 #INITIALISATIONS-------------------------
 if REGION == True:
@@ -147,7 +224,7 @@ if REGION == True:
     mixer.init()
     if SYSTEM == "linux":
         print ("WAITING FOR NETWORK")
-        check_router()
+        #check_router()
         print ("NETWORK CONNECTED")
         GPIO.setwarnings(False)
 
@@ -155,371 +232,309 @@ if REGION == True:
 if REGION == True:
     if debug == True:
         print("SETUP HARDWARE")
-    #SETUP DIGITAL INPUTS      
-    GPIO.setmode(GPIO.BCM)  #SETUP GPIO BY "NAME"
-    GPIO.setup(17, GPIO.IN) #TURN LEFT
-    GPIO.setup(27, GPIO.IN) #TURN RIGHT
-    GPIO.setup(22, GPIO.IN) #GENERATOR CAR
-    GPIO.setup(23, GPIO.IN) #BREAK
-    GPIO.setup(24, GPIO.IN) #PARK
-    GPIO.setup(10, GPIO.IN) #2ND BATTERY
-    GPIO.setup(9, GPIO.IN)  #RESERVE
-    GPIO.setup(25, GPIO.IN) #RESERVE
-    GPIO.setup(11, GPIO.IN) #SECURITY
-    GPIO.setup(5, GPIO.IN)  #RESERVE
-    GPIO.setup(6, GPIO.IN)  #HIGH BEAM
-    GPIO.setup(19, GPIO.IN) #SERVICE ENGINE
+    #SETUP DIGITAL INPUTS
+    GPIO.setmode(GPIO.BCM)                         #SETUP GPIO BY "NAME"
+    RpiGPIO = [17,27,22,23,24,10,9,25,11,5,6,19]   #PINS THAT ARE USED
+    for pinref in RpiGPIO:                         #SETUP PINS AS INPUT
+        GPIO.setup(pinref,GPIO.IN)
 
     #SETUP DIGITAL OUTPUTS
-    rb01_r00 = False
-    rb01_r01 = False
-    rb01_r02 = False
-    rb01_r03 = False
-    rb01_r04 = False
-    rb01_r05 = False
-    rb01_r06 = False
-    rb01_r07 = False
-    rb01_r08 = False
-    rb01_r09 = False
-    rb01_r10 = False
-    rb01_r11 = False
-    rb01_r12 = False
-    rb01_r13 = False
-    rb01_r14 = False
-    rb01_r15 = False
-    rb02_r00 = False
-    rb02_r01 = False
-    rb02_r02 = False
-    rb02_r03 = False
-    rb02_r04 = False
-    rb02_r05 = False
-    rb02_r06 = False
-    rb02_r07 = False
-    rb02_r08 = False
-    rb02_r09 = False
-    rb02_r10 = False
-    rb02_r11 = False
-    rb02_r12 = False
-    rb02_r13 = False
-    rb02_r14 = False
-    rb02_r15 = False
-    rb03_r00 = False
-    rb03_r01 = False
-    rb03_r02 = False
-    rb03_r03 = False
-    rb03_r04 = False
-    rb03_r05 = False
-    rb03_r06 = False
-    rb03_r07 = False
-    rb03_r08 = False
-    rb03_r09 = False
-    rb03_r10 = False
-    rb03_r11 = False
-    rb03_r12 = False
-    rb03_r13 = False
-    rb03_r14 = False
-    rb03_r15 = False
+    rb01 = [False for i in range(16)] #check variable: If rb01[0] == True..... (0-15)
+    rb02 = [False for i in range(16)]
+    rb03 = [False for i in range(16)]
 
     #SETUP SIMULATIONS
-    sim_IB01_I1 = False
-    sim_IB01_I2 = False
-    sim_IB01_I3 = False
-    sim_IB01_I4 = False
-    sim_IB02_I1 = False
-    sim_IB02_I2 = False
-    sim_IB02_I3 = False
-    sim_IB02_I4 = False
-    sim_IB03_I1 = False
-    sim_IB03_I2 = False
-    sim_IB03_I3 = False
-    sim_IB03_I4 = False
+    sim_IB01 = [False for i in range(4)] #check variable: If sim_IB01[0] == True..... (0-3)
+    sim_IB02 = [False for i in range(4)]
+    sim_IB03 = [False for i in range(4)]
 
 #LOAD IMAGES-----------------------------
 if REGION == True:
     if debug == True:
         print("LOAD IMAGES")
     #BACKGROUNDS
-    BG_CARFUNCTIONS_IMG = file = os.path.join(thisfolder, 'images/bg/U02_CARFUNCTIONS.png')
-    BG_KNIGHTFUNCTIONS_IMG = file = os.path.join(thisfolder, 'images/bg/U02_KNIGHTFUNCTIONS.png')
-    BG_AUDIO_IMG = file = os.path.join(thisfolder, 'images/bg/U02_AUDIO.png')
-    BG_VIDEO_IMG = file = os.path.join(thisfolder, 'images/bg/U02_VIDEO.png')
-    BG_CARMSG_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/CARMSG.png')
-    BG_DONT_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/DONT.png')
-    BG_GBYE_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/GBYE.png')
-    BG_GREET_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/GREET.png')
-    BG_KITTKARR_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/KITTKARR.png')
-    BG_SERIECUT_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/SERIECUT.png')
-    BG_SFX_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/SFX.png')
-    BG_UNSORT_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/UNSORT.png')
-    BG_YESNO_IMG = file = os.path.join(thisfolder, 'images/bg/SOUND/YESNO.png')
+    BG_CARFUNCTIONS_IMG = file = os.path.join(g_folder, 'images/bg/U02_CARFUNCTIONS.png')
+    BG_KNIGHTFUNCTIONS_IMG = file = os.path.join(g_folder, 'images/bg/U02_KNIGHTFUNCTIONS.png')
+    BG_AUDIO_IMG = file = os.path.join(g_folder, 'images/bg/U02_AUDIO.png')
+    BG_VIDEO_IMG = file = os.path.join(g_folder, 'images/bg/U02_VIDEO.png')
+    BG_CARMSG_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/CARMSG.png')
+    BG_DONT_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/DONT.png')
+    BG_GBYE_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/GBYE.png')
+    BG_GREET_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/GREET.png')
+    BG_KITTKARR_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/KITTKARR.png')
+    BG_SERIECUT_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/SERIECUT.png')
+    BG_SFX_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/SFX.png')
+    BG_UNSORT_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/UNSORT.png')
+    BG_YESNO_IMG = file = os.path.join(g_folder, 'images/bg/SOUND/YESNO.png')
     #SYMBOLS
     #3x5mm
-    img_BU3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/BU.png')
-    img_DK3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/DK.png')
-    img_GN3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/GN.png')
-    img_OR3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/OR.png')
-    img_PK3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/PK.png')
-    img_PU3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/PU.png')
-    img_RD3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/RD.png')
-    img_WS3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/WH.png')
-    img_YE3x5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/3x5MM/YE.png')
+    img_BU3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/BU.png')
+    img_DK3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/DK.png')
+    img_GN3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/GN.png')
+    img_OR3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/OR.png')
+    img_PK3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/PK.png')
+    img_PU3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/PU.png')
+    img_RD3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/RD.png')
+    img_WS3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/WH.png')
+    img_YE3x5MM_SRC =file=os.path.join(g_folder, 'images/symbols/3x5MM/YE.png')
     #5mm
-    img_BU5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/BU.png')
-    img_DK5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/DK.png')
-    img_GN5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/GN.png')
-    img_OR5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/OR.png')
-    img_PK5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/PK.png')
-    img_PU5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/PU.png')
-    img_RD5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/RD.png')
-    img_WS5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/WH.png')
-    img_YE5MM_SRC =file=os.path.join(thisfolder, 'images/symbols/5MM/YE.png')
+    img_BU5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/BU.png')
+    img_DK5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/DK.png')
+    img_GN5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/GN.png')
+    img_OR5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/OR.png')
+    img_PK5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/PK.png')
+    img_PU5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/PU.png')
+    img_RD5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/RD.png')
+    img_WS5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/WH.png')
+    img_YE5MM_SRC =file=os.path.join(g_folder, 'images/symbols/5MM/YE.png')
     #1908
-    img_BU1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/BU.png')
-    img_BUDK1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/BUDK.png')
-    img_GN1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/GN.png')
-    img_GNDK1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/GNDK.png')
-    img_OR1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/OR.png')
-    img_ORDK1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/ORDK.png')
-    img_RD1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/RD.png')
-    img_RDDK1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/RDDK.png')
-    img_WH1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/WH.png')
-    img_WHDK1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/DK.png')
-    img_YE1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/YE.png')
-    img_YEDK1908_SRC =file=os.path.join(thisfolder, 'images/symbols/1908/YEDK.png')
+    img_BU1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/BU.png')
+    img_BUDK1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/BUDK.png')
+    img_GN1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/GN.png')
+    img_GNDK1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/GNDK.png')
+    img_OR1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/OR.png')
+    img_ORDK1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/ORDK.png')
+    img_RD1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/RD.png')
+    img_RDDK1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/RDDK.png')
+    img_WH1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/WH.png')
+    img_WHDK1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/DK.png')
+    img_YE1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/YE.png')
+    img_YEDK1908_SRC =file=os.path.join(g_folder, 'images/symbols/1908/YEDK.png')
     #2856
-    img_BU2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/BU.png')
-    img_DK2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/DK.png')
-    img_GN2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/GN.png')
-    img_GNDK2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/GNDK.png')
-    img_OR2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/OR.png')
-    img_PK2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/PK.png')
-    img_PU2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/PU.png')
-    img_RD2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/RD.png')
-    img_RDDK2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/RDDK.png')
-    img_WH2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/WH.png')
-    img_YE2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/YE.png')
-    img_YEDK2856_SRC =file=os.path.join(thisfolder, 'images/symbols/2856/YEDK.png')
+    img_BU2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/BU.png')
+    img_DK2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/DK.png')
+    img_GN2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/GN.png')
+    img_GNDK2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/GNDK.png')
+    img_OR2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/OR.png')
+    img_PK2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/PK.png')
+    img_PU2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/PU.png')
+    img_RD2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/RD.png')
+    img_RDDK2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/RDDK.png')
+    img_WH2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/WH.png')
+    img_YE2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/YE.png')
+    img_YEDK2856_SRC =file=os.path.join(g_folder, 'images/symbols/2856/YEDK.png')
     #5628
-    img_BU5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/BU.png')
-    img_DK5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/DK.png')
-    img_GN5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/GN.png')
-    img_GNDK5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/GNDK.png')
-    img_OR5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/OR.png')
-    img_PK5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/PK.png')
-    img_PU5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/PU.png')
-    img_RD5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/RD.png')
-    img_RDDK5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/RDDK.png')
-    img_WS5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/WH.png')
-    img_YE5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/YE.png')
-    img_YEDK5628_SRC =file=os.path.join(thisfolder, 'images/symbols/5628/YEDK.png')
+    img_BU5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/BU.png')
+    img_DK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/DK.png')
+    img_GN5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/GN.png')
+    img_GNDK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/GNDK.png')
+    img_OR5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/OR.png')
+    img_PK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/PK.png')
+    img_PU5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/PU.png')
+    img_RD5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/RD.png')
+    img_RDDK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/RDDK.png')
+    img_WS5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/WH.png')
+    img_YE5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/YE.png')
+    img_YEDK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/YEDK.png')
     #56112
-    img_BU56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/BU.png')
-    img_DK56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/DK.png')
-    img_GN56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/GN.png')
-    img_GNDK56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/GNDK.png')
-    img_OR56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/OR.png')
-    img_PK56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/PK.png')
-    img_PU56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/PU.png')
-    img_RD56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/RD.png')
-    img_RDDK56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/RDDK.png')
-    img_WH56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/WH.png')
-    img_YE56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/YE.png')
-    img_YEDK56112_SRC =file=os.path.join(thisfolder, 'images/symbols/56112/YEDK.png')
+    img_BU56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/BU.png')
+    img_DK56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/DK.png')
+    img_GN56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/GN.png')
+    img_GNDK56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/GNDK.png')
+    img_OR56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/OR.png')
+    img_PK56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/PK.png')
+    img_PU56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/PU.png')
+    img_RD56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/RD.png')
+    img_RDDK56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/RDDK.png')
+    img_WH56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/WH.png')
+    img_YE56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/YE.png')
+    img_YEDK56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/YEDK.png')
     #BTTF
-    img_00_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/00_NORM.png')
-    img_01_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/01_NORM.png')
-    img_02_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/02_NORM.png')
-    img_03_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/03_NORM.png')
-    img_04_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/04_NORM.png')
-    img_05_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/05_NORM.png')
-    img_06_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/06_NORM.png')
-    img_07_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/07_NORM.png')
-    img_08_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/08_NORM.png')
-    img_09_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/09_NORM.png')
-    img_DELETE_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/DELETE_NORM.png')
-    img_ENTER_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/ENTER_NORM.png')
-    img_LAMP_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/LAMP_NORM.png')
-    img_LAMP_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/LAMP_ON.png')
-    img_RESET_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/RESET_NORM.png')
-    img_GNDK_2_7SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/GNDK_2_7SEG.png')
-    img_GNDK_3_14SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/GNDK_3_14SEG.png')
-    img_GNDK_4_7SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/GNDK_4_7SEG.png')
-    img_RDDK_2_7SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/RDDK_2_7SEG.png')
-    img_RDDK_3_14SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/RDDK_3_14SEG.png')
-    img_RDDK_4_7SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/RDDK_4_7SEG.png')
-    img_YEDK_2_7SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/YEDK_2_7SEG.png')
-    img_YEDK_3_14SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/YEDK_3_14SEG.png')
-    img_YEDK_4_7SEG_SRC =file=os.path.join(thisfolder, 'images/symbols/bttf/YEDK_4_7SEG.png')
+    img_00_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/00_NORM.png')
+    img_01_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/01_NORM.png')
+    img_02_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/02_NORM.png')
+    img_03_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/03_NORM.png')
+    img_04_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/04_NORM.png')
+    img_05_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/05_NORM.png')
+    img_06_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/06_NORM.png')
+    img_07_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/07_NORM.png')
+    img_08_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/08_NORM.png')
+    img_09_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/09_NORM.png')
+    img_DELETE_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/DELETE_NORM.png')
+    img_ENTER_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/ENTER_NORM.png')
+    img_LAMP_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/LAMP_NORM.png')
+    img_LAMP_ON_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/LAMP_ON.png')
+    img_RESET_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/RESET_NORM.png')
+    img_GNDK_2_7SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/GNDK_2_7SEG.png')
+    img_GNDK_3_14SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/GNDK_3_14SEG.png')
+    img_GNDK_4_7SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/GNDK_4_7SEG.png')
+    img_RDDK_2_7SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/RDDK_2_7SEG.png')
+    img_RDDK_3_14SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/RDDK_3_14SEG.png')
+    img_RDDK_4_7SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/RDDK_4_7SEG.png')
+    img_YEDK_2_7SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/YEDK_2_7SEG.png')
+    img_YEDK_3_14SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/YEDK_3_14SEG.png')
+    img_YEDK_4_7SEG_SRC =file=os.path.join(g_folder, 'images/symbols/bttf/YEDK_4_7SEG.png')
     #DC10
-    img_DKDC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/DK.png')
-    img_GNDC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/GN.png')
-    img_GN2DC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/GN2.png')
-    img_GNDKDC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/GNDK.png')
-    img_RDDC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/RD.png')
-    img_RD2DC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/RD2.png')
-    img_RDDKDC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/RDDK.png')
-    img_YEDC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/YE.png')
-    img_YE2DC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/YE2.png')
-    img_YEDKDC10_SRC = file = os.path.join(thisfolder, 'images/symbols/DC10/YEDK.png')
+    img_DKDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/DK.png')
+    img_GNDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/GN.png')
+    img_GN2DC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/GN2.png')
+    img_GNDKDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/GNDK.png')
+    img_RDDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/RD.png')
+    img_RD2DC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/RD2.png')
+    img_RDDKDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/RDDK.png')
+    img_YEDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/YE.png')
+    img_YE2DC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/YE2.png')
+    img_YEDKDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/YEDK.png')
     #DISPLAYS
-    img_RDDK_DG01_S12_SRC =file=os.path.join(thisfolder, 'images/symbols/display/RDDK_DG01_S12.png')
-    img_GYDK_DG01_S12_SRC =file=os.path.join(thisfolder, 'images/symbols/display/GYDK_DG01_S12.png')
-    img_RDDK_DG01_S34_SRC =file=os.path.join(thisfolder, 'images/symbols/display/RDDK_DG01_S34.png')
-    img_GYDK_DG01_S34_SRC =file=os.path.join(thisfolder, 'images/symbols/display/GYDK_DG01_S34.png')
-    img_RDDK_DG02_SRC = file = os.path.join(thisfolder, 'images/symbols/display/RDDK_DG02_S34.png')
-    img_YEDK_DG02_SRC = file = os.path.join(thisfolder, 'images/symbols/display/GYDK_DG02_S34.png')
-    img_RDDK_DG02_S34_SRC = file = os.path.join(thisfolder, 'images/symbols/display/RDDK_DG02_PROGNOSEL.png')
-    img_GYDK_DG02_S34_SRC = file = os.path.join(thisfolder, 'images/symbols/display/GYDK_DG02_PROGNOSEL.png')
+    img_RDDK_DG01_S12_SRC =file=os.path.join(g_folder, 'images/symbols/display/RDDK_DG01_S12.png')
+    img_GYDK_DG01_S12_SRC =file=os.path.join(g_folder, 'images/symbols/display/GYDK_DG01_S12.png')
+    img_RDDK_DG01_S34_SRC =file=os.path.join(g_folder, 'images/symbols/display/RDDK_DG01_S34.png')
+    img_GYDK_DG01_S34_SRC =file=os.path.join(g_folder, 'images/symbols/display/GYDK_DG01_S34.png')
+    img_RDDK_DG02_SRC = file = os.path.join(g_folder, 'images/symbols/display/RDDK_DG02_S34.png')
+    img_YEDK_DG02_SRC = file = os.path.join(g_folder, 'images/symbols/display/GYDK_DG02_S34.png')
+    img_RDDK_DG02_S34_SRC = file = os.path.join(g_folder, 'images/symbols/display/RDDK_DG02_PROGNOSEL.png')
+    img_GYDK_DG02_S34_SRC = file = os.path.join(g_folder, 'images/symbols/display/GYDK_DG02_PROGNOSEL.png')
     #KNIGHT
-    img_BTN_EBS_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/EBS_OFF_BTN.png')
-    img_BTN_EBS_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/EBS_ON_BTN.png')
-    img_BTN_SPM_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/SPM_OFF_BTN.png')
-    img_BTN_SPM_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/SPM_ON_BTN.png')
-    img_LED_EBS_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/EBS_OFF_LED.png')
-    img_LED_EBS_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/EBS_ON_LED.png')
-    img_LED_SPM_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/SPM_OFF_LED.png')
-    img_LED_SPM_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/SPM_ON_LED.png')
-    img_DOWN_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/DOWN_OFF.png')
-    img_DOWN_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/DOWN_ON.png')
-    img_RPM_HIGH_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/RPM_HIGH.png')
-    img_RPM_NORM_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/RPM_NORM.png')
-    img_RPM_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/RPM_OFF.png')
-    img_UP_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/UP_OFF.png')
-    img_UP_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/UP_ON.png')
-    img_V_LED_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_OFF.png')
-    img_V_LED_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_ON.png')
-    img_V_LED_SIM_OFF_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_SIM_OFF.png')
-    img_V_LED_SIM_ON_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_SIM_ON.png')
-    img_V_LED_SIMULATION_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_SIMULATION.png')
-    img_V_LED_LIVE_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/V_LED_LIVE.png')
-    img_R_OFF_LARGE_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_OFF_LARGE.png')
-    img_R_ON_LARGE_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_ON_LARGE.png')
-    img_R_OFF_SMALL_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_OFF_SMALL.png')
-    img_R_ON_SMALL_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/R_ON_SMALL.png')
-    img_RD_RPM_BG_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/RD_RPM_BG.png')
-    img_BU_RPM_BG_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/BU_RPM_BG.png')
-    img_PROGNO_BG_SRC =file=os.path.join(thisfolder, 'images/symbols/knight/PROGNO_BG.png') 
+    img_BTN_EBS_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/EBS_OFF_BTN.png')
+    img_BTN_EBS_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/EBS_ON_BTN.png')
+    img_BTN_SPM_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/SPM_OFF_BTN.png')
+    img_BTN_SPM_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/SPM_ON_BTN.png')
+    img_LED_EBS_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/EBS_OFF_LED.png')
+    img_LED_EBS_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/EBS_ON_LED.png')
+    img_LED_SPM_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/SPM_OFF_LED.png')
+    img_LED_SPM_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/SPM_ON_LED.png')
+    img_DOWN_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/DOWN_OFF.png')
+    img_DOWN_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/DOWN_ON.png')
+    img_RPM_HIGH_SRC =file=os.path.join(g_folder, 'images/symbols/knight/RPM_HIGH.png')
+    img_RPM_NORM_SRC =file=os.path.join(g_folder, 'images/symbols/knight/RPM_NORM.png')
+    img_RPM_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/RPM_OFF.png')
+    img_UP_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/UP_OFF.png')
+    img_UP_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/UP_ON.png')
+    img_V_LED_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/V_LED_OFF.png')
+    img_V_LED_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/V_LED_ON.png')
+    img_V_LED_SIM_OFF_SRC =file=os.path.join(g_folder, 'images/symbols/knight/V_LED_SIM_OFF.png')
+    img_V_LED_SIM_ON_SRC =file=os.path.join(g_folder, 'images/symbols/knight/V_LED_SIM_ON.png')
+    img_V_LED_SIMULATION_SRC =file=os.path.join(g_folder, 'images/symbols/knight/V_LED_SIMULATION.png')
+    img_V_LED_LIVE_SRC =file=os.path.join(g_folder, 'images/symbols/knight/V_LED_LIVE.png')
+    img_R_OFF_LARGE_SRC =file=os.path.join(g_folder, 'images/symbols/knight/R_OFF_LARGE.png')
+    img_R_ON_LARGE_SRC =file=os.path.join(g_folder, 'images/symbols/knight/R_ON_LARGE.png')
+    img_R_OFF_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/R_OFF_SMALL.png')
+    img_R_ON_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/R_ON_SMALL.png')
+    img_RD_RPM_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/RD_RPM_BG.png')
+    img_BU_RPM_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/BU_RPM_BG.png')
+    img_PROGNO_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/PROGNO_BG.png') 
     #SYS_CLASSIC
-    img_CAR_CLASSIC_BREAK_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/BREAK.png')
-    img_CAR_CLASSIC_SES_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/SES.png')
-    img_CAR_CLASSIC_FOG1_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/FOG1.png')
-    img_CAR_CLASSIC_GAS_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/GAS.png')
-    img_CAR_CLASSIC_GENERATOR_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/GENERATOR.png')
-    img_CAR_CLASSIC_GENERATOR2_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/GENERATOR2.png')
-    img_CAR_CLASSIC_HAZZARD_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/HAZZARD.png')
-    img_CAR_CLASSIC_HIGH_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/HIGH.png')
-    img_CAR_CLASSIC_LIGHT_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/LIGHT.png')
-    img_CAR_CLASSIC_OIL_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/OIL.png')
-    img_CAR_CLASSIC_PARK_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/PARK.png')
-    img_CAR_CLASSIC_SECURITY_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/SECURITY.png')
-    img_CAR_CLASSIC_TEMP_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/TEMP.png')
-    img_CAR_CLASSIC_TRNLEFT_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/TRNLE.png')
-    img_CAR_CLASSIC_TRNRIGHT_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/TRNRI.png')
-    img_CAR_CLASSIC_DOOR_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/DOOR.png')
-    img_CAR_CLASSIC_RUN_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/RUN.png')
-    img_CAR_CLASSIC_WIFI_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_clas/WIFI.png')
+    img_CAR_CLASSIC_BREAK_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/BREAK.png')
+    img_CAR_CLASSIC_SES_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/SES.png')
+    img_CAR_CLASSIC_FOG1_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/FOG1.png')
+    img_CAR_CLASSIC_GAS_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/GAS.png')
+    img_CAR_CLASSIC_GENERATOR_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/GENERATOR.png')
+    img_CAR_CLASSIC_GENERATOR2_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/GENERATOR2.png')
+    img_CAR_CLASSIC_HAZZARD_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/HAZZARD.png')
+    img_CAR_CLASSIC_HIGH_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/HIGH.png')
+    img_CAR_CLASSIC_LIGHT_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/LIGHT.png')
+    img_CAR_CLASSIC_OIL_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/OIL.png')
+    img_CAR_CLASSIC_PARK_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/PARK.png')
+    img_CAR_CLASSIC_SECURITY_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/SECURITY.png')
+    img_CAR_CLASSIC_TEMP_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/TEMP.png')
+    img_CAR_CLASSIC_TRNLEFT_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/TRNLE.png')
+    img_CAR_CLASSIC_TRNRIGHT_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/TRNRI.png')
+    img_CAR_CLASSIC_DOOR_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/DOOR.png')
+    img_CAR_CLASSIC_RUN_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/RUN.png')
+    img_CAR_CLASSIC_WIFI_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/WIFI.png')
     #SYS_MODERN
-    img_CAR_MODERN_TRNLEFT_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F1/l_direction-l-signal-indicators.png')
-    img_CAR_MODERN_TRNRIGHT_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F1/l_direction-r-signal-indicators.png')
-    img_CAR_MODERN_HAZZARD_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F1/l_hazard-lights.png')
+    img_CAR_MODERN_TRNLEFT_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F1/l_direction-l-signal-indicators.png')
+    img_CAR_MODERN_TRNRIGHT_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F1/l_direction-r-signal-indicators.png')
+    img_CAR_MODERN_HAZZARD_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F1/l_hazard-lights.png')
     #POS F2
-    img_CAR_MODERN_GENERATOR_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F2/w_battery-charge.png')
-    img_CAR_MODERN_2NDBATTERY_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F2/w_battery-charge-2.png')
+    img_CAR_MODERN_GENERATOR_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F2/w_battery-charge.png')
+    img_CAR_MODERN_2NDBATTERY_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F2/w_battery-charge-2.png')
     #POS F3
-    img_CAR_MODERN_GAS_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F3/w_low-fuel-level.png')
-    img_CAR_MODERN_OIL_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F3/w_oil-pressure.png')
-    img_CAR_MODERN_TEMP_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F3/w_engine-temperature-warning.png')
+    img_CAR_MODERN_GAS_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F3/w_low-fuel-level.png')
+    img_CAR_MODERN_OIL_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F3/w_oil-pressure.png')
+    img_CAR_MODERN_TEMP_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F3/w_engine-temperature-warning.png')
     #POS F4
-    img_CAR_MODERN_BREAK_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F4/s_press-brake-pedal.png')
-    img_CAR_MODERN_PARK_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F4/s_parking-brake.png')
+    img_CAR_MODERN_BREAK_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F4/s_press-brake-pedal.png')
+    img_CAR_MODERN_PARK_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F4/s_parking-brake.png')
     #POS F5
-    img_CAR_MODERN_SECURITY_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F5/s_security-alert.png')
+    img_CAR_MODERN_SECURITY_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F5/s_security-alert.png')
     #POS F6
-    img_CAR_MODERN_SES_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F6/s_check-engine.png')
+    img_CAR_MODERN_SES_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F6/s_check-engine.png')
     #POS F7
-    img_CAR_MODERN_FOG1_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F7/l_front-fog-light.png')
+    img_CAR_MODERN_FOG1_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F7/l_front-fog-light.png')
     #POS F8
-    img_CAR_MODERN_LIGHT_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F8/l_low-beam-indicator.png')
-    img_CAR_MODERN_HIGH_SRC =file=os.path.join(thisfolder, 'images/symbols/sys_new/F8/l_high-beam-light-indicator.png')
+    img_CAR_MODERN_LIGHT_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F8/l_low-beam-indicator.png')
+    img_CAR_MODERN_HIGH_SRC =file=os.path.join(g_folder, 'images/symbols/sys_new/F8/l_high-beam-light-indicator.png')
     #MESAGE CENTER SMALL
-    img_BU_MSGSMALL_SRC = file = os.path.join(thisfolder, 'images/symbols/msg/BU.png')
-    img_BUDK_MSGSMALL_SRC = file = os.path.join(thisfolder, 'images/symbols/msg/BUDK.png')
+    img_BU_MSGSMALL_SRC = file = os.path.join(g_folder, 'images/symbols/msg/BU.png')
+    img_BUDK_MSGSMALL_SRC = file = os.path.join(g_folder, 'images/symbols/msg/BUDK.png')
     #VOICEBOX S01
-    img_AIR_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/AIR.png')
-    img_AIR_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/AIR_DK.png')
-    img_AUTO_S01_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/AUTO.png')
-    img_AUTO_DK_S01_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/AUTO_DK.png')
-    img_NORMAL_S01_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/NORMAL.png')
-    img_NORMAL_DK_S01_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/NORMAL_DK.png')
-    img_OIL_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/OIL.png')
-    img_OIL_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/OIL_DK.png')
-    img_P1_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P1.png')
-    img_P1_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P1_DK.png')
-    img_P2_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P2.png')
-    img_P2_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P2_DK.png')
-    img_P3_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P3.png')
-    img_P3_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P3_DK.png')
-    img_P4_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P4.png')
-    img_P4_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/P4_DK.png')
-    img_PURSUIT_S01_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/PURSUIT.png')
-    img_PURSUIT_DK_S01_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/PURSUIT_DK.png')
-    img_RD00_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/RD00.png')
-    img_RD06_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/RD06.png')
-    img_RD08_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/RD08.png')
-    img_RD10_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/RD10.png')
-    img_S1_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/S1.png')
-    img_S1_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/S1_DK.png')
-    img_S2_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/S2.png')
-    img_S2_DK_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/S2_DK.png')
-    img_YE00_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/YE00.png')
-    img_YE06_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/YE06.png')
-    img_YE08_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/YE08.png')
-    img_YE10_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S01/YE10.png')
+    img_AIR_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/AIR.png')
+    img_AIR_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/AIR_DK.png')
+    img_AUTO_S01_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/AUTO.png')
+    img_AUTO_DK_S01_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/AUTO_DK.png')
+    img_NORMAL_S01_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/NORMAL.png')
+    img_NORMAL_DK_S01_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/NORMAL_DK.png')
+    img_OIL_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/OIL.png')
+    img_OIL_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/OIL_DK.png')
+    img_P1_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P1.png')
+    img_P1_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P1_DK.png')
+    img_P2_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P2.png')
+    img_P2_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P2_DK.png')
+    img_P3_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P3.png')
+    img_P3_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P3_DK.png')
+    img_P4_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P4.png')
+    img_P4_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/P4_DK.png')
+    img_PURSUIT_S01_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/PURSUIT.png')
+    img_PURSUIT_DK_S01_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/PURSUIT_DK.png')
+    img_RD00_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/RD00.png')
+    img_RD06_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/RD06.png')
+    img_RD08_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/RD08.png')
+    img_RD10_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/RD10.png')
+    img_S1_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/S1.png')
+    img_S1_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/S1_DK.png')
+    img_S2_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/S2.png')
+    img_S2_DK_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/S2_DK.png')
+    img_YE00_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/YE00.png')
+    img_YE06_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/YE06.png')
+    img_YE08_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/YE08.png')
+    img_YE10_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S01/YE10.png')
     #VOICEBOX S02
-    img_AUTO_S02_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S02/AUTO.png')
-    img_AUTO_DK_S02_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S02/AUTO_DK.png')
-    img_NORMAL_S02_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S02/NORMAL.png')
-    img_NORMAL_DK_S02_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S02/NORMAL_DK.png')
-    img_PURSUIT_S02_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S02/PURSUIT.png')
-    img_PURSUIT_DK_S02_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S02/PURSUIT_DK.png')
+    img_AUTO_S02_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S02/AUTO.png')
+    img_AUTO_DK_S02_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S02/AUTO_DK.png')
+    img_NORMAL_S02_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S02/NORMAL.png')
+    img_NORMAL_DK_S02_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S02/NORMAL_DK.png')
+    img_PURSUIT_S02_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S02/PURSUIT.png')
+    img_PURSUIT_DK_S02_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S02/PURSUIT_DK.png')
     #VOICEBOX S03
-    img_GN8888S03_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/GN8888S03.png')
-    img_GN8888S04_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/GN8888S04.png')
-    img_GNDK8888_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/GNDK8888.png')
-    img_YE8888_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE8888.png')
-    img_YEDK8888_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YEDK8888.png')
-    img_RD8888_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD8888.png')
-    img_RDDK8888_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RDDK8888.png')
-    img_BU8888_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/BU8888.png')
-    img_BUDK8888_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/BZDK8888.png')
-    img_YEALT_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE_ALT.png')
-    img_YEDKALT_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YEDK_ALT.png')
-    img_YEAUX_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE_AUX.png')
-    img_YEDKAUX_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YEDK_AUX.png')
-    img_YEOILPRESS_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE_OILPRESS.png')
-    img_YEDKOILPRESS_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YEDK_OILPRESS.png')
-    img_YESATCOMM_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE_SATCOMM.png')
-    img_YEDKSATCOMM_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YEDK_SATCOMM.png')
-    img_RDOILTEMP_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD_OILTEMP.png')
-    img_RDDKOILTEMP_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RDDK_OILTEMP.png')
-    img_RDACC_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD_ACC.png')
-    img_RDDKACC_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RDDK_ACC.png')
-    img_RDEGT_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD_EGT.png')
-    img_RDDKEGT_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RDDK_EGT.png')
-    img_RDRADAR_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD_RADAR.png')
-    img_RDDKRADAR_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RDDK_RADAR.png')
-    img_RDFUEL_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD_FUEL.png')
-    img_RDDKFUEL_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RDDK_FUEL.png')
-    img_RDMPI_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD_MPI.png')
-    img_RDDKMPI_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RDDK_MPI.png')
-    img_RD00RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD00RWA.png')
-    img_RD06RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD06RWA.png')
-    img_RD08RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD08RWA.png')
-    img_RD10RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/RD10RWA.png')
-    img_YE00RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE00RWA.png')
-    img_YE06RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE06RWA.png')
-    img_YE08RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE08RWA.png')
-    img_YE10RWA_SRC = file = os.path.join(thisfolder, 'images/symbols/vb/S34/YE10RWA.png')
+    img_GN8888S03_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/GN8888S03.png')
+    img_GN8888S04_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/GN8888S04.png')
+    img_GNDK8888_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/GNDK8888.png')
+    img_YE8888_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE8888.png')
+    img_YEDK8888_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YEDK8888.png')
+    img_RD8888_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD8888.png')
+    img_RDDK8888_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RDDK8888.png')
+    img_BU8888_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/BU8888.png')
+    img_BUDK8888_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/BZDK8888.png')
+    img_YEALT_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE_ALT.png')
+    img_YEDKALT_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YEDK_ALT.png')
+    img_YEAUX_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE_AUX.png')
+    img_YEDKAUX_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YEDK_AUX.png')
+    img_YEOILPRESS_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE_OILPRESS.png')
+    img_YEDKOILPRESS_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YEDK_OILPRESS.png')
+    img_YESATCOMM_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE_SATCOMM.png')
+    img_YEDKSATCOMM_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YEDK_SATCOMM.png')
+    img_RDOILTEMP_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD_OILTEMP.png')
+    img_RDDKOILTEMP_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RDDK_OILTEMP.png')
+    img_RDACC_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD_ACC.png')
+    img_RDDKACC_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RDDK_ACC.png')
+    img_RDEGT_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD_EGT.png')
+    img_RDDKEGT_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RDDK_EGT.png')
+    img_RDRADAR_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD_RADAR.png')
+    img_RDDKRADAR_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RDDK_RADAR.png')
+    img_RDFUEL_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD_FUEL.png')
+    img_RDDKFUEL_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RDDK_FUEL.png')
+    img_RDMPI_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD_MPI.png')
+    img_RDDKMPI_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RDDK_MPI.png')
+    img_RD00RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD00RWA.png')
+    img_RD06RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD06RWA.png')
+    img_RD08RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD08RWA.png')
+    img_RD10RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/RD10RWA.png')
+    img_YE00RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE00RWA.png')
+    img_YE06RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE06RWA.png')
+    img_YE08RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE08RWA.png')
+    img_YE10RWA_SRC = file = os.path.join(g_folder, 'images/symbols/vb/S34/YE10RWA.png')
+
 #BEGIN PROGRAMM------------------------------------------------------------------
 #SAMPLEAPP-------------------------------
 class SampleApp(tk.Tk):
@@ -527,7 +542,7 @@ class SampleApp(tk.Tk):
         if debug == True:
             print("SampleApp_init")
         tk.Tk.__init__(self)        
-        self.wm_geometry(sWidth+"x"+sHeight+"+"+sLeft+"+"+sTop)        
+        self.wm_geometry(g_app_width+"x"+g_app_height+"+"+g_app_left+"+"+g_app_top)        
         self.title(version)
         if (SYSTEM == "win32") or (SYSTEM == "win64"):
             self.resizable(0, 0)
@@ -549,9 +564,9 @@ class SampleApp(tk.Tk):
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
-        self._frame.place(x=sLeft, y=sTop, width=sWidth, height=sHeight)
+        self._frame.place(x=g_app_left, y=g_app_top, width=g_app_width, height=g_app_height)
         if debug == True:
-            print(sLeft, sTop, sWidth, sHeight)
+            print(g_app_left, g_app_top, g_app_width, g_app_height)
 
 #DASH------------------------------------
 class DASH(tk.Frame):
@@ -562,6 +577,12 @@ class DASH(tk.Frame):
         read.update_aldl()
         read.update_data()       
         read.update_text()
+        
+        try:
+            self.ser = serial.Serial('/dev/ttyACM0', 9600)
+        except serial.serialutil.SerialException:
+            print ("No GPS device found.")
+            self.ser = None
 
         #STYLES----------------------------------
         btn_style_lcars001 = {'activeforeground':'#507AF7','activeforeground':MYCOLOR_BK,'background':'#93AF32','foreground':MYCOLOR_BK,'relief':'raised','borderwidth':6,'font':font_BTN}
@@ -571,72 +592,72 @@ class DASH(tk.Frame):
 
         if theme == "K3KS01":
             if style == "KARR":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_K3KS01KA.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_K3KS01KA.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_K3KS01KA.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_K3KS01KA.png')
             elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_K3KS01KI.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_K3KS01KI.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_K3KS01KI.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_K3KS01KI.png')
         elif theme == "NIGHT":
             if style == "KARR":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_NIGHTKA.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_NIGHTKA.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NIGHTKA.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NIGHTKA.png')
             elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_NIGHTKI.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_NIGHTKI.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NIGHTKI.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NIGHTKI.png')
         elif theme == "S01":
             if style == "KARR":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S01KA.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S01KA.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S01KA.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S01KA.png')
             elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S01KI.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S01KI.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S01KI.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S01KI.png')
         elif theme == "S02":
             if style == "KARR":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S02KA.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S02KA.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S02KA.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S02KA.png')
             elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S02KI.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S02KI.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S02KI.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S02KI.png')
         elif theme == "S03":
             if style == "KARR":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S03KA.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S03KA.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S03KA.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S03KA.png')
             elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S03KI.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S03KI.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S03KI.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S03KI.png')
         elif theme == "S04":
             if style == "KARR":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S04KA.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S04KA.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S04KA.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S04KA.png')
             elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S04KI.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S04KI.png')            
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S04KI.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S04KI.png')            
         elif theme == "S05":
             if style == "KARR":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S05KA.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S05KA.png')
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S05KA.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S05KA.png')
             elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_S05KI.png')
-                U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_S05KI.png')  
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S05KI.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S05KI.png')  
         elif theme == "DMC":
-            U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_DMC.png')
-            U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_DMC.png')
+            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_DMC.png')
+            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_DMC.png')
             read.bttf_snd(2)
         elif theme == "GM":
-            U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_GM.png')
-            U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_GM.png')
+            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_GM.png')
+            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_GM.png')
         elif theme == "GM2":
-            U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_GM2.png')
-            U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_GM2.png')
+            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_GM2.png')
+            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_GM2.png')
         elif theme == "LCARS":
-            U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_LCARS.png')
-            U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_LCARS.png')
+            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_LCARS.png')
+            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_LCARS.png')
         elif theme == "NEWOS":
-            U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_NEWOS.png')
-            U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_NEWOS.png')
+            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NEWOS.png')
+            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NEWOS.png')
         elif theme == "SERVICE":
-            U01_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U01_SERVICE.png')
-            U02_BG_IMG = file = os.path.join(thisfolder, 'images/bg/DASH/U02_SERVICE.png')
+            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_SERVICE.png')
+            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_SERVICE.png')
         
         if unit == "UNIT01":
             img_BG_LBL = tk.PhotoImage(file=U01_BG_IMG)
@@ -2034,15 +2055,15 @@ class DASH(tk.Frame):
             count_ign_enable = 0
             count_ign_off = 20
 
-        self.after(UPDATE_INTERVAL_COUNTER, self.counters)
+        self.after(g_time_upd_cnt, self.counters)
     def VB_KARRS01(self):
         if debug == True:
             print("DASH_vbkarrs01")
         if procedures == "LIVE":
-            g_voicebox_value = g_voicebox_value_2
+            gl_voicebox_value = gl_voicebox_value_2
         else:
-            g_voicebox_value = ''.join(random.choice(string.digits) for _ in range(2))
-        int_g_voicebox_value = int (g_voicebox_value)         #F�R LED BALKEN
+            gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(2))
+        int_gl_voicebox_value = int (gl_voicebox_value)         #F�R LED BALKEN
 
         #KYEATA VOICEBOX BOAYE LEDS
         LED_YE00_LBL = tk.PhotoImage(file=img_YE00_SRC)
@@ -2055,23 +2076,23 @@ class DASH(tk.Frame):
         self.Canvas1.LED_YE10_LBL = LED_YE10_LBL
 
         #VU-METER
-        if int_g_voicebox_value > 60:
+        if int_gl_voicebox_value > 60:
             self.Canvas1.create_image((1405, 70), image=LED_YE10_LBL, anchor='nw') #C10
-        elif int_g_voicebox_value > 40:
+        elif int_gl_voicebox_value > 40:
             self.Canvas1.create_image((1405, 70), image=LED_YE08_LBL, anchor='nw') #C10
-        elif int_g_voicebox_value > 20:
+        elif int_gl_voicebox_value > 20:
             self.Canvas1.create_image((1405, 70), image=LED_YE06_LBL, anchor='nw') #C10
         else:
             self.Canvas1.create_image((1405, 70), image=LED_YE00_LBL, anchor='nw') #C10
-        self.after(UPDATE_INTERVAL_VBS01, self.VB_KARRS01)
+        self.after(g_time_upd_vb_s01, self.VB_KARRS01)
     def VB_KITTS01(self):
         if debug == True:
             print("DASH_vbkitts01")
         if procedures == "LIVE":
-            g_voicebox_value = g_voicebox_value_2
+            gl_voicebox_value = gl_voicebox_value_2
         else:
-            g_voicebox_value = ''.join(random.choice(string.digits) for _ in range(2))
-        int_g_voicebox_value = int (g_voicebox_value)         #F�R LED BALKEN
+            gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(2))
+        int_gl_voicebox_value = int (gl_voicebox_value)         #F�R LED BALKEN
 
         #KRDATA VOICEBOX BOARD LEDS
         LED_RD00_LBL = tk.PhotoImage(file=img_RD00_SRC)
@@ -2084,23 +2105,23 @@ class DASH(tk.Frame):
         self.Canvas1.LED_RD10_LBL = LED_RD10_LBL
 
         #VU-METER
-        if int_g_voicebox_value > 60:
+        if int_gl_voicebox_value > 60:
             self.Canvas1.create_image((1405, 70), image=LED_RD10_LBL, anchor='nw') #C10
-        elif int_g_voicebox_value > 40:
+        elif int_gl_voicebox_value > 40:
             self.Canvas1.create_image((1405, 70), image=LED_RD08_LBL, anchor='nw') #C10
-        elif int_g_voicebox_value > 20:
+        elif int_gl_voicebox_value > 20:
             self.Canvas1.create_image((1405, 70), image=LED_RD06_LBL, anchor='nw') #C10
         else:
             self.Canvas1.create_image((1405, 70), image=LED_RD00_LBL, anchor='nw') #C10
-        self.after(UPDATE_INTERVAL_VBS01, self.VB_KITTS01)
+        self.after(g_time_upd_vb_s01, self.VB_KITTS01)
     def VB_KARRS02(self):
         if debug == True:
             print("DASH_vbkarrs02")
         if procedures == "LIVE":
-            g_voicebox_value = g_voicebox_value_2
+            gl_voicebox_value = gl_voicebox_value_2
         else:
-            g_voicebox_value = ''.join(random.choice(string.digits) for _ in range(3))
-        int_g_voicebox_value = int (g_voicebox_value)         #F�R LED BALKEN
+            gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(3))
+        int_gl_voicebox_value = int (gl_voicebox_value)         #F�R LED BALKEN
         
         #KRDATA VOICEBOX BOARD LEDS
         img_YE06RWA_LBL = tk.PhotoImage(file=img_YE06RWA_SRC)
@@ -2111,256 +2132,256 @@ class DASH(tk.Frame):
         self.Canvas1.img_YE10RWA_LBL = img_YE10RWA_LBL
 
         #VU-METER MITTE
-        if int_g_voicebox_value > 100:
+        if int_gl_voicebox_value > 100:
             self.Canvas1.create_image((1490, 185), image=img_YE10RWA_LBL, anchor='nw') #C10
             self.Canvas1.create_image((1490, 203), image=img_YE10RWA_LBL, anchor='nw') #C11
-        elif int_g_voicebox_value > 60:
+        elif int_gl_voicebox_value > 60:
             self.Canvas1.create_image((1490, 185), image=img_YE08RWA_LBL, anchor='nw') #C10
             self.Canvas1.create_image((1490, 203), image=img_YE08RWA_LBL, anchor='nw') #C11
-        elif int_g_voicebox_value > 30:
+        elif int_gl_voicebox_value > 30:
             self.Canvas1.create_image((1490, 185), image=img_YE06RWA_LBL, anchor='nw') #C10
             self.Canvas1.create_image((1490, 203), image=img_YE06RWA_LBL, anchor='nw') #C11
-        if int_g_voicebox_value > 200:
+        if int_gl_voicebox_value > 200:
             self.Canvas1.create_image((1490, 167), image=img_YE10RWA_LBL, anchor='nw') #C09
             self.Canvas1.create_image((1490, 221), image=img_YE10RWA_LBL, anchor='nw') #C12
-        elif int_g_voicebox_value > 150:
+        elif int_gl_voicebox_value > 150:
             self.Canvas1.create_image((1490, 167), image=img_YE08RWA_LBL, anchor='nw') #C09
             self.Canvas1.create_image((1490, 221), image=img_YE08RWA_LBL, anchor='nw') #C12
-        elif int_g_voicebox_value > 100:
+        elif int_gl_voicebox_value > 100:
             self.Canvas1.create_image((1490, 167), image=img_YE06RWA_LBL, anchor='nw') #C09
             self.Canvas1.create_image((1490, 221), image=img_YE06RWA_LBL, anchor='nw') #C12
-        if int_g_voicebox_value > 300:
+        if int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1490, 149), image=img_YE10RWA_LBL, anchor='nw') #C08
             self.Canvas1.create_image((1490, 239), image=img_YE10RWA_LBL, anchor='nw') #C13
-        elif int_g_voicebox_value > 250:
+        elif int_gl_voicebox_value > 250:
             self.Canvas1.create_image((1490, 149), image=img_YE08RWA_LBL, anchor='nw') #C08
             self.Canvas1.create_image((1490, 239), image=img_YE08RWA_LBL, anchor='nw') #C13
-        elif int_g_voicebox_value > 200:
+        elif int_gl_voicebox_value > 200:
             self.Canvas1.create_image((1490, 149), image=img_YE06RWA_LBL, anchor='nw') #C08
             self.Canvas1.create_image((1490, 239), image=img_YE06RWA_LBL, anchor='nw') #C13
-        if int_g_voicebox_value > 400:
+        if int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1490, 131), image=img_YE10RWA_LBL, anchor='nw') #C07
             self.Canvas1.create_image((1490, 257), image=img_YE10RWA_LBL, anchor='nw') #C14
-        elif int_g_voicebox_value > 350:
+        elif int_gl_voicebox_value > 350:
             self.Canvas1.create_image((1490, 131), image=img_YE08RWA_LBL, anchor='nw') #C07
             self.Canvas1.create_image((1490, 257), image=img_YE08RWA_LBL, anchor='nw') #C14
-        elif int_g_voicebox_value > 300:
+        elif int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1490, 131), image=img_YE06RWA_LBL, anchor='nw') #C07
             self.Canvas1.create_image((1490, 257), image=img_YE06RWA_LBL, anchor='nw') #C14
-        if int_g_voicebox_value > 500:
+        if int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1490, 113), image=img_YE10RWA_LBL, anchor='nw') #C06
             self.Canvas1.create_image((1490, 275), image=img_YE10RWA_LBL, anchor='nw') #C15
-        elif int_g_voicebox_value > 450:
+        elif int_gl_voicebox_value > 450:
             self.Canvas1.create_image((1490, 113), image=img_YE08RWA_LBL, anchor='nw') #C06
             self.Canvas1.create_image((1490, 275), image=img_YE08RWA_LBL, anchor='nw') #C15
-        elif int_g_voicebox_value > 400:
+        elif int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1490, 113), image=img_YE06RWA_LBL, anchor='nw') #C06
             self.Canvas1.create_image((1490, 275), image=img_YE06RWA_LBL, anchor='nw') #C15
-        if int_g_voicebox_value > 600:
+        if int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1490, 95), image=img_YE10RWA_LBL, anchor='nw') #C05
             self.Canvas1.create_image((1490, 293), image=img_YE10RWA_LBL, anchor='nw') #C16
-        elif int_g_voicebox_value > 550:
+        elif int_gl_voicebox_value > 550:
             self.Canvas1.create_image((1490, 95), image=img_YE08RWA_LBL, anchor='nw') #C05
             self.Canvas1.create_image((1490, 293), image=img_YE08RWA_LBL, anchor='nw') #C16
-        elif int_g_voicebox_value > 500:
+        elif int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1490, 95), image=img_YE06RWA_LBL, anchor='nw') #C05
             self.Canvas1.create_image((1490, 293), image=img_YE06RWA_LBL, anchor='nw') #C16
-        if int_g_voicebox_value > 700:
+        if int_gl_voicebox_value > 700:
             self.Canvas1.create_image((1490, 77), image=img_YE10RWA_LBL, anchor='nw') #C04
             self.Canvas1.create_image((1490, 311), image=img_YE10RWA_LBL, anchor='nw') #C17
-        elif int_g_voicebox_value > 650:
+        elif int_gl_voicebox_value > 650:
             self.Canvas1.create_image((1490, 77), image=img_YE08RWA_LBL, anchor='nw') #C04
             self.Canvas1.create_image((1490, 311), image=img_YE08RWA_LBL, anchor='nw') #C17
-        elif int_g_voicebox_value > 600:
+        elif int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1490, 77), image=img_YE06RWA_LBL, anchor='nw') #C04
             self.Canvas1.create_image((1490, 311), image=img_YE06RWA_LBL, anchor='nw') #C17
-        if int_g_voicebox_value > 800:
+        if int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1490, 59), image=img_YE10RWA_LBL, anchor='nw') #C03
             self.Canvas1.create_image((1490, 329), image=img_YE10RWA_LBL, anchor='nw') #C18
-        elif int_g_voicebox_value > 750:
+        elif int_gl_voicebox_value > 750:
             self.Canvas1.create_image((1490, 59), image=img_YE08RWA_LBL, anchor='nw') #C03
             self.Canvas1.create_image((1490, 329), image=img_YE08RWA_LBL, anchor='nw') #C18
-        elif int_g_voicebox_value > 700:
+        elif int_gl_voicebox_value > 700:
             self.Canvas1.create_image((1490, 59), image=img_YE06RWA_LBL, anchor='nw') #C03
             self.Canvas1.create_image((1490, 329), image=img_YE06RWA_LBL, anchor='nw') #C18
-        if int_g_voicebox_value > 900:
+        if int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1490, 41), image=img_YE10RWA_LBL, anchor='nw') #C02
             self.Canvas1.create_image((1490, 347), image=img_YE10RWA_LBL, anchor='nw') #C19
-        elif int_g_voicebox_value > 850:
+        elif int_gl_voicebox_value > 850:
             self.Canvas1.create_image((1490, 41), image=img_YE08RWA_LBL, anchor='nw') #C02
             self.Canvas1.create_image((1490, 347), image=img_YE08RWA_LBL, anchor='nw') #C19
-        elif int_g_voicebox_value > 800:
+        elif int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1490, 41), image=img_YE06RWA_LBL, anchor='nw') #C02
             self.Canvas1.create_image((1490, 347), image=img_YE06RWA_LBL, anchor='nw') #C19
-        if int_g_voicebox_value > 1000:
+        if int_gl_voicebox_value > 1000:
             self.Canvas1.create_image((1490, 23), image=img_YE10RWA_LBL, anchor='nw') #C01
             self.Canvas1.create_image((1490, 365), image=img_YE10RWA_LBL, anchor='nw') #C20
-        elif int_g_voicebox_value > 950:
+        elif int_gl_voicebox_value > 950:
             self.Canvas1.create_image((1490, 23), image=img_YE08RWA_LBL, anchor='nw') #C01
             self.Canvas1.create_image((1490, 365), image=img_YE08RWA_LBL, anchor='nw') #C20
-        elif int_g_voicebox_value > 900:
+        elif int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1490, 23), image=img_YE06RWA_LBL, anchor='nw') #C01
             self.Canvas1.create_image((1490, 365), image=img_YE06RWA_LBL, anchor='nw') #C20
         #VU-METER LINKS RECHTS
-        if int_g_voicebox_value > 300:
+        if int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1420, 23), image=img_YE10RWA_LBL, anchor='nw') #L01 
             self.Canvas1.create_image((1560, 23), image=img_YE10RWA_LBL, anchor='nw') #R01
             self.Canvas1.create_image((1420, 365), image=img_YE10RWA_LBL, anchor='nw') #L20
             self.Canvas1.create_image((1560, 365), image=img_YE10RWA_LBL, anchor='nw') #R20
-        elif int_g_voicebox_value > 200:
+        elif int_gl_voicebox_value > 200:
             self.Canvas1.create_image((1420, 23), image=img_YE08RWA_LBL, anchor='nw') #L01 
             self.Canvas1.create_image((1560, 23), image=img_YE08RWA_LBL, anchor='nw') #R01
             self.Canvas1.create_image((1420, 365), image=img_YE08RWA_LBL, anchor='nw') #L20
             self.Canvas1.create_image((1560, 365), image=img_YE08RWA_LBL, anchor='nw') #R20
-        elif int_g_voicebox_value > 100:
+        elif int_gl_voicebox_value > 100:
             self.Canvas1.create_image((1420, 23), image=img_YE06RWA_LBL, anchor='nw') #L01 
             self.Canvas1.create_image((1560, 23), image=img_YE06RWA_LBL, anchor='nw') #R01
             self.Canvas1.create_image((1420, 365), image=img_YE06RWA_LBL, anchor='nw') #L20
             self.Canvas1.create_image((1560, 365), image=img_YE06RWA_LBL, anchor='nw') #R20
-        if int_g_voicebox_value > 500:
+        if int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1420, 41), image=img_YE10RWA_LBL, anchor='nw') #L02
             self.Canvas1.create_image((1560, 41), image=img_YE10RWA_LBL, anchor='nw') #R02
             self.Canvas1.create_image((1420, 347), image=img_YE10RWA_LBL, anchor='nw') #L19
             self.Canvas1.create_image((1560, 347), image=img_YE10RWA_LBL, anchor='nw') #R19
-        elif int_g_voicebox_value > 400:
+        elif int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1420, 41), image=img_YE08RWA_LBL, anchor='nw') #L02
             self.Canvas1.create_image((1560, 41), image=img_YE08RWA_LBL, anchor='nw') #R02
             self.Canvas1.create_image((1420, 347), image=img_YE08RWA_LBL, anchor='nw') #L19
             self.Canvas1.create_image((1560, 347), image=img_YE08RWA_LBL, anchor='nw') #R19
-        elif int_g_voicebox_value > 300:
+        elif int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1420, 41), image=img_YE06RWA_LBL, anchor='nw') #L02
             self.Canvas1.create_image((1560, 41), image=img_YE06RWA_LBL, anchor='nw') #R02
             self.Canvas1.create_image((1420, 347), image=img_YE06RWA_LBL, anchor='nw') #L19
             self.Canvas1.create_image((1560, 347), image=img_YE06RWA_LBL, anchor='nw') #R19
-        if int_g_voicebox_value > 600:
+        if int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1420, 59), image=img_YE10RWA_LBL, anchor='nw') #L03
             self.Canvas1.create_image((1560, 59), image=img_YE10RWA_LBL, anchor='nw') #R03
             self.Canvas1.create_image((1420, 329), image=img_YE10RWA_LBL, anchor='nw') #L18
             self.Canvas1.create_image((1560, 329), image=img_YE10RWA_LBL, anchor='nw') #R18
-        elif int_g_voicebox_value > 500:
+        elif int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1420, 59), image=img_YE08RWA_LBL, anchor='nw') #L03
             self.Canvas1.create_image((1560, 59), image=img_YE08RWA_LBL, anchor='nw') #R03
             self.Canvas1.create_image((1420, 329), image=img_YE08RWA_LBL, anchor='nw') #L18
             self.Canvas1.create_image((1560, 329), image=img_YE08RWA_LBL, anchor='nw') #R18
-        elif int_g_voicebox_value > 400:
+        elif int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1420, 59), image=img_YE06RWA_LBL, anchor='nw') #L03
             self.Canvas1.create_image((1560, 59), image=img_YE06RWA_LBL, anchor='nw') #R03
             self.Canvas1.create_image((1420, 329), image=img_YE06RWA_LBL, anchor='nw') #L18
             self.Canvas1.create_image((1560, 329), image=img_YE06RWA_LBL, anchor='nw') #R18
-        if int_g_voicebox_value > 800:
+        if int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1420, 77), image=img_YE10RWA_LBL, anchor='nw') #L04
             self.Canvas1.create_image((1560, 77), image=img_YE10RWA_LBL, anchor='nw') #R04
             self.Canvas1.create_image((1420, 311), image=img_YE10RWA_LBL, anchor='nw') #L17
             self.Canvas1.create_image((1560, 311), image=img_YE10RWA_LBL, anchor='nw') #R17
-        elif int_g_voicebox_value > 700:
+        elif int_gl_voicebox_value > 700:
             self.Canvas1.create_image((1420, 77), image=img_YE08RWA_LBL, anchor='nw') #L04
             self.Canvas1.create_image((1560, 77), image=img_YE08RWA_LBL, anchor='nw') #R04
             self.Canvas1.create_image((1420, 311), image=img_YE08RWA_LBL, anchor='nw') #L17
             self.Canvas1.create_image((1560, 311), image=img_YE08RWA_LBL, anchor='nw') #R17
-        elif int_g_voicebox_value > 600:
+        elif int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1420, 77), image=img_YE06RWA_LBL, anchor='nw') #L04
             self.Canvas1.create_image((1560, 77), image=img_YE06RWA_LBL, anchor='nw') #R04
             self.Canvas1.create_image((1420, 311), image=img_YE06RWA_LBL, anchor='nw') #L17
             self.Canvas1.create_image((1560, 311), image=img_YE06RWA_LBL, anchor='nw') #R17
-        if int_g_voicebox_value > 850:
+        if int_gl_voicebox_value > 850:
             self.Canvas1.create_image((1420, 95), image=img_YE10RWA_LBL, anchor='nw') #L05
             self.Canvas1.create_image((1560, 95), image=img_YE10RWA_LBL, anchor='nw') #R05
             self.Canvas1.create_image((1420, 293), image=img_YE10RWA_LBL, anchor='nw') #L16
             self.Canvas1.create_image((1560, 293), image=img_YE10RWA_LBL, anchor='nw') #R16
-        elif int_g_voicebox_value > 750:
+        elif int_gl_voicebox_value > 750:
             self.Canvas1.create_image((1420, 95), image=img_YE08RWA_LBL, anchor='nw') #L05
             self.Canvas1.create_image((1560, 95), image=img_YE08RWA_LBL, anchor='nw') #R05
             self.Canvas1.create_image((1420, 293), image=img_YE08RWA_LBL, anchor='nw') #L16
             self.Canvas1.create_image((1560, 293), image=img_YE08RWA_LBL, anchor='nw') #R16
-        elif int_g_voicebox_value > 650:
+        elif int_gl_voicebox_value > 650:
             self.Canvas1.create_image((1420, 95), image=img_YE06RWA_LBL, anchor='nw') #L05
             self.Canvas1.create_image((1560, 95), image=img_YE06RWA_LBL, anchor='nw') #R05
             self.Canvas1.create_image((1420, 293), image=img_YE06RWA_LBL, anchor='nw') #L16
             self.Canvas1.create_image((1560, 293), image=img_YE06RWA_LBL, anchor='nw') #R16
-        if int_g_voicebox_value > 860:
+        if int_gl_voicebox_value > 860:
             self.Canvas1.create_image((1420, 113), image=img_YE10RWA_LBL, anchor='nw') #L06
             self.Canvas1.create_image((1560, 113), image=img_YE10RWA_LBL, anchor='nw') #R06
             self.Canvas1.create_image((1420, 275), image=img_YE10RWA_LBL, anchor='nw') #L15
             self.Canvas1.create_image((1560, 275), image=img_YE10RWA_LBL, anchor='nw') #R15
-        elif int_g_voicebox_value > 830:
+        elif int_gl_voicebox_value > 830:
             self.Canvas1.create_image((1420, 113), image=img_YE08RWA_LBL, anchor='nw') #L06
             self.Canvas1.create_image((1560, 113), image=img_YE08RWA_LBL, anchor='nw') #R06
             self.Canvas1.create_image((1420, 275), image=img_YE08RWA_LBL, anchor='nw') #L15
             self.Canvas1.create_image((1560, 275), image=img_YE08RWA_LBL, anchor='nw') #R15
-        elif int_g_voicebox_value > 800:
+        elif int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1420, 113), image=img_YE06RWA_LBL, anchor='nw') #L06
             self.Canvas1.create_image((1560, 113), image=img_YE06RWA_LBL, anchor='nw') #R06
             self.Canvas1.create_image((1420, 275), image=img_YE06RWA_LBL, anchor='nw') #L15
             self.Canvas1.create_image((1560, 275), image=img_YE06RWA_LBL, anchor='nw') #R15
-        if int_g_voicebox_value > 870:
+        if int_gl_voicebox_value > 870:
             self.Canvas1.create_image((1420, 131), image=img_YE10RWA_LBL, anchor='nw') #L07
             self.Canvas1.create_image((1560, 131), image=img_YE10RWA_LBL, anchor='nw') #R07
             self.Canvas1.create_image((1420, 257), image=img_YE10RWA_LBL, anchor='nw') #L14
             self.Canvas1.create_image((1560, 257), image=img_YE10RWA_LBL, anchor='nw') #R14
-        elif int_g_voicebox_value > 840:
+        elif int_gl_voicebox_value > 840:
             self.Canvas1.create_image((1420, 131), image=img_YE08RWA_LBL, anchor='nw') #L07
             self.Canvas1.create_image((1560, 131), image=img_YE08RWA_LBL, anchor='nw') #R07
             self.Canvas1.create_image((1420, 257), image=img_YE08RWA_LBL, anchor='nw') #L14
             self.Canvas1.create_image((1560, 257), image=img_YE08RWA_LBL, anchor='nw') #R14
-        elif int_g_voicebox_value > 810:
+        elif int_gl_voicebox_value > 810:
             self.Canvas1.create_image((1420, 131), image=img_YE06RWA_LBL, anchor='nw') #L07
             self.Canvas1.create_image((1560, 131), image=img_YE06RWA_LBL, anchor='nw') #R07
             self.Canvas1.create_image((1420, 257), image=img_YE06RWA_LBL, anchor='nw') #L14
             self.Canvas1.create_image((1560, 257), image=img_YE06RWA_LBL, anchor='nw') #R14
-        if int_g_voicebox_value > 900:
+        if int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1420, 149), image=img_YE10RWA_LBL, anchor='nw') #L08
             self.Canvas1.create_image((1560, 149), image=img_YE10RWA_LBL, anchor='nw') #R08
             self.Canvas1.create_image((1420, 239), image=img_YE10RWA_LBL, anchor='nw') #L13
             self.Canvas1.create_image((1560, 239), image=img_YE10RWA_LBL, anchor='nw') #R13
-        elif int_g_voicebox_value > 870:
+        elif int_gl_voicebox_value > 870:
             self.Canvas1.create_image((1420, 149), image=img_YE08RWA_LBL, anchor='nw') #L08
             self.Canvas1.create_image((1560, 149), image=img_YE08RWA_LBL, anchor='nw') #R08
             self.Canvas1.create_image((1420, 239), image=img_YE08RWA_LBL, anchor='nw') #L13
             self.Canvas1.create_image((1560, 239), image=img_YE08RWA_LBL, anchor='nw') #R13
-        elif int_g_voicebox_value > 840:
+        elif int_gl_voicebox_value > 840:
             self.Canvas1.create_image((1420, 149), image=img_YE06RWA_LBL, anchor='nw') #L08
             self.Canvas1.create_image((1560, 149), image=img_YE06RWA_LBL, anchor='nw') #R08
             self.Canvas1.create_image((1420, 239), image=img_YE06RWA_LBL, anchor='nw') #L13
             self.Canvas1.create_image((1560, 239), image=img_YE06RWA_LBL, anchor='nw') #R13
-        if int_g_voicebox_value > 930:
+        if int_gl_voicebox_value > 930:
             self.Canvas1.create_image((1420, 167), image=img_YE10RWA_LBL, anchor='nw') #L09
             self.Canvas1.create_image((1560, 167), image=img_YE10RWA_LBL, anchor='nw') #R09
             self.Canvas1.create_image((1420, 221), image=img_YE10RWA_LBL, anchor='nw') #L12
             self.Canvas1.create_image((1560, 221), image=img_YE10RWA_LBL, anchor='nw') #R12
-        elif int_g_voicebox_value > 900:
+        elif int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1420, 167), image=img_YE08RWA_LBL, anchor='nw') #L09
             self.Canvas1.create_image((1560, 167), image=img_YE08RWA_LBL, anchor='nw') #R09
             self.Canvas1.create_image((1420, 221), image=img_YE08RWA_LBL, anchor='nw') #L12
             self.Canvas1.create_image((1560, 221), image=img_YE08RWA_LBL, anchor='nw') #R12
-        elif int_g_voicebox_value > 870:
+        elif int_gl_voicebox_value > 870:
             self.Canvas1.create_image((1420, 167), image=img_YE06RWA_LBL, anchor='nw') #L09
             self.Canvas1.create_image((1560, 167), image=img_YE06RWA_LBL, anchor='nw') #R09
             self.Canvas1.create_image((1420, 221), image=img_YE06RWA_LBL, anchor='nw') #L12
             self.Canvas1.create_image((1560, 221), image=img_YE06RWA_LBL, anchor='nw') #R12
-        if int_g_voicebox_value > 960:
+        if int_gl_voicebox_value > 960:
             self.Canvas1.create_image((1420, 185), image=img_YE10RWA_LBL, anchor='nw') #L10
             self.Canvas1.create_image((1560, 185), image=img_YE10RWA_LBL, anchor='nw') #R10
             self.Canvas1.create_image((1420, 203), image=img_YE10RWA_LBL, anchor='nw') #L11
             self.Canvas1.create_image((1560, 203), image=img_YE10RWA_LBL, anchor='nw') #R11
-        elif int_g_voicebox_value > 930:
+        elif int_gl_voicebox_value > 930:
             self.Canvas1.create_image((1420, 185), image=img_YE08RWA_LBL, anchor='nw') #L10
             self.Canvas1.create_image((1560, 185), image=img_YE08RWA_LBL, anchor='nw') #R10
             self.Canvas1.create_image((1420, 203), image=img_YE08RWA_LBL, anchor='nw') #L11
             self.Canvas1.create_image((1560, 203), image=img_YE08RWA_LBL, anchor='nw') #R11
-        elif int_g_voicebox_value > 900:
+        elif int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1420, 185), image=img_YE06RWA_LBL, anchor='nw') #L10
             self.Canvas1.create_image((1560, 185), image=img_YE06RWA_LBL, anchor='nw') #R10
             self.Canvas1.create_image((1420, 203), image=img_YE06RWA_LBL, anchor='nw') #L11
             self.Canvas1.create_image((1560, 203), image=img_YE06RWA_LBL, anchor='nw') #R11
-        self.after(UPDATE_INTERVAL_VB, self.VB_KARRS02)
+        self.after(g_time_upd_vb, self.VB_KARRS02)
     def VB_KITTS02(self):
         if debug == True:
             print("DASH_vbkitts02")
         if procedures == "LIVE":
-            g_voicebox_value = g_voicebox_value_2
+            gl_voicebox_value = gl_voicebox_value_2
         else:
-            g_voicebox_value = ''.join(random.choice(string.digits) for _ in range(3))
-        int_g_voicebox_value = int (g_voicebox_value)         #F�R LED BALKEN
+            gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(3))
+        int_gl_voicebox_value = int (gl_voicebox_value)         #F�R LED BALKEN
 
         #KRDATA VOICEBOX BOARD LEDS
         img_RD06RWA_LBL = tk.PhotoImage(file=img_RD06RWA_SRC)
@@ -2371,249 +2392,249 @@ class DASH(tk.Frame):
         self.Canvas1.img_RD10RWA_LBL = img_RD10RWA_LBL
 
         #VU-METER MITTE
-        if int_g_voicebox_value > 100:
+        if int_gl_voicebox_value > 100:
             self.Canvas1.create_image((1490, 185), image=img_RD10RWA_LBL, anchor='nw') #C10
             self.Canvas1.create_image((1490, 203), image=img_RD10RWA_LBL, anchor='nw') #C11
-        elif int_g_voicebox_value > 60:
+        elif int_gl_voicebox_value > 60:
             self.Canvas1.create_image((1490, 185), image=img_RD08RWA_LBL, anchor='nw') #C10
             self.Canvas1.create_image((1490, 203), image=img_RD08RWA_LBL, anchor='nw') #C11
-        elif int_g_voicebox_value > 30:
+        elif int_gl_voicebox_value > 30:
             self.Canvas1.create_image((1490, 185), image=img_RD06RWA_LBL, anchor='nw') #C10
             self.Canvas1.create_image((1490, 203), image=img_RD06RWA_LBL, anchor='nw') #C11
-        if int_g_voicebox_value > 200:
+        if int_gl_voicebox_value > 200:
             self.Canvas1.create_image((1490, 167), image=img_RD10RWA_LBL, anchor='nw') #C09
             self.Canvas1.create_image((1490, 221), image=img_RD10RWA_LBL, anchor='nw') #C12
-        elif int_g_voicebox_value > 150:
+        elif int_gl_voicebox_value > 150:
             self.Canvas1.create_image((1490, 167), image=img_RD08RWA_LBL, anchor='nw') #C09
             self.Canvas1.create_image((1490, 221), image=img_RD08RWA_LBL, anchor='nw') #C12
-        elif int_g_voicebox_value > 100:
+        elif int_gl_voicebox_value > 100:
             self.Canvas1.create_image((1490, 167), image=img_RD06RWA_LBL, anchor='nw') #C09
             self.Canvas1.create_image((1490, 221), image=img_RD06RWA_LBL, anchor='nw') #C12
-        if int_g_voicebox_value > 300:
+        if int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1490, 149), image=img_RD10RWA_LBL, anchor='nw') #C08
             self.Canvas1.create_image((1490, 239), image=img_RD10RWA_LBL, anchor='nw') #C13
-        elif int_g_voicebox_value > 250:
+        elif int_gl_voicebox_value > 250:
             self.Canvas1.create_image((1490, 149), image=img_RD08RWA_LBL, anchor='nw') #C08
             self.Canvas1.create_image((1490, 239), image=img_RD08RWA_LBL, anchor='nw') #C13
-        elif int_g_voicebox_value > 200:
+        elif int_gl_voicebox_value > 200:
             self.Canvas1.create_image((1490, 149), image=img_RD06RWA_LBL, anchor='nw') #C08
             self.Canvas1.create_image((1490, 239), image=img_RD06RWA_LBL, anchor='nw') #C13
-        if int_g_voicebox_value > 400:
+        if int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1490, 131), image=img_RD10RWA_LBL, anchor='nw') #C07
             self.Canvas1.create_image((1490, 257), image=img_RD10RWA_LBL, anchor='nw') #C14
-        elif int_g_voicebox_value > 350:
+        elif int_gl_voicebox_value > 350:
             self.Canvas1.create_image((1490, 131), image=img_RD08RWA_LBL, anchor='nw') #C07
             self.Canvas1.create_image((1490, 257), image=img_RD08RWA_LBL, anchor='nw') #C14
-        elif int_g_voicebox_value > 300:
+        elif int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1490, 131), image=img_RD06RWA_LBL, anchor='nw') #C07
             self.Canvas1.create_image((1490, 257), image=img_RD06RWA_LBL, anchor='nw') #C14
-        if int_g_voicebox_value > 500:
+        if int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1490, 113), image=img_RD10RWA_LBL, anchor='nw') #C06
             self.Canvas1.create_image((1490, 275), image=img_RD10RWA_LBL, anchor='nw') #C15
-        elif int_g_voicebox_value > 450:
+        elif int_gl_voicebox_value > 450:
             self.Canvas1.create_image((1490, 113), image=img_RD08RWA_LBL, anchor='nw') #C06
             self.Canvas1.create_image((1490, 275), image=img_RD08RWA_LBL, anchor='nw') #C15
-        elif int_g_voicebox_value > 400:
+        elif int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1490, 113), image=img_RD06RWA_LBL, anchor='nw') #C06
             self.Canvas1.create_image((1490, 275), image=img_RD06RWA_LBL, anchor='nw') #C15
-        if int_g_voicebox_value > 600:
+        if int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1490, 95), image=img_RD10RWA_LBL, anchor='nw') #C05
             self.Canvas1.create_image((1490, 293), image=img_RD10RWA_LBL, anchor='nw') #C16
-        elif int_g_voicebox_value > 550:
+        elif int_gl_voicebox_value > 550:
             self.Canvas1.create_image((1490, 95), image=img_RD08RWA_LBL, anchor='nw') #C05
             self.Canvas1.create_image((1490, 293), image=img_RD08RWA_LBL, anchor='nw') #C16
-        elif int_g_voicebox_value > 500:
+        elif int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1490, 95), image=img_RD06RWA_LBL, anchor='nw') #C05
             self.Canvas1.create_image((1490, 293), image=img_RD06RWA_LBL, anchor='nw') #C16
-        if int_g_voicebox_value > 700:
+        if int_gl_voicebox_value > 700:
             self.Canvas1.create_image((1490, 77), image=img_RD10RWA_LBL, anchor='nw') #C04
             self.Canvas1.create_image((1490, 311), image=img_RD10RWA_LBL, anchor='nw') #C17
-        elif int_g_voicebox_value > 650:
+        elif int_gl_voicebox_value > 650:
             self.Canvas1.create_image((1490, 77), image=img_RD08RWA_LBL, anchor='nw') #C04
             self.Canvas1.create_image((1490, 311), image=img_RD08RWA_LBL, anchor='nw') #C17
-        elif int_g_voicebox_value > 600:
+        elif int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1490, 77), image=img_RD06RWA_LBL, anchor='nw') #C04
             self.Canvas1.create_image((1490, 311), image=img_RD06RWA_LBL, anchor='nw') #C17
-        if int_g_voicebox_value > 800:
+        if int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1490, 59), image=img_RD10RWA_LBL, anchor='nw') #C03
             self.Canvas1.create_image((1490, 329), image=img_RD10RWA_LBL, anchor='nw') #C18
-        elif int_g_voicebox_value > 750:
+        elif int_gl_voicebox_value > 750:
             self.Canvas1.create_image((1490, 59), image=img_RD08RWA_LBL, anchor='nw') #C03
             self.Canvas1.create_image((1490, 329), image=img_RD08RWA_LBL, anchor='nw') #C18
-        elif int_g_voicebox_value > 700:
+        elif int_gl_voicebox_value > 700:
             self.Canvas1.create_image((1490, 59), image=img_RD06RWA_LBL, anchor='nw') #C03
             self.Canvas1.create_image((1490, 329), image=img_RD06RWA_LBL, anchor='nw') #C18
-        if int_g_voicebox_value > 900:
+        if int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1490, 41), image=img_RD10RWA_LBL, anchor='nw') #C02
             self.Canvas1.create_image((1490, 347), image=img_RD10RWA_LBL, anchor='nw') #C19
-        elif int_g_voicebox_value > 850:
+        elif int_gl_voicebox_value > 850:
             self.Canvas1.create_image((1490, 41), image=img_RD08RWA_LBL, anchor='nw') #C02
             self.Canvas1.create_image((1490, 347), image=img_RD08RWA_LBL, anchor='nw') #C19
-        elif int_g_voicebox_value > 800:
+        elif int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1490, 41), image=img_RD06RWA_LBL, anchor='nw') #C02
             self.Canvas1.create_image((1490, 347), image=img_RD06RWA_LBL, anchor='nw') #C19
-        if int_g_voicebox_value > 1000:
+        if int_gl_voicebox_value > 1000:
             self.Canvas1.create_image((1490, 23), image=img_RD10RWA_LBL, anchor='nw') #C01
             self.Canvas1.create_image((1490, 365), image=img_RD10RWA_LBL, anchor='nw') #C20
-        elif int_g_voicebox_value > 950:
+        elif int_gl_voicebox_value > 950:
             self.Canvas1.create_image((1490, 23), image=img_RD08RWA_LBL, anchor='nw') #C01
             self.Canvas1.create_image((1490, 365), image=img_RD08RWA_LBL, anchor='nw') #C20
-        elif int_g_voicebox_value > 900:
+        elif int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1490, 23), image=img_RD06RWA_LBL, anchor='nw') #C01
             self.Canvas1.create_image((1490, 365), image=img_RD06RWA_LBL, anchor='nw') #C20
 
         #VU-METER LINKS RECHTS
-        if int_g_voicebox_value > 300:
+        if int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1420, 185), image=img_RD10RWA_LBL, anchor='nw') #L10
             self.Canvas1.create_image((1560, 185), image=img_RD10RWA_LBL, anchor='nw') #R10
             self.Canvas1.create_image((1420, 203), image=img_RD10RWA_LBL, anchor='nw') #L11
             self.Canvas1.create_image((1560, 203), image=img_RD10RWA_LBL, anchor='nw') #R11
-        elif int_g_voicebox_value > 200:
+        elif int_gl_voicebox_value > 200:
             self.Canvas1.create_image((1420, 185), image=img_RD08RWA_LBL, anchor='nw') #L10
             self.Canvas1.create_image((1560, 185), image=img_RD08RWA_LBL, anchor='nw') #R10
             self.Canvas1.create_image((1420, 203), image=img_RD08RWA_LBL, anchor='nw') #L11
             self.Canvas1.create_image((1560, 203), image=img_RD08RWA_LBL, anchor='nw') #R11
-        elif int_g_voicebox_value > 100:
+        elif int_gl_voicebox_value > 100:
             self.Canvas1.create_image((1420, 185), image=img_RD06RWA_LBL, anchor='nw') #L10
             self.Canvas1.create_image((1560, 185), image=img_RD06RWA_LBL, anchor='nw') #R10
             self.Canvas1.create_image((1420, 203), image=img_RD06RWA_LBL, anchor='nw') #L11
             self.Canvas1.create_image((1560, 203), image=img_RD06RWA_LBL, anchor='nw') #R11
-        if int_g_voicebox_value > 500:
+        if int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1420, 167), image=img_RD10RWA_LBL, anchor='nw') #L09
             self.Canvas1.create_image((1560, 167), image=img_RD10RWA_LBL, anchor='nw') #R09
             self.Canvas1.create_image((1420, 221), image=img_RD10RWA_LBL, anchor='nw') #L12
             self.Canvas1.create_image((1560, 221), image=img_RD10RWA_LBL, anchor='nw') #R12
-        elif int_g_voicebox_value > 400:
+        elif int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1420, 167), image=img_RD08RWA_LBL, anchor='nw') #L09
             self.Canvas1.create_image((1560, 167), image=img_RD08RWA_LBL, anchor='nw') #R09
             self.Canvas1.create_image((1420, 221), image=img_RD08RWA_LBL, anchor='nw') #L12
             self.Canvas1.create_image((1560, 221), image=img_RD08RWA_LBL, anchor='nw') #R12
-        elif int_g_voicebox_value > 300:
+        elif int_gl_voicebox_value > 300:
             self.Canvas1.create_image((1420, 167), image=img_RD06RWA_LBL, anchor='nw') #L09
             self.Canvas1.create_image((1560, 167), image=img_RD06RWA_LBL, anchor='nw') #R09
             self.Canvas1.create_image((1420, 221), image=img_RD06RWA_LBL, anchor='nw') #L12
             self.Canvas1.create_image((1560, 221), image=img_RD06RWA_LBL, anchor='nw') #R12
-        if int_g_voicebox_value > 600:
+        if int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1420, 149), image=img_RD10RWA_LBL, anchor='nw') #L08
             self.Canvas1.create_image((1560, 149), image=img_RD10RWA_LBL, anchor='nw') #R08
             self.Canvas1.create_image((1420, 239), image=img_RD10RWA_LBL, anchor='nw') #L13
             self.Canvas1.create_image((1560, 239), image=img_RD10RWA_LBL, anchor='nw') #R13
-        elif int_g_voicebox_value > 500:
+        elif int_gl_voicebox_value > 500:
             self.Canvas1.create_image((1420, 149), image=img_RD08RWA_LBL, anchor='nw') #L08
             self.Canvas1.create_image((1560, 149), image=img_RD08RWA_LBL, anchor='nw') #R08
             self.Canvas1.create_image((1420, 239), image=img_RD08RWA_LBL, anchor='nw') #L13
             self.Canvas1.create_image((1560, 239), image=img_RD08RWA_LBL, anchor='nw') #R13
-        elif int_g_voicebox_value > 400:
+        elif int_gl_voicebox_value > 400:
             self.Canvas1.create_image((1420, 149), image=img_RD06RWA_LBL, anchor='nw') #L08
             self.Canvas1.create_image((1560, 149), image=img_RD06RWA_LBL, anchor='nw') #R08
             self.Canvas1.create_image((1420, 239), image=img_RD06RWA_LBL, anchor='nw') #L13
             self.Canvas1.create_image((1560, 239), image=img_RD06RWA_LBL, anchor='nw') #R13
-        if int_g_voicebox_value > 800:
+        if int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1420, 131), image=img_RD10RWA_LBL, anchor='nw') #L07
             self.Canvas1.create_image((1560, 131), image=img_RD10RWA_LBL, anchor='nw') #R07
             self.Canvas1.create_image((1420, 257), image=img_RD10RWA_LBL, anchor='nw') #L14
             self.Canvas1.create_image((1560, 257), image=img_RD10RWA_LBL, anchor='nw') #R14
-        elif int_g_voicebox_value > 700:
+        elif int_gl_voicebox_value > 700:
             self.Canvas1.create_image((1420, 131), image=img_RD08RWA_LBL, anchor='nw') #L07
             self.Canvas1.create_image((1560, 131), image=img_RD08RWA_LBL, anchor='nw') #R07
             self.Canvas1.create_image((1420, 257), image=img_RD08RWA_LBL, anchor='nw') #L14
             self.Canvas1.create_image((1560, 257), image=img_RD08RWA_LBL, anchor='nw') #R14
-        elif int_g_voicebox_value > 600:
+        elif int_gl_voicebox_value > 600:
             self.Canvas1.create_image((1420, 131), image=img_RD06RWA_LBL, anchor='nw') #L07
             self.Canvas1.create_image((1560, 131), image=img_RD06RWA_LBL, anchor='nw') #R07
             self.Canvas1.create_image((1420, 257), image=img_RD06RWA_LBL, anchor='nw') #L14
             self.Canvas1.create_image((1560, 257), image=img_RD06RWA_LBL, anchor='nw') #R14
-        if int_g_voicebox_value > 850:
+        if int_gl_voicebox_value > 850:
             self.Canvas1.create_image((1420, 113), image=img_RD10RWA_LBL, anchor='nw') #L06
             self.Canvas1.create_image((1560, 113), image=img_RD10RWA_LBL, anchor='nw') #R06
             self.Canvas1.create_image((1420, 275), image=img_RD10RWA_LBL, anchor='nw') #L15
             self.Canvas1.create_image((1560, 275), image=img_RD10RWA_LBL, anchor='nw') #R15
-        elif int_g_voicebox_value > 750:
+        elif int_gl_voicebox_value > 750:
             self.Canvas1.create_image((1420, 113), image=img_RD08RWA_LBL, anchor='nw') #L06
             self.Canvas1.create_image((1560, 113), image=img_RD08RWA_LBL, anchor='nw') #R06
             self.Canvas1.create_image((1420, 275), image=img_RD08RWA_LBL, anchor='nw') #L15
             self.Canvas1.create_image((1560, 275), image=img_RD08RWA_LBL, anchor='nw') #R15
-        elif int_g_voicebox_value > 650:
+        elif int_gl_voicebox_value > 650:
             self.Canvas1.create_image((1420, 113), image=img_RD06RWA_LBL, anchor='nw') #L06
             self.Canvas1.create_image((1560, 113), image=img_RD06RWA_LBL, anchor='nw') #R06
             self.Canvas1.create_image((1420, 275), image=img_RD06RWA_LBL, anchor='nw') #L15
             self.Canvas1.create_image((1560, 275), image=img_RD06RWA_LBL, anchor='nw') #R15
-        if int_g_voicebox_value > 860:
+        if int_gl_voicebox_value > 860:
             self.Canvas1.create_image((1420, 95), image=img_RD10RWA_LBL, anchor='nw') #L05
             self.Canvas1.create_image((1560, 95), image=img_RD10RWA_LBL, anchor='nw') #R05
             self.Canvas1.create_image((1420, 293), image=img_RD10RWA_LBL, anchor='nw') #L16
             self.Canvas1.create_image((1560, 293), image=img_RD10RWA_LBL, anchor='nw') #R16
-        elif int_g_voicebox_value > 830:
+        elif int_gl_voicebox_value > 830:
             self.Canvas1.create_image((1420, 95), image=img_RD08RWA_LBL, anchor='nw') #L05
             self.Canvas1.create_image((1560, 95), image=img_RD08RWA_LBL, anchor='nw') #R05
             self.Canvas1.create_image((1420, 293), image=img_RD08RWA_LBL, anchor='nw') #L16
             self.Canvas1.create_image((1560, 293), image=img_RD08RWA_LBL, anchor='nw') #R16
-        elif int_g_voicebox_value > 800:
+        elif int_gl_voicebox_value > 800:
             self.Canvas1.create_image((1420, 95), image=img_RD06RWA_LBL, anchor='nw') #L05
             self.Canvas1.create_image((1560, 95), image=img_RD06RWA_LBL, anchor='nw') #R05
             self.Canvas1.create_image((1420, 293), image=img_RD06RWA_LBL, anchor='nw') #L16
             self.Canvas1.create_image((1560, 293), image=img_RD06RWA_LBL, anchor='nw') #R16
-        if int_g_voicebox_value > 870:
+        if int_gl_voicebox_value > 870:
             self.Canvas1.create_image((1420, 77), image=img_RD10RWA_LBL, anchor='nw') #L04
             self.Canvas1.create_image((1560, 77), image=img_RD10RWA_LBL, anchor='nw') #R04
             self.Canvas1.create_image((1420, 311), image=img_RD10RWA_LBL, anchor='nw') #L17
             self.Canvas1.create_image((1560, 311), image=img_RD10RWA_LBL, anchor='nw') #R17
-        elif int_g_voicebox_value > 840:
+        elif int_gl_voicebox_value > 840:
             self.Canvas1.create_image((1420, 77), image=img_RD08RWA_LBL, anchor='nw') #L04
             self.Canvas1.create_image((1560, 77), image=img_RD08RWA_LBL, anchor='nw') #R04
             self.Canvas1.create_image((1420, 311), image=img_RD08RWA_LBL, anchor='nw') #L17
             self.Canvas1.create_image((1560, 311), image=img_RD08RWA_LBL, anchor='nw') #R17
-        elif int_g_voicebox_value > 810:
+        elif int_gl_voicebox_value > 810:
             self.Canvas1.create_image((1420, 77), image=img_RD06RWA_LBL, anchor='nw') #L04
             self.Canvas1.create_image((1560, 77), image=img_RD06RWA_LBL, anchor='nw') #R04
             self.Canvas1.create_image((1420, 311), image=img_RD06RWA_LBL, anchor='nw') #L17
             self.Canvas1.create_image((1560, 311), image=img_RD06RWA_LBL, anchor='nw') #R17
-        if int_g_voicebox_value > 900:
+        if int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1420, 59), image=img_RD10RWA_LBL, anchor='nw') #L03
             self.Canvas1.create_image((1560, 59), image=img_RD10RWA_LBL, anchor='nw') #R03
             self.Canvas1.create_image((1420, 329), image=img_RD10RWA_LBL, anchor='nw') #L18
             self.Canvas1.create_image((1560, 329), image=img_RD10RWA_LBL, anchor='nw') #R18
-        elif int_g_voicebox_value > 870:
+        elif int_gl_voicebox_value > 870:
             self.Canvas1.create_image((1420, 59), image=img_RD08RWA_LBL, anchor='nw') #L03
             self.Canvas1.create_image((1560, 59), image=img_RD08RWA_LBL, anchor='nw') #R03
             self.Canvas1.create_image((1420, 329), image=img_RD08RWA_LBL, anchor='nw') #L18
             self.Canvas1.create_image((1560, 329), image=img_RD08RWA_LBL, anchor='nw') #R18
-        elif int_g_voicebox_value > 840:
+        elif int_gl_voicebox_value > 840:
             self.Canvas1.create_image((1420, 59), image=img_RD06RWA_LBL, anchor='nw') #L03
             self.Canvas1.create_image((1560, 59), image=img_RD06RWA_LBL, anchor='nw') #R03
             self.Canvas1.create_image((1420, 329), image=img_RD06RWA_LBL, anchor='nw') #L18
             self.Canvas1.create_image((1560, 329), image=img_RD06RWA_LBL, anchor='nw') #R18
-        if int_g_voicebox_value > 930:
+        if int_gl_voicebox_value > 930:
             self.Canvas1.create_image((1420, 41), image=img_RD10RWA_LBL, anchor='nw') #L02
             self.Canvas1.create_image((1560, 41), image=img_RD10RWA_LBL, anchor='nw') #R02
             self.Canvas1.create_image((1420, 347), image=img_RD10RWA_LBL, anchor='nw') #L19
             self.Canvas1.create_image((1560, 347), image=img_RD10RWA_LBL, anchor='nw') #R19
-        elif int_g_voicebox_value > 900:
+        elif int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1420, 41), image=img_RD08RWA_LBL, anchor='nw') #L02
             self.Canvas1.create_image((1560, 41), image=img_RD08RWA_LBL, anchor='nw') #R02
             self.Canvas1.create_image((1420, 347), image=img_RD08RWA_LBL, anchor='nw') #L19
             self.Canvas1.create_image((1560, 347), image=img_RD08RWA_LBL, anchor='nw') #R19
-        elif int_g_voicebox_value > 870:
+        elif int_gl_voicebox_value > 870:
             self.Canvas1.create_image((1420, 41), image=img_RD06RWA_LBL, anchor='nw') #L02
             self.Canvas1.create_image((1560, 41), image=img_RD06RWA_LBL, anchor='nw') #R02
             self.Canvas1.create_image((1420, 347), image=img_RD06RWA_LBL, anchor='nw') #L19
             self.Canvas1.create_image((1560, 347), image=img_RD06RWA_LBL, anchor='nw') #R19
-        if int_g_voicebox_value > 960:
+        if int_gl_voicebox_value > 960:
             self.Canvas1.create_image((1420, 23), image=img_RD10RWA_LBL, anchor='nw') #L01 
             self.Canvas1.create_image((1560, 23), image=img_RD10RWA_LBL, anchor='nw') #R01
             self.Canvas1.create_image((1420, 365), image=img_RD10RWA_LBL, anchor='nw') #L20
             self.Canvas1.create_image((1560, 365), image=img_RD10RWA_LBL, anchor='nw') #R20
-        elif int_g_voicebox_value > 930:
+        elif int_gl_voicebox_value > 930:
             self.Canvas1.create_image((1420, 23), image=img_RD08RWA_LBL, anchor='nw') #L01 
             self.Canvas1.create_image((1560, 23), image=img_RD08RWA_LBL, anchor='nw') #R01
             self.Canvas1.create_image((1420, 365), image=img_RD08RWA_LBL, anchor='nw') #L20
             self.Canvas1.create_image((1560, 365), image=img_RD08RWA_LBL, anchor='nw') #R20
-        elif int_g_voicebox_value > 900:
+        elif int_gl_voicebox_value > 900:
             self.Canvas1.create_image((1420, 23), image=img_RD06RWA_LBL, anchor='nw') #L01 
             self.Canvas1.create_image((1560, 23), image=img_RD06RWA_LBL, anchor='nw') #R01
             self.Canvas1.create_image((1420, 365), image=img_RD06RWA_LBL, anchor='nw') #L20
             self.Canvas1.create_image((1560, 365), image=img_RD06RWA_LBL, anchor='nw') #R20
-        self.after(UPDATE_INTERVAL_VB, self.VB_KITTS02)
+        self.after(g_time_upd_vb, self.VB_KITTS02)
     def digital(self):
         if debug == True:
             print("DASH_digital")
@@ -2621,62 +2642,65 @@ class DASH(tk.Frame):
         read.update_data()
         read.update_defaults()
         read.check_gpio()
-        global socketdata01
-        global socketdata02
-        global global_menu
-        global g_voicebox_value_2
-        g_voicebox_value_2 = 100
+        global g_com_swpdle
+        global g_com_swpdre
+        global g_msg_center
+        global gl_voicebox_value_2
+        gl_voicebox_value_2 = 100
+        
         if unit == "UNIT01":
             #LIFEDATA ANALOG
             if procedures == "LIVE":
                 read.update_aldlU01()
-                g_LG01V = aldl_speed  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
-                g_LG05V = signal  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
-                g_LG06V = tuning  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
-                g_LG07V = "0"
-                g_LG08V = "0"
-                g_LG09V = "0"
-                g_LG10V = "0"
-                g_LG11V = "0"
-                g_LG12V = "0"
-                g_LG13V = "0"
+                read.update_data()
 
-                g_LG05V = trip        #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
-                g_LG06V = v_range  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
-                g_LG04V = total_km  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
-                g_LG04V2 = total_miles
+                gl_LG01V = aldl_speed
+                gl_LG05V = signal  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
+                gl_LG06V = tuning  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
+                gl_LG07V = "0"
+                gl_LG08V = "0"
+                gl_LG09V = "0"
+                gl_LG10V = "0"
+                gl_LG11V = "0"
+                gl_LG12V = "0"
+                gl_LG13V = "0"
+
+                gl_LG05V = trip        #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
+                gl_LG06V = v_range  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
+                gl_LG04V = total_km  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
+                gl_LG04V2 = total_miles
             
-                g_msg02_text = socketdata02
+                gl_msg02_text = g_com_swpdre
             else:
                 rnd02 = ['0', '1']
                 rnd14 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
                 rnd20 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
-                g_LG01V = ''.join(random.choice(string.digits) for _ in range(2))
-                g_LG05V = random.choice(rnd20)
-                g_LG06V = random.choice(rnd20)
-                g_LG07V = random.choice(rnd02)
-                g_LG08V = random.choice(rnd02)
-                g_LG09V = random.choice(rnd02)
-                g_LG10V = random.choice(rnd02)
-                g_LG11V = random.choice(rnd02)
-                g_LG12V = random.choice(rnd02)
-                g_LG13V = random.choice(rnd02)
+                gl_LG01V = ''.join(random.choice(string.digits) for _ in range(2))
+                gl_LG05V = random.choice(rnd20)
+                gl_LG06V = random.choice(rnd20)
+                gl_LG07V = random.choice(rnd02)
+                gl_LG08V = random.choice(rnd02)
+                gl_LG09V = random.choice(rnd02)
+                gl_LG10V = random.choice(rnd02)
+                gl_LG11V = random.choice(rnd02)
+                gl_LG12V = random.choice(rnd02)
+                gl_LG13V = random.choice(rnd02)
 
             #VARIABLES AS INTAGER FOR LED GAUGE
-            LG01V = int (g_LG01V)
-            LG05V = int (g_LG05V)
-            LG06V = int (g_LG06V)
-            LG07V = int (g_LG07V)
-            LG08V = int (g_LG08V)
-            LG09V = int (g_LG09V)
-            LG10V = int (g_LG10V)
-            LG11V = int (g_LG11V)
-            LG12V = int (g_LG12V)
-            LG13V = int (g_LG13V)
+            LG01V = int (gl_LG01V)
+            LG05V = int (gl_LG05V)
+            LG06V = int (gl_LG06V)
+            LG07V = int (gl_LG07V)
+            LG08V = int (gl_LG08V)
+            LG09V = int (gl_LG09V)
+            LG10V = int (gl_LG10V)
+            LG11V = int (gl_LG11V)
+            LG12V = int (gl_LG12V)
+            LG13V = int (gl_LG13V)
 
             #TODOS0102
-            g_LG04V2 = random.choice(global_menu)
-            g_msg02_text = random.choice(global_menu)
+            gl_LG04V2 = random.choice(g_msg_center)
+            gl_msg02_text = random.choice(g_msg_center)
 
             #GAUGE-POSITIONS----------------------------------------------------------------------------------------------------------------------------------        
             if   theme == "NIGHT":
@@ -3307,9 +3331,9 @@ class DASH(tk.Frame):
             elif theme == "S03" or theme == "S04":
                 #DISPLAYS-------------------------------------------------------------------------------------------------------------------------------------
                 self.Canvas1.create_image((609, 116), image=DG01_OFF_LBL, anchor='nw')
-                self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(g_LG01V).zfill(3), anchor='n', font=font_RPMS03)
+                self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(gl_LG01V).zfill(3), anchor='n', font=font_RPMS03)
 
-                self.lbl_TOTAL.configure(text=g_LG01V.zfill(6))
+                self.lbl_TOTAL.configure(text=gl_LG01V.zfill(6))
 
                 #POWER BUTTONS-------------------------------------------------------------------------------------------------------------
                 if prognoselU01 == "LG01":
@@ -3333,12 +3357,12 @@ class DASH(tk.Frame):
                     self.LG04B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG05":
                     self.LG05B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(g_LG05V).zfill(4))
+                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG05V).zfill(4))
                 else: 
                     self.LG05B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG06":
                     self.LG06B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(g_LG06V).zfill(4))
+                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG06V).zfill(4))
                 else: 
                     self.LG06B.configure(image=LG01_ON02_LBL)         
             elif theme == "S05":
@@ -3359,10 +3383,10 @@ class DASH(tk.Frame):
             
                 #DISPLAYS-------------------------------------------------------------------------------------------------------------------------------------
                 self.Canvas1.create_image((609, 116), image=DG01_OFF_LBL, anchor='nw')
-                self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(g_LG01V).zfill(3), anchor='n', font=font_RPMS03)
+                self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(gl_LG01V).zfill(3), anchor='n', font=font_RPMS03)
             
 
-                self.lbl_TOTAL.configure(text=g_LG01V.zfill(6))
+                self.lbl_TOTAL.configure(text=gl_LG01V.zfill(6))
 
                 #POWER BUTTONS-------------------------------------------------------------------------------------------------------------
                 if prognoselU01 == "LG01":
@@ -3386,12 +3410,12 @@ class DASH(tk.Frame):
                     self.LG04B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG05":
                     self.LG05B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(g_LG05V).zfill(4))
+                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG05V).zfill(4))
                 else: 
                     self.LG05B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG06":
                     self.LG06B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(g_LG06V).zfill(4))
+                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG06V).zfill(4))
                 else: 
                     self.LG06B.configure(image=LG01_ON02_LBL)  
 
@@ -4452,17 +4476,17 @@ class DASH(tk.Frame):
             soundfolder = "SOUND"
             subfolder01 = "SWPDLE"
             subfolder02 = "SWPDRI"
-            soundobject01 = os.path.join(thisfolder, soundfolder, subfolder01, socketdata01)
-            soundobject02 = os.path.join(thisfolder, soundfolder, subfolder02, socketdata02)
+            soundobject01 = os.path.join(g_folder, soundfolder, subfolder01, g_com_swpdle)
+            soundobject02 = os.path.join(g_folder, soundfolder, subfolder02, g_com_swpdre)
 
             #PLAY-SWITCHPOD-LEFT
-            if socketdata01 != "EMPTY":
-                socketdata01 = "EMPTY"            
+            if g_com_swpdle != "EMPTY":
+                g_com_swpdle = "EMPTY"            
                 mixer.music.load(soundobject01)
                 mixer.music.play()
             #PLAY-SWITCHPOD-RIGHT
-            if socketdata02 != "EMPTY":
-                socketdata02 = "EMPTY"            
+            if g_com_swpdre != "EMPTY":
+                g_com_swpdre = "EMPTY"            
                 mixer.music.load(soundobject02)
                 mixer.music.play()
 
@@ -4470,79 +4494,79 @@ class DASH(tk.Frame):
                 a_chan0 = AnalogIn(ads, ADS.P0) #DATA FROM ANALOG INPUT 0
             #LIVEDATA ANALOG
             if procedures == "LIVE":
-                g_LG01V = aldl_rpm           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG02V = aldl_inlettemp     #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG03V = aldl_oiltemp       #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG04V = aldl_egttemp       #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG05V = aldl_oilpressure   #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN          
-                g_LG08V = aldl_vdc           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG09V = aldl_amp           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG10V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG11V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG12V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG13V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
-                g_LG14V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG01V = aldl_rpm           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG02V = aldl_inlettemp     #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG03V = aldl_oiltemp       #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG04V = aldl_egttemp       #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG05V = aldl_oilpressure   #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN          
+                gl_LG08V = aldl_vdc           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG09V = aldl_amp           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG10V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG11V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG12V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG13V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
+                gl_LG14V = aldl_aux           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
                 if enable_ai01 == "True":
                     try:
-                        g_LG06V = '%.0f'% (float(a_chan0.value)*57/32768.0) #TANKINHALT 0-57 LITER
+                        gl_LG06V = '%.0f'% (float(a_chan0.value)*57/32768.0) #TANKINHALT 0-57 LITER
                     except:
-                        g_LG06V = 0
+                        gl_LG06V = 0
                     #todo lg07 to 0-100%
-                    g_LG07V = 0
+                    gl_LG07V = 0
                 else:
-                    g_LG06V = 5
-                    g_LG07V = 5
+                    gl_LG06V = 5
+                    gl_LG07V = 5
             else:
                 rnd05 = ['0', '1', '2', '3', '4', '5']
                 rnd07 = ['0', '1', '2', '3', '4', '5', '6', '7']
                 rnd12 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
                 rnd24 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
                 if   theme == "S01" or theme == "S02" or theme == "S01KI" or theme == "S02KI":
-                    g_LG01V = ''.join(random.choice(string.digits) for _ in range(2))
-                    g_LG02V = random.choice(rnd12)
-                    g_LG03V = random.choice(rnd12)
-                    g_LG04V = random.choice(rnd12)
-                    g_LG05V = random.choice(rnd12)
-                    g_LG06V = random.choice(rnd12)
-                    g_LG07V = random.choice(rnd12)
-                    g_LG08V = random.choice(rnd24)
-                    g_LG09V = random.choice(rnd24)
-                    g_LG10V = random.choice(rnd24)
-                    g_LG11V = random.choice(rnd24)
-                    g_LG12V = random.choice(rnd24)
-                    g_LG13V = random.choice(rnd24)
-                    g_LG14V = random.choice(rnd24)
+                    gl_LG01V = ''.join(random.choice(string.digits) for _ in range(2))
+                    gl_LG02V = random.choice(rnd12)
+                    gl_LG03V = random.choice(rnd12)
+                    gl_LG04V = random.choice(rnd12)
+                    gl_LG05V = random.choice(rnd12)
+                    gl_LG06V = random.choice(rnd12)
+                    gl_LG07V = random.choice(rnd12)
+                    gl_LG08V = random.choice(rnd24)
+                    gl_LG09V = random.choice(rnd24)
+                    gl_LG10V = random.choice(rnd24)
+                    gl_LG11V = random.choice(rnd24)
+                    gl_LG12V = random.choice(rnd24)
+                    gl_LG13V = random.choice(rnd24)
+                    gl_LG14V = random.choice(rnd24)
                 elif theme == "NIGHT" or theme == "S03" or theme == "S04" or theme == "S05" or theme == "NIGHT_KITT" or theme == "S03KI" or theme == "S04KI" or theme == "S05KI" or theme == "DMC" or theme == "LCARS" or theme == "GM":
-                    g_LG01V = ''.join(random.choice(string.digits) for _ in range(2))
-                    g_LG02V = random.choice(rnd07)
-                    g_LG03V = random.choice(rnd07)
-                    g_LG04V = random.choice(rnd07)
-                    g_LG05V = random.choice(rnd07)
-                    g_LG06V = random.choice(rnd07)
-                    g_LG07V = random.choice(rnd07)
-                    g_LG08V = random.choice(rnd05)
-                    g_LG09V = random.choice(rnd05)
-                    g_LG10V = random.choice(rnd05)
-                    g_LG11V = random.choice(rnd05)
-                    g_LG12V = random.choice(rnd05)
-                    g_LG13V = random.choice(rnd05)
-                    g_LG14V = random.choice(rnd05)
+                    gl_LG01V = ''.join(random.choice(string.digits) for _ in range(2))
+                    gl_LG02V = random.choice(rnd07)
+                    gl_LG03V = random.choice(rnd07)
+                    gl_LG04V = random.choice(rnd07)
+                    gl_LG05V = random.choice(rnd07)
+                    gl_LG06V = random.choice(rnd07)
+                    gl_LG07V = random.choice(rnd07)
+                    gl_LG08V = random.choice(rnd05)
+                    gl_LG09V = random.choice(rnd05)
+                    gl_LG10V = random.choice(rnd05)
+                    gl_LG11V = random.choice(rnd05)
+                    gl_LG12V = random.choice(rnd05)
+                    gl_LG13V = random.choice(rnd05)
+                    gl_LG14V = random.choice(rnd05)
         
             #VARIABLES AS INTAGER FOR LED GAUGE
-            LG01V = int (g_LG01V)
-            LG02V = int (g_LG02V)
-            LG03V = int (g_LG03V)
-            LG04V = int (g_LG04V)
-            LG05V = int (g_LG05V)
-            LG06V = int (g_LG06V)
-            LG07V = int (g_LG07V)
-            LG08V = int (g_LG08V)
-            LG09V = int (g_LG09V)
-            LG10V = int (g_LG10V)
-            LG11V = int (g_LG11V)
-            LG12V = int (g_LG12V)
-            LG13V = int (g_LG13V)
-            LG14V = int (g_LG14V)
+            LG01V = int (gl_LG01V)
+            LG02V = int (gl_LG02V)
+            LG03V = int (gl_LG03V)
+            LG04V = int (gl_LG04V)
+            LG05V = int (gl_LG05V)
+            LG06V = int (gl_LG06V)
+            LG07V = int (gl_LG07V)
+            LG08V = int (gl_LG08V)
+            LG09V = int (gl_LG09V)
+            LG10V = int (gl_LG10V)
+            LG11V = int (gl_LG11V)
+            LG12V = int (gl_LG12V)
+            LG13V = int (gl_LG13V)
+            LG14V = int (gl_LG14V)
 
             #GAUGE-POSITIONS----------------------------------------------------------------------------------------------------------------------------------        
             if   theme == "NIGHT":
@@ -6119,28 +6143,28 @@ class DASH(tk.Frame):
                     else:
                         self.Canvas1.create_image((LG10X+i*LG10XC, LG10Y), image=LG02_OFF01_LBL, anchor='nw')
                 #ATTACK LED--------------------------------------------------------------------------------------
-                if g_attack ==0:
+                if gl_attack ==0:
                     self.Canvas1.create_image((1762, 256), image=LG02_OFF01_LBL, anchor='nw') #ATTACK GN
                     self.Canvas1.create_image((1762, 296), image=LG02_ON02_LBL, anchor='nw') #ATTACK RD
                 else:
                     self.Canvas1.create_image((1762, 256), image=LG02_ON01_LBL, anchor='nw') #ATTACK GN
                     self.Canvas1.create_image((1762, 296), image=LG02_OFF01_LBL, anchor='nw') #ATTACK RD
                 #SUST LED----------------------------------------------------------------------------------------
-                if g_sust ==0:
+                if gl_sust ==0:
                     self.Canvas1.create_image((1870, 256), image=LG02_OFF01_LBL, anchor='nw') #SUST GN
                     self.Canvas1.create_image((1870, 296), image=LG02_ON02_LBL, anchor='nw') #SUST RD
                 else:
                     self.Canvas1.create_image((1870, 256), image=LG02_ON01_LBL, anchor='nw') #SUST GN
                     self.Canvas1.create_image((1870, 296), image=LG02_OFF01_LBL, anchor='nw') #SUST RD
                 #DELAY LED---------------------------------------------------------------------------------------
-                if g_delay ==0:
+                if gl_delay ==0:
                     self.Canvas1.create_image((1978, 256), image=LG02_OFF01_LBL, anchor='nw') #DELAY GN
                     self.Canvas1.create_image((1978, 296), image=LG02_ON02_LBL, anchor='nw') #DELAY RD
                 else:
                     self.Canvas1.create_image((1978, 256), image=LG02_ON01_LBL, anchor='nw') #DELAY GN
                     self.Canvas1.create_image((1978, 296), image=LG02_OFF01_LBL, anchor='nw') #DELAY RD
                 #DEL LED-----------------------------------------------------------------------------------------
-                if g_del ==0:
+                if gl_del ==0:
                     self.Canvas1.create_image((2086, 256), image=LG02_OFF01_LBL, anchor='nw') #DEL GN
                     self.Canvas1.create_image((2086, 296), image=LG02_ON02_LBL, anchor='nw') #DEL RD
                 else:
@@ -6157,12 +6181,12 @@ class DASH(tk.Frame):
                 else:
                     self.LG16B.configure(image=LG03_OFF01_LBL)
                 #BIG AUTO LED-------------------------------------------------------------------------------------
-                if rb01_r11 == True:
+                if rb01[11] == True:
                     self.LG17B.configure(image=LG03_ON02_LBL)
                 else:
                     self.LG17B.configure(image=LG03_OFF01_LBL)
                 #BIG PURSUIT LED----------------------------------------------------------------------------------
-                if rb01_r10 == True:
+                if rb01[10] == True:
                     self.LG18B.configure(image=LG03_ON03_LBL)
                 else:
                     self.LG18B.configure(image=LG03_OFF01_LBL) 
@@ -6392,28 +6416,28 @@ class DASH(tk.Frame):
                         else:
                             self.Canvas1.create_image((LG10X+i*LG10XC, LG10Y), image=LG02_OFF02_LBL, anchor='nw')
                 #ATTACK LED--------------------------------------------------------------------------------------
-                if g_attack ==0:
+                if gl_attack ==0:
                     self.Canvas1.create_image((1762, 256), image=LG02_OFF02_LBL, anchor='nw') #ATTACK GN
                     self.Canvas1.create_image((1762, 296), image=LG02_ON02_LBL, anchor='nw') #ATTACK RD
                 else:
                     self.Canvas1.create_image((1762, 256), image=LG02_ON01_LBL, anchor='nw') #ATTACK GN
                     self.Canvas1.create_image((1762, 296), image=LG02_OFF03_LBL, anchor='nw') #ATTACK RD
                 #SUST LED----------------------------------------------------------------------------------------
-                if g_sust ==0:
+                if gl_sust ==0:
                     self.Canvas1.create_image((1870, 256), image=LG02_OFF02_LBL, anchor='nw') #SUST GN
                     self.Canvas1.create_image((1870, 296), image=LG02_ON02_LBL, anchor='nw') #SUST RD
                 else:
                     self.Canvas1.create_image((1870, 256), image=LG02_ON01_LBL, anchor='nw') #SUST GN
                     self.Canvas1.create_image((1870, 296), image=LG02_OFF03_LBL, anchor='nw') #SUST RD
                 #DELAY LED---------------------------------------------------------------------------------------
-                if g_delay ==0:
+                if gl_delay ==0:
                     self.Canvas1.create_image((1978, 256), image=LG02_OFF02_LBL, anchor='nw') #DELAY GN
                     self.Canvas1.create_image((1978, 296), image=LG02_ON02_LBL, anchor='nw') #DELAY RD
                 else:
                     self.Canvas1.create_image((1978, 256), image=LG02_ON01_LBL, anchor='nw') #DELAY GN
                     self.Canvas1.create_image((1978, 296), image=LG02_OFF03_LBL, anchor='nw') #DELAY RD
                 #DEL LED-----------------------------------------------------------------------------------------
-                if g_del ==0:
+                if gl_del ==0:
                     self.Canvas1.create_image((2086, 256), image=LG02_OFF02_LBL, anchor='nw') #DEL GN
                     self.Canvas1.create_image((2086, 296), image=LG02_ON02_LBL, anchor='nw') #DEL RD
                 else:
@@ -6430,12 +6454,12 @@ class DASH(tk.Frame):
                 else:
                     self.LG16B.configure(image=LG03_OFF02_LBL)
                 #BIG AUTO LED-------------------------------------------------------------------------------------
-                if rb01_r11 == True:
+                if rb01[11] == True:
                     self.LG17B.configure(image=LG03_ON02_LBL)
                 else:
                     self.LG17B.configure(image=LG03_OFF03_LBL)
                 #BIG PURSUIT LED----------------------------------------------------------------------------------
-                if rb01_r10 == True:
+                if rb01[10] == True:
                     self.LG18B.configure(image=LG03_ON03_LBL)
                 else:
                     self.LG18B.configure(image=LG03_OFF04_LBL) 
@@ -6679,28 +6703,28 @@ class DASH(tk.Frame):
                         else:
                             self.Canvas1.create_image((LG10X+i*LG10XC, LG10Y), image=LG02_OFF02_LBL, anchor='nw')
                 #ATTACK LED--------------------------------------------------------------------------------------
-                if g_attack ==0:
+                if gl_attack ==0:
                     self.Canvas1.create_image((1762, 256), image=LG02_OFF02_LBL, anchor='nw') #ATTACK GN
                     self.Canvas1.create_image((1762, 296), image=LG02_ON02_LBL, anchor='nw') #ATTACK RD
                 else:
                     self.Canvas1.create_image((1762, 256), image=LG02_ON01_LBL, anchor='nw') #ATTACK GN
                     self.Canvas1.create_image((1762, 296), image=LG02_OFF03_LBL, anchor='nw') #ATTACK RD
                 #SUST LED----------------------------------------------------------------------------------------
-                if g_sust ==0:
+                if gl_sust ==0:
                     self.Canvas1.create_image((1870, 256), image=LG02_OFF02_LBL, anchor='nw') #SUST GN
                     self.Canvas1.create_image((1870, 296), image=LG02_ON02_LBL, anchor='nw') #SUST RD
                 else:
                     self.Canvas1.create_image((1870, 256), image=LG02_ON01_LBL, anchor='nw') #SUST GN
                     self.Canvas1.create_image((1870, 296), image=LG02_OFF03_LBL, anchor='nw') #SUST RD
                 #DELAY LED---------------------------------------------------------------------------------------
-                if g_delay ==0:
+                if gl_delay ==0:
                     self.Canvas1.create_image((1978, 256), image=LG02_OFF02_LBL, anchor='nw') #DELAY GN
                     self.Canvas1.create_image((1978, 296), image=LG02_ON02_LBL, anchor='nw') #DELAY RD
                 else:
                     self.Canvas1.create_image((1978, 256), image=LG02_ON01_LBL, anchor='nw') #DELAY GN
                     self.Canvas1.create_image((1978, 296), image=LG02_OFF03_LBL, anchor='nw') #DELAY RD
                 #DEL LED-----------------------------------------------------------------------------------------
-                if g_del ==0:
+                if gl_del ==0:
                     self.Canvas1.create_image((2086, 256), image=LG02_OFF02_LBL, anchor='nw') #DEL GN
                     self.Canvas1.create_image((2086, 296), image=LG02_ON02_LBL, anchor='nw') #DEL RD
                 else:
@@ -6717,12 +6741,12 @@ class DASH(tk.Frame):
                 else:
                     self.LG16B.configure(image=LG03_OFF02_LBL)
                 #BIG AUTO LED-------------------------------------------------------------------------------------
-                if rb01_r11 == True:
+                if rb01[11] == True:
                     self.LG17B.configure(image=LG03_ON02_LBL)
                 else:
                     self.LG17B.configure(image=LG03_OFF03_LBL)
                 #BIG PURSUIT LED----------------------------------------------------------------------------------
-                if rb01_r10 == True:
+                if rb01[10] == True:
                     self.LG18B.configure(image=LG03_ON03_LBL)
                 else:
                     self.LG18B.configure(image=LG03_OFF04_LBL) 
@@ -6911,10 +6935,10 @@ class DASH(tk.Frame):
             #LINE 7 RIGHT
             if state_IB02_I2 == False:
                 self.Canvas1.create_image((2283, 607), image=LED_CLASSIC_HIGH_LBL, anchor='nw')
-            if wifi_status == True:
+            if g_wifi_state == True:
                 self.Canvas1.create_image((2180, 702), image=LED_CLASSIC_WIFI_LBL, anchor='nw')
             #END
-        self.after(UPDATE_INTERVAL_DIGITAL, self.digital)
+        self.after(g_time_upd_dig, self.digital)
 
 #CARFUNCTIONS----------------------------
 class CARFUNCTIONS_PAGE(tk.Frame):    
@@ -6970,7 +6994,7 @@ class CARFUNCTIONS_PAGE(tk.Frame):
     def digital(self):
         read = myfunctions()   
 
-        self.after(UPDATE_INTERVAL_DIGITAL, self.digital)
+        self.after(g_time_upd_dig, self.digital)
 
 #KNIGHTFUNCTIONS-------------------------
 class KNIGHTFUNCTIONS_PAGE(tk.Frame):    
@@ -6994,13 +7018,13 @@ class KNIGHTFUNCTIONS_PAGE(tk.Frame):
         self.SPMB.place(x=420, y=520, height=150, width=150)
         self.SPMB.configure(borderwidth=0)
         self.SPMB.configure(highlightthickness=0)
-        self.SPMB.configure(command=lambda: read.spm())
+        self.SPMB.configure(command=lambda: read.g_fnc_spm())
 
         self.EBSB = tk.Button()
         self.EBSB.place(x=710, y=520, height=150, width=150)
         self.EBSB.configure(borderwidth=0)
         self.EBSB.configure(highlightthickness=0)
-        self.EBSB.configure(command=lambda: read.ebs())
+        self.EBSB.configure(command=lambda: read.g_fnc_ebs())
         
         self.digital()
     def digital(self):
@@ -7026,20 +7050,20 @@ class KNIGHTFUNCTIONS_PAGE(tk.Frame):
             LED_SPM_OFF_LBL = tk.PhotoImage(file=img_LED_SPM_OFF_SRC)
             self.Canvas1.LED_SPM_OFF_LBL = LED_SPM_OFF_LBL
 
-        if spm == True:
+        if g_fnc_spm == True:
             self.SPMB.configure(image=BTN_SPM_ON_LBL)
             self.Canvas1.create_image((380, 310), image=LED_SPM_ON_LBL, anchor='nw')
         else: 
             self.SPMB.configure(image=BTN_SPM_OFF_LBL)
             self.Canvas1.create_image((380, 310), image=LED_SPM_OFF_LBL, anchor='nw')
-        if ebs == True:
+        if g_fnc_ebs == True:
             self.EBSB.configure(image=BTN_EBS_ON_LBL)
             self.Canvas1.create_image((670, 310), image=LED_EBS_ON_LBL, anchor='nw')
         else: 
             self.EBSB.configure(image=BTN_EBS_OFF_LBL)
             self.Canvas1.create_image((670, 310), image=LED_EBS_OFF_LBL, anchor='nw')
 
-        self.after(UPDATE_INTERVAL_DIGITAL, self.digital)
+        self.after(g_time_upd_dig, self.digital)
 
 #AUDIO-----------------------------------
 class AUDIO_PAGE(tk.Frame):    
@@ -7111,7 +7135,7 @@ class AUDIO_PAGE(tk.Frame):
         self.digital()
     def digital(self):
         read = myfunctions()   
-        self.after(UPDATE_INTERVAL_DIGITAL, self.digital)
+        self.after(g_time_upd_dig, self.digital)
 
 #AUDIO_PLAYBACK--------------------------
 class AUDIO_PLAYBACK(tk.Frame):    
@@ -7271,7 +7295,7 @@ class AUDIO_PLAYBACK(tk.Frame):
         read = myfunctions()   
 
         #ALLOCATE-IMAGES----------------------------------------------------------------------------------------------------------------------------------        
-        self.after(UPDATE_INTERVAL_DIGITAL, self.digital)
+        self.after(g_time_upd_dig, self.digital)
 
 #CONTROL---------------------------------
 class CONTROL_PAGE(tk.Frame):
@@ -7288,9 +7312,9 @@ class CONTROL_PAGE(tk.Frame):
         self.Canvas1 = tk.Canvas()
 
         if unit == "UNIT01":
-            BG_CONTROL_IMG = file = os.path.join(thisfolder, 'images/bg/U01_CONTROL.png')
+            BG_CONTROL_IMG = file = os.path.join(g_folder, 'images/bg/U01_CONTROL.png')
         elif unit == "UNIT02":
-            BG_CONTROL_IMG = file = os.path.join(thisfolder, 'images/bg/U02_CONTROL.png')
+            BG_CONTROL_IMG = file = os.path.join(g_folder, 'images/bg/U02_CONTROL.png')
 
         img_BG03_LBL = tk.PhotoImage(file=BG_CONTROL_IMG)
         self.Canvas1.bg_image = img_BG03_LBL
@@ -7373,7 +7397,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r08 = tk.Label()
             self.lbl_rb01_r08.place(x=665, y=280, width="180", height="30")
             self.lbl_rb01_r08.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r08.configure(text=file_text.get('rb01', 'r08'))
+            self.lbl_rb01_r08.configure(text=g_r_file_text.get('rb01', 'r08'))
 
             self.btn_rb01_r09 = tk.Button()
             self.btn_rb01_r09.place(x=877, y=214, width=RB01W, height=RB01H)
@@ -7382,7 +7406,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r09 = tk.Label()
             self.lbl_rb01_r09.place(x=864, y=280, width="180", height="30")
             self.lbl_rb01_r09.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r09.configure(text=file_text.get('rb01', 'r09'))
+            self.lbl_rb01_r09.configure(text=g_r_file_text.get('rb01', 'r09'))
 
             self.btn_rb01_r10 = tk.Button()
             self.btn_rb01_r10.place(x=1076, y=214, width=RB01W, height=RB01H)
@@ -7391,7 +7415,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r10 = tk.Label()
             self.lbl_rb01_r10.place(x=1063, y=280, width="180", height=30)
             self.lbl_rb01_r10.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r10.configure(text=file_text.get('rb01', 'r10'))
+            self.lbl_rb01_r10.configure(text=g_r_file_text.get('rb01', 'r10'))
 
             self.btn_rb01_r11 = tk.Button()
             self.btn_rb01_r11.place(x=678, y=395, width=RB01W, height=RB01H)
@@ -7400,7 +7424,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r11 = tk.Label()
             self.lbl_rb01_r11.place(x=665, y=460, width="180", height=30)
             self.lbl_rb01_r11.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r11.configure(text=file_text.get('rb01', 'r11'))
+            self.lbl_rb01_r11.configure(text=g_r_file_text.get('rb01', 'r11'))
 
             self.btn_rb01_r12 = tk.Button()
             self.btn_rb01_r12.place(x=877, y=395, width=RB01W, height=RB01H)
@@ -7409,7 +7433,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r12 = tk.Label()
             self.lbl_rb01_r12.place(x=864, y=460, width="180", height="30")
             self.lbl_rb01_r12.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb01_r12.configure(text=file_text.get('rb01', 'r12'))
+            self.lbl_rb01_r12.configure(text=g_r_file_text.get('rb01', 'r12'))
 
             self.btn_rb02_r08 = tk.Button()
             self.btn_rb02_r08.place(x=1076, y=395, width=RB01W, height=RB01H)
@@ -7418,7 +7442,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb02_r08 = tk.Label()
             self.lbl_rb02_r08.place(x=1063, y=460, width="180", height="30")
             self.lbl_rb02_r08.configure(foreground=MYCOLOR_AQUA, background=MYCOLOR_AQUA_DK, anchor = "c", font=(font_SRVC))
-            self.lbl_rb02_r08.configure(text=file_text.get('rb02', 'r08'))
+            self.lbl_rb02_r08.configure(text=g_r_file_text.get('rb02', 'r08'))
 
             self.btn_rb02_r04 = tk.Button()
             self.btn_rb02_r04.place(x=1620, y=200, width="150", height="150")
@@ -7458,47 +7482,47 @@ class CONTROL_PAGE(tk.Frame):
         self.Canvas1.R_ON_LARGE_LBL = R_ON_LARGE_LBL        
         
         if unit == "UNIT02":
-            if rb01_r08 == 0:
+            if rb01[8] == 0:
                 self.btn_rb01_r08.configure(image=R_OFF_LARGE_LBL)
             else: 
                 self.btn_rb01_r08.configure(image=R_ON_LARGE_LBL)
-            if rb01_r09 == False:
+            if rb01[9] == False:
                 self.btn_rb01_r09.configure(image=R_OFF_LARGE_LBL)
             else: 
                 self.btn_rb01_r09.configure(image=R_ON_LARGE_LBL)
-            if rb01_r10 == False:
+            if rb01[10] == False:
                 self.btn_rb01_r10.configure(image=R_OFF_LARGE_LBL)
             else: 
                 self.btn_rb01_r10.configure(image=R_ON_LARGE_LBL)
-            if rb01_r11 == False:
+            if rb01[11] == False:
                 self.btn_rb01_r11.configure(image=R_OFF_LARGE_LBL)
             else: 
                 self.btn_rb01_r11.configure(image=R_ON_LARGE_LBL)
-            if rb01_r12 == 0:
+            if rb01[12] == 0:
                 self.btn_rb01_r12.configure(image=R_OFF_LARGE_LBL)
             else: 
                 self.btn_rb01_r12.configure(image=R_ON_LARGE_LBL)
-            if rb02_r08 == 0:
+            if rb02[8] == 0:
                 self.btn_rb02_r08.configure(image=R_OFF_LARGE_LBL)
             else: 
                 self.btn_rb02_r08.configure(image=R_ON_LARGE_LBL)
-            if rb02_r04 == 0:
+            if rb02[4] == 0:
                 self.btn_rb02_r04.configure(image=LED_UP_OFF_LBL)
             else: 
                 self.btn_rb02_r04.configure(image=LED_UP_ON_LBL)
-            if rb02_r05 == 0:
+            if rb02[5] == 0:
                 self.btn_rb02_r05.configure(image=LED_DOWN_OFF_LBL)
             else: 
                 self.btn_rb02_r05.configure(image=LED_DOWN_ON_LBL)
-            if rb02_r06 == 0:
+            if rb02[6] == 0:
                 self.btn_rb02_r06.configure(image=LED_UP_OFF_LBL)
             else: 
                 self.btn_rb02_r06.configure(image=LED_UP_ON_LBL)
-            if rb02_r07 == 0:
+            if rb02[7] == 0:
                 self.btn_rb02_r07.configure(image=LED_DOWN_OFF_LBL)
             else: 
                 self.btn_rb02_r07.configure(image=LED_DOWN_ON_LBL)
-        self.after(UPDATE_INTERVAL_DIGITAL, self.digital)
+        self.after(g_time_upd_dig, self.digital)
 
 #THEMES----------------------------------
 class THEMES_PAGE(tk.Frame):
@@ -7514,9 +7538,9 @@ class THEMES_PAGE(tk.Frame):
         self.Canvas1 = tk.Canvas()
         
         if unit == "UNIT01":
-            BG_THEMES_IMG = file = os.path.join(thisfolder, 'images/bg/U01_THEMES.png')
+            BG_THEMES_IMG = file = os.path.join(g_folder, 'images/bg/U01_THEMES.png')
         elif unit == "UNIT02":
-            BG_THEMES_IMG = file = os.path.join(thisfolder, 'images/bg/U02_THEMES.png')
+            BG_THEMES_IMG = file = os.path.join(g_folder, 'images/bg/U02_THEMES.png')
 
         img_BG01_LBL = tk.PhotoImage(file=BG_THEMES_IMG)
         self.Canvas1.bg_image = img_BG01_LBL
@@ -7640,11 +7664,11 @@ class THEMES_PAGE(tk.Frame):
         self.digital()
     def digital(self):
         read = myfunctions()
-        self.after(UPDATE_INTERVAL_DIGITAL_SETUP, self.digital)
+        self.after(g_time_upd_conf, self.digital)
 
 #SETUP-----------------------------------
-class SETUP_PAGE_U02(tk.Frame):
-    def __init__(self, master):        
+class SETUP_PAGE_U02(tk.Frame):    
+    def __init__(self, master): 
         read = myfunctions()
         read.update_data()
 
@@ -7680,9 +7704,9 @@ class SETUP_PAGE_U02(tk.Frame):
         self.Canvas1 = tk.Canvas()
 
         if unit == "UNIT01":
-            BG_SETUP_IMG = file = os.path.join(thisfolder, 'images/bg/U01_SETUP.png')
+            BG_SETUP_IMG = file = os.path.join(g_folder, 'images/bg/U01_SETUP.png')
         elif unit == "UNIT02":
-            BG_SETUP_IMG = file = os.path.join(thisfolder, 'images/bg/U02_SETUP.png')
+            BG_SETUP_IMG = file = os.path.join(g_folder, 'images/bg/U02_SETUP.png')
 
         img_BG01_LBL = tk.PhotoImage(file=BG_SETUP_IMG)
         self.Canvas1.bg_image = img_BG01_LBL
@@ -7706,6 +7730,20 @@ class SETUP_PAGE_U02(tk.Frame):
         self.btn_PROCEDURES.configure(text="PROCEDURES")
         self.btn_PROCEDURES.configure(command=lambda:[read.procedures(), app.switch_frame(SETUP_PAGE_U02), read.dtmf(0)])        
 
+        self.lbl_units = tk.Label()
+        self.lbl_units.place(x=540, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
+        self.lbl_units.configure(background=MYCOLOR_AQUA_DK)
+        self.lbl_units.configure(anchor = "center")
+        self.lbl_units.configure(foreground=MYCOLOR_AQUA)
+        self.lbl_units.configure(font=font_BTN)
+        self.lbl_units.configure(text=units)
+
+        self.btn_units = tk.Button()
+        self.btn_units.place(x=720, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
+        self.btn_units.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
+        self.btn_units.configure(text="PROCEDURES")
+        self.btn_units.configure(command=lambda:[read.units(), app.switch_frame(SETUP_PAGE_U02), read.dtmf(0)])        
+
         self.btn_EXIT = tk.Button()
         self.btn_EXIT.place(x=900, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
         self.btn_EXIT.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_RD, foreground=MYCOLOR_AQUA, font=font_BTN)
@@ -7725,109 +7763,109 @@ class SETUP_PAGE_U02(tk.Frame):
                 self.btn_IB01_I1.place(x=40, y=527, width=80, height=38)
                 self.btn_IB01_I1.configure(borderwidth=0)
                 self.btn_IB01_I1.configure(highlightthickness=0)
-                self.btn_IB01_I1.configure(command=lambda:[read.input_sim("IB01_I1")])
+                self.btn_IB01_I1.configure(command=lambda:[read.input_sim_ib01(0)])
                 self.lbl_IB01_I1 = tk.Label()
                 self.lbl_IB01_I1.place(x=125, y=527, width=80, height=38)
-                self.Canvas1.create_text(210, 550, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I1'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(210, 550, fill=MYCOLOR_WH, text=g_r_file_text.get('IB01', 'state_IB01_I1'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB01_I2 = tk.Button()
                 self.btn_IB01_I2.place(x=40, y=572, width=80, height=38)
                 self.btn_IB01_I2.configure(borderwidth=0)
                 self.btn_IB01_I2.configure(highlightthickness=0)
-                self.btn_IB01_I2.configure(command=lambda:[read.input_sim("IB01_I2")])     
+                self.btn_IB01_I2.configure(command=lambda:[read.input_sim_ib01(1)])     
                 self.lbl_IB01_I2 = tk.Label()
                 self.lbl_IB01_I2.place(x=125, y=572, width=80, height=38)
-                self.Canvas1.create_text(210, 595, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I2'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(210, 595, fill=MYCOLOR_WH, text=g_r_file_text.get('IB01', 'state_IB01_I2'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB01_I3 = tk.Button()
                 self.btn_IB01_I3.place(x=40, y=617, width=80, height=38)
                 self.btn_IB01_I3.configure(borderwidth=0)
                 self.btn_IB01_I3.configure(highlightthickness=0)
-                self.btn_IB01_I3.configure(command=lambda:[read.input_sim("IB01_I3")])
+                self.btn_IB01_I3.configure(command=lambda:[read.input_sim_ib01(2)])
                 self.lbl_IB01_I3 = tk.Label()
                 self.lbl_IB01_I3.place(x=125, y=617, width=80, height=38)
-                self.Canvas1.create_text(210, 640, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I3'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(210, 640, fill=MYCOLOR_WH, text=g_r_file_text.get('IB01', 'state_IB01_I3'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB01_I4 = tk.Button()
                 self.btn_IB01_I4.place(x=40, y=662, width=80, height=38)
                 self.btn_IB01_I4.configure(borderwidth=0)
                 self.btn_IB01_I4.configure(highlightthickness=0)
-                self.btn_IB01_I4.configure(command=lambda:[read.input_sim("IB01_I4")])
+                self.btn_IB01_I4.configure(command=lambda:[read.input_sim_ib01(3)])
                 self.lbl_IB01_I4 = tk.Label()
                 self.lbl_IB01_I4.place(x=125, y=662, width=80, height=38)
-                self.Canvas1.create_text(210, 685, fill=MYCOLOR_WH, text=file_text.get('IB01', 'state_IB01_I4'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(210, 685, fill=MYCOLOR_WH, text=g_r_file_text.get('IB01', 'state_IB01_I4'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB02_I1 = tk.Button()
                 self.btn_IB02_I1.place(x=460, y=527, width=80, height=38)
                 self.btn_IB02_I1.configure(borderwidth=0)
                 self.btn_IB02_I1.configure(highlightthickness=0)
-                self.btn_IB02_I1.configure(command=lambda:[read.input_sim("IB02_I1")])           
+                self.btn_IB02_I1.configure(command=lambda:[read.input_sim_ib02(0)])           
                 self.lbl_IB02_I1 = tk.Label()
                 self.lbl_IB02_I1.place(x=545, y=527, width=80, height=38)
-                self.Canvas1.create_text(630, 550, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I1'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(630, 550, fill=MYCOLOR_WH, text=g_r_file_text.get('IB02', 'state_IB02_I1'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB02_I2 = tk.Button()
                 self.btn_IB02_I2.place(x=460, y=572, width=80, height=38)
                 self.btn_IB02_I2.configure(borderwidth=0)
                 self.btn_IB02_I2.configure(highlightthickness=0)
-                self.btn_IB02_I2.configure(command=lambda:[read.input_sim("IB02_I2")])
+                self.btn_IB02_I2.configure(command=lambda:[read.input_sim_ib02(1)])
                 self.lbl_IB02_I2 = tk.Label()
                 self.lbl_IB02_I2.place(x=545, y=572, width=80, height=38)
-                self.Canvas1.create_text(630, 595, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I2'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(630, 595, fill=MYCOLOR_WH, text=g_r_file_text.get('IB02', 'state_IB02_I2'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB02_I3 = tk.Button()
                 self.btn_IB02_I3.place(x=460, y=617, width=80, height=38)
                 self.btn_IB02_I3.configure(borderwidth=0)
                 self.btn_IB02_I3.configure(highlightthickness=0)
-                self.btn_IB02_I3.configure(command=lambda:[read.input_sim("IB02_I3")])
+                self.btn_IB02_I3.configure(command=lambda:[read.input_sim_ib02(2)])
                 self.lbl_IB02_I3 = tk.Label()
                 self.lbl_IB02_I3.place(x=545, y=617, width=80, height=38)
-                self.Canvas1.create_text(630, 640, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I3'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(630, 640, fill=MYCOLOR_WH, text=g_r_file_text.get('IB02', 'state_IB02_I3'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB02_I4 = tk.Button()
                 self.btn_IB02_I4.place(x=460, y=662, width=80, height=38)
                 self.btn_IB02_I4.configure(borderwidth=0)
                 self.btn_IB02_I4.configure(highlightthickness=0)
-                self.btn_IB02_I4.configure(command=lambda:[read.input_sim("IB02_I4")])
+                self.btn_IB02_I4.configure(command=lambda:[read.input_sim_ib02(3)])
                 self.lbl_IB02_I4 = tk.Label()
                 self.lbl_IB02_I4.place(x=545, y=662, width=80, height=38)
-                self.Canvas1.create_text(630, 685, fill=MYCOLOR_WH, text=file_text.get('IB02', 'state_IB02_I4'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(630, 685, fill=MYCOLOR_WH, text=g_r_file_text.get('IB02', 'state_IB02_I4'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB03_I1 = tk.Button()
                 self.btn_IB03_I1.place(x=880, y=527, width=80, height=38)
                 self.btn_IB03_I1.configure(borderwidth=0)
                 self.btn_IB03_I1.configure(highlightthickness=0)
-                self.btn_IB03_I1.configure(command=lambda:[read.input_sim("IB03_I1")])
+                self.btn_IB03_I1.configure(command=lambda:[read.input_sim_ib03(0)])
                 self.lbl_IB03_I1 = tk.Label()
                 self.lbl_IB03_I1.place(x=965, y=527, width=80, height=38)
-                self.Canvas1.create_text(1050, 550, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I1'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(1050, 550, fill=MYCOLOR_WH, text=g_r_file_text.get('IB03', 'state_IB03_I1'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB03_I2 = tk.Button()
                 self.btn_IB03_I2.place(x=880, y=572, width=80, height=38)
                 self.btn_IB03_I2.configure(borderwidth=0)
                 self.btn_IB03_I2.configure(highlightthickness=0)
-                self.btn_IB03_I2.configure(command=lambda:[read.input_sim("IB03_I2")])
+                self.btn_IB03_I2.configure(command=lambda:[read.input_sim_ib03(1)])
                 self.lbl_IB03_I2 = tk.Label()
                 self.lbl_IB03_I2.place(x=965, y=572, width=80, height=38)
-                self.Canvas1.create_text(1050, 595, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I2'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(1050, 595, fill=MYCOLOR_WH, text=g_r_file_text.get('IB03', 'state_IB03_I2'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB03_I3 = tk.Button()
                 self.btn_IB03_I3.place(x=880, y=617, width=80, height=38)
                 self.btn_IB03_I3.configure(borderwidth=0)
                 self.btn_IB03_I3.configure(highlightthickness=0)
-                self.btn_IB03_I3.configure(command=lambda:[read.input_sim("IB03_I3")])
+                self.btn_IB03_I3.configure(command=lambda:[read.input_sim_ib03(2)])
                 self.lbl_IB03_I3 = tk.Label()
                 self.lbl_IB03_I3.place(x=965, y=617, width=80, height=38)
-                self.Canvas1.create_text(1050, 640, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I3'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(1050, 640, fill=MYCOLOR_WH, text=g_r_file_text.get('IB03', 'state_IB03_I3'), anchor='w', font=(font_SRVC))
 
                 self.btn_IB03_I4 = tk.Button()
                 self.btn_IB03_I4.place(x=880, y=662, width=80, height=38)
                 self.btn_IB03_I4.configure(borderwidth=0)
                 self.btn_IB03_I4.configure(highlightthickness=0)
-                self.btn_IB03_I4.configure(command=lambda:[read.input_sim("IB03_I4")])
+                self.btn_IB03_I4.configure(command=lambda:[read.input_sim_ib03(3)])
                 self.lbl_IB03_I4 = tk.Label()
                 self.lbl_IB03_I4.place(x=965, y=662, width=80, height=38)
-                self.Canvas1.create_text(1050, 685, fill=MYCOLOR_WH, text=file_text.get('IB03', 'state_IB03_I4'), anchor='w', font=(font_SRVC))
+                self.Canvas1.create_text(1050, 685, fill=MYCOLOR_WH, text=g_r_file_text.get('IB03', 'state_IB03_I4'), anchor='w', font=(font_SRVC))
 
             #LABELS CREATE
             if REGION == True:
@@ -7931,54 +7969,54 @@ class SETUP_PAGE_U02(tk.Frame):
                 self.lbl_rb03_r15.configure(**lbl_style_relais)
             #LABELS TEXT
             if REGION == True:
-               self.lbl_rb01_r00.configure(text=file_text.get('rb01', 'r00'))
-               self.lbl_rb01_r01.configure(text=file_text.get('rb01', 'r01'))
-               self.lbl_rb01_r02.configure(text=file_text.get('rb01', 'r02'))
-               self.lbl_rb01_r03.configure(text=file_text.get('rb01', 'r03'))
-               self.lbl_rb01_r04.configure(text=file_text.get('rb01', 'r04'))
-               self.lbl_rb01_r05.configure(text=file_text.get('rb01', 'r05'))
-               self.lbl_rb01_r06.configure(text=file_text.get('rb01', 'r06'))
-               self.lbl_rb01_r07.configure(text=file_text.get('rb01', 'r07'))
-               self.lbl_rb01_r08.configure(text=file_text.get('rb01', 'r08'))
-               self.lbl_rb01_r09.configure(text=file_text.get('rb01', 'r09'))
-               self.lbl_rb01_r10.configure(text=file_text.get('rb01', 'r10'))
-               self.lbl_rb01_r11.configure(text=file_text.get('rb01', 'r11'))
-               self.lbl_rb01_r12.configure(text=file_text.get('rb01', 'r12'))
-               self.lbl_rb01_r13.configure(text=file_text.get('rb01', 'r13'))
-               self.lbl_rb01_r14.configure(text=file_text.get('rb01', 'r14'))
-               self.lbl_rb01_r15.configure(text=file_text.get('rb01', 'r15'))
-               self.lbl_rb02_r00.configure(text=file_text.get('rb02', 'r00'))
-               self.lbl_rb02_r01.configure(text=file_text.get('rb02', 'r01'))
-               self.lbl_rb02_r02.configure(text=file_text.get('rb02', 'r02'))
-               self.lbl_rb02_r03.configure(text=file_text.get('rb02', 'r03'))
-               self.lbl_rb02_r04.configure(text=file_text.get('rb02', 'r04'))
-               self.lbl_rb02_r05.configure(text=file_text.get('rb02', 'r05'))
-               self.lbl_rb02_r06.configure(text=file_text.get('rb02', 'r06'))
-               self.lbl_rb02_r07.configure(text=file_text.get('rb02', 'r07'))
-               self.lbl_rb02_r08.configure(text=file_text.get('rb02', 'r08'))
-               self.lbl_rb02_r09.configure(text=file_text.get('rb02', 'r09'))
-               self.lbl_rb02_r10.configure(text=file_text.get('rb02', 'r10'))
-               self.lbl_rb02_r11.configure(text=file_text.get('rb02', 'r11'))
-               self.lbl_rb02_r12.configure(text=file_text.get('rb02', 'r12'))
-               self.lbl_rb02_r13.configure(text=file_text.get('rb02', 'r13'))
-               self.lbl_rb02_r14.configure(text=file_text.get('rb02', 'r14'))
-               self.lbl_rb02_r15.configure(text=file_text.get('rb02', 'r15'))
-               self.lbl_rb03_r00.configure(text=file_text.get('rb03', 'r00'))
-               self.lbl_rb03_r01.configure(text=file_text.get('rb03', 'r01'))
-               self.lbl_rb03_r02.configure(text=file_text.get('rb03', 'r02'))
-               self.lbl_rb03_r03.configure(text=file_text.get('rb03', 'r03'))
-               self.lbl_rb03_r04.configure(text=file_text.get('rb03', 'r04'))
-               self.lbl_rb03_r05.configure(text=file_text.get('rb03', 'r05'))
-               self.lbl_rb03_r06.configure(text=file_text.get('rb03', 'r06'))
-               self.lbl_rb03_r07.configure(text=file_text.get('rb03', 'r07'))
-               self.lbl_rb03_r08.configure(text=file_text.get('rb03', 'r08'))
-               self.lbl_rb03_r09.configure(text=file_text.get('rb03', 'r09'))
-               self.lbl_rb03_r10.configure(text=file_text.get('rb03', 'r10'))
-               self.lbl_rb03_r11.configure(text=file_text.get('rb03', 'r11'))
-               self.lbl_rb03_r12.configure(text=file_text.get('rb03', 'r12'))
-               self.lbl_rb03_r13.configure(text=file_text.get('rb03', 'r13'))
-               self.lbl_rb03_r14.configure(text=file_text.get('rb03', 'r14'))
-               self.lbl_rb03_r15.configure(text=file_text.get('rb03', 'r15'))
+               self.lbl_rb01_r00.configure(text=g_r_file_text.get('rb01', 'r00'))
+               self.lbl_rb01_r01.configure(text=g_r_file_text.get('rb01', 'r01'))
+               self.lbl_rb01_r02.configure(text=g_r_file_text.get('rb01', 'r02'))
+               self.lbl_rb01_r03.configure(text=g_r_file_text.get('rb01', 'r03'))
+               self.lbl_rb01_r04.configure(text=g_r_file_text.get('rb01', 'r04'))
+               self.lbl_rb01_r05.configure(text=g_r_file_text.get('rb01', 'r05'))
+               self.lbl_rb01_r06.configure(text=g_r_file_text.get('rb01', 'r06'))
+               self.lbl_rb01_r07.configure(text=g_r_file_text.get('rb01', 'r07'))
+               self.lbl_rb01_r08.configure(text=g_r_file_text.get('rb01', 'r08'))
+               self.lbl_rb01_r09.configure(text=g_r_file_text.get('rb01', 'r09'))
+               self.lbl_rb01_r10.configure(text=g_r_file_text.get('rb01', 'r10'))
+               self.lbl_rb01_r11.configure(text=g_r_file_text.get('rb01', 'r11'))
+               self.lbl_rb01_r12.configure(text=g_r_file_text.get('rb01', 'r12'))
+               self.lbl_rb01_r13.configure(text=g_r_file_text.get('rb01', 'r13'))
+               self.lbl_rb01_r14.configure(text=g_r_file_text.get('rb01', 'r14'))
+               self.lbl_rb01_r15.configure(text=g_r_file_text.get('rb01', 'r15'))
+               self.lbl_rb02_r00.configure(text=g_r_file_text.get('rb02', 'r00'))
+               self.lbl_rb02_r01.configure(text=g_r_file_text.get('rb02', 'r01'))
+               self.lbl_rb02_r02.configure(text=g_r_file_text.get('rb02', 'r02'))
+               self.lbl_rb02_r03.configure(text=g_r_file_text.get('rb02', 'r03'))
+               self.lbl_rb02_r04.configure(text=g_r_file_text.get('rb02', 'r04'))
+               self.lbl_rb02_r05.configure(text=g_r_file_text.get('rb02', 'r05'))
+               self.lbl_rb02_r06.configure(text=g_r_file_text.get('rb02', 'r06'))
+               self.lbl_rb02_r07.configure(text=g_r_file_text.get('rb02', 'r07'))
+               self.lbl_rb02_r08.configure(text=g_r_file_text.get('rb02', 'r08'))
+               self.lbl_rb02_r09.configure(text=g_r_file_text.get('rb02', 'r09'))
+               self.lbl_rb02_r10.configure(text=g_r_file_text.get('rb02', 'r10'))
+               self.lbl_rb02_r11.configure(text=g_r_file_text.get('rb02', 'r11'))
+               self.lbl_rb02_r12.configure(text=g_r_file_text.get('rb02', 'r12'))
+               self.lbl_rb02_r13.configure(text=g_r_file_text.get('rb02', 'r13'))
+               self.lbl_rb02_r14.configure(text=g_r_file_text.get('rb02', 'r14'))
+               self.lbl_rb02_r15.configure(text=g_r_file_text.get('rb02', 'r15'))
+               self.lbl_rb03_r00.configure(text=g_r_file_text.get('rb03', 'r00'))
+               self.lbl_rb03_r01.configure(text=g_r_file_text.get('rb03', 'r01'))
+               self.lbl_rb03_r02.configure(text=g_r_file_text.get('rb03', 'r02'))
+               self.lbl_rb03_r03.configure(text=g_r_file_text.get('rb03', 'r03'))
+               self.lbl_rb03_r04.configure(text=g_r_file_text.get('rb03', 'r04'))
+               self.lbl_rb03_r05.configure(text=g_r_file_text.get('rb03', 'r05'))
+               self.lbl_rb03_r06.configure(text=g_r_file_text.get('rb03', 'r06'))
+               self.lbl_rb03_r07.configure(text=g_r_file_text.get('rb03', 'r07'))
+               self.lbl_rb03_r08.configure(text=g_r_file_text.get('rb03', 'r08'))
+               self.lbl_rb03_r09.configure(text=g_r_file_text.get('rb03', 'r09'))
+               self.lbl_rb03_r10.configure(text=g_r_file_text.get('rb03', 'r10'))
+               self.lbl_rb03_r11.configure(text=g_r_file_text.get('rb03', 'r11'))
+               self.lbl_rb03_r12.configure(text=g_r_file_text.get('rb03', 'r12'))
+               self.lbl_rb03_r13.configure(text=g_r_file_text.get('rb03', 'r13'))
+               self.lbl_rb03_r14.configure(text=g_r_file_text.get('rb03', 'r14'))
+               self.lbl_rb03_r15.configure(text=g_r_file_text.get('rb03', 'r15'))
             #LABELS POSITION
             if REGION == True:
                 self.lbl_rb01_r00.place(x=L01X, y=L02Y, width=L01W, height=L01H)
@@ -8262,51 +8300,51 @@ class SETUP_PAGE_U02(tk.Frame):
         self.Canvas1.LED_V_LED_LIVE_LBL = LED_V_LED_LIVE_LBL
 
         if unit == "UNIT02":
-            if sim_IB01_I1 == True:
+            if sim_IB01[0] == True:
                 self.btn_IB01_I1.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB01_I1.configure(image=LED_V_LED_LIVE_LBL)
-            if sim_IB01_I2 == True:
+            if sim_IB01[1] == True:
                 self.btn_IB01_I2.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB01_I2.configure(image=LED_V_LED_LIVE_LBL)            
-            if sim_IB01_I3 == True:
+            if sim_IB01[2] == True:
                 self.btn_IB01_I3.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB01_I3.configure(image=LED_V_LED_LIVE_LBL)            
-            if sim_IB01_I4 == True:
+            if sim_IB01[3] == True:
                 self.btn_IB01_I4.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB01_I4.configure(image=LED_V_LED_LIVE_LBL)            
-            if sim_IB02_I1 == True:
+            if sim_IB02[0] == True:
                 self.btn_IB02_I1.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB02_I1.configure(image=LED_V_LED_LIVE_LBL)
-            if sim_IB02_I2 == True:
+            if sim_IB02[1] == True:
                 self.btn_IB02_I2.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB02_I2.configure(image=LED_V_LED_LIVE_LBL)            
-            if sim_IB02_I3 == True:
+            if sim_IB02[2] == True:
                 self.btn_IB02_I3.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB02_I3.configure(image=LED_V_LED_LIVE_LBL)            
-            if sim_IB02_I4 == True:
+            if sim_IB02[3] == True:
                 self.btn_IB02_I4.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB02_I4.configure(image=LED_V_LED_LIVE_LBL)       
-            if sim_IB03_I1 == True:
+            if sim_IB03[0] == True:
                 self.btn_IB03_I1.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB03_I1.configure(image=LED_V_LED_LIVE_LBL)
-            if sim_IB03_I2 == True:
+            if sim_IB03[1] == True:
                 self.btn_IB03_I2.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB03_I2.configure(image=LED_V_LED_LIVE_LBL)            
-            if sim_IB03_I3 == True:
+            if sim_IB03[2] == True:
                 self.btn_IB03_I3.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB03_I3.configure(image=LED_V_LED_LIVE_LBL)            
-            if sim_IB03_I4 == True:
+            if sim_IB03[3] == True:
                 self.btn_IB03_I4.configure(image=LED_V_LED_SIMULATION_LBL)
             else:
                 self.btn_IB03_I4.configure(image=LED_V_LED_LIVE_LBL)   
@@ -8360,201 +8398,201 @@ class SETUP_PAGE_U02(tk.Frame):
             else: 
                 self.lbl_IB03_I4.configure(image=LED_V_LED_OFF_LBL) 
             #RB01
-            if rb01_r00 == False:
+            if rb01[0] == False:
                 self.btn_rb01_r00.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r00.configure(image=R_ON_SMALL_LBL)
-            if rb01_r01 == False:
+            if rb01[1] == False:
                 self.btn_rb01_r01.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r01.configure(image=R_ON_SMALL_LBL)
-            if rb01_r02 == False:
+            if rb01[2] == False:
                 self.btn_rb01_r02.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r02.configure(image=R_ON_SMALL_LBL)
-            if rb01_r03 == False:
+            if rb01[3] == False:
                 self.btn_rb01_r03.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r03.configure(image=R_ON_SMALL_LBL)
-            if rb01_r04 == False:
+            if rb01[4] == False:
                 self.btn_rb01_r04.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r04.configure(image=R_ON_SMALL_LBL)
-            if rb01_r05 == False:
+            if rb01[5] == False:
                 self.btn_rb01_r05.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r05.configure(image=R_ON_SMALL_LBL)
-            if rb01_r06 == False:
+            if rb01[6] == False:
                 self.btn_rb01_r06.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r06.configure(image=R_ON_SMALL_LBL)
-            if rb01_r07 == False:
+            if rb01[7] == False:
                 self.btn_rb01_r07.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r07.configure(image=R_ON_SMALL_LBL)
-            if rb01_r08 == False:
+            if rb01[8] == False:
                 self.btn_rb01_r08.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r08.configure(image=R_ON_SMALL_LBL)
-            if rb01_r09 == False:
+            if rb01[9] == False:
                 self.btn_rb01_r09.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r09.configure(image=R_ON_SMALL_LBL)
-            if rb01_r10 == False:
+            if rb01[10] == False:
                 self.btn_rb01_r10.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r10.configure(image=R_ON_SMALL_LBL)
-            if rb01_r11 == False:
+            if rb01[11] == False:
                 self.btn_rb01_r11.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r11.configure(image=R_ON_SMALL_LBL)
-            if rb01_r12 == False:
+            if rb01[12] == False:
                 self.btn_rb01_r12.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r12.configure(image=R_ON_SMALL_LBL)
-            if rb01_r13 == False:
+            if rb01[13] == False:
                 self.btn_rb01_r13.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r13.configure(image=R_ON_SMALL_LBL)
-            if rb01_r14 == False:
+            if rb01[14] == False:
                 self.btn_rb01_r14.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r14.configure(image=R_ON_SMALL_LBL)
-            if rb01_r15 == False:
+            if rb01[15] == False:
                 self.btn_rb01_r15.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb01_r15.configure(image=R_ON_SMALL_LBL)
             #rb02
-            if rb02_r00 == False:
+            if rb02[0] == False:
                 self.btn_rb02_r00.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r00.configure(image=R_ON_SMALL_LBL)
-            if rb02_r01 == False:
+            if rb02[1] == False:
                 self.btn_rb02_r01.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r01.configure(image=R_ON_SMALL_LBL)
-            if rb02_r02 == False:
+            if rb02[2] == False:
                 self.btn_rb02_r02.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r02.configure(image=R_ON_SMALL_LBL)
-            if rb02_r03 == False:
+            if rb02[3] == False:
                 self.btn_rb02_r03.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r03.configure(image=R_ON_SMALL_LBL)
-            if rb02_r04 == False:
+            if rb02[4] == False:
                 self.btn_rb02_r04.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r04.configure(image=R_ON_SMALL_LBL)
-            if rb02_r05 == False:
+            if rb02[5] == False:
                 self.btn_rb02_r05.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r05.configure(image=R_ON_SMALL_LBL)
-            if rb02_r06 == False:
+            if rb02[6] == False:
                 self.btn_rb02_r06.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r06.configure(image=R_ON_SMALL_LBL)
-            if rb02_r07 == False:
+            if rb02[7] == False:
                 self.btn_rb02_r07.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r07.configure(image=R_ON_SMALL_LBL)
-            if rb02_r08 == False:
+            if rb02[8] == False:
                 self.btn_rb02_r08.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r08.configure(image=R_ON_SMALL_LBL)
-            if rb02_r09 == False:
+            if rb02[9] == False:
                 self.btn_rb02_r09.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r09.configure(image=R_ON_SMALL_LBL)
-            if rb02_r10 == False:
+            if rb02[10] == False:
                 self.btn_rb02_r10.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r10.configure(image=R_ON_SMALL_LBL)
-            if rb02_r11 == False:
+            if rb02[11] == False:
                 self.btn_rb02_r11.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r11.configure(image=R_ON_SMALL_LBL)
-            if rb02_r12 == False:
+            if rb02[12] == False:
                 self.btn_rb02_r12.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r12.configure(image=R_ON_SMALL_LBL)
-            if rb02_r13 == False:
+            if rb02[13] == False:
                 self.btn_rb02_r13.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r13.configure(image=R_ON_SMALL_LBL)
-            if rb02_r14 == False:
+            if rb02[14] == False:
                 self.btn_rb02_r14.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r14.configure(image=R_ON_SMALL_LBL)
-            if rb02_r15 == False:
+            if rb02[15] == False:
                 self.btn_rb02_r15.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb02_r15.configure(image=R_ON_SMALL_LBL)
             #rb03
-            if rb03_r00 == False:
+            if rb02[0] == False:
                 self.btn_rb03_r00.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r00.configure(image=R_ON_SMALL_LBL)
-            if rb03_r01 == False:
+            if rb02[1] == False:
                 self.btn_rb03_r01.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r01.configure(image=R_ON_SMALL_LBL)
-            if rb03_r02 == False:
+            if rb02[2] == False:
                 self.btn_rb03_r02.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r02.configure(image=R_ON_SMALL_LBL)
-            if rb03_r03 == False:
+            if rb02[3] == False:
                 self.btn_rb03_r03.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r03.configure(image=R_ON_SMALL_LBL)
-            if rb03_r04 == False:
+            if rb02[4] == False:
                 self.btn_rb03_r04.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r04.configure(image=R_ON_SMALL_LBL)
-            if rb03_r05 == False:
+            if rb02[5] == False:
                 self.btn_rb03_r05.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r05.configure(image=R_ON_SMALL_LBL)
-            if rb03_r06 == False:
+            if rb02[6] == False:
                 self.btn_rb03_r06.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r06.configure(image=R_ON_SMALL_LBL)
-            if rb03_r07 == False:
+            if rb02[7] == False:
                 self.btn_rb03_r07.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r07.configure(image=R_ON_SMALL_LBL)
-            if rb03_r08 == False:
+            if rb02[8] == False:
                 self.btn_rb03_r08.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r08.configure(image=R_ON_SMALL_LBL)
-            if rb03_r09 == False:
+            if rb02[9] == False:
                 self.btn_rb03_r09.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r09.configure(image=R_ON_SMALL_LBL)
-            if rb03_r10 == False:
+            if rb02[10] == False:
                 self.btn_rb03_r10.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r10.configure(image=R_ON_SMALL_LBL)
-            if rb03_r11 == False:
+            if rb02[11] == False:
                 self.btn_rb03_r11.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r11.configure(image=R_ON_SMALL_LBL)
-            if rb03_r12 == False:
+            if rb02[12] == False:
                 self.btn_rb03_r12.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r12.configure(image=R_ON_SMALL_LBL)
-            if rb03_r13 == False:
+            if rb02[13] == False:
                 self.btn_rb03_r13.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r13.configure(image=R_ON_SMALL_LBL)
-            if rb03_r14 == False:
+            if rb02[14] == False:
                 self.btn_rb03_r14.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r14.configure(image=R_ON_SMALL_LBL)
-            if rb03_r15 == False:
+            if rb02[15] == False:
                 self.btn_rb03_r15.configure(image=R_OFF_SMALL_LBL)
             else: 
                 self.btn_rb03_r15.configure(image=R_ON_SMALL_LBL)
-        self.after(UPDATE_INTERVAL_DIGITAL_SETUP, self.digital)
+        self.after(g_time_upd_conf, self.digital)
 
 #MYFUNCTIONS-----------------------------
 class myfunctions(): 
@@ -8564,13 +8602,14 @@ class myfunctions():
     def update_data(self):
         global data_file
         config = configparser.ConfigParser()
-        data_file = os.path.join(thisfolder, 'data/data.ini')
+        data_file = os.path.join(g_folder, 'data/data.ini')
         config.read(data_file)
         #CONFIG
         global unit
         global style
         global theme
         global procedures
+        global units
         global soundmode
         global volume
         global muted
@@ -8582,10 +8621,13 @@ class myfunctions():
         global enable_rb02
         global enable_rb03
         global enable_ai01
+        global enable_scanner
+        global enable_gps
         unit = config.get("CONFIG","unit")
         style = config.get("CONFIG","style")
         theme = config.get("CONFIG","theme")
         procedures = config.get("CONFIG","procedures")
+        units = config.get("CONFIG","units")
         soundmode = config.get("CONFIG","soundmode")
         volume = config.get("CONFIG","volume")
         muted = config.get("CONFIG","muted")
@@ -8597,6 +8639,8 @@ class myfunctions():
         enable_rb02 = config.get("CONFIG","enable_rb02")
         enable_rb03 = config.get("CONFIG","enable_rb03")
         enable_ai01 = config.get("CONFIG","enable_ai01")
+        enable_scanner = config.get("CONFIG","enable_scanner")
+        enable_gps = config.get("CONFIG","enable_gps")
         #COMPASS
         global nswo
         global latitude
@@ -8686,27 +8730,27 @@ class myfunctions():
         int_g_p2_value = int (config.get("VOICEBOX","p2"))
         int_g_p3_value = int (config.get("VOICEBOX","p3"))
         int_g_p4_value = int (config.get("VOICEBOX","p4"))
-        g_voicebox_value_2 = config.get("VOICEBOX","voicebox")
-        g_ledmitriprange_value = config.get("U01","miles")
+        gl_voicebox_value_2 = config.get("VOICEBOX","voicebox")
+        gl_ledmitriprange_value = config.get("U01","miles")
         #U03
         global progno_string
         global prognosel
-        global g_vdc
-        global g_amp
-        global g_aux
-        global g_attack
-        global g_sust
-        global g_delay
-        global g_del
+        global gl_vdc
+        global gl_amp
+        global gl_aux
+        global gl_attack
+        global gl_sust
+        global gl_delay
+        global gl_del
         progno_string = config.get("U03","progno_string")
         prognosel = config.get("U03","prognosel")
-        g_vdc = config.get("U03","g_vdc")
-        g_amp = config.get("U03","g_amp")
-        g_aux = config.get("U03","g_aux")
-        g_attack = config.get("U03","g_attack")
-        g_sust = config.get("U03","g_sust")
-        g_delay = config.get("U03","g_delay")
-        g_del = config.get("U03","g_del")
+        gl_vdc = config.get("U03","g_vdc")
+        gl_amp = config.get("U03","g_amp")
+        gl_aux = config.get("U03","g_aux")
+        gl_attack = config.get("U03","g_attack")
+        gl_sust = config.get("U03","g_sust")
+        gl_delay = config.get("U03","g_delay")
+        gl_del = config.get("U03","g_del")
     def update_aldlU01(self):
         global aldl_speed
         global aldl_rpm
@@ -8714,7 +8758,7 @@ class myfunctions():
         global aldl_oiltemp
         global aldl_egttemp
         global aldl_oilpressure
-        config_ALDL = dict(file_aldl.items('U01_ALDL'))
+        config_ALDL = dict(g_r_file_aldl.items('U01_ALDL'))
         aldl_speed = config_ALDL['aldl_speed']
         aldl_rpm = config_ALDL['aldl_rpm']
         aldl_inlettemp = config_ALDL['aldl_inlettemp']
@@ -8731,7 +8775,7 @@ class myfunctions():
         global aldl_vdc
         global aldl_amp
         global aldl_aux
-        config_ALDL = dict(file_aldl.items('U02_ALDL'))
+        config_ALDL = dict(g_r_file_aldl.items('U02_ALDL'))
         aldl_speed = config_ALDL['01-01_speed']
         aldl_rpm = config_ALDL['01-02_rpm']
         aldl_inlettemp = config_ALDL['01-03_inlettemp']
@@ -8867,8 +8911,8 @@ class myfunctions():
         global lg17_txt
         global lg18_txt
         global lg19_txt
-        file_text.read(text_fileU01)     
-        text_config = dict(file_text.items(theme))
+        g_r_file_text.read(g_file_textU01)     
+        text_config = dict(g_r_file_text.items(theme))
         lg01_txt = text_config['lg01']
         lg0102_txt = text_config['lg0102']
         lg0103_txt = text_config['lg0103']
@@ -8916,8 +8960,8 @@ class myfunctions():
         global lg17_txt
         global lg18_txt
         global lg19_txt
-        file_text.read(text_file)     
-        text_config = dict(file_text.items(theme))
+        g_r_file_text.read(g_file_text)     
+        text_config = dict(g_r_file_text.items(theme))
         lg01_txt = text_config['lg01']
         lg0102_txt = text_config['lg0102']
         lg0103_txt = text_config['lg0103']
@@ -9016,7 +9060,7 @@ class myfunctions():
     def list_sound_files(self, i):
         global list_files
         global soundpath
-        soundpath_all = posixpath.join(thisfolder, "SOUND")
+        soundpath_all = posixpath.join(g_folder, "SOUND")
         soundpath = posixpath.join(soundpath_all, i) 
         list_files = []
         for path in os.listdir(soundpath):
@@ -9027,58 +9071,58 @@ class myfunctions():
         mixer.music.load(soundobject)
         mixer.music.play()
     def turnsignal(self):  
-        playmp3 = os.path.join(thisfolder, "SOUND/TURN.mp3")
+        playmp3 = os.path.join(g_folder, "SOUND/TURN.mp3")
         mixer.music.load(playmp3)
         mixer.music.play()   
     def sound_voice(self, sound_var):
         #IMPORT-SOUNDFILE
         soundfolder = "SOUND"
         subfolder01 = "SWPDLE"
-        soundobject01 = posixpath.join(thisfolder, soundfolder, subfolder01, sound_var)
+        soundobject01 = posixpath.join(g_folder, soundfolder, subfolder01, sound_var)
         mixer.music.load(soundobject01)
         mixer.music.play()
     def bttf_snd(self,sound_var):
         if   sound_var == 0:
-            playmp3 = os.path.join(thisfolder, "SOUND/BTTF/TCD_FAIL.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/BTTF/TCD_FAIL.mp3")
         elif sound_var == 1:
-            playmp3 = os.path.join(thisfolder, "SOUND/BTTF/TCD_OFF_SHORT.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/BTTF/TCD_OFF_SHORT.mp3")
         elif sound_var == 2:
-            playmp3 = os.path.join(thisfolder, "SOUND/BTTF/TCD_ON_LOUD.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/BTTF/TCD_ON_LOUD.mp3")
         elif sound_var == 3:
-            playmp3 = os.path.join(thisfolder, "SOUND/BTTF/BEEP.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/BTTF/BEEP.mp3")
         mixer.music.load(playmp3)
         mixer.music.play()
     def dtmf(self, data):
         if   data == 0:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/000.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/000.mp3")
         elif data == 1:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/001.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/001.mp3")
         elif data == 2:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/002.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/002.mp3")
         elif data == 3:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/003.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/003.mp3")
         elif data == 4:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/004.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/004.mp3")
         elif data == 5:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/005.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/005.mp3")
         elif data == 6:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/006.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/006.mp3")
         elif data == 7:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/007.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/007.mp3")
         elif data == 8:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/008.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/008.mp3")
         elif data == 9:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/009.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/009.mp3")
         elif data == 10:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/010.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/010.mp3")
         elif data == 11:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/011.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/011.mp3")
         elif data == 12:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/012.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/012.mp3")
         elif data == 13:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/013.mp3")
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/013.mp3")
         elif data == 14:
-            playmp3 = os.path.join(thisfolder, "SOUND/DTMF/014.mp3") 
+            playmp3 = os.path.join(g_folder, "SOUND/DTMF/014.mp3") 
         mixer.music.load(playmp3)
         mixer.music.play()
     def prognoselU01(self, data):
@@ -9105,20 +9149,20 @@ class myfunctions():
             count_ign_enable = 0
             count_ign_off = 20
             pass 
-    def spm(self):
-        global spm
-        if spm == False:
-            spm = True
-        elif spm == True:
-            spm = False
-    def ebs(self):
-        global ebs
-        global spm
-        if ebs == False:
-            ebs = True
-            spm = False
-        elif ebs == True:
-            ebs = False
+    def g_fnc_spm(self):
+        global g_fnc_spm
+        if g_fnc_spm == False:
+            g_fnc_spm = True
+        elif g_fnc_spm == True:
+            g_fnc_spm = False
+    def g_fnc_ebs(self):
+        global g_fnc_ebs
+        global g_fnc_spm
+        if g_fnc_ebs == False:
+            g_fnc_ebs = True
+            g_fnc_spm = False
+        elif g_fnc_ebs == True:
+            g_fnc_ebs = False
     def procedures(self):
         global procedures
         if procedures == "LIVE":
@@ -9130,7 +9174,19 @@ class myfunctions():
         write_procedures = config_object["CONFIG"] #Get the section
         write_procedures["procedures"] = procedures       #Update the parameter
         with open(data_file, 'w') as conf:    #Write changes back to file
-            config_object.write(conf)               
+            config_object.write(conf) 
+    def units(self):
+        global units
+        if units == "METRIC":
+            units = "IMPERIAL"
+        else:
+            units = "METRIC"
+        config_object = ConfigParser()
+        config_object.read(data_file)
+        write_units = config_object["CONFIG"] #Get the section
+        write_units["units"] = units       #Update the parameter
+        with open(data_file, 'w') as conf:    #Write changes back to file
+            config_object.write(conf) 
     def check_gpio(self):
         global state_IB01_I1
         global state_IB01_I2
@@ -9188,7 +9244,7 @@ class myfunctions():
             config_object.write(conf) 
     def switch_theme(self, var):
         global theme
-        playmp3 = os.path.join(thisfolder, "SOUND/sfx/SCREEN_ON.mp3") 
+        playmp3 = os.path.join(g_folder, "SOUND/sfx/SCREEN_ON.mp3") 
         mixer.music.load(playmp3)
         mixer.music.play()
         config_object = ConfigParser()
@@ -9219,432 +9275,48 @@ class myfunctions():
         with open(data_file, 'w') as conf:
             config_object.write(conf) 
         app.switch_frame(DASH)
-    def input_sim(self, var):
-        global sim_IB01_I1
-        global sim_IB01_I2
-        global sim_IB01_I3
-        global sim_IB01_I4
-        global sim_IB02_I1
-        global sim_IB02_I2
-        global sim_IB02_I3
-        global sim_IB02_I4
-        global sim_IB03_I1
-        global sim_IB03_I2
-        global sim_IB03_I3
-        global sim_IB03_I4
-
-        if var == "IB01_I1":
-            if sim_IB01_I1 == False:
-                sim_IB01_I1 = True
-            else:
-                sim_IB01_I1 = False
-        elif var == "IB01_I2":
-            if sim_IB01_I2 == False:
-                sim_IB01_I2 = True
-            else:
-                sim_IB01_I2 = False
-        elif var == "IB01_I3":
-            if sim_IB01_I3 == False:
-                sim_IB01_I3 = True
-            else:
-                sim_IB01_I3 = False
-        elif var == "IB01_I4":
-            if sim_IB01_I4 == False:
-                sim_IB01_I4 = True
-            else:
-                sim_IB01_I4 = False
-        elif var == "IB02_I1":
-            if sim_IB02_I1 == False:
-                sim_IB02_I1 = True
-            else:
-                sim_IB02_I1 = False
-        elif var == "IB02_I2":
-            if sim_IB02_I2 == False:
-                sim_IB02_I2 = True
-            else:
-                sim_IB02_I2 = False
-        elif var == "IB02_I3":
-            if sim_IB02_I3 == False:
-                sim_IB02_I3 = True
-            else:
-                sim_IB02_I3 = False
-        elif var == "IB02_I4":
-            if sim_IB02_I4 == False:
-                sim_IB02_I4 = True
-            else:
-                sim_IB02_I4 = False
-        elif var == "IB03_I1":
-            if sim_IB03_I1 == False:
-                sim_IB03_I1 = True
-            else:
-                sim_IB03_I1 = False
-        elif var == "IB03_I2":
-            if sim_IB03_I2 == False:
-                sim_IB03_I2 = True
-            else:
-                sim_IB03_I2 = False
-        elif var == "IB03_I3":
-            if sim_IB03_I3 == False:
-                sim_IB03_I3 = True
-            else:
-                sim_IB03_I3 = False
-        elif var == "IB03_I4":
-            if sim_IB03_I4 == False:
-                sim_IB03_I4 = True
-            else:
-                sim_IB03_I4 = False
+    def input_sim_ib01(self, var):
+        if sim_IB01[var] == False:
+            sim_IB01[var] = True
+        else:
+            sim_IB01[var] = False
+    def input_sim_ib02(self, var):
+        if sim_IB02[var] == False:
+            sim_IB02[var] = True
+        else:
+            sim_IB02[var] = False 
+    def input_sim_ib03(self, var):
+        if sim_IB03[var] == False:
+            sim_IB03[var] = True
+        else:
+            sim_IB03[var] = False
     def switch_rb01(self, var):
-        global rb01_r00
-        global rb01_r01
-        global rb01_r02
-        global rb01_r03
-        global rb01_r04
-        global rb01_r05
-        global rb01_r06
-        global rb01_r07
-        global rb01_r08
-        global rb01_r09
-        global rb01_r10
-        global rb01_r11
-        global rb01_r12
-        global rb01_r13
-        global rb01_r14
-        global rb01_r15 
-        global info_lbl
-
         if enable_rb01 == "True":
             relno = rb01.get_pin(var)
             relno.direction = Direction.OUTPUT
-            if var == 0:
-                if rb01_r00 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r00 = not relno.value
-            elif var == 1:
-                if rb01_r01 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r01 = not relno.value            
-            elif var == 2:
-                if rb01_r02 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r02 = not relno.value
-            elif var == 3:
-                if rb01_r03 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r03 = not relno.value
-            elif var == 4:
-                if rb01_r04 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r04 = not relno.value
-            elif var == 5:
-                if rb01_r05 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r05 = not relno.value
-            elif var == 6:
-                if rb01_r06 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r06 = not relno.value
-            elif var == 7:
-                if rb01_r07 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r07 = not relno.value
-            elif var == 8:
-                if rb01_r08 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r08 = not relno.value
-            elif var == 9:
-                if rb01_r09 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r09 = not relno.value
-            elif var == 10:
-                if rb01_r10 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r10 = not relno.value
-            elif var == 11:
-                if rb01_r11 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r11 = not relno.value
-            elif var == 12:
-                if rb01_r12 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r12 = not relno.value
-            elif var == 13:
-                if rb01_r13 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r13 = not relno.value
-            elif var == 14:
-                if rb01_r14 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r14 = not relno.value
-            elif var == 15:
-                if rb01_r15 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb01_r15 = not relno.value
+            if rb01[var] == False:
+                relno.value = False
+            else:
+                relno.value = True
+            rb01[var] = not relno.value
     def switch_rb02(self, var):
-        global rb02_r00
-        global rb02_r01
-        global rb02_r02
-        global rb02_r03
-        global rb02_r04
-        global rb02_r05
-        global rb02_r06
-        global rb02_r07
-        global rb02_r08
-        global rb02_r09
-        global rb02_r10
-        global rb02_r11
-        global rb02_r12
-        global rb02_r13
-        global rb02_r14
-        global rb02_r15  
-
         if enable_rb02 == "True":
             relno = rb02.get_pin(var)
             relno.direction = Direction.OUTPUT
-            if var == 0:
-                if rb02_r00 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r00 = not relno.value
-            elif var == 1:
-                if rb02_r01 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r01 = not relno.value            
-            elif var == 2:
-                if rb02_r02 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r02 = not relno.value
-            elif var == 3:
-                if rb02_r03 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r03 = not relno.value
-            elif var == 4:
-                if rb02_r04 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r04 = not relno.value
-            elif var == 5:
-                if rb02_r05 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r05 = not relno.value
-            elif var == 6:
-                if rb02_r06 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r06 = not relno.value
-            elif var == 7:
-                if rb02_r07 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r07 = not relno.value
-            elif var == 8:
-                if rb02_r08 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r08 = not relno.value
-            elif var == 9:
-                if rb02_r09 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r09 = not relno.value
-            elif var == 10:
-                if rb02_r10 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r10 = not relno.value
-            elif var == 11:
-                if rb02_r11 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r11 = not relno.value
-            elif var == 12:
-                if rb02_r12 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r12 = not relno.value
-            elif var == 13:
-                if rb02_r13 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r13 = not relno.value
-            elif var == 14:
-                if rb02_r14 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r14 = not relno.value
-            elif var == 15:
-                if rb02_r15 == False:
-                    relno.value = False
-                else:
-                    relno.value = True
-                rb02_r15 = not relno.value
+            if rb02[var] == False:
+                relno.value = False
+            else:
+                relno.value = True
+            rb02[var] = not relno.value           
     def switch_rb03(self, var):
-            global rb03_r00
-            global rb03_r01
-            global rb03_r02
-            global rb03_r03
-            global rb03_r04
-            global rb03_r05
-            global rb03_r06
-            global rb03_r07
-            global rb03_r08
-            global rb03_r09
-            global rb03_r10
-            global rb03_r11
-            global rb03_r12
-            global rb03_r13
-            global rb03_r14
-            global rb03_r15  
-
-            if enable_rb03 == "True":
-                relno = rb03.get_pin(var)
-                relno.direction = Direction.OUTPUT
-                if var == 0:
-                    if rb03_r00 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r00 = not relno.value
-                elif var == 1:
-                    if rb03_r01 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r01 = not relno.value            
-                elif var == 2:
-                    if rb03_r02 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r02 = not relno.value
-                elif var == 3:
-                    if rb03_r03 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r03 = not relno.value
-                elif var == 4:
-                    if rb03_r04 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r04 = not relno.value
-                elif var == 5:
-                    if rb03_r05 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r05 = not relno.value
-                elif var == 6:
-                    if rb03_r06 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r06 = not relno.value
-                elif var == 7:
-                    if rb03_r07 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r07 = not relno.value
-                elif var == 8:
-                    if rb03_r08 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r08 = not relno.value
-                elif var == 9:
-                    if rb03_r09 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r09 = not relno.value
-                elif var == 10:
-                    if rb03_r10 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r10 = not relno.value
-                elif var == 11:
-                    if rb03_r11 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r11 = not relno.value
-                elif var == 12:
-                    if rb03_r12 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r12 = not relno.value
-                elif var == 13:
-                    if rb03_r13 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r13 = not relno.value
-                elif var == 14:
-                    if rb03_r14 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r14 = not relno.value
-                elif var == 15:
-                    if rb03_r15 == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    rb03_r15 = not relno.value
+        if enable_rb03 == "True":
+            relno = rb03.get_pin(var)
+            relno.direction = Direction.OUTPUT
+            if rb03[var] == False:
+                relno.value = False
+            else:
+                relno.value = True
+            rb03[var] = not relno.value 
 #END-----------------------------------------------------------------------------
 if __name__ == "__main__":
     websocket.enableTrace(True)
@@ -9657,6 +9329,11 @@ if __name__ == "__main__":
     wst2 = threading.Thread(target=ws2.run_forever)
     wst2.daemon = True
     wst2.start()
+
+    ws3 = websocket.WebSocketApp("ws://10.0.0.207/", on_message = scannerbar)
+    wst3 = threading.Thread(target=ws3.run_forever)
+    wst3.daemon = True
+    wst3.start()
 
     app = SampleApp()
     app.mainloop()

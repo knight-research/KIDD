@@ -17,13 +17,16 @@ pip3 install websocket-client
   
 ## 6. VLC PYTHON:  
 pip3 install python-vlc  
+
+## 7. PYNMEA2 GPS:  
+pip3 install pynmea2  
   
-## 7. PYGAME:  
+## 8. PYGAME:  
 pip3 install pygame  
 or beta if you have problems or too new python version:  
 pip install pygame --pre  
   
-## 8. INSTALL FONTS FROM FONTS FOLDER  
+## 9. INSTALL FONTS FROM FONTS FOLDER  
 --------------------------------------------------------------
   
 --------------------------------------------------------------
