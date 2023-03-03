@@ -2,7 +2,7 @@
 
 REGION = True #I AM JUST HERE FOR A BETTER VIEW
 debug = False #PRINT INFORMATIONS TO CONSOLE
-version = "V1.3.6"
+version = "V1.3.7"
 #INFOS-----------------------------------
 # VARIABLE SHORTINFORMATIONS
 # g_ global Variable
@@ -66,6 +66,9 @@ if REGION == True:
     g_file_text_U01 = os.path.join(g_folder, 'data/text_U01.ini')
     g_file_text_U02 = os.path.join(g_folder, 'data/text_U02.ini')
     #g_r_file_text.read(g_file_text)
+    #DATA----------------------------------------------------
+    g_r_file_data = configparser.ConfigParser()
+    g_file_data = os.path.join(g_folder, 'data/data.ini')
     #DISPLAY-SETTINGS----------------------------------------
     g_app_left   =  "%s" % 0
     g_app_top    =  "%s" % 0
@@ -83,6 +86,22 @@ if REGION == True:
     count_ign_enable = 0
     muted = 0
     volume_var = 0
+    #GPS-DATA------------------------------------------------
+    gps_port = None
+    g_gps_ignore_meter = 10.0
+    g_gps_long = None
+    g_gps_lat = None
+    g_gps_kph = None
+    g_gps_mph = None
+    g_gps_odo = None
+    g_gps_odo_cnt = 0.0
+    g_f_gps_kph = None
+    g_f_gps_mph = None
+    g_rnd_gps_kph = None
+    g_rnd_gps_mph = None
+    g_int_gps_kph = None
+    g_int_gps_mph = None
+    g_str_gps_odo = None
     #TEXTLISTS-----------------------------------------------
     g_msg_center = ["CALIBRATE", "PRESEN", "TBI", "MILES", "TRIP", "RANGE", "FUEL"]
     g_states = ["ON", "OFF", "HIGH", "LOW", "UP", "DOWN"]
@@ -97,7 +116,48 @@ if REGION == True:
     SND_BTN_W = 139
     THEME_BTN_W = 139
     THEME_BTN_H = 59
-    #SCANNER-------------------------------------------------
+
+    def update_configuration():
+        #muss hier für ersten start sein...
+        g_r_file_data.read(g_file_data)
+        #CONFIG
+        global enable_rb01
+        global enable_rb02
+        global enable_rb03
+        global enable_ai01
+        global enable_scanner
+        global enable_gps
+        enable_rb01 = g_r_file_data.get("CONFIG","enable_rb01")
+        enable_rb02 = g_r_file_data.get("CONFIG","enable_rb02")
+        enable_rb03 = g_r_file_data.get("CONFIG","enable_rb03")
+        enable_ai01 = g_r_file_data.get("CONFIG","enable_ai01")
+        enable_scanner = g_r_file_data.get("CONFIG","enable_scanner")
+        enable_gps = g_r_file_data.get("CONFIG","enable_gps")
+    update_configuration()
+
+#SCANNER---------------------------------
+if REGION == True:
+    def scannerbar(ws3, message):
+        print (message)
+        print("-- Step : "+ str(StepCounter) +" --")
+        for pinref in range(0, 8):
+            #xpin=RpiGPIO[pinref]#
+            # Check if LED should be on or off
+            if Seq[StepCounter][pinref]!=0:
+                print(" Enable " + str(xpin))
+                #GPIO.output(xpin, True)
+            else:
+                print(" Disable " + str(xpin))
+                #GPIO.output(xpin, False)
+  
+        StepCounter += StepDir
+  
+        # If we reach the end of the sequence reverse the direction and step the other way
+        if (StepCounter==StepCount) or (StepCounter<0):
+            StepDir = StepDir * -1
+            StepCounter = StepCounter + StepDir + StepDir
+            time.sleep(WaitTime)
+    
     StepCounter = 0
     StepDir = 1
     WaitTime = 0.2
@@ -131,28 +191,6 @@ if REGION == True:
     Seq = Seq1
     StepCount = StepCount1
 
-
-    def update_configuration():
-        #muss hier für ersten start sein...
-        global data_file
-        config = configparser.ConfigParser()
-        data_file = os.path.join(g_folder, 'data/data.ini')
-        config.read(data_file)
-        #CONFIG
-        global enable_rb01
-        global enable_rb02
-        global enable_rb03
-        global enable_ai01
-        global enable_scanner
-        global enable_gps
-        enable_rb01 = config.get("CONFIG","enable_rb01")
-        enable_rb02 = config.get("CONFIG","enable_rb02")
-        enable_rb03 = config.get("CONFIG","enable_rb03")
-        enable_ai01 = config.get("CONFIG","enable_ai01")
-        enable_scanner = config.get("CONFIG","enable_scanner")
-        enable_gps = config.get("CONFIG","enable_gps")
-    update_configuration()
-
 #SIMULATION-AND-OS-SETTINGS--------------
 if SYSTEM == "win32" or SYSTEM == "win64":
     import _fake_GPIO as GPIO
@@ -166,6 +204,10 @@ elif SYSTEM == "linux":
     from digitalio import Direction
     from adafruit_mcp230xx.mcp23017 import MCP23017 
     import Adafruit_PCA9685
+    import serial.tools.list_ports
+    import pynmea2
+    import math
+
     if enable_rb01 == "True":
         i2c = busio.I2C(board.SCL, board.SDA)
         rb01 = MCP23017(i2c, address=0x20)
@@ -182,6 +224,16 @@ elif SYSTEM == "linux":
         #https://tutorials-raspberrypi.de/mehrere-servo-motoren-steuern-raspberry-pi-pca9685/
         scan01 = Adafruit_PCA9685.PCA9685(address=0x40)
         scan01.set_pwm_freq(50)
+    if enable_gps == "ON":
+        # Search for GPS module on all available ACM ports        
+        for port in serial.tools.list_ports.comports():
+            if "ACM" in port.device:
+                try:
+                    gps_serial = serial.Serial(port.device, 9600, timeout=1)
+                    gps_port = port.device
+                    break
+                except serial.SerialException:
+                    pass
 
 #WEBSOCKET-SWPD-COMMUNICATION------------
 def get_data_SWPDLE(ws, message):
@@ -192,28 +244,6 @@ def get_data_SWPDRI(ws2, message):
     print (message)
     global g_com_swpdre
     g_com_swpdre = message
-
-#SCANNER---------------------------------
-def scannerbar(ws3, message):
-    print (message)
-    print("-- Step : "+ str(StepCounter) +" --")
-    for pinref in range(0, 8):
-        #xpin=RpiGPIO[pinref]#
-        # Check if LED should be on or off
-        if Seq[StepCounter][pinref]!=0:
-            print(" Enable " + str(xpin))
-            #GPIO.output(xpin, True)
-        else:
-            print(" Disable " + str(xpin))
-            #GPIO.output(xpin, False)
-  
-    StepCounter += StepDir
-  
-    # If we reach the end of the sequence reverse the direction and step the other way
-    if (StepCounter==StepCount) or (StepCounter<0):
-        StepDir = StepDir * -1
-        StepCounter = StepCounter + StepDir + StepDir
-        time.sleep(WaitTime)
 
 #INITIALISATIONS-------------------------
 if REGION == True:
@@ -228,7 +258,7 @@ if REGION == True:
         print ("NETWORK CONNECTED")
         GPIO.setwarnings(False)
 
-#SETUPO HARDWARE-------------------------
+#SETUP HARDWARE--------------------------
 if REGION == True:
     if debug == True:
         print("SETUP HARDWARE")
@@ -580,20 +610,15 @@ class DASH(tk.Frame):
         if unit == "UNIT01":
             g_r_file_text.read(g_file_text_U01)  
             read.update_text()
-
-        if unit == "UNIT02":
+        elif unit == "UNIT02":
             g_r_file_text.read(g_file_text_U02)
             read.update_text() 
-            
-        try:
-            self.ser = serial.Serial('/dev/ttyACM0', 9600)
-        except serial.serialutil.SerialException:
-            print ("No GPS device found.")
-            self.ser = None
 
         #STYLES----------------------------------
+        #todo get these somehow to the global variables
         btn_style_lcars001 = {'activeforeground':'#507AF7','activeforeground':MYCOLOR_BK,'background':'#93AF32','foreground':MYCOLOR_BK,'relief':'raised','borderwidth':6,'font':font_BTN}
-
+        lbl_style_sysinfo = {'background':MYCOLOR_AQUA_DK,'anchor':"e",'foreground':MYCOLOR_AQUA,'font':font_SRVC}
+        
         tk.Frame.__init__(self, master)
         self.Canvas1 = tk.Canvas()
 
@@ -862,6 +887,52 @@ class DASH(tk.Frame):
                 self.lbl_TOTAL.configure(anchor = "e")
                 self.lbl_TOTAL.configure(font=TOTALFONT_S34)
             elif theme == "S05":
+                #SYS INFORMATION DISPLAY-----------------
+                if REGION == True:
+                    self.Canvas1.create_text(430, 130, fill=MYCOLOR_YE, anchor='w', text="of                GB HDD", font=(font_SRVC))
+                    self.Canvas1.create_text(430, 155, fill=MYCOLOR_YE, anchor='w', text="of                GB RAM", font=(font_SRVC))
+                    self.Canvas1.create_text(430, 180, fill=MYCOLOR_YE, anchor='w', text="%  CPU USED", font=(font_SRVC))
+                    self.Canvas1.create_text(430, 205, fill=MYCOLOR_YE, anchor='w', text="C  CPU TEMP", font=(font_SRVC))
+                    self.Canvas1.create_text(470, 230, fill=MYCOLOR_YE, anchor='w', text="LAT", font=(font_SRVC))
+                    self.Canvas1.create_text(470, 255, fill=MYCOLOR_YE, anchor='w', text="LONG", font=(font_SRVC))
+                    self.Canvas1.create_text(470, 280, fill=MYCOLOR_YE, anchor='w', text="SPEED", font=(font_SRVC))
+
+                    self.lbl_HDD_USED = tk.Label()
+                    self.lbl_HDD_USED.place(x=365, y=118, height="20", width="60")
+                    self.lbl_HDD_USED.configure(**lbl_style_sysinfo)
+
+                    self.lbl_HDD_MAX = tk.Label()
+                    self.lbl_HDD_MAX.place(x=453, y=118, height="20", width="60")
+                    self.lbl_HDD_MAX.configure(**lbl_style_sysinfo)
+
+                    self.lbl_RAM_USED = tk.Label()
+                    self.lbl_RAM_USED.place(x=365, y=143, height="20", width="60")
+                    self.lbl_RAM_USED.configure(**lbl_style_sysinfo) 
+
+                    self.lbl_RAM_MAX = tk.Label()
+                    self.lbl_RAM_MAX.place(x=453, y=143, height="20", width="60")
+                    self.lbl_RAM_MAX.configure(**lbl_style_sysinfo)
+
+                    self.lbl_CPU_TEMP = tk.Label()
+                    self.lbl_CPU_TEMP.place(x=365, y=168, height="20", width="60")
+                    self.lbl_CPU_TEMP.configure(**lbl_style_sysinfo)
+
+                    self.lbl_CPU_USED = tk.Label()
+                    self.lbl_CPU_USED.place(x=365, y=193, height="20", width="60")
+                    self.lbl_CPU_USED.configure(**lbl_style_sysinfo) 
+
+                    self.lbl_LATITUDE = tk.Label()
+                    self.lbl_LATITUDE.place(x=365, y=218, height="20", width="100")
+                    self.lbl_LATITUDE.configure(**lbl_style_sysinfo)
+
+                    self.lbl_LONGITUDE = tk.Label()
+                    self.lbl_LONGITUDE.place(x=365, y=243, height="20", width="100")
+                    self.lbl_LONGITUDE.configure(**lbl_style_sysinfo)
+
+                    self.lbl_GPS_SPEED = tk.Label()
+                    self.lbl_GPS_SPEED.place(x=365, y=268, height="20", width="100")
+                    self.lbl_GPS_SPEED.configure(**lbl_style_sysinfo)
+                
                 self.LG01B = tk.Button()
                 self.LG01B.place(x=4, y=65, height=42, width=80)
                 self.LG01B.configure(borderwidth=0)
@@ -918,38 +989,6 @@ class DASH(tk.Frame):
                 self.lbl_TOTAL.place(x=800, y=590, width=460, height=90)
                 self.lbl_TOTAL.configure(anchor = "e")
                 self.lbl_TOTAL.configure(font=TOTALFONT_S34)
-
-                self.Canvas1.create_text(445, 195, fill=MYCOLOR_AQUA, anchor='w', text="HDD", font=(font_S34))
-                self.lbl_HDD = tk.Label()
-                self.lbl_HDD.place(x=485, y=180, height="30", width="108")
-                self.lbl_HDD.configure(background=MYCOLOR_BK)
-                self.lbl_HDD.configure(anchor = "e")
-                self.lbl_HDD.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_HDD.configure(font=font_SRVC) 
-
-                self.Canvas1.create_text(445, 225, fill=MYCOLOR_AQUA, anchor='w', text="TMP", font=(font_S34))
-                self.lbl_TEMP = tk.Label()
-                self.lbl_TEMP.place(x=485, y=210, height="30", width="108")
-                self.lbl_TEMP.configure(background=MYCOLOR_BK)
-                self.lbl_TEMP.configure(anchor = "e")
-                self.lbl_TEMP.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_TEMP.configure(font=font_SRVC) 
-        
-                self.Canvas1.create_text(445, 255, fill=MYCOLOR_AQUA, anchor='w', text="RAM", font=(font_S34))
-                self.lbl_RAM = tk.Label()
-                self.lbl_RAM.place(x=485, y=240, height="30", width="108")
-                self.lbl_RAM.configure(background=MYCOLOR_BK)
-                self.lbl_RAM.configure(anchor = "e")
-                self.lbl_RAM.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_RAM.configure(font=font_SRVC) 
-
-                self.Canvas1.create_text(445, 285, fill=MYCOLOR_AQUA, anchor='w', text="CPU", font=(font_S34))
-                self.lbl_CPU = tk.Label()
-                self.lbl_CPU.place(x=485, y=270, height="30", width="108")
-                self.lbl_CPU.configure(background=MYCOLOR_BK)
-                self.lbl_CPU.configure(anchor = "e")
-                self.lbl_CPU.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_CPU.configure(font=font_SRVC)
             elif theme == "DMC":
                 self.LG01B = tk.Button()
                 self.LG01B.place(x=12, y=67, width=165, height=52)
@@ -1700,35 +1739,35 @@ class DASH(tk.Frame):
                 self.LG18B.configure(command=lambda:[read.switch_rb01(10),read.dtmf(0)])
 
                 self.Canvas1.create_text(395, 240, fill=MYCOLOR_AQUA, anchor='w', text="HDD", font=(font_S34))
-                self.lbl_HDD = tk.Label()
-                self.lbl_HDD.place(x=440, y=225, height="30", width="100")
-                self.lbl_HDD.configure(background=MYCOLOR_BK)
-                self.lbl_HDD.configure(anchor = "e")
-                self.lbl_HDD.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_HDD.configure(font=font_SRVC) 
+                self.lbl_HDD_USED = tk.Label()
+                self.lbl_HDD_USED.place(x=440, y=225, height="30", width="100")
+                self.lbl_HDD_USED.configure(background=MYCOLOR_BK)
+                self.lbl_HDD_USED.configure(anchor = "e")
+                self.lbl_HDD_USED.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_HDD_USED.configure(font=font_SRVC) 
 
                 self.Canvas1.create_text(395, 270, fill=MYCOLOR_AQUA, anchor='w', text="TEMP", font=(font_S34))
-                self.lbl_TEMP = tk.Label()
-                self.lbl_TEMP.place(x=440, y=255, height="30", width="100")
-                self.lbl_TEMP.configure(background=MYCOLOR_BK)
-                self.lbl_TEMP.configure(anchor = "e")
-                self.lbl_TEMP.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_TEMP.configure(font=font_SRVC) 
+                self.lbl_CPU_TEMP = tk.Label()
+                self.lbl_CPU_TEMP.place(x=440, y=255, height="30", width="100")
+                self.lbl_CPU_TEMP.configure(background=MYCOLOR_BK)
+                self.lbl_CPU_TEMP.configure(anchor = "e")
+                self.lbl_CPU_TEMP.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_CPU_TEMP.configure(font=font_SRVC) 
         
                 self.Canvas1.create_text(395, 300, fill=MYCOLOR_AQUA, anchor='w', text="RAM", font=(font_S34))
-                self.lbl_RAM = tk.Label()
-                self.lbl_RAM.place(x=440, y=285, height="30", width="100")
-                self.lbl_RAM.configure(background=MYCOLOR_BK)
-                self.lbl_RAM.configure(anchor = "e")
-                self.lbl_RAM.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_RAM.configure(font=font_SRVC) 
+                self.lbl_RAM_USED = tk.Label()
+                self.lbl_RAM_USED.place(x=440, y=285, height="30", width="100")
+                self.lbl_RAM_USED.configure(background=MYCOLOR_BK)
+                self.lbl_RAM_USED.configure(anchor = "e")
+                self.lbl_RAM_USED.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_RAM_USED.configure(font=font_SRVC) 
 
                 self.Canvas1.create_text(395, 330, fill=MYCOLOR_AQUA, anchor='w', text="CPU", font=(font_S34))
-                self.lbl_CPU = tk.Label()
-                self.lbl_CPU.place(x=440, y=305, height="30", width="100")
-                self.lbl_CPU.configure(background=MYCOLOR_BK)
-                self.lbl_CPU.configure(anchor = "e")
-                self.lbl_CPU.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_CPU_USED = tk.Label()
+                self.lbl_CPU_USED.place(x=440, y=305, height="30", width="100")
+                self.lbl_CPU_USED.configure(background=MYCOLOR_BK)
+                self.lbl_CPU_USED.configure(anchor = "e")
+                self.lbl_CPU_USED.configure(foreground=MYCOLOR_AQUA)
             elif theme == "K3KS01":
                 self.LG01B = tk.Button()
                 self.LG01B.place(x=12, y=67, width=165, height=52)
@@ -2007,35 +2046,35 @@ class DASH(tk.Frame):
                 self.LG18B.configure(command=lambda:[read.switch_rb01(10),read.dtmf(0)])
 
                 self.Canvas1.create_text(395, 240, fill=MYCOLOR_AQUA, anchor='w', text="HDD", font=(font_S34))
-                self.lbl_HDD = tk.Label()
-                self.lbl_HDD.place(x=440, y=225, height="30", width="100")
-                self.lbl_HDD.configure(background=MYCOLOR_BK)
-                self.lbl_HDD.configure(anchor = "e")
-                self.lbl_HDD.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_HDD.configure(font=font_SRVC) 
+                self.lbl_HDD_USED = tk.Label()
+                self.lbl_HDD_USED.place(x=440, y=225, height="30", width="100")
+                self.lbl_HDD_USED.configure(background=MYCOLOR_BK)
+                self.lbl_HDD_USED.configure(anchor = "e")
+                self.lbl_HDD_USED.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_HDD_USED.configure(font=font_SRVC) 
 
                 self.Canvas1.create_text(395, 270, fill=MYCOLOR_AQUA, anchor='w', text="TEMP", font=(font_S34))
-                self.lbl_TEMP = tk.Label()
-                self.lbl_TEMP.place(x=440, y=255, height="30", width="100")
-                self.lbl_TEMP.configure(background=MYCOLOR_BK)
-                self.lbl_TEMP.configure(anchor = "e")
-                self.lbl_TEMP.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_TEMP.configure(font=font_SRVC) 
+                self.lbl_CPU_TEMP = tk.Label()
+                self.lbl_CPU_TEMP.place(x=440, y=255, height="30", width="100")
+                self.lbl_CPU_TEMP.configure(background=MYCOLOR_BK)
+                self.lbl_CPU_TEMP.configure(anchor = "e")
+                self.lbl_CPU_TEMP.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_CPU_TEMP.configure(font=font_SRVC) 
         
                 self.Canvas1.create_text(395, 300, fill=MYCOLOR_AQUA, anchor='w', text="RAM", font=(font_S34))
-                self.lbl_RAM = tk.Label()
-                self.lbl_RAM.place(x=440, y=285, height="30", width="100")
-                self.lbl_RAM.configure(background=MYCOLOR_BK)
-                self.lbl_RAM.configure(anchor = "e")
-                self.lbl_RAM.configure(foreground=MYCOLOR_AQUA)
-                self.lbl_RAM.configure(font=font_SRVC) 
+                self.lbl_RAM_USED = tk.Label()
+                self.lbl_RAM_USED.place(x=440, y=285, height="30", width="100")
+                self.lbl_RAM_USED.configure(background=MYCOLOR_BK)
+                self.lbl_RAM_USED.configure(anchor = "e")
+                self.lbl_RAM_USED.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_RAM_USED.configure(font=font_SRVC) 
 
                 self.Canvas1.create_text(395, 330, fill=MYCOLOR_AQUA, anchor='w', text="CPU", font=(font_S34))
-                self.lbl_CPU = tk.Label()
-                self.lbl_CPU.place(x=440, y=305, height="30", width="100")
-                self.lbl_CPU.configure(background=MYCOLOR_BK)
-                self.lbl_CPU.configure(anchor = "e")
-                self.lbl_CPU.configure(foreground=MYCOLOR_AQUA)
+                self.lbl_CPU_USED = tk.Label()
+                self.lbl_CPU_USED.place(x=440, y=305, height="30", width="100")
+                self.lbl_CPU_USED.configure(background=MYCOLOR_BK)
+                self.lbl_CPU_USED.configure(anchor = "e")
+                self.lbl_CPU_USED.configure(foreground=MYCOLOR_AQUA)
             elif theme == "SERVICE":
                 self.LG01B = tk.Button()
                 self.LG01B.place(x=5, y=50, width=200, height=60)
@@ -2661,6 +2700,9 @@ class DASH(tk.Frame):
                 read.update_aldlU01()
                 read.update_data()
 
+                if gps_port is not None:                    
+                    read.gps_data()
+
                 gl_LG01V = aldl_speed
                 gl_LG05V = signal  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
                 gl_LG06V = tuning  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
@@ -2674,7 +2716,7 @@ class DASH(tk.Frame):
 
                 gl_LG05V = trip        #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
                 gl_LG06V = v_range  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
-                gl_LG04V = total_km  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
+                gl_LG04V = g_str_gps_odo #total_km  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
                 gl_LG04V2 = total_miles
             
                 gl_msg02_text = g_com_swpdre
@@ -3354,7 +3396,7 @@ class DASH(tk.Frame):
                     self.LG02B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG03":
                     self.LG03B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG02V).zfill(4))
+                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG03V).zfill(4))
                 else: 
                     self.LG03B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG04":
@@ -3373,27 +3415,37 @@ class DASH(tk.Frame):
                 else: 
                     self.LG06B.configure(image=LG01_ON02_LBL)         
             elif theme == "S05":
-                if SYSTEM == "linux":
-                    #RAM CPU AND DISK USAGE
-                    total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
-                    # Getting loadover15 minutes
-                    load1, load5, load15 = psutil.getloadavg()
-                    cpu_usage = (load15/os.cpu_count()) * 100
-                    total, used, free = shutil.disk_usage("/")
-                    self.lbl_HDD.configure(text=free // (2**30))
-                    tFile = open('/sys/class/thermal/thermal_zone0/temp')
-                    temp = float(tFile.read())
-                    tempC = temp/1000
-                    self.lbl_TEMP.configure(text=round((tempC), 2))
-                    self.lbl_RAM.configure(text=round((used_memory/total_memory) * 100, 2))
-                    self.lbl_CPU.configure(text=str(cpu_usage).zfill(4))
+                if SYSTEM != "linux":
+                    self.lbl_HDD_USED.configure(text="888.8")
+                    self.lbl_HDD_MAX.configure(text="888.8")
+                    self.lbl_RAM_USED.configure(text="888.8")
+                    self.lbl_RAM_MAX.configure(text="888.8")
+                    self.lbl_CPU_TEMP.configure(text="888.8")
+                    self.lbl_CPU_USED.configure(text="888.8")                    
+                    self.lbl_LATITUDE.configure(text="888.8888")
+                    self.lbl_LONGITUDE.configure(text="888.8888")
+                    self.lbl_GPS_SPEED.configure(text="888.88")
+                elif SYSTEM == "linux":                   
+                    def get_cpu_temperature():
+                        res = os.popen('vcgencmd measure_temp').readline()
+                        return(res.replace("temp=","").replace("'C\n",""))
+
+                    self.lbl_HDD_USED.configure(text=str(round(psutil.disk_usage('/').used / (1024.0 ** 3), 2)))
+                    self.lbl_HDD_MAX.configure(text=str(round(psutil.disk_usage('/').total / (1024.0 ** 3), 2)))
+                    self.lbl_RAM_USED.configure(text=str(psutil.virtual_memory().percent))
+                    self.lbl_RAM_MAX.configure(text=str(round(psutil.virtual_memory().total / (1024.0 ** 3), 2)))
+                    self.lbl_CPU_TEMP.configure(text=get_cpu_temperature())
+                    self.lbl_CPU_USED.configure(text=str(psutil.cpu_percent()))                   
+                    self.lbl_LATITUDE.configure(text=g_gps_long)
+                    self.lbl_LONGITUDE.configure(text=g_gps_lat)
+                    self.lbl_GPS_SPEED.configure(text=g_gps_kph)
             
                 #DISPLAYS-------------------------------------------------------------------------------------------------------------------------------------
                 self.Canvas1.create_image((609, 116), image=DG01_OFF_LBL, anchor='nw')
                 self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(gl_LG01V).zfill(3), anchor='n', font=font_RPMS03)
             
 
-                self.lbl_TOTAL.configure(text=gl_LG01V.zfill(6))
+                self.lbl_TOTAL.configure(text=gl_LG04V)
 
                 #POWER BUTTONS-------------------------------------------------------------------------------------------------------------
                 if prognoselU01 == "LG01":
@@ -3402,12 +3454,12 @@ class DASH(tk.Frame):
                     self.LG01B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG02":
                     self.LG02B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(LG01V).zfill(4))
+                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG02V).zfill(4))
                 else: 
                     self.LG02B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG03":
                     self.LG03B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG02V).zfill(4))
+                    self.lbl_MITRIPTANGE.configure(text=g_gps_odo)
                 else: 
                     self.LG03B.configure(image=LG01_ON02_LBL)
                 if prognoselU01 == "LG04":
@@ -6478,13 +6530,13 @@ class DASH(tk.Frame):
                     load1, load5, load15 = psutil.getloadavg()
                     cpu_usage = (load15/os.cpu_count()) * 100
                     total, used, free = shutil.disk_usage("/")
-                    self.lbl_HDD.configure(text=free // (2**30))
+                    self.lbl_HDD_USED.configure(text=free // (2**30))
                     tFile = open('/sys/class/thermal/thermal_zone0/temp')
                     temp = float(tFile.read())
                     tempC = temp/1000
-                    self.lbl_TEMP.configure(text=round((tempC), 2))
-                    self.lbl_RAM.configure(text=round((used_memory/total_memory) * 100, 2))
-                    self.lbl_CPU.configure(text=str(cpu_usage).zfill(4))
+                    self.lbl_CPU_TEMP.configure(text=round((tempC), 2))
+                    self.lbl_RAM_USED.configure(text=round((used_memory/total_memory) * 100, 2))
+                    self.lbl_CPU_USED.configure(text=str(cpu_usage).zfill(4))
                 #RPM LEDS-TODO-FORMEL-ERSTELLEN--------------------------------------------------------------------------------------------
                 if LG01V >= 28:
                     self.Canvas1.create_image((5, 270), image=LG01_ON01_LBL, anchor='nw') #ADZM GN01
@@ -8607,10 +8659,10 @@ class myfunctions():
         GPIO.cleanup()
         app.destroy()
     def update_data(self):
-        global data_file
-        config = configparser.ConfigParser()
-        data_file = os.path.join(g_folder, 'data/data.ini')
-        config.read(data_file)
+        #global g_file_data
+        #config = configparser.ConfigParser()
+        #g_file_data = os.path.join(g_folder, 'data/data.ini')
+        g_r_file_data.read(g_file_data)
         #CONFIG
         global unit
         global style
@@ -8630,31 +8682,31 @@ class myfunctions():
         global enable_ai01
         global enable_scanner
         global enable_gps
-        unit = config.get("CONFIG","unit")
-        style = config.get("CONFIG","style")
-        theme = config.get("CONFIG","theme")
-        procedures = config.get("CONFIG","procedures")
-        units = config.get("CONFIG","units")
-        soundmode = config.get("CONFIG","soundmode")
-        volume = config.get("CONFIG","volume")
-        muted = config.get("CONFIG","muted")
-        language = config.get("CONFIG","language")
-        acscl01 = config.get("CONFIG","acscl01")
-        acscl02 = config.get("CONFIG","acscl02")
-        acscl03 = config.get("CONFIG","acscl03")
-        enable_rb01 = config.get("CONFIG","enable_rb01")
-        enable_rb02 = config.get("CONFIG","enable_rb02")
-        enable_rb03 = config.get("CONFIG","enable_rb03")
-        enable_ai01 = config.get("CONFIG","enable_ai01")
-        enable_scanner = config.get("CONFIG","enable_scanner")
-        enable_gps = config.get("CONFIG","enable_gps")
+        unit = g_r_file_data.get("CONFIG","unit")
+        style = g_r_file_data.get("CONFIG","style")
+        theme = g_r_file_data.get("CONFIG","theme")
+        procedures = g_r_file_data.get("CONFIG","procedures")
+        units = g_r_file_data.get("CONFIG","units")
+        soundmode = g_r_file_data.get("CONFIG","soundmode")
+        volume = g_r_file_data.get("CONFIG","volume")
+        muted = g_r_file_data.get("CONFIG","muted")
+        language = g_r_file_data.get("CONFIG","language")
+        acscl01 = g_r_file_data.get("CONFIG","acscl01")
+        acscl02 = g_r_file_data.get("CONFIG","acscl02")
+        acscl03 = g_r_file_data.get("CONFIG","acscl03")
+        enable_rb01 = g_r_file_data.get("CONFIG","enable_rb01")
+        enable_rb02 = g_r_file_data.get("CONFIG","enable_rb02")
+        enable_rb03 = g_r_file_data.get("CONFIG","enable_rb03")
+        enable_ai01 = g_r_file_data.get("CONFIG","enable_ai01")
+        enable_scanner = g_r_file_data.get("CONFIG","enable_scanner")
+        enable_gps = g_r_file_data.get("CONFIG","enable_gps")
         #COMPASS
         global nswo
         global latitude
         global longitude
-        nswo = config.get("COMPASS","nswo")
-        latitude = config.get("COMPASS","latitude")
-        longitude = config.get("COMPASS","longitude")
+        nswo = g_r_file_data.get("COMPASS","nswo")
+        latitude = g_r_file_data.get("COMPASS","latitude")
+        longitude = g_r_file_data.get("COMPASS","longitude")
         #U01
         global mphkph
         global total_km
@@ -8674,24 +8726,24 @@ class myfunctions():
         global cb
         global signal
         global tuning
-        mphkph = config.get("U01","mphkph")
-        total_km = config.get("U01","total_km")
-        total_miles = config.get("U01","total_miles")
-        mitriprange = config.get("U01","mitriprange")
-        miles = config.get("U01","miles")
-        trip = config.get("U01","trip")
-        v_range = config.get("U01","v_range")
-        progno_stringU01 = config.get("U01","progno_string")
-        prognoselU01 = config.get("U01","prognosel")
-        lo = config.get("U01","lo")
-        hi = config.get("U01","hi")
-        vhf = config.get("U01","vhf")
-        uhf = config.get("U01","uhf")
-        am = config.get("U01","am")
-        fm = config.get("U01","fm")
-        cb = config.get("U01","cb")
-        signal = config.get("U01","signal")
-        tuning = config.get("U01","tuning")
+        mphkph = g_r_file_data.get("U01","mphkph")
+        total_km = g_r_file_data.get("U01","total_km")
+        total_miles = g_r_file_data.get("U01","total_miles")
+        mitriprange = g_r_file_data.get("U01","mitriprange")
+        miles = g_r_file_data.get("U01","miles")
+        trip = g_r_file_data.get("U01","trip")
+        v_range = g_r_file_data.get("U01","v_range")
+        progno_stringU01 = g_r_file_data.get("U01","progno_string")
+        prognoselU01 = g_r_file_data.get("U01","prognosel")
+        lo = g_r_file_data.get("U01","lo")
+        hi = g_r_file_data.get("U01","hi")
+        vhf = g_r_file_data.get("U01","vhf")
+        uhf = g_r_file_data.get("U01","uhf")
+        am = g_r_file_data.get("U01","am")
+        fm = g_r_file_data.get("U01","fm")
+        cb = g_r_file_data.get("U01","cb")
+        signal = g_r_file_data.get("U01","signal")
+        tuning = g_r_file_data.get("U01","tuning")
         #VOICEBOX
         global int_g_normal_value
         global int_g_auto_value
@@ -8715,30 +8767,30 @@ class myfunctions():
         global int_g_p2_value
         global int_g_p3_value
         global int_g_p4_value
-        int_g_normal_value = int (config.get("VOICEBOX","normal"))
-        int_g_auto_value = int (config.get("VOICEBOX","auto"))
-        int_g_pursuit_value = int (config.get("VOICEBOX","pursuit"))
-        int_g_attack_value = int (config.get("VOICEBOX","attack"))
-        int_g_alt_value = int (config.get("VOICEBOX","alt"))
-        int_g_aux_value = int (config.get("VOICEBOX","aux"))
-        int_g_oilpress_value = int (config.get("VOICEBOX","oilpress"))
-        int_g_satcomm_value = int (config.get("VOICEBOX","satcomm"))
-        int_g_oiltemp_value = int (config.get("VOICEBOX","oiltemp"))
-        int_g_acc_value = int (config.get("VOICEBOX","acc"))
-        int_g_egt_value = int (config.get("VOICEBOX","egt"))
-        int_g_radar_value = int (config.get("VOICEBOX","radar"))
-        int_g_fuel_value = int (config.get("VOICEBOX","fuel"))
-        int_g_mpi_value = int (config.get("VOICEBOX","mpi"))
-        int_g_air_value = int (config.get("VOICEBOX","air"))
-        int_g_oil_value = int (config.get("VOICEBOX","oil"))
-        int_g_s1_value = int (config.get("VOICEBOX","s1"))
-        int_g_s2_value = int (config.get("VOICEBOX","s2"))
-        int_g_p1_value = int (config.get("VOICEBOX","p1"))
-        int_g_p2_value = int (config.get("VOICEBOX","p2"))
-        int_g_p3_value = int (config.get("VOICEBOX","p3"))
-        int_g_p4_value = int (config.get("VOICEBOX","p4"))
-        gl_voicebox_value_2 = config.get("VOICEBOX","voicebox")
-        gl_ledmitriprange_value = config.get("U01","miles")
+        int_g_normal_value = int (g_r_file_data.get("VOICEBOX","normal"))
+        int_g_auto_value = int (g_r_file_data.get("VOICEBOX","auto"))
+        int_g_pursuit_value = int (g_r_file_data.get("VOICEBOX","pursuit"))
+        int_g_attack_value = int (g_r_file_data.get("VOICEBOX","attack"))
+        int_g_alt_value = int (g_r_file_data.get("VOICEBOX","alt"))
+        int_g_aux_value = int (g_r_file_data.get("VOICEBOX","aux"))
+        int_g_oilpress_value = int (g_r_file_data.get("VOICEBOX","oilpress"))
+        int_g_satcomm_value = int (g_r_file_data.get("VOICEBOX","satcomm"))
+        int_g_oiltemp_value = int (g_r_file_data.get("VOICEBOX","oiltemp"))
+        int_g_acc_value = int (g_r_file_data.get("VOICEBOX","acc"))
+        int_g_egt_value = int (g_r_file_data.get("VOICEBOX","egt"))
+        int_g_radar_value = int (g_r_file_data.get("VOICEBOX","radar"))
+        int_g_fuel_value = int (g_r_file_data.get("VOICEBOX","fuel"))
+        int_g_mpi_value = int (g_r_file_data.get("VOICEBOX","mpi"))
+        int_g_air_value = int (g_r_file_data.get("VOICEBOX","air"))
+        int_g_oil_value = int (g_r_file_data.get("VOICEBOX","oil"))
+        int_g_s1_value = int (g_r_file_data.get("VOICEBOX","s1"))
+        int_g_s2_value = int (g_r_file_data.get("VOICEBOX","s2"))
+        int_g_p1_value = int (g_r_file_data.get("VOICEBOX","p1"))
+        int_g_p2_value = int (g_r_file_data.get("VOICEBOX","p2"))
+        int_g_p3_value = int (g_r_file_data.get("VOICEBOX","p3"))
+        int_g_p4_value = int (g_r_file_data.get("VOICEBOX","p4"))
+        gl_voicebox_value_2 = (g_r_file_data.get("VOICEBOX","voicebox"))
+        gl_ledmitriprange_value = (g_r_file_data.get("U01","miles"))
         #U03
         global progno_string
         global prognosel
@@ -8749,15 +8801,15 @@ class myfunctions():
         global gl_sust
         global gl_delay
         global gl_del
-        progno_string = config.get("U03","progno_string")
-        prognosel = config.get("U03","prognosel")
-        gl_vdc = config.get("U03","g_vdc")
-        gl_amp = config.get("U03","g_amp")
-        gl_aux = config.get("U03","g_aux")
-        gl_attack = config.get("U03","g_attack")
-        gl_sust = config.get("U03","g_sust")
-        gl_delay = config.get("U03","g_delay")
-        gl_del = config.get("U03","g_del")
+        progno_string = g_r_file_data.get("U03","progno_string")
+        prognosel = g_r_file_data.get("U03","prognosel")
+        gl_vdc = g_r_file_data.get("U03","g_vdc")
+        gl_amp = g_r_file_data.get("U03","g_amp")
+        gl_aux = g_r_file_data.get("U03","g_aux")
+        gl_attack = g_r_file_data.get("U03","g_attack")
+        gl_sust = g_r_file_data.get("U03","g_sust")
+        gl_delay = g_r_file_data.get("U03","g_delay")
+        gl_del = g_r_file_data.get("U03","g_del")
     def update_aldlU01(self):
         global aldl_speed
         global aldl_rpm
@@ -8878,7 +8930,7 @@ class myfunctions():
         font_S34 = ("lcars", 24)
         font_S05S = ("Cheapsman Free", 36)
         font_BTN = ("Cheapsman Free", 28)
-        font_SRVC = ("LCDDot TR", 25)
+        font_SRVC = ("LCDDot TR", 26)
         font_S12_DG01a = ("ccar7seg", 127)
         font_RPM01 = ("DSEG7 Classic", 134)
         font_RPMS01 = ("ccar7seg", 165)
@@ -8944,17 +8996,17 @@ class myfunctions():
         lg19_txt = text_config['lg19']
     def save_acscl01(self, val):
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_data = config_object["CONFIG"]
         write_data["acscl01"] = val        
-        with open(data_file, 'w') as conf:
+        with open(g_file_data, 'w') as conf:
             config_object.write(conf)
     def save_acscl02(self, val):
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_data = config_object["CONFIG"]
         write_data["acscl02"] = val        
-        with open(data_file, 'w') as conf:
+        with open(g_file_data, 'w') as conf:
             config_object.write(conf)
     def get_number_of_elements(self, list):
         count = 0
@@ -8968,10 +9020,10 @@ class myfunctions():
         global soundmode
         soundmode = "EXTERNAL"
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_procedures = config_object["CONFIG"] #Get the section
         write_procedures["soundmode"] = soundmode       #Update the parameter
-        with open(data_file, 'w') as conf:    #Write changes back to file
+        with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf) 
     def sound_hdmi1(self):
         if SYSTEM == "linux":
@@ -8980,10 +9032,10 @@ class myfunctions():
         global soundmode
         soundmode = "HDMI-1"
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_procedures = config_object["CONFIG"] #Get the section
         write_procedures["soundmode"] = soundmode       #Update the parameter
-        with open(data_file, 'w') as conf:    #Write changes back to file
+        with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf)  
     def sound_hdmi2(self):
         if SYSTEM == "linux":
@@ -8992,10 +9044,10 @@ class myfunctions():
         global soundmode
         soundmode = "HDMI-2"
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_procedures = config_object["CONFIG"] #Get the section
         write_procedures["soundmode"] = soundmode       #Update the parameter
-        with open(data_file, 'w') as conf:    #Write changes back to file
+        with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf)  
     def set_vol(self, volume_var):
         volume = int(volume_var) / 100
@@ -9084,17 +9136,17 @@ class myfunctions():
         mixer.music.play()
     def prognoselU01(self, data):
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_procedures = config_object["U01"] #Get the section
         write_procedures["prognosel"] = data   #Update the parameter
-        with open(data_file, 'w') as conf: #Write changes back to file
+        with open(g_file_data, 'w') as conf: #Write changes back to file
             config_object.write(conf) 
     def prognosel(self, data):
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_procedures = config_object["U03"] #Get the section
         write_procedures["prognosel"] = data   #Update the parameter
-        with open(data_file, 'w') as conf: #Write changes back to file
+        with open(g_file_data, 'w') as conf: #Write changes back to file
             config_object.write(conf) 
     def LG16B(self):
         global count_ign_enable
@@ -9127,10 +9179,10 @@ class myfunctions():
         else:
             procedures = "LIVE"
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_procedures = config_object["CONFIG"] #Get the section
         write_procedures["procedures"] = procedures       #Update the parameter
-        with open(data_file, 'w') as conf:    #Write changes back to file
+        with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf) 
     def units(self):
         global units
@@ -9139,10 +9191,10 @@ class myfunctions():
         else:
             units = "METRIC"
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_units = config_object["CONFIG"] #Get the section
         write_units["units"] = units       #Update the parameter
-        with open(data_file, 'w') as conf:    #Write changes back to file
+        with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf) 
     def check_gpio(self):
         global state_IB01_I1
@@ -9186,18 +9238,18 @@ class myfunctions():
     def switch_unit(self, var):
         global unit
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_data = config_object["CONFIG"]
         write_data["unit"] = var       
-        with open(data_file, 'w') as conf:
+        with open(g_file_data, 'w') as conf:
             config_object.write(conf)
     def switch_style(self, var):
         global style
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_data = config_object["CONFIG"]
         write_data["style"] = var       
-        with open(data_file, 'w') as conf:
+        with open(g_file_data, 'w') as conf:
             config_object.write(conf) 
     def switch_theme(self, var):
         global theme
@@ -9205,10 +9257,10 @@ class myfunctions():
         mixer.music.load(playmp3)
         mixer.music.play()
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_data = config_object["CONFIG"]
         write_data["theme"] = var       
-        with open(data_file, 'w') as conf:
+        with open(g_file_data, 'w') as conf:
             config_object.write(conf) 
         app.switch_frame(DASH)
     def trip_reset(self):
@@ -9220,7 +9272,7 @@ class myfunctions():
             config_object.write(conf)               #Write changes back to file
     def btn_mphkph(self):
         config_object = ConfigParser()
-        config_object.read(data_file)
+        config_object.read(g_file_data)
         write_data = config_object["CONFIG"]
         write_data["02-01_mphkph"] = procedures     
         if procedures == "MPH":
@@ -9229,7 +9281,7 @@ class myfunctions():
             procedures = "MPH"
         write_data = config_object["CONFIG"]
         write_data["02-01_mphkph"] = procedures       
-        with open(data_file, 'w') as conf:
+        with open(g_file_data, 'w') as conf:
             config_object.write(conf) 
         app.switch_frame(DASH)
     def input_sim_ib01(self, var):
@@ -9273,7 +9325,50 @@ class myfunctions():
                 relno.value = False
             else:
                 relno.value = True
-            rb03[var] = not relno.value 
+            rb03[var] = not relno.value
+    def gps_data(self):
+        global g_gps_long
+        global g_gps_lat
+        global g_gps_kph
+        global g_gps_mph       
+        global g_gps_odo_cnt        
+        global g_gps_odo
+        global g_f_gps_kph
+        global g_f_gps_mph
+        global g_rnd_gps_kph
+        global g_rnd_gps_mph
+        global g_int_gps_kph
+        global g_int_gps_mph
+        global g_str_gps_odo
+        
+        try:
+            # Read data from GPS module
+            gps_data = gps_serial.readline().decode('ascii', errors='replace')
+            parsed_data = pynmea2.parse(gps_data)
+            g_gps_long = "{:.5f}".format(parsed_data.longitude)
+            g_gps_lat = "{:.5f}".format(parsed_data.latitude)
+            g_gps_kph = "{:.1f}".format(parsed_data.spd_over_grnd * 1.852)  
+            g_gps_mph = "{:.1f}".format(parsed_data.spd_over_grnd * 1.15078)
+            g_gps_odo_cnt += parsed_data.spd_over_grnd / 1000.0 * 3600.0
+            g_gps_odo = "{:.2f}".format(g_gps_odo_cnt / 1000)            
+            
+            # Convert Data in other formats
+            #string converted to float
+            g_f_gps_kph = float(g_gps_kph)
+            g_f_gps_mph = float(g_gps_mph)
+            #float rounded to intager
+            g_rnd_gps_kph = round(g_f_gps_kph)
+            g_rnd_gps_mph = round(g_f_gps_mph)
+            #integer with leading zeros
+            g_int_gps_kph = "{:0>3d}".format(g_rnd_gps_kph)
+            g_int_gps_mph = "{:0>3d}".format(g_rnd_gps_mph)
+            g_str_gps_odo = "{:.2f}".format(g_gps_odo_cnt / 1000)
+
+            print(g_gps_odo)
+
+
+        except (pynmea2.ParseError, AttributeError, serial.SerialException):
+            pass
 #END-----------------------------------------------------------------------------
 if __name__ == "__main__":
     websocket.enableTrace(True)
