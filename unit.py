@@ -3,6 +3,7 @@
 REGION = True #I AM JUST HERE FOR A BETTER VIEW
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V1.3.7"
+#LAST CHANGE 2023-03-12 15:24
 #INFOS-----------------------------------
 # VARIABLE SHORTINFORMATIONS
 # g_ global Variable
@@ -21,6 +22,7 @@ if REGION == True:
     import os
     import posixpath
     import platform
+    import pyaudio
     from pygame import mixer
     import random
     import shutil
@@ -91,22 +93,20 @@ if REGION == True:
     g_gps_ignore_meter = 10.0
     g_gps_long = None
     g_gps_lat = None
-    g_gps_kph = None
-    g_gps_mph = None
-    g_gps_odo = None
+    g_gps_kph = 888.8
+    g_gps_mph = 888.8
+    g_gps_odo = 888.8
     g_gps_odo_cnt = 0.0
-    g_f_gps_kph = None
-    g_f_gps_mph = None
-    g_rnd_gps_kph = None
-    g_rnd_gps_mph = None
-    g_int_gps_kph = None
-    g_int_gps_mph = None
-    g_str_gps_odo = None
+    g_f_gps_kph = 888.8
+    g_f_gps_mph = 888.8
+    g_rnd_gps_kph = 888
+    g_rnd_gps_mph = 888
+    g_int_gps_kph = 888
+    g_int_gps_mph = 888
+    g_str_gps_odo = 888
     #TEXTLISTS-----------------------------------------------
     g_msg_center = ["CALIBRATE", "PRESEN", "TBI", "MILES", "TRIP", "RANGE", "FUEL"]
     g_states = ["ON", "OFF", "HIGH", "LOW", "UP", "DOWN"]
-    g_units_eu = ["KPHc", "KPHg", "KM", "C", "BAR", "LTR"]
-    g_units_us = ["MPHc", "MPHg", "MLS", "F", "PSI", "GAL"]
     #FUNCTIONS-----------------------------------------------
     g_fnc_spm = False
     g_fnc_ebs = False
@@ -125,14 +125,30 @@ if REGION == True:
         global enable_rb02
         global enable_rb03
         global enable_ai01
-        global enable_scanner
-        global enable_gps
+        global func_scan
+        global func_gps
+        global func_mic
+        global func_04
+        global func_05
+        global func_06
+        global func_07
+        global func_08
+        global func_09
+        global func_simu
         enable_rb01 = g_r_file_data.get("CONFIG","enable_rb01")
         enable_rb02 = g_r_file_data.get("CONFIG","enable_rb02")
         enable_rb03 = g_r_file_data.get("CONFIG","enable_rb03")
         enable_ai01 = g_r_file_data.get("CONFIG","enable_ai01")
-        enable_scanner = g_r_file_data.get("CONFIG","enable_scanner")
-        enable_gps = g_r_file_data.get("CONFIG","enable_gps")
+        func_scan = g_r_file_data.get("CONFIG","func_scan")
+        func_gps = g_r_file_data.get("CONFIG","func_gps")
+        func_mic = g_r_file_data.get("CONFIG","func_mic")
+        func_04 = g_r_file_data.get("CONFIG","func_04")
+        func_05 = g_r_file_data.get("CONFIG","func_05")
+        func_06 = g_r_file_data.get("CONFIG","func_06")
+        func_07 = g_r_file_data.get("CONFIG","func_07")
+        func_08 = g_r_file_data.get("CONFIG","func_08")
+        func_09 = g_r_file_data.get("CONFIG","func_09")
+        func_simu = g_r_file_data.get("CONFIG","func_simu")
     update_configuration()
 
 #SCANNER---------------------------------
@@ -207,6 +223,7 @@ elif SYSTEM == "linux":
     import serial.tools.list_ports
     import pynmea2
     import math
+    
 
     if enable_rb01 == "True":
         i2c = busio.I2C(board.SCL, board.SDA)
@@ -220,11 +237,11 @@ elif SYSTEM == "linux":
     if enable_ai01 == "True":
         i2c = busio.I2C(board.SCL, board.SDA)
         ads = ADS.ADS1115(i2c, address=0x48)
-    if enable_scanner == "True":
+    if func_scan == "ON":
         #https://tutorials-raspberrypi.de/mehrere-servo-motoren-steuern-raspberry-pi-pca9685/
         scan01 = Adafruit_PCA9685.PCA9685(address=0x40)
         scan01.set_pwm_freq(50)
-    if enable_gps == "ON":
+    if func_gps == "ON":
         # Search for GPS module on all available ACM ports        
         for port in serial.tools.list_ports.comports():
             if "ACM" in port.device:
@@ -356,6 +373,10 @@ if REGION == True:
     img_WS5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/WH.png')
     img_YE5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/YE.png')
     img_YEDK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/YEDK.png')
+    img_RDGN5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/RDGN.png')
+    img_RDGNDK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/RDGNDK.png')
+    img_GNRD5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/GNRD.png')
+    img_GNRDDK5628_SRC =file=os.path.join(g_folder, 'images/symbols/5628/GNRDDK.png')
     #56112
     img_BU56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/BU.png')
     img_DK56112_SRC =file=os.path.join(g_folder, 'images/symbols/56112/DK.png')
@@ -405,6 +426,12 @@ if REGION == True:
     img_YEDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/YE.png')
     img_YE2DC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/YE2.png')
     img_YEDKDC10_SRC = file = os.path.join(g_folder, 'images/symbols/DC10/YEDK.png')
+    #SPEED UNIT LEDPANEL
+    img_DKDG_SRC = file = os.path.join(g_folder, 'images/symbols/dg/DK.png')
+    img_RDDG_SRC = file = os.path.join(g_folder, 'images/symbols/dg/RD.png')
+    img_RDDKDG_SRC = file = os.path.join(g_folder, 'images/symbols/dg/RDDK.png')
+    img_YEDG_SRC = file = os.path.join(g_folder, 'images/symbols/dg/YE.png')
+    img_YEDKDG_SRC = file = os.path.join(g_folder, 'images/symbols/dg/YEDK.png')
     #DISPLAYS
     img_RDDK_DG01_S12_SRC =file=os.path.join(g_folder, 'images/symbols/display/RDDK_DG01_S12.png')
     img_GYDK_DG01_S12_SRC =file=os.path.join(g_folder, 'images/symbols/display/GYDK_DG01_S12.png')
@@ -442,7 +469,9 @@ if REGION == True:
     img_R_ON_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/R_ON_SMALL.png')
     img_RD_RPM_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/RD_RPM_BG.png')
     img_BU_RPM_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/BU_RPM_BG.png')
-    img_PROGNO_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/PROGNO_BG.png') 
+    img_PROGNO_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/PROGNO_BG.png')
+    img_LIVE_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/LIVE_SMALL.png')
+    img_SIMU_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/SIMU_SMALL.png')
     #SYS_CLASSIC
     img_CAR_CLASSIC_BREAK_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/BREAK.png')
     img_CAR_CLASSIC_SES_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/SES.png')
@@ -606,100 +635,112 @@ class DASH(tk.Frame):
         read = myfunctions()
         read.update_aldl()
         read.update_data()
-
+        
         if unit == "UNIT01":
             g_r_file_text.read(g_file_text_U01)  
             read.update_text()
         elif unit == "UNIT02":
             g_r_file_text.read(g_file_text_U02)
             read.update_text() 
+        
+        global g_units
+        if units == "METRIC":
+            g_units = ["KPH", "KPHg", "KM", "C", "BAR", "LTR"]
+        else:
+            g_units = ["MPH", "MPHg", "MLS", "F", "PSI", "GAL"]
 
         #STYLES----------------------------------
         #todo get these somehow to the global variables
         btn_style_lcars001 = {'activeforeground':'#507AF7','activeforeground':MYCOLOR_BK,'background':'#93AF32','foreground':MYCOLOR_BK,'relief':'raised','borderwidth':6,'font':font_BTN}
         lbl_style_sysinfo = {'background':MYCOLOR_AQUA_DK,'anchor':"e",'foreground':MYCOLOR_AQUA,'font':font_SRVC}
-        
+
+        #POWER BUTTON STYLE
+        btn_style_power_S03S04S05 = {'borderwidth':0,'highlightthickness':0}
+        btn_style_units = {'borderwidth':0,'highlightthickness':0,'font':MPHKPHFONT_S34,'compound':"center"}
+
         tk.Frame.__init__(self, master)
         self.Canvas1 = tk.Canvas()
 
-        if theme == "K3KS01":
-            if style == "KARR":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_K3KS01KA.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_K3KS01KA.png')
-            elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_K3KS01KI.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_K3KS01KI.png')
-        elif theme == "NIGHT":
-            if style == "KARR":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NIGHTKA.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NIGHTKA.png')
-            elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NIGHTKI.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NIGHTKI.png')
-        elif theme == "S01":
-            if style == "KARR":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S01KA.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S01KA.png')
-            elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S01KI.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S01KI.png')
-        elif theme == "S02":
-            if style == "KARR":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S02KA.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S02KA.png')
-            elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S02KI.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S02KI.png')
-        elif theme == "S03":
-            if style == "KARR":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S03KA.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S03KA.png')
-            elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S03KI.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S03KI.png')
-        elif theme == "S04":
-            if style == "KARR":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S04KA.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S04KA.png')
-            elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S04KI.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S04KI.png')            
-        elif theme == "S05":
-            if style == "KARR":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S05KA.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S05KA.png')
-            elif style == "KITT":
-                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S05KI.png')
-                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S05KI.png')  
-        elif theme == "DMC":
-            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_DMC.png')
-            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_DMC.png')
-            read.bttf_snd(2)
-        elif theme == "GM":
-            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_GM.png')
-            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_GM.png')
-        elif theme == "GM2":
-            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_GM2.png')
-            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_GM2.png')
-        elif theme == "LCARS":
-            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_LCARS.png')
-            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_LCARS.png')
-        elif theme == "NEWOS":
-            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NEWOS.png')
-            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NEWOS.png')
-        elif theme == "SERVICE":
-            U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_SERVICE.png')
-            U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_SERVICE.png')
+        #SETUP BACKGROUND IMAGES
+        if REGION == True:
+            if theme == "K3KS01":
+                if style == "KARR":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_K3KS01KA.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_K3KS01KA.png')
+                elif style == "KITT":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_K3KS01KI.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_K3KS01KI.png')
+            elif theme == "NIGHT":
+                if style == "KARR":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NIGHTKA.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NIGHTKA.png')
+                elif style == "KITT":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NIGHTKI.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NIGHTKI.png')
+            elif theme == "S01":
+                if style == "KARR":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S01KA.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S01KA.png')
+                elif style == "KITT":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S01KI.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S01KI.png')
+            elif theme == "S02":
+                if style == "KARR":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S02KA.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S02KA.png')
+                elif style == "KITT":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S02KI.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S02KI.png')
+            elif theme == "S03":
+                if style == "KARR":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S03KA.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S03KA.png')
+                elif style == "KITT":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S03KI.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S03KI.png')
+            elif theme == "S04":
+                if style == "KARR":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S04KA.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S04KA.png')
+                elif style == "KITT":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S04KI.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S04KI.png')            
+            elif theme == "S05":
+                if style == "KARR":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S05KA.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S05KA.png')
+                elif style == "KITT":
+                    U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_S05KI.png')
+                    U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_S05KI.png')  
+            elif theme == "DMC":
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_DMC.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_DMC.png')
+                read.bttf_snd(2)
+            elif theme == "GM":
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_GM.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_GM.png')
+            elif theme == "GM2":
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_GM2.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_GM2.png')
+            elif theme == "LCARS":
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_LCARS.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_LCARS.png')
+            elif theme == "NEWOS":
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_NEWOS.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_NEWOS.png')
+            elif theme == "SERVICE":
+                U01_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U01_SERVICE.png')
+                U02_BG_IMG = file = os.path.join(g_folder, 'images/bg/DASH/U02_SERVICE.png')
         
-        if unit == "UNIT01":
-            img_BG_LBL = tk.PhotoImage(file=U01_BG_IMG)
-        elif unit == "UNIT02":
-            img_BG_LBL = tk.PhotoImage(file=U02_BG_IMG)
+            if unit == "UNIT01":
+                img_BG_LBL = tk.PhotoImage(file=U01_BG_IMG)
+            elif unit == "UNIT02":
+                img_BG_LBL = tk.PhotoImage(file=U02_BG_IMG)
 
-        self.Canvas1.bg_image = img_BG_LBL
-        self.Canvas1.create_image((0, 0), image=img_BG_LBL, anchor='nw')
-        self.Canvas1.configure(highlightthickness=0)
-        self.Canvas1.place(x=0, y=0, width=2560, height=800)
+            self.Canvas1.bg_image = img_BG_LBL
+            self.Canvas1.create_image((0, 0), image=img_BG_LBL, anchor='nw')
+            self.Canvas1.configure(highlightthickness=0)
+            self.Canvas1.place(x=0, y=0, width=2560, height=800)
        
         if unit == "UNIT01":
             #Widgets initialisieren
@@ -829,66 +870,9 @@ class DASH(tk.Frame):
                 self.lbl_MITRIPTANGE.configure(font=MITRIPRANGEFONT_S12)
                 self.lbl_MITRIPTANGE.configure(background=MYCOLOR_GRAY_DK)
                 self.lbl_MITRIPTANGE.configure(foreground=MYCOLOR_YE)
-            elif theme == "S03" or theme == "S04":
-                self.LG01B = tk.Button()
-                self.LG01B.place(x=4, y=65, height=42, width=80)
-                self.LG01B.configure(borderwidth=0)
-                self.LG01B.configure(highlightthickness=0)
-                self.LG01B.configure(command=lambda:[read.dtmf(0),app.switch_frame(CONTROL_PAGE)])
-
-                self.LG02B = tk.Button()
-                self.LG02B.place(x=93, y=120, height=42, width=80)
-                self.LG02B.configure(borderwidth=0)
-                self.LG02B.configure(highlightthickness=0)
-                self.LG02B.configure(command=lambda:[read.prognoselU01("LG02"),read.dtmf(0)])
-
-                self.LG03B = tk.Button()
-                self.LG03B.place(x=175, y=120, height=42, width=80)
-                self.LG03B.configure(borderwidth=0)
-                self.LG03B.configure(highlightthickness=0)
-                self.LG03B.configure(command=lambda:[read.prognoselU01("LG03"),read.dtmf(0)])
-
-                self.LG04B = tk.Button()
-                self.LG04B.place(x=257, y=120, height=42, width=80)
-                self.LG04B.configure(borderwidth=0)
-                self.LG04B.configure(highlightthickness=0)
-                self.LG04B.configure(command=lambda:[read.prognoselU01("LG04"),read.dtmf(0)])
-
-                self.LG05B = tk.Button()
-                self.LG05B.place(x=3, y=401, height=42, width=80)
-                self.LG05B.configure(borderwidth=0)
-                self.LG05B.configure(highlightthickness=0)
-                self.LG05B.configure(command=lambda:[read.prognoselU01("LG05"),read.dtmf(0)])
-
-                self.LG06B = tk.Button()
-                self.LG06B.place(x=3, y=578, height=42, width=80)
-                self.LG06B.configure(borderwidth=0)
-                self.LG06B.configure(highlightthickness=0)
-                self.LG06B.configure(command=lambda:[read.prognoselU01("LG06"),read.dtmf(0)])
-
-                self.btn_MPHKPH = tk.Button()
-                self.btn_MPHKPH.configure(borderwidth=0)
-                self.btn_MPHKPH.configure(highlightthickness=0)
-                self.btn_MPHKPH.configure(activebackground=MYCOLOR_YE)
-                self.btn_MPHKPH.configure(activeforeground=MYCOLOR_BK)
-                self.btn_MPHKPH.configure(font=MPHKPHFONT_S34)
-                self.btn_MPHKPH.configure(text=mphkph)
-                self.btn_MPHKPH.configure(background=MYCOLOR_YE)
-                self.btn_MPHKPH.configure(foreground=MYCOLOR_BK)
-                self.btn_MPHKPH.configure(command=lambda:[read.btn_mphkph(),read.dtmf(0),app.switch_frame(DASH)])
-
-                self.lbl_MITRIPTANGE = tk.Label()
-                self.lbl_MITRIPTANGE.place(x=40, y=220, width=300, height=90)
-                self.lbl_MITRIPTANGE.configure(anchor = "nw")
-                self.lbl_MITRIPTANGE.configure(font=MITRIPRANGEFONT_S34)
-
-                self.lbl_TOTAL = tk.Label()
-                self.lbl_TOTAL.place(x=800, y=590, width=460, height=90)
-                self.lbl_TOTAL.configure(anchor = "e")
-                self.lbl_TOTAL.configure(font=TOTALFONT_S34)
-            elif theme == "S05":
+            elif theme == "S03" or theme == "S04" or theme == "S05":
                 #SYS INFORMATION DISPLAY-----------------
-                if REGION == True:
+                if theme == "S05":
                     self.Canvas1.create_text(430, 130, fill=MYCOLOR_YE, anchor='w', text="of                GB HDD", font=(font_SRVC))
                     self.Canvas1.create_text(430, 155, fill=MYCOLOR_YE, anchor='w', text="of                GB RAM", font=(font_SRVC))
                     self.Canvas1.create_text(430, 180, fill=MYCOLOR_YE, anchor='w', text="%  CPU USED", font=(font_SRVC))
@@ -933,52 +917,81 @@ class DASH(tk.Frame):
                     self.lbl_GPS_SPEED.place(x=365, y=268, height="20", width="100")
                     self.lbl_GPS_SPEED.configure(**lbl_style_sysinfo)
                 
-                self.LG01B = tk.Button()
-                self.LG01B.place(x=4, y=65, height=42, width=80)
-                self.LG01B.configure(borderwidth=0)
-                self.LG01B.configure(highlightthickness=0)
-                self.LG01B.configure(command=lambda:[read.dtmf(0),app.switch_frame(CONTROL_PAGE)])
+                #MAIN GAUGE SELECTION BUTTONS
+                if REGION == True:
+                    self.LG01B = tk.Button()
+                    self.LG01B.place(x=4, y=65, height=42, width=80)
+                    self.LG01B.configure(**btn_style_power_S03S04S05)
+                    self.LG01B.configure(command=lambda:[read.dtmf(0),app.switch_frame(CONTROL_PAGE)])
 
-                self.LG02B = tk.Button()
-                self.LG02B.place(x=93, y=120, height=42, width=80)
-                self.LG02B.configure(borderwidth=0)
-                self.LG02B.configure(highlightthickness=0)
-                self.LG02B.configure(command=lambda:[read.prognoselU01("LG02"),read.dtmf(0)])
+                    self.LG05B = tk.Button()
+                    self.LG05B.place(x=3, y=401, height=42, width=80)
+                    self.LG05B.configure(**btn_style_power_S03S04S05)
+                    self.LG05B.configure(command=lambda:[read.prognoselU01("LG05"),read.dtmf(0)])
 
-                self.LG03B = tk.Button()
-                self.LG03B.place(x=175, y=120, height=42, width=80)
-                self.LG03B.configure(borderwidth=0)
-                self.LG03B.configure(highlightthickness=0)
-                self.LG03B.configure(command=lambda:[read.prognoselU01("LG03"),read.dtmf(0)])
+                    self.LG06B = tk.Button()
+                    self.LG06B.place(x=3, y=578, height=42, width=80)
+                    self.LG06B.configure(**btn_style_power_S03S04S05)
+                    self.LG06B.configure(command=lambda:[read.prognoselU01("LG06"),read.dtmf(0)])
 
-                self.LG04B = tk.Button()
-                self.LG04B.place(x=257, y=120, height=42, width=80)
-                self.LG04B.configure(borderwidth=0)
-                self.LG04B.configure(highlightthickness=0)
-                self.LG04B.configure(command=lambda:[read.prognoselU01("LG04"),read.dtmf(0)])
+                #DISPLAY GAUGE BUTTONS
+                if REGION == True:
+                    self.LG02B = tk.Button()
+                    self.LG02B.place(x=93, y=120, height=42, width=80)
+                    self.LG02B.configure(**btn_style_power_S03S04S05)
+                    self.LG02B.configure(command=lambda:[read.prognoselU01("LG02"),read.dtmf(0)])
 
-                self.LG05B = tk.Button()
-                self.LG05B.place(x=3, y=401, height=42, width=80)
-                self.LG05B.configure(borderwidth=0)
-                self.LG05B.configure(highlightthickness=0)
-                self.LG05B.configure(command=lambda:[read.prognoselU01("LG05"),read.dtmf(0)])
+                    self.LG03B = tk.Button()
+                    self.LG03B.place(x=175, y=120, height=42, width=80)
+                    self.LG03B.configure(**btn_style_power_S03S04S05)
+                    self.LG03B.configure(command=lambda:[read.prognoselU01("LG03"),read.dtmf(0)])
 
-                self.LG06B = tk.Button()
-                self.LG06B.place(x=3, y=578, height=42, width=80)
-                self.LG06B.configure(borderwidth=0)
-                self.LG06B.configure(highlightthickness=0)
-                self.LG06B.configure(command=lambda:[read.prognoselU01("LG06"),read.dtmf(0)])
+                    self.LG04B = tk.Button()
+                    self.LG04B.place(x=257, y=120, height=42, width=80)
+                    self.LG04B.configure(**btn_style_power_S03S04S05)
+                    self.LG04B.configure(command=lambda:[read.prognoselU01("LG04"),read.dtmf(0)])
 
-                self.btn_MPHKPH = tk.Button()
-                self.btn_MPHKPH.configure(borderwidth=0)
-                self.btn_MPHKPH.configure(highlightthickness=0)
-                self.btn_MPHKPH.configure(activebackground=MYCOLOR_YE)
-                self.btn_MPHKPH.configure(activeforeground=MYCOLOR_BK)
-                self.btn_MPHKPH.configure(font=MPHKPHFONT_S34)
-                self.btn_MPHKPH.configure(text=mphkph)
-                self.btn_MPHKPH.configure(background=MYCOLOR_YE)
-                self.btn_MPHKPH.configure(foreground=MYCOLOR_BK)
-                self.btn_MPHKPH.configure(command=lambda:[read.btn_mphkph(),read.dtmf(0),app.switch_frame(DASH)])
+                    self.btn_units = tk.Button()
+                    self.btn_units.place(x=1105, y=248, width=166, height=81)
+                    self.btn_units.configure(**btn_style_units)                                 
+                    self.btn_units.configure(command=lambda:[read.units(),read.dtmf(0),app.switch_frame(DASH)])
+                
+                #FUNCTION BUTTONS (LO HI VHF UHF AM FM CB)
+                if REGION == True:
+                    self.F01B = tk.Button()
+                    self.F01B.place(x=507, y=374, height=80, width=80)
+                    self.F01B.configure(**btn_style_power_S03S04S05)
+                    self.F01B.configure(command=lambda:[read.cardata(),read.dtmf(0)])
+
+                    self.F02B = tk.Button()
+                    self.F02B.place(x=619, y=374, height=80, width=80)
+                    self.F02B.configure(**btn_style_power_S03S04S05)
+                    self.F02B.configure(command=lambda:[read.cardata(),read.dtmf(0)])
+
+                    self.F03B = tk.Button()
+                    self.F03B.place(x=732, y=374, height=80, width=80)
+                    self.F03B.configure(**btn_style_power_S03S04S05)
+                    self.F03B.configure(command=lambda:[read.cardata(),read.dtmf(0)])
+
+                    self.F04B = tk.Button()
+                    self.F04B.place(x=844, y=374, height=80, width=80)
+                    self.F04B.configure(**btn_style_power_S03S04S05)
+                    self.F04B.configure(command=lambda:[read.cardata(),read.dtmf(0)])
+
+                    self.F05B = tk.Button()
+                    self.F05B.place(x=957, y=374, height=80, width=80)
+                    self.F05B.configure(**btn_style_power_S03S04S05)
+                    self.F05B.configure(command=lambda:[read.cardata(),read.dtmf(0)])
+
+                    self.F06B = tk.Button()
+                    self.F06B.place(x=1069, y=374, height=80, width=80)
+                    self.F06B.configure(**btn_style_power_S03S04S05)
+                    self.F06B.configure(command=lambda:[read.cardata(),read.dtmf(0)])
+
+                    self.F07B = tk.Button()
+                    self.F07B.place(x=1181, y=374, height=80, width=80)
+                    self.F07B.configure(**btn_style_power_S03S04S05)
+                    self.F07B.configure(command=lambda:[read.cardata(),read.dtmf(0)])
 
                 self.lbl_MITRIPTANGE = tk.Label()
                 self.lbl_MITRIPTANGE.place(x=40, y=220, width=300, height=90)
@@ -2105,7 +2118,7 @@ class DASH(tk.Frame):
     def VB_KARRS01(self):
         if debug == True:
             print("DASH_vbkarrs01")
-        if procedures == "LIVE":
+        if func_simu == "OFF":
             gl_voicebox_value = gl_voicebox_value_2
         else:
             gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(2))
@@ -2134,7 +2147,7 @@ class DASH(tk.Frame):
     def VB_KITTS01(self):
         if debug == True:
             print("DASH_vbkitts01")
-        if procedures == "LIVE":
+        if func_simu == "OFF":
             gl_voicebox_value = gl_voicebox_value_2
         else:
             gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(2))
@@ -2163,7 +2176,7 @@ class DASH(tk.Frame):
     def VB_KARRS02(self):
         if debug == True:
             print("DASH_vbkarrs02")
-        if procedures == "LIVE":
+        if func_simu == "OFF":
             gl_voicebox_value = gl_voicebox_value_2
         else:
             gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(3))
@@ -2423,7 +2436,7 @@ class DASH(tk.Frame):
     def VB_KITTS02(self):
         if debug == True:
             print("DASH_vbkitts02")
-        if procedures == "LIVE":
+        if func_simu == "OFF":
             gl_voicebox_value = gl_voicebox_value_2
         else:
             gl_voicebox_value = ''.join(random.choice(string.digits) for _ in range(3))
@@ -2692,18 +2705,39 @@ class DASH(tk.Frame):
         global g_com_swpdre
         global g_msg_center
         global gl_voicebox_value_2
-        gl_voicebox_value_2 = 100
-        
+        gl_voicebox_value_2 = 100       
+
         if unit == "UNIT01":
             #LIFEDATA ANALOG
-            if procedures == "LIVE":
+            if func_simu == "OFF":
                 read.update_aldlU01()
                 read.update_data()
 
-                if gps_port is not None:                    
-                    read.gps_data()
+                #FUNCTIONS-----------------------------------
+                if REGION == True:
+                    #GPS-------------------------------------
+                    if func_gps == "ON":
+                        if gps_port is not None:                    
+                            read.gps_data()
 
-                gl_LG01V = aldl_speed
+                        if cardata == "GPS":
+                            if units == "METRIC":
+                                gl_LG01V = g_int_gps_kph
+                            else:
+                                gl_LG01V = g_int_gps_mph
+                        else:
+                            if units == "METRIC":
+                                gl_LG01V = aldl_speed
+                            else:
+                                gl_LG01V = aldl_speed
+                    else:
+                        if units == "METRIC":
+                            gl_LG01V = aldl_speed
+                        else:
+                            gl_LG01V = aldl_speed
+                    #MIC-------------------------------------
+
+
                 gl_LG05V = signal  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
                 gl_LG06V = tuning  #STR F�R ANZEIGE MIT F�HRENDEN NULLEN
                 gl_LG07V = "0"
@@ -2725,6 +2759,7 @@ class DASH(tk.Frame):
                 rnd14 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
                 rnd20 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
                 gl_LG01V = ''.join(random.choice(string.digits) for _ in range(2))
+                gl_LG04V = random.choice(rnd02)
                 gl_LG05V = random.choice(rnd20)
                 gl_LG06V = random.choice(rnd20)
                 gl_LG07V = random.choice(rnd02)
@@ -2736,7 +2771,7 @@ class DASH(tk.Frame):
                 gl_LG13V = random.choice(rnd02)
 
             #VARIABLES AS INTAGER FOR LED GAUGE
-            LG01V = int (gl_LG01V)
+            LG01V = int (gl_LG05V)
             LG05V = int (gl_LG05V)
             LG06V = int (gl_LG06V)
             LG07V = int (gl_LG07V)
@@ -3175,7 +3210,6 @@ class DASH(tk.Frame):
                     self.lbl_MITRIPTANGE.configure(foreground=MYCOLOR_YE)
                     self.lbl_TOTAL.configure(background=MYCOLOR_GRAY_DK)
                     self.lbl_TOTAL.configure(foreground=MYCOLOR_YE)
-
                     #5628
                     LG01_OFF00_LBL = tk.PhotoImage(file=img_DK5628_SRC)        
                     self.Canvas1.LG01_OFF00_LBL = LG01_OFF00_LBL
@@ -3192,7 +3226,16 @@ class DASH(tk.Frame):
                     LG01_ON03_LBL = tk.PhotoImage(file=img_RD5628_SRC)        
                     self.Canvas1.LG01_ON03_LBL = LG01_ON03_LBL
                     LG01_ON04_LBL = tk.PhotoImage(file=img_OR5628_SRC)        
-                    self.Canvas1.LG01_ON04_LBL = LG01_ON04_LBL            
+                    self.Canvas1.LG01_ON04_LBL = LG01_ON04_LBL
+                    #LO HI UHF VHF AM FM CB
+                    BTN_F0x_OFF00_LBL = tk.PhotoImage(file=img_RDGNDK5628_SRC)
+                    self.Canvas1.BTN_F0x_OFF00_LBL = BTN_F0x_OFF00_LBL
+                    BTN_F0x_OFF01_LBL = tk.PhotoImage(file=img_RDGN5628_SRC)
+                    self.Canvas1.BTN_F0x_OFF01_LBL = BTN_F0x_OFF01_LBL                    
+                    BTN_F0x_ON00_LBL = tk.PhotoImage(file=img_GNRDDK5628_SRC)
+                    self.Canvas1.BTN_F0x_ON00_LBL = BTN_F0x_ON00_LBL
+                    BTN_F0x_ON01_LBL = tk.PhotoImage(file=img_GNRD5628_SRC)
+                    self.Canvas1.BTN_F0x_ON01_LBL = BTN_F0x_ON01_LBL
                     #DC10
                     LG05_OFF00_LBL = tk.PhotoImage(file=img_DKDC10_SRC)     
                     self.Canvas1.LG05_OFF00_LBL = LG05_OFF00_LBL
@@ -3202,6 +3245,13 @@ class DASH(tk.Frame):
                     self.Canvas1.LG05_ON01_LBL = LG05_ON01_LBL
                     LG05_ON02_LBL = tk.PhotoImage(file=img_YE2DC10_SRC)        
                     self.Canvas1.LG05_ON02_LBL = LG05_ON02_LBL
+                    #SPEED LEDPANEL
+                    DG_OFF00_LBL = tk.PhotoImage(file=img_DKDG_SRC)        
+                    self.Canvas1.DG_OFF00_LBL = DG_OFF00_LBL
+                    DG_OFF01_LBL = tk.PhotoImage(file=img_YEDKDG_SRC)        
+                    self.Canvas1.DG_OFF01_LBL = DG_OFF01_LBL
+                    DG_ON01_LBL = tk.PhotoImage(file=img_YEDG_SRC)        
+                    self.Canvas1.DG_ON01_LBL = DG_ON01_LBL
                     #VOICEBOX S34
                     #VB5STEP
                     LG14_ON01_LBL = tk.PhotoImage(file=img_YEALT_SRC)
@@ -3292,7 +3342,16 @@ class DASH(tk.Frame):
                     LG01_ON03_LBL = tk.PhotoImage(file=img_RD5628_SRC)        
                     self.Canvas1.LG01_ON03_LBL = LG01_ON03_LBL
                     LG01_ON04_LBL = tk.PhotoImage(file=img_OR5628_SRC)        
-                    self.Canvas1.LG01_ON04_LBL = LG01_ON04_LBL            
+                    self.Canvas1.LG01_ON04_LBL = LG01_ON04_LBL 
+                    #LO HI UHF VHF AM FM CB
+                    BTN_F0x_OFF00_LBL = tk.PhotoImage(file=img_RDGNDK5628_SRC)
+                    self.Canvas1.BTN_F0x_OFF00_LBL = BTN_F0x_OFF00_LBL
+                    BTN_F0x_OFF01_LBL = tk.PhotoImage(file=img_RDGN5628_SRC)
+                    self.Canvas1.BTN_F0x_OFF01_LBL = BTN_F0x_OFF01_LBL                    
+                    BTN_F0x_ON00_LBL = tk.PhotoImage(file=img_GNRDDK5628_SRC)
+                    self.Canvas1.BTN_F0x_ON00_LBL = BTN_F0x_ON00_LBL
+                    BTN_F0x_ON01_LBL = tk.PhotoImage(file=img_GNRD5628_SRC)
+                    self.Canvas1.BTN_F0x_ON01_LBL = BTN_F0x_ON01_LBL
                     #DC10
                     LG05_OFF00_LBL = tk.PhotoImage(file=img_DKDC10_SRC)     
                     self.Canvas1.LG05_OFF00_LBL = LG05_OFF00_LBL
@@ -3302,6 +3361,13 @@ class DASH(tk.Frame):
                     self.Canvas1.LG05_ON01_LBL = LG05_ON01_LBL
                     LG05_ON02_LBL = tk.PhotoImage(file=img_RD2DC10_SRC)        
                     self.Canvas1.LG05_ON02_LBL = LG05_ON02_LBL
+                    #SPEED LEDPANEL
+                    DG_OFF00_LBL = tk.PhotoImage(file=img_DKDG_SRC)        
+                    self.Canvas1.DG_OFF00_LBL = DG_OFF00_LBL
+                    DG_OFF01_LBL = tk.PhotoImage(file=img_RDDKDG_SRC)        
+                    self.Canvas1.DG_OFF01_LBL = DG_OFF01_LBL
+                    DG_ON01_LBL = tk.PhotoImage(file=img_RDDG_SRC)        
+                    self.Canvas1.DG_ON01_LBL = DG_ON01_LBL
                     #VOICEBOX S34
                     #VB5STEP
                     LG14_ON01_LBL = tk.PhotoImage(file=img_YEALT_SRC)
@@ -3377,106 +3443,116 @@ class DASH(tk.Frame):
                 #DISPLAYS-------------------------------------------------------------------------------------------------------------------------------------
                 self.Canvas1.create_image((582, 160), image=DISP_OFF_LBL, anchor='nw')
                 self.Canvas1.create_text(769, 166, fill=DISP_ON_COLOR, text=str(LG01V).zfill(3), anchor='n', font=(font_S12_DG01a))
-            elif theme == "S03" or theme == "S04":
-                #DISPLAYS-------------------------------------------------------------------------------------------------------------------------------------
-                self.Canvas1.create_image((609, 116), image=DG01_OFF_LBL, anchor='nw')
-                self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(gl_LG01V).zfill(3), anchor='n', font=font_RPMS03)
+            elif theme == "S03" or theme == "S04" or theme == "S05":
+                #INFO DISPLAY U01S05 DASH
+                if REGION == True and theme == "S05":
+                    if SYSTEM != "linux":
+                        self.lbl_HDD_USED.configure(text="888.8")
+                        self.lbl_HDD_MAX.configure(text="888.8")
+                        self.lbl_RAM_USED.configure(text="888.8")
+                        self.lbl_RAM_MAX.configure(text="888.8")
+                        self.lbl_CPU_TEMP.configure(text="888.8")
+                        self.lbl_CPU_USED.configure(text="888.8")                    
+                        self.lbl_LATITUDE.configure(text="888.8888")
+                        self.lbl_LONGITUDE.configure(text="888.8888")
+                        self.lbl_GPS_SPEED.configure(text="888.88")
+                    elif SYSTEM == "linux":                   
+                        def get_cpu_temperature():
+                            res = os.popen('vcgencmd measure_temp').readline()
+                            return(res.replace("temp=","").replace("'C\n",""))
 
-                self.lbl_TOTAL.configure(text=gl_LG01V.zfill(6))
+                        self.lbl_HDD_USED.configure(text=str(round(psutil.disk_usage('/').used / (1024.0 ** 3), 2)))
+                        self.lbl_HDD_MAX.configure(text=str(round(psutil.disk_usage('/').total / (1024.0 ** 3), 2)))
+                        self.lbl_RAM_USED.configure(text=str(psutil.virtual_memory().percent))
+                        self.lbl_RAM_MAX.configure(text=str(round(psutil.virtual_memory().total / (1024.0 ** 3), 2)))
+                        self.lbl_CPU_TEMP.configure(text=get_cpu_temperature())
+                        self.lbl_CPU_USED.configure(text=str(psutil.cpu_percent()))                   
+                        self.lbl_LATITUDE.configure(text=g_gps_long)
+                        self.lbl_LONGITUDE.configure(text=g_gps_lat)
+                        self.lbl_GPS_SPEED.configure(text=g_gps_kph)
+                
+                #SPEED DISPLAY U01S05 DASH
+                if REGION == True: 
+                    self.Canvas1.create_image((609, 116), image=DG01_OFF_LBL, anchor='nw')
+                    self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(gl_LG01V).zfill(3), anchor='n', font=font_RPMS03)
+                
+                #ODOMETER DISPLAY U01S05 DASH    
+                if REGION == True: 
+                    self.lbl_TOTAL.configure(text=gl_LG04V)
 
-                #POWER BUTTONS-------------------------------------------------------------------------------------------------------------
-                if prognoselU01 == "LG01":
-                    self.LG01B.configure(image=LG01_ON04_LBL)
-                else: 
-                    self.LG01B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG02":
-                    self.LG02B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(LG01V).zfill(4))
-                else: 
-                    self.LG02B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG03":
-                    self.LG03B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG03V).zfill(4))
-                else: 
-                    self.LG03B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG04":
-                    self.LG04B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG03V).zfill(4))
-                else: 
-                    self.LG04B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG05":
-                    self.LG05B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG05V).zfill(4))
-                else: 
-                    self.LG05B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG06":
-                    self.LG06B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG06V).zfill(4))
-                else: 
-                    self.LG06B.configure(image=LG01_ON02_LBL)         
-            elif theme == "S05":
-                if SYSTEM != "linux":
-                    self.lbl_HDD_USED.configure(text="888.8")
-                    self.lbl_HDD_MAX.configure(text="888.8")
-                    self.lbl_RAM_USED.configure(text="888.8")
-                    self.lbl_RAM_MAX.configure(text="888.8")
-                    self.lbl_CPU_TEMP.configure(text="888.8")
-                    self.lbl_CPU_USED.configure(text="888.8")                    
-                    self.lbl_LATITUDE.configure(text="888.8888")
-                    self.lbl_LONGITUDE.configure(text="888.8888")
-                    self.lbl_GPS_SPEED.configure(text="888.88")
-                elif SYSTEM == "linux":                   
-                    def get_cpu_temperature():
-                        res = os.popen('vcgencmd measure_temp').readline()
-                        return(res.replace("temp=","").replace("'C\n",""))
+                #FUNCTION BUTTONS
+                if REGION == True:
+                    #F01B (LO)
+                    if cardata == "GPS":
+                        self.F01B.configure(image=BTN_F0x_OFF01_LBL)
+                    else: 
+                        self.F01B.configure(image=BTN_F0x_ON01_LBL)
+                    #F02B (HI)
+                    if cardata == "GPS":
+                        self.F02B.configure(image=BTN_F0x_OFF01_LBL)
+                    else: 
+                        self.F02B.configure(image=BTN_F0x_ON01_LBL)
+                    #F03B (VHF)
+                    if cardata == "GPS":
+                        self.F03B.configure(image=BTN_F0x_OFF01_LBL)
+                    else: 
+                        self.F03B.configure(image=BTN_F0x_ON01_LBL)
+                    #F04B (UHF)
+                    if cardata == "GPS":
+                        self.F04B.configure(image=BTN_F0x_OFF01_LBL)
+                    else: 
+                        self.F04B.configure(image=BTN_F0x_ON01_LBL)
+                    #F05B (AM)
+                    if cardata == "GPS":
+                        self.F05B.configure(image=BTN_F0x_OFF01_LBL)
+                    else: 
+                        self.F05B.configure(image=BTN_F0x_ON01_LBL)
+                    #F06B (FM)
+                    if cardata == "GPS":
+                        self.F06B.configure(image=BTN_F0x_OFF01_LBL)
+                    else: 
+                        self.F06B.configure(image=BTN_F0x_ON01_LBL)
+                    #F07B (CB)
+                    if cardata == "GPS":
+                        self.F07B.configure(image=BTN_F0x_OFF01_LBL)
+                    else: 
+                        self.F07B.configure(image=BTN_F0x_ON01_LBL)
 
-                    self.lbl_HDD_USED.configure(text=str(round(psutil.disk_usage('/').used / (1024.0 ** 3), 2)))
-                    self.lbl_HDD_MAX.configure(text=str(round(psutil.disk_usage('/').total / (1024.0 ** 3), 2)))
-                    self.lbl_RAM_USED.configure(text=str(psutil.virtual_memory().percent))
-                    self.lbl_RAM_MAX.configure(text=str(round(psutil.virtual_memory().total / (1024.0 ** 3), 2)))
-                    self.lbl_CPU_TEMP.configure(text=get_cpu_temperature())
-                    self.lbl_CPU_USED.configure(text=str(psutil.cpu_percent()))                   
-                    self.lbl_LATITUDE.configure(text=g_gps_long)
-                    self.lbl_LONGITUDE.configure(text=g_gps_lat)
-                    self.lbl_GPS_SPEED.configure(text=g_gps_kph)
-            
-                #DISPLAYS-------------------------------------------------------------------------------------------------------------------------------------
-                self.Canvas1.create_image((609, 116), image=DG01_OFF_LBL, anchor='nw')
-                self.Canvas1.create_text(858, 135, fill=DG_ON_COLOR, text=str(gl_LG01V).zfill(3), anchor='n', font=font_RPMS03)
-            
+                #SPEED BUTTON
+                self.btn_units.configure(image=DG_ON01_LBL)
+                self.btn_units.configure(text=g_units[0])
 
-                self.lbl_TOTAL.configure(text=gl_LG04V)
-
-                #POWER BUTTONS-------------------------------------------------------------------------------------------------------------
-                if prognoselU01 == "LG01":
-                    self.LG01B.configure(image=LG01_ON04_LBL)
-                else: 
-                    self.LG01B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG02":
-                    self.LG02B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG02V).zfill(4))
-                else: 
-                    self.LG02B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG03":
-                    self.LG03B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=g_gps_odo)
-                else: 
-                    self.LG03B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG04":
-                    self.LG04B.configure(image=LG01_ON04_LBL)
-                    #self.lbl_MITRIPTANGE.configure(text=str(int_LG03V).zfill(4))
-                else: 
-                    self.LG04B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG05":
-                    self.LG05B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG05V).zfill(4))
-                else: 
-                    self.LG05B.configure(image=LG01_ON02_LBL)
-                if prognoselU01 == "LG06":
-                    self.LG06B.configure(image=LG01_ON04_LBL)
-                    self.lbl_MITRIPTANGE.configure(text=str(gl_LG06V).zfill(4))
-                else: 
-                    self.LG06B.configure(image=LG01_ON02_LBL)  
+                #POWER BUTTONS (YE/OR) U01S05 DASH
+                if REGION == True: 
+                    if prognoselU01 == "LG01":
+                        self.LG01B.configure(image=LG01_ON04_LBL)
+                    else: 
+                        self.LG01B.configure(image=LG01_ON02_LBL)
+                    if prognoselU01 == "LG02":
+                        self.LG02B.configure(image=LG01_ON04_LBL)
+                        #self.lbl_MITRIPTANGE.configure(text=str(int_LG02V).zfill(4))
+                    else: 
+                        self.LG02B.configure(image=LG01_ON02_LBL)
+                    if prognoselU01 == "LG03":
+                        self.LG03B.configure(image=LG01_ON04_LBL)
+                        self.lbl_MITRIPTANGE.configure(text=g_gps_odo)
+                    else: 
+                        self.LG03B.configure(image=LG01_ON02_LBL)
+                    if prognoselU01 == "LG04":
+                        self.LG04B.configure(image=LG01_ON04_LBL)
+                        #self.lbl_MITRIPTANGE.configure(text=str(int_LG03V).zfill(4))
+                    else: 
+                        self.LG04B.configure(image=LG01_ON02_LBL)
+                    if prognoselU01 == "LG05":
+                        self.LG05B.configure(image=LG01_ON04_LBL)
+                        self.lbl_MITRIPTANGE.configure(text=str(gl_LG05V).zfill(4))
+                    else: 
+                        self.LG05B.configure(image=LG01_ON02_LBL)
+                    if prognoselU01 == "LG06":
+                        self.LG06B.configure(image=LG01_ON04_LBL)
+                        self.lbl_MITRIPTANGE.configure(text=str(gl_LG06V).zfill(4))
+                    else: 
+                        self.LG06B.configure(image=LG01_ON02_LBL)  
 
             #SET-GAUGE-ON-PAGE--------------------------------------------------------------------------------------------------------------------------------        
             if   theme == "NIGHT":
@@ -3872,55 +3948,7 @@ class DASH(tk.Frame):
                        self.Canvas1.create_image((LG06X+i*LG06XC, LG06Y), image=LG05_ON01_LBL, anchor='nw')
                     else:
                         self.Canvas1.create_image((LG06X+i*LG06XC, LG06Y), image=LG05_OFF00_LBL, anchor='nw')
-                #LO LED------------------------------------------------------------------------------------------
-                if LG07V == 1:
-                    self.Canvas1.create_image((507, 374), image=LG01_OFF00_LBL, anchor='nw')
-                    self.Canvas1.create_image((507, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((507, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((507, 413), image=LG01_OFF00_LBL, anchor='nw')
-                #HI LED------------------------------------------------------------------------------------------
-                if LG08V == 1:
-                    self.Canvas1.create_image((619, 374), image=LG01_OFF00_LBL, anchor='nw')
-                    self.Canvas1.create_image((619, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((619, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((619, 413), image=LG01_OFF00_LBL, anchor='nw')
-                #VHF LED-----------------------------------------------------------------------------------------
-                if LG09V == 1:
-                    self.Canvas1.create_image((732, 374), image=LG01_OFF00_LBL, anchor='nw')
-                    self.Canvas1.create_image((732, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((732, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((732, 413), image=LG01_OFF00_LBL, anchor='nw')
-                #UHF LED-----------------------------------------------------------------------------------------
-                if LG10V == 1:
-                    self.Canvas1.create_image((844, 374), image=LG01_OFF00_LBL, anchor='nw')
-                    self.Canvas1.create_image((844, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((844, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((844, 413), image=LG01_OFF00_LBL, anchor='nw')
-                #AM LED------------------------------------------------------------------------------------------
-                if LG11V == 1:
-                    self.Canvas1.create_image((957, 374), image=LG01_OFF00_LBL, anchor='nw')
-                    self.Canvas1.create_image((957, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((957, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((957, 413), image=LG01_OFF00_LBL, anchor='nw')
-                #FM LED------------------------------------------------------------------------------------------
-                if LG12V == 1:
-                    self.Canvas1.create_image((1069, 374), image=LG01_OFF00_LBL, anchor='nw')
-                    self.Canvas1.create_image((1069, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((1069, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((1069, 413), image=LG01_OFF00_LBL, anchor='nw')
-                #CB LED------------------------------------------------------------------------------------------
-                if LG13V == 1:
-                    self.Canvas1.create_image((1181, 374), image=LG01_OFF00_LBL, anchor='nw')
-                    self.Canvas1.create_image((1181, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((1181, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((1181, 413), image=LG01_OFF00_LBL, anchor='nw')
+                
                 #VB5STEP
                 if int_g_alt_value == 1:
                     self.Canvas1.create_image((1280, 20), image=LG14_ON01_LBL, anchor='nw')
@@ -4009,55 +4037,7 @@ class DASH(tk.Frame):
                        self.Canvas1.create_image((LG06X+i*LG06XC, LG06Y), image=LG05_ON02_LBL, anchor='nw')
                     else:
                         self.Canvas1.create_image((LG06X+i*LG06XC, LG06Y), image=LG05_OFF01_LBL, anchor='nw')
-                #LO LED------------------------------------------------------------------------------------------
-                if LG07V == 1:
-                    self.Canvas1.create_image((507, 374), image=LG01_OFF03_LBL, anchor='nw')
-                    self.Canvas1.create_image((507, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((507, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((507, 413), image=LG01_OFF01_LBL, anchor='nw')
-                #HI LED------------------------------------------------------------------------------------------
-                if LG08V == 1:
-                    self.Canvas1.create_image((619, 374), image=LG01_OFF03_LBL, anchor='nw')
-                    self.Canvas1.create_image((619, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((619, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((619, 413), image=LG01_OFF01_LBL, anchor='nw')
-                #VHF LED-----------------------------------------------------------------------------------------
-                if LG09V == 1:
-                    self.Canvas1.create_image((732, 374), image=LG01_OFF03_LBL, anchor='nw')
-                    self.Canvas1.create_image((732, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((732, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((732, 413), image=LG01_OFF01_LBL, anchor='nw')
-                #UHF LED-----------------------------------------------------------------------------------------
-                if LG10V == 1:
-                    self.Canvas1.create_image((844, 374), image=LG01_OFF03_LBL, anchor='nw')
-                    self.Canvas1.create_image((844, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((844, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((844, 413), image=LG01_OFF01_LBL, anchor='nw')
-                #AM LED------------------------------------------------------------------------------------------
-                if LG11V == 1:
-                    self.Canvas1.create_image((957, 374), image=LG01_OFF03_LBL, anchor='nw')
-                    self.Canvas1.create_image((957, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((957, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((957, 413), image=LG01_OFF01_LBL, anchor='nw')
-                #FM LED------------------------------------------------------------------------------------------
-                if LG12V == 1:
-                    self.Canvas1.create_image((1069, 374), image=LG01_OFF03_LBL, anchor='nw')
-                    self.Canvas1.create_image((1069, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((1069, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((1069, 413), image=LG01_OFF01_LBL, anchor='nw')
-                #CB LED------------------------------------------------------------------------------------------
-                if LG13V == 1:
-                    self.Canvas1.create_image((1181, 374), image=LG01_OFF03_LBL, anchor='nw')
-                    self.Canvas1.create_image((1181, 413), image=LG01_ON01_LBL, anchor='nw')
-                else:
-                    self.Canvas1.create_image((1181, 374), image=LG01_ON03_LBL, anchor='nw')
-                    self.Canvas1.create_image((1181, 413), image=LG01_OFF01_LBL, anchor='nw')
+
                 #VB5STEP
                 if int_g_alt_value == 1:
                     self.Canvas1.create_image((1280, 20), image=LG14_ON01_LBL, anchor='nw')
@@ -4552,7 +4532,7 @@ class DASH(tk.Frame):
             if enable_ai01 == "True":
                 a_chan0 = AnalogIn(ads, ADS.P0) #DATA FROM ANALOG INPUT 0
             #LIVEDATA ANALOG
-            if procedures == "LIVE":
+            if func_simu == "OFF":
                 gl_LG01V = aldl_rpm           #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
                 gl_LG02V = aldl_inlettemp     #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
                 gl_LG03V = aldl_oiltemp       #STR FUER ANZEIGE MIT FUEHRENDEN NULLEN
@@ -7364,8 +7344,8 @@ class CONTROL_PAGE(tk.Frame):
         
         #STYLES----------------------------------
         btn_style_config = {'activeforeground':MYCOLOR_AQUA,'activeforeground':MYCOLOR_BK,'background':MYCOLOR_AQUA_DK,'foreground':MYCOLOR_AQUA,'bd':2,'font':font_BTN}
-        RB01W = 152
-        RB01H = 52
+        RST01W = 152
+        RST01H = 52
                        
         tk.Frame.__init__(self, master)
         self.Canvas1 = tk.Canvas()
@@ -7450,7 +7430,7 @@ class CONTROL_PAGE(tk.Frame):
             self.btn_VIDEO.configure(command=lambda:[read.mute(), app.switch_frame(AUDIO_PAGE)])
 
             self.btn_rb01_r08 = tk.Button()
-            self.btn_rb01_r08.place(x=678, y=214, width=RB01W, height=RB01H)
+            self.btn_rb01_r08.place(x=678, y=214, width=RST01W, height=RST01H)
             self.btn_rb01_r08.configure(borderwidth=0, highlightthickness=0)
             self.btn_rb01_r08.configure(command=lambda:[read.switch_rb01(8)])        
             self.lbl_rb01_r08 = tk.Label()
@@ -7459,7 +7439,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r08.configure(text=g_r_file_text.get('rb01', 'r08'))
 
             self.btn_rb01_r09 = tk.Button()
-            self.btn_rb01_r09.place(x=877, y=214, width=RB01W, height=RB01H)
+            self.btn_rb01_r09.place(x=877, y=214, width=RST01W, height=RST01H)
             self.btn_rb01_r09.configure(borderwidth=0, highlightthickness=0)
             self.btn_rb01_r09.configure(command=lambda:[read.switch_rb01(9)])        
             self.lbl_rb01_r09 = tk.Label()
@@ -7468,7 +7448,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r09.configure(text=g_r_file_text.get('rb01', 'r09'))
 
             self.btn_rb01_r10 = tk.Button()
-            self.btn_rb01_r10.place(x=1076, y=214, width=RB01W, height=RB01H)
+            self.btn_rb01_r10.place(x=1076, y=214, width=RST01W, height=RST01H)
             self.btn_rb01_r10.configure(borderwidth=0, highlightthickness=0)
             self.btn_rb01_r10.configure(command=lambda:[read.switch_rb01(10)])        
             self.lbl_rb01_r10 = tk.Label()
@@ -7477,7 +7457,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r10.configure(text=g_r_file_text.get('rb01', 'r10'))
 
             self.btn_rb01_r11 = tk.Button()
-            self.btn_rb01_r11.place(x=678, y=395, width=RB01W, height=RB01H)
+            self.btn_rb01_r11.place(x=678, y=395, width=RST01W, height=RST01H)
             self.btn_rb01_r11.configure(borderwidth=0, highlightthickness=0)
             self.btn_rb01_r11.configure(command=lambda:[read.switch_rb01(11)])        
             self.lbl_rb01_r11 = tk.Label()
@@ -7486,7 +7466,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r11.configure(text=g_r_file_text.get('rb01', 'r11'))
 
             self.btn_rb01_r12 = tk.Button()
-            self.btn_rb01_r12.place(x=877, y=395, width=RB01W, height=RB01H)
+            self.btn_rb01_r12.place(x=877, y=395, width=RST01W, height=RST01H)
             self.btn_rb01_r12.configure(borderwidth=0, highlightthickness=0)
             self.btn_rb01_r12.configure(command=lambda:[read.switch_rb01(12)])        
             self.lbl_rb01_r12 = tk.Label()
@@ -7495,7 +7475,7 @@ class CONTROL_PAGE(tk.Frame):
             self.lbl_rb01_r12.configure(text=g_r_file_text.get('rb01', 'r12'))
 
             self.btn_rb02_r08 = tk.Button()
-            self.btn_rb02_r08.place(x=1076, y=395, width=RB01W, height=RB01H)
+            self.btn_rb02_r08.place(x=1076, y=395, width=RST01W, height=RST01H)
             self.btn_rb02_r08.configure(borderwidth=0, highlightthickness=0)
             self.btn_rb02_r08.configure(command=lambda:[read.switch_rb02(8)])          
             self.lbl_rb02_r08 = tk.Label()
@@ -7606,12 +7586,6 @@ class THEMES_PAGE(tk.Frame):
         self.Canvas1.create_image((0, 0), image=img_BG01_LBL, anchor='nw')
         self.Canvas1.configure(highlightthickness=0)
         self.Canvas1.place(x=0, y=0, width=2560, height=800)
-
-        self.btn_BACK = tk.Button()
-        self.btn_BACK.place(x=1080, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
-        self.btn_BACK.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
-        self.btn_BACK.configure(text="BACK")
-        self.btn_BACK.configure(command=lambda: master.switch_frame(CONTROL_PAGE))
 
         self.btn_STYLE_KA = tk.Button()
         self.btn_STYLE_KA.place(x=81, y=180, width=THEME_BTN_W, height=THEME_BTN_H)
@@ -7734,29 +7708,66 @@ class SETUP_PAGE_U02(tk.Frame):
         #STYLES----------------------------------
         lbl_style_relais = {'foreground':MYCOLOR_AQUA,'background':MYCOLOR_AQUA_DK,'anchor':"c",'font':font_SRVC}
         btn_style_relais = {'borderwidth':0,'highlightthickness':0}
-        #RELAIS BUTTONS AND LABEL POSITIONES        
-        L01W = 100
-        L01H = 26
-        L01X = 1300
-        L01CX = 130
-        L01Y = 45 
-        L02Y = 140
-        L03Y = 235
-        L04Y = 330
-        L05Y = 425
-        L06Y = 520
-        L07Y = 615
-        RB01W = 100
-        RB01H = 40
-        RB01X = 1300 #XPOS 1. LED
-        RB01CX = 130 #SPACING TO NEXT LED IN THIS GAUGE
-        RB01Y1 = 70 #YPOS
-        RB01Y2 = 165 #YPOS
-        RB01Y3 = 260 #YPOS
-        RB01Y4 = 355 #YPOS
-        RB01Y5 = 450 #YPOS
-        RB01Y6 = 545 #YPOS
-        RB01Y7 = 640 #YPOS
+        
+        #BUTTON AND LABEL X POSITIONS
+        #UNIT01 LEFT MONITOR
+        L01X = 30
+        L02X = 155
+        L03X = 280
+        L04X = 405
+        L05X = 530
+        L06X = 655
+        L07X = 780
+        L08X = 905
+        L09X = 1030
+        L10X = 1155
+        #UNIT01 RIGHT MONITOR       
+        L11X = 1530
+        #UNIT02 LEFT MONITOR
+        L12X = 20
+        L13X = 150
+        L14X = 280
+        L15X = 410
+        L16X = 540
+        L17X = 670
+        L18X = 800
+        L19X = 930
+        #UNIT02 RIGHT MONITOR
+        L20X = 1300
+        L21X = 1430
+        L22X = 1560
+        L23X = 1690
+        L24X = 1820
+        L25X = 1950
+        L26X = 2080
+        L27X = 2210
+
+        #LABEL Y POSITIONS
+        #UNIT01 AND UNIT02
+        L01Y = 140
+        L02Y = 235
+        L03Y = 330
+        L04Y = 425
+        L05Y = 520
+        L06Y = 615
+
+        #BUTTON Y POSITIONS
+        #UNIT01 AND UNIT02
+        B01Y = 165
+        B02Y = 260
+        B03Y = 355
+        B04Y = 450
+        B05Y = 545
+        B06Y = 640
+              
+        #LABEL SIZE
+        LST01W = 100
+        LST01H = 26  
+
+        #BUTTON SIZE
+        RST01W = 100
+        RST01H = 40
+
 
         tk.Frame.__init__(self, master)
         tk.Frame.configure(self,bg='black')
@@ -7766,7 +7777,7 @@ class SETUP_PAGE_U02(tk.Frame):
             BG_SETUP_IMG = file = os.path.join(g_folder, 'images/bg/U01_SETUP.png')
         elif unit == "UNIT02":
             BG_SETUP_IMG = file = os.path.join(g_folder, 'images/bg/U02_SETUP.png')
-
+                       
         img_BG01_LBL = tk.PhotoImage(file=BG_SETUP_IMG)
         self.Canvas1.bg_image = img_BG01_LBL
         self.Canvas1.create_image((0, 0), image=img_BG01_LBL, anchor='nw')
@@ -7775,45 +7786,130 @@ class SETUP_PAGE_U02(tk.Frame):
         self.Canvas1.create_text(450, 37, fill=MYCOLOR_AQUA, text=version, anchor='ne', font=(font_SRVC))
         self.Canvas1.create_text(450, 65, fill=MYCOLOR_AQUA, text=SYSTEM, anchor='ne', font=(font_SRVC))
 
-        self.lbl_PROCEDURES = tk.Label()
-        self.lbl_PROCEDURES.place(x=540, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
-        self.lbl_PROCEDURES.configure(background=MYCOLOR_AQUA_DK)
-        self.lbl_PROCEDURES.configure(anchor = "center")
-        self.lbl_PROCEDURES.configure(foreground=MYCOLOR_AQUA)
-        self.lbl_PROCEDURES.configure(font=font_BTN)
-        self.lbl_PROCEDURES.configure(text=procedures)
+        if unit == "UNIT01" or unit == "UNIT02":
+            self.lbl_units = tk.Label()
+            self.lbl_units.place(x=540, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
+            self.lbl_units.configure(background=MYCOLOR_AQUA_DK)
+            self.lbl_units.configure(anchor = "center")
+            self.lbl_units.configure(foreground=MYCOLOR_AQUA)
+            self.lbl_units.configure(font=font_BTN)
+            self.lbl_units.configure(text=units)
 
-        self.btn_PROCEDURES = tk.Button()
-        self.btn_PROCEDURES.place(x=720, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
-        self.btn_PROCEDURES.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
-        self.btn_PROCEDURES.configure(text="PROCEDURES")
-        self.btn_PROCEDURES.configure(command=lambda:[read.procedures(), app.switch_frame(SETUP_PAGE_U02), read.dtmf(0)])        
+            self.btn_units = tk.Button()
+            self.btn_units.place(x=720, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
+            self.btn_units.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
+            self.btn_units.configure(text="UNITS")
+            self.btn_units.configure(command=lambda:[read.units(), app.switch_frame(SETUP_PAGE_U02), read.dtmf(0)])        
 
-        self.lbl_units = tk.Label()
-        self.lbl_units.place(x=540, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
-        self.lbl_units.configure(background=MYCOLOR_AQUA_DK)
-        self.lbl_units.configure(anchor = "center")
-        self.lbl_units.configure(foreground=MYCOLOR_AQUA)
-        self.lbl_units.configure(font=font_BTN)
-        self.lbl_units.configure(text=units)
-
-        self.btn_units = tk.Button()
-        self.btn_units.place(x=720, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
-        self.btn_units.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
-        self.btn_units.configure(text="PROCEDURES")
-        self.btn_units.configure(command=lambda:[read.units(), app.switch_frame(SETUP_PAGE_U02), read.dtmf(0)])        
-
-        self.btn_EXIT = tk.Button()
-        self.btn_EXIT.place(x=900, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
-        self.btn_EXIT.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_RD, foreground=MYCOLOR_AQUA, font=font_BTN)
-        self.btn_EXIT.configure(text="EXIT")
-        self.btn_EXIT.configure(command=read.quitDASH)
+            self.btn_EXIT = tk.Button()
+            self.btn_EXIT.place(x=900, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
+            self.btn_EXIT.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_RD, foreground=MYCOLOR_AQUA, font=font_BTN)
+            self.btn_EXIT.configure(text="EXIT")
+            self.btn_EXIT.configure(command=read.quitDASH)
         
-        self.btn_BACK = tk.Button()
-        self.btn_BACK.place(x=1080, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
-        self.btn_BACK.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
-        self.btn_BACK.configure(text="BACK")
-        self.btn_BACK.configure(command=lambda: master.switch_frame(CONTROL_PAGE))
+            self.btn_BACK = tk.Button()
+            self.btn_BACK.place(x=1080, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
+            self.btn_BACK.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
+            self.btn_BACK.configure(text="BACK")
+            self.btn_BACK.configure(command=lambda: master.switch_frame(CONTROL_PAGE))
+
+        if unit == "UNIT01":
+            #LABELS CREATE
+            if REGION == True:
+                self.lbl_f01 = tk.Label()
+                self.lbl_f02 = tk.Label()
+                self.lbl_f03 = tk.Label()
+                self.lbl_f04 = tk.Label()
+                self.lbl_f05 = tk.Label()
+                self.lbl_f06 = tk.Label()
+                self.lbl_f07 = tk.Label()
+                self.lbl_f08 = tk.Label()
+                self.lbl_f09 = tk.Label()
+                self.lbl_f10 = tk.Label()
+            #LABELS STYLE
+            if REGION == True:
+                self.lbl_f01.configure(**lbl_style_relais)
+                self.lbl_f02.configure(**lbl_style_relais)
+                self.lbl_f03.configure(**lbl_style_relais)
+                self.lbl_f04.configure(**lbl_style_relais)
+                self.lbl_f05.configure(**lbl_style_relais)
+                self.lbl_f06.configure(**lbl_style_relais)
+                self.lbl_f07.configure(**lbl_style_relais)
+                self.lbl_f08.configure(**lbl_style_relais)
+                self.lbl_f09.configure(**lbl_style_relais)
+                self.lbl_f10.configure(**lbl_style_relais)
+            #LABELS TEXT
+            if REGION == True:
+               self.lbl_f01.configure(text=g_r_file_text.get('SETUP', 'f01'))
+               self.lbl_f02.configure(text=g_r_file_text.get('SETUP', 'f02'))
+               self.lbl_f03.configure(text=g_r_file_text.get('SETUP', 'f03'))
+               self.lbl_f04.configure(text=g_r_file_text.get('SETUP', 'f04'))
+               self.lbl_f05.configure(text=g_r_file_text.get('SETUP', 'f05'))
+               self.lbl_f06.configure(text=g_r_file_text.get('SETUP', 'f06'))
+               self.lbl_f07.configure(text=g_r_file_text.get('SETUP', 'f07'))
+               self.lbl_f08.configure(text=g_r_file_text.get('SETUP', 'f08'))
+               self.lbl_f09.configure(text=g_r_file_text.get('SETUP', 'f09'))
+               self.lbl_f10.configure(text=g_r_file_text.get('SETUP', 'f10'))
+            #LABELS POSITION
+            if REGION == True:
+                self.lbl_f01.place(x=L01X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f02.place(x=L02X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f03.place(x=L03X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f04.place(x=L04X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f05.place(x=L05X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f06.place(x=L06X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f07.place(x=L07X, y=L01Y, width=LST01W, height=LST01H)               
+                self.lbl_f08.place(x=L08X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f09.place(x=L09X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_f10.place(x=L10X, y=L01Y, width=LST01W, height=LST01H)
+            #BUTTONS CREATE
+            if REGION == True:
+                self.btn_f01 = tk.Button()                
+                self.btn_f02 = tk.Button()
+                self.btn_f03 = tk.Button()
+                self.btn_f04 = tk.Button()
+                self.btn_f05 = tk.Button()
+                self.btn_f06 = tk.Button()
+                self.btn_f07 = tk.Button()
+                self.btn_f08 = tk.Button()
+                self.btn_f09 = tk.Button()
+                self.btn_f10 = tk.Button()
+            #BUTTONS STYLE
+            if REGION == True:
+                self.btn_f01.configure(**btn_style_relais)
+                self.btn_f02.configure(**btn_style_relais)
+                self.btn_f03.configure(**btn_style_relais)
+                self.btn_f04.configure(**btn_style_relais)
+                self.btn_f05.configure(**btn_style_relais)
+                self.btn_f06.configure(**btn_style_relais)
+                self.btn_f07.configure(**btn_style_relais)
+                self.btn_f08.configure(**btn_style_relais)
+                self.btn_f09.configure(**btn_style_relais)
+                self.btn_f10.configure(**btn_style_relais)
+            #BUTTON COMMAND
+            if REGION == True:
+                self.btn_f01.configure(command=lambda:[read.enable_disable("func_scan",func_scan), read.dtmf(0)])
+                self.btn_f02.configure(command=lambda:[read.enable_disable("func_gps",func_gps), read.dtmf(0)])
+                self.btn_f03.configure(command=lambda:[read.enable_disable("func_mic",func_mic), read.dtmf(0)])
+                self.btn_f04.configure(command=lambda:[read.enable_disable("func_04",func_04), read.dtmf(0)])
+                self.btn_f05.configure(command=lambda:[read.enable_disable("func_05",func_05), read.dtmf(0)])
+                self.btn_f06.configure(command=lambda:[read.enable_disable("func_06",func_06), read.dtmf(0)])
+                self.btn_f07.configure(command=lambda:[read.enable_disable("func_07",func_07), read.dtmf(0)])
+                self.btn_f08.configure(command=lambda:[read.enable_disable("func_08",func_08), read.dtmf(0)])
+                self.btn_f09.configure(command=lambda:[read.enable_disable("func_09",func_09), read.dtmf(0)])
+                self.btn_f10.configure(command=lambda:[read.enable_disable("func_simu",func_simu), read.dtmf(0)])
+            #BUTTON POSITION
+            if REGION == True:
+                self.btn_f01.place(x=L01X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f02.place(x=L02X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f03.place(x=L03X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f04.place(x=L04X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f05.place(x=L05X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f06.place(x=L06X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f07.place(x=L07X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f08.place(x=L08X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f09.place(x=L09X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_f10.place(x=L10X, y=B01Y, width=RST01W, height=RST01H)
 
         if unit == "UNIT02":
             #INPUTS
@@ -8078,55 +8174,54 @@ class SETUP_PAGE_U02(tk.Frame):
                self.lbl_rb03_r15.configure(text=g_r_file_text.get('rb03', 'r15'))
             #LABELS POSITION
             if REGION == True:
-                self.lbl_rb01_r00.place(x=L01X, y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r01.place(x=L01X+L01CX, y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r02.place(x=L01X+(2*L01CX), y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r03.place(x=L01X+(3*L01CX), y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r04.place(x=L01X+(4*L01CX), y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r05.place(x=L01X+(5*L01CX), y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r06.place(x=L01X+(6*L01CX), y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r07.place(x=L01X+(7*L01CX), y=L02Y, width=L01W, height=L01H)
-                self.lbl_rb01_r08.place(x=L01X, y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb01_r09.place(x=L01X+L01CX, y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb01_r10.place(x=L01X+(2*L01CX), y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb01_r11.place(x=L01X+(3*L01CX), y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb01_r12.place(x=L01X+(4*L01CX), y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb01_r13.place(x=L01X+(5*L01CX), y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb01_r14.place(x=L01X+(6*L01CX), y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb01_r15.place(x=L01X+(7*L01CX), y=L03Y, width=L01W, height=L01H)
-                self.lbl_rb02_r00.place(x=L01X, y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r01.place(x=L01X+L01CX, y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r02.place(x=L01X+(2*L01CX), y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r03.place(x=L01X+(3*L01CX), y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r04.place(x=L01X+(4*L01CX), y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r05.place(x=L01X+(5*L01CX), y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r06.place(x=L01X+(6*L01CX), y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r07.place(x=L01X+(7*L01CX), y=L04Y, width=L01W, height=L01H)
-                self.lbl_rb02_r08.place(x=L01X, y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb02_r09.place(x=L01X+L01CX, y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb02_r10.place(x=L01X+(2*L01CX), y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb02_r11.place(x=L01X+(3*L01CX), y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb02_r12.place(x=L01X+(4*L01CX), y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb02_r13.place(x=L01X+(5*L01CX), y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb02_r14.place(x=L01X+(6*L01CX), y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb02_r15.place(x=L01X+(7*L01CX), y=L05Y, width=L01W, height=L01H)
-                self.lbl_rb03_r00.place(x=L01X, y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r01.place(x=L01X+L01CX, y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r02.place(x=L01X+(2*L01CX), y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r03.place(x=L01X+(3*L01CX), y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r04.place(x=L01X+(4*L01CX), y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r05.place(x=L01X+(5*L01CX), y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r06.place(x=L01X+(6*L01CX), y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r07.place(x=L01X+(7*L01CX), y=L06Y, width=L01W, height=L01H)
-                self.lbl_rb03_r08.place(x=L01X, y=L07Y, width=L01W, height=L01H)
-                self.lbl_rb03_r09.place(x=L01X+L01CX, y=L07Y, width=L01W, height=L01H)
-                self.lbl_rb03_r10.place(x=L01X+(2*L01CX), y=L07Y, width=L01W, height=L01H)
-                self.lbl_rb03_r11.place(x=L01X+(3*L01CX), y=L07Y, width=L01W, height=L01H)
-                self.lbl_rb03_r12.place(x=L01X+(4*L01CX), y=L07Y, width=L01W, height=L01H)
-                self.lbl_rb03_r13.place(x=L01X+(5*L01CX), y=L07Y, width=L01W, height=L01H)
-                self.lbl_rb03_r14.place(x=L01X+(6*L01CX), y=L07Y, width=L01W, height=L01H)
-                self.lbl_rb03_r15.place(x=L01X+(7*L01CX), y=L07Y, width=L01W, height=L01H)
-            
+                self.lbl_rb01_r00.place(x=L20X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r01.place(x=L21X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r02.place(x=L22X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r03.place(x=L23X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r04.place(x=L24X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r05.place(x=L25X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r06.place(x=L26X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r07.place(x=L27X, y=L01Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r08.place(x=L20X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r09.place(x=L21X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r10.place(x=L22X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r11.place(x=L23X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r12.place(x=L24X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r13.place(x=L25X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r14.place(x=L26X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb01_r15.place(x=L27X, y=L02Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r00.place(x=L20X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r01.place(x=L21X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r02.place(x=L22X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r03.place(x=L23X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r04.place(x=L24X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r05.place(x=L25X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r06.place(x=L26X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r07.place(x=L27X, y=L03Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r08.place(x=L20X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r09.place(x=L21X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r10.place(x=L22X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r11.place(x=L23X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r12.place(x=L24X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r13.place(x=L25X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r14.place(x=L26X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb02_r15.place(x=L27X, y=L04Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r00.place(x=L20X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r01.place(x=L21X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r02.place(x=L22X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r03.place(x=L23X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r04.place(x=L24X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r05.place(x=L25X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r06.place(x=L26X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r07.place(x=L27X, y=L05Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r08.place(x=L20X, y=L06Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r09.place(x=L21X, y=L06Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r10.place(x=L22X, y=L06Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r11.place(x=L23X, y=L06Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r12.place(x=L24X, y=L06Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r13.place(x=L25X, y=L06Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r14.place(x=L26X, y=L06Y, width=LST01W, height=LST01H)
+                self.lbl_rb03_r15.place(x=L27X, y=L06Y, width=LST01W, height=LST01H)            
             #BUTTONS CREATE
             if REGION == True:
                 self.btn_rb01_r00 = tk.Button()
@@ -8279,84 +8374,135 @@ class SETUP_PAGE_U02(tk.Frame):
                 self.btn_rb03_r15.configure(command=lambda:[read.switch_rb03(15)])
             #BUTTON POSITION
             if REGION == True:
-                self.btn_rb01_r00.place(x=RB01X, y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r01.place(x=RB01X+RB01CX, y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r02.place(x=RB01X+(2*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r03.place(x=RB01X+(3*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r04.place(x=RB01X+(4*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r05.place(x=RB01X+(5*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r06.place(x=RB01X+(6*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r07.place(x=RB01X+(7*RB01CX), y=RB01Y2, width=RB01W, height=RB01H)
-                self.btn_rb01_r08.place(x=RB01X, y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb01_r09.place(x=RB01X+RB01CX, y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb01_r10.place(x=RB01X+(2*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb01_r11.place(x=RB01X+(3*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb01_r12.place(x=RB01X+(4*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb01_r13.place(x=RB01X+(5*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb01_r14.place(x=RB01X+(6*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb01_r15.place(x=RB01X+(7*RB01CX), y=RB01Y3, width=RB01W, height=RB01H)
-                self.btn_rb02_r00.place(x=RB01X, y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r01.place(x=RB01X+RB01CX, y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r02.place(x=RB01X+(2*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r03.place(x=RB01X+(3*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r04.place(x=RB01X+(4*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r05.place(x=RB01X+(5*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r06.place(x=RB01X+(6*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r07.place(x=RB01X+(7*RB01CX), y=RB01Y4, width=RB01W, height=RB01H)
-                self.btn_rb02_r08.place(x=RB01X, y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb02_r09.place(x=RB01X+RB01CX, y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb02_r10.place(x=RB01X+(2*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb02_r11.place(x=RB01X+(3*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb02_r12.place(x=RB01X+(4*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb02_r13.place(x=RB01X+(5*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb02_r14.place(x=RB01X+(6*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb02_r15.place(x=RB01X+(7*RB01CX), y=RB01Y5, width=RB01W, height=RB01H)
-                self.btn_rb03_r00.place(x=RB01X, y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r01.place(x=RB01X+RB01CX, y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r02.place(x=RB01X+(2*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r03.place(x=RB01X+(3*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r04.place(x=RB01X+(4*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r05.place(x=RB01X+(5*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r06.place(x=RB01X+(6*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r07.place(x=RB01X+(7*RB01CX), y=RB01Y6, width=RB01W, height=RB01H)
-                self.btn_rb03_r08.place(x=RB01X, y=RB01Y7, width=RB01W, height=RB01H)
-                self.btn_rb03_r09.place(x=RB01X+RB01CX, y=RB01Y7, width=RB01W, height=RB01H)
-                self.btn_rb03_r10.place(x=RB01X+(2*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
-                self.btn_rb03_r11.place(x=RB01X+(3*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
-                self.btn_rb03_r12.place(x=RB01X+(4*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
-                self.btn_rb03_r13.place(x=RB01X+(5*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
-                self.btn_rb03_r14.place(x=RB01X+(6*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
-                self.btn_rb03_r15.place(x=RB01X+(7*RB01CX), y=RB01Y7, width=RB01W, height=RB01H)
+                self.btn_rb01_r00.place(x=L20X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r01.place(x=L21X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r02.place(x=L22X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r03.place(x=L23X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r04.place(x=L24X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r05.place(x=L25X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r06.place(x=L26X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r07.place(x=L27X, y=B01Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r08.place(x=L20X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r09.place(x=L21X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r10.place(x=L22X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r11.place(x=L23X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r12.place(x=L24X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r13.place(x=L25X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r14.place(x=L26X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb01_r15.place(x=L27X, y=B02Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r00.place(x=L20X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r01.place(x=L21X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r02.place(x=L22X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r03.place(x=L23X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r04.place(x=L24X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r05.place(x=L25X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r06.place(x=L26X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r07.place(x=L27X, y=B03Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r08.place(x=L20X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r09.place(x=L21X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r10.place(x=L22X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r11.place(x=L23X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r12.place(x=L24X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r13.place(x=L25X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r14.place(x=L26X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb02_r15.place(x=L27X, y=B04Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r00.place(x=L20X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r01.place(x=L21X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r02.place(x=L22X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r03.place(x=L23X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r04.place(x=L24X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r05.place(x=L25X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r06.place(x=L26X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r07.place(x=L27X, y=B05Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r08.place(x=L20X, y=B06Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r09.place(x=L21X, y=B06Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r10.place(x=L22X, y=B06Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r11.place(x=L23X, y=B06Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r12.place(x=L24X, y=B06Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r13.place(x=L25X, y=B06Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r14.place(x=L26X, y=B06Y, width=RST01W, height=RST01H)
+                self.btn_rb03_r15.place(x=L27X, y=B06Y, width=RST01W, height=RST01H)
         self.digital()
     def digital(self):
         read = myfunctions()
         read.update_data()
         read.check_gpio()
         
-        LED_RPM_HIGH_LBL = tk.PhotoImage(file=img_RPM_HIGH_SRC)
-        self.Canvas1.LED_RPM_HIGH_LBL = LED_RPM_HIGH_LBL
-        LED_RPM_NORM_LBL = tk.PhotoImage(file=img_RPM_NORM_SRC)
-        self.Canvas1.LED_RPM_NORM_LBL = LED_RPM_NORM_LBL
-        LED_UP_OFF_LBL = tk.PhotoImage(file=img_UP_OFF_SRC)
-        self.Canvas1.LED_UP_OFF_LBL = LED_UP_OFF_LBL
-        LED_UP_ON_LBL = tk.PhotoImage(file=img_UP_ON_SRC)
-        self.Canvas1.LED_UP_ON_LBL = LED_UP_ON_LBL
-        R_OFF_SMALL_LBL = tk.PhotoImage(file=img_R_OFF_SMALL_SRC)
-        self.Canvas1.R_OFF_SMALL_LBL = R_OFF_SMALL_LBL
-        R_ON_SMALL_LBL = tk.PhotoImage(file=img_R_ON_LARGE_SRC)
-        self.Canvas1.R_ON_SMALL_LBL = R_ON_SMALL_LBL
-        LED_V_LED_OFF_LBL = tk.PhotoImage(file=img_V_LED_OFF_SRC)
-        self.Canvas1.LED_V_LED_OFF_LBL = LED_V_LED_OFF_LBL
-        LED_V_LED_ON_LBL = tk.PhotoImage(file=img_V_LED_ON_SRC)
-        self.Canvas1.LED_V_LED_ON_LBL = LED_V_LED_ON_LBL
-        LED_V_LED_SIM_OFF_LBL = tk.PhotoImage(file=img_V_LED_SIM_OFF_SRC)
-        self.Canvas1.LED_V_LED_SIM_OFF_LBL = LED_V_LED_SIM_OFF_LBL
-        LED_V_LED_SIM_ON_LBL = tk.PhotoImage(file=img_V_LED_SIM_ON_SRC)
-        self.Canvas1.LED_V_LED_SIM_ON_LBL = LED_V_LED_SIM_ON_LBL
-        LED_V_LED_SIMULATION_LBL = tk.PhotoImage(file=img_V_LED_SIMULATION_SRC)
-        self.Canvas1.LED_V_LED_SIMULATION_LBL = LED_V_LED_SIMULATION_LBL
-        LED_V_LED_LIVE_LBL = tk.PhotoImage(file=img_V_LED_LIVE_SRC)
-        self.Canvas1.LED_V_LED_LIVE_LBL = LED_V_LED_LIVE_LBL
+        #LOAD IMAGES
+        if REGION == True:
+            LED_RPM_HIGH_LBL = tk.PhotoImage(file=img_RPM_HIGH_SRC)
+            self.Canvas1.LED_RPM_HIGH_LBL = LED_RPM_HIGH_LBL
+            LED_RPM_NORM_LBL = tk.PhotoImage(file=img_RPM_NORM_SRC)
+            self.Canvas1.LED_RPM_NORM_LBL = LED_RPM_NORM_LBL
+            LED_UP_OFF_LBL = tk.PhotoImage(file=img_UP_OFF_SRC)
+            self.Canvas1.LED_UP_OFF_LBL = LED_UP_OFF_LBL
+            LED_UP_ON_LBL = tk.PhotoImage(file=img_UP_ON_SRC)
+            self.Canvas1.LED_UP_ON_LBL = LED_UP_ON_LBL
+            R_OFF_SMALL_LBL = tk.PhotoImage(file=img_R_OFF_SMALL_SRC)
+            self.Canvas1.R_OFF_SMALL_LBL = R_OFF_SMALL_LBL
+            R_ON_SMALL_LBL = tk.PhotoImage(file=img_R_ON_SMALL_SRC)
+            self.Canvas1.R_ON_SMALL_LBL = R_ON_SMALL_LBL
+            LED_V_LED_OFF_LBL = tk.PhotoImage(file=img_V_LED_OFF_SRC)
+            self.Canvas1.LED_V_LED_OFF_LBL = LED_V_LED_OFF_LBL
+            LED_V_LED_ON_LBL = tk.PhotoImage(file=img_V_LED_ON_SRC)
+            self.Canvas1.LED_V_LED_ON_LBL = LED_V_LED_ON_LBL
+            LED_V_LED_SIM_OFF_LBL = tk.PhotoImage(file=img_V_LED_SIM_OFF_SRC)
+            self.Canvas1.LED_V_LED_SIM_OFF_LBL = LED_V_LED_SIM_OFF_LBL
+            LED_V_LED_SIM_ON_LBL = tk.PhotoImage(file=img_V_LED_SIM_ON_SRC)
+            self.Canvas1.LED_V_LED_SIM_ON_LBL = LED_V_LED_SIM_ON_LBL
+            LED_V_LED_SIMULATION_LBL = tk.PhotoImage(file=img_V_LED_SIMULATION_SRC)
+            self.Canvas1.LED_V_LED_SIMULATION_LBL = LED_V_LED_SIMULATION_LBL
+            LED_V_LED_LIVE_LBL = tk.PhotoImage(file=img_V_LED_LIVE_SRC)
+            self.Canvas1.LED_V_LED_LIVE_LBL = LED_V_LED_LIVE_LBL
+            LIVE_SMALL_LBL = tk.PhotoImage(file=img_LIVE_SMALL_SRC)
+            self.Canvas1.LIVE_SMALL_LBL = LIVE_SMALL_LBL
+            SIMU_SMALL_LBL = tk.PhotoImage(file=img_SIMU_SMALL_SRC)
+            self.Canvas1.SIMU_SMALL_LBL = SIMU_SMALL_LBL
+
+
+
+        if unit == "UNIT01":
+            #BUTTONS
+            if func_scan == "OFF":
+                self.btn_f01.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_f01.configure(image=R_ON_SMALL_LBL)
+            if func_gps == "OFF":
+                self.btn_f02.configure(image=R_OFF_SMALL_LBL)
+            else: 
+                self.btn_f02.configure(image=R_ON_SMALL_LBL)
+            if func_mic == "OFF":
+                self.btn_f03.configure(image=R_OFF_SMALL_LBL)
+            else:
+                self.btn_f03.configure(image=R_ON_SMALL_LBL)
+            if func_04 == "OFF":
+                self.btn_f04.configure(image=R_OFF_SMALL_LBL)
+            else:
+                self.btn_f04.configure(image=R_ON_SMALL_LBL)
+            if func_05 == "OFF":
+                self.btn_f05.configure(image=R_OFF_SMALL_LBL)
+            else:
+                self.btn_f05.configure(image=R_ON_SMALL_LBL)
+            if func_06 == "OFF":
+                self.btn_f06.configure(image=R_OFF_SMALL_LBL)
+            else:
+                self.btn_f06.configure(image=R_ON_SMALL_LBL)
+            if func_07 == "OFF":
+                self.btn_f07.configure(image=R_OFF_SMALL_LBL)
+            else:
+                self.btn_f07.configure(image=R_ON_SMALL_LBL)
+            if func_08 == "OFF":
+                self.btn_f08.configure(image=R_OFF_SMALL_LBL)
+            else:
+                self.btn_f08.configure(image=R_ON_SMALL_LBL)
+            if func_09 == "OFF":
+                self.btn_f09.configure(image=R_OFF_SMALL_LBL)
+            else:
+                self.btn_f09.configure(image=R_ON_SMALL_LBL)
+            if func_simu == "OFF":
+                self.btn_f10.configure(image=LIVE_SMALL_LBL)
+            else:
+                self.btn_f10.configure(image=SIMU_SMALL_LBL)
 
         if unit == "UNIT02":
             if sim_IB01[0] == True:
@@ -8667,8 +8813,8 @@ class myfunctions():
         global unit
         global style
         global theme
-        global procedures
         global units
+        global cardata
         global soundmode
         global volume
         global muted
@@ -8680,13 +8826,21 @@ class myfunctions():
         global enable_rb02
         global enable_rb03
         global enable_ai01
-        global enable_scanner
-        global enable_gps
+        global func_scan
+        global func_gps
+        global func_mic
+        global func_04
+        global func_05
+        global func_06
+        global func_07
+        global func_08
+        global func_09
+        global func_simu
         unit = g_r_file_data.get("CONFIG","unit")
         style = g_r_file_data.get("CONFIG","style")
         theme = g_r_file_data.get("CONFIG","theme")
-        procedures = g_r_file_data.get("CONFIG","procedures")
         units = g_r_file_data.get("CONFIG","units")
+        cardata = g_r_file_data.get("CONFIG","cardata")
         soundmode = g_r_file_data.get("CONFIG","soundmode")
         volume = g_r_file_data.get("CONFIG","volume")
         muted = g_r_file_data.get("CONFIG","muted")
@@ -8698,8 +8852,16 @@ class myfunctions():
         enable_rb02 = g_r_file_data.get("CONFIG","enable_rb02")
         enable_rb03 = g_r_file_data.get("CONFIG","enable_rb03")
         enable_ai01 = g_r_file_data.get("CONFIG","enable_ai01")
-        enable_scanner = g_r_file_data.get("CONFIG","enable_scanner")
-        enable_gps = g_r_file_data.get("CONFIG","enable_gps")
+        func_scan = g_r_file_data.get("CONFIG","func_scan")
+        func_gps = g_r_file_data.get("CONFIG","func_gps")
+        func_mic = g_r_file_data.get("CONFIG","func_mic")
+        func_04 = g_r_file_data.get("CONFIG","func_04")
+        func_05 = g_r_file_data.get("CONFIG","func_05")
+        func_06 = g_r_file_data.get("CONFIG","func_06")
+        func_07 = g_r_file_data.get("CONFIG","func_07")
+        func_08 = g_r_file_data.get("CONFIG","func_08")
+        func_09 = g_r_file_data.get("CONFIG","func_09")
+        func_simu = g_r_file_data.get("CONFIG","func_simu")
         #COMPASS
         global nswo
         global latitude
@@ -9172,30 +9334,61 @@ class myfunctions():
             g_fnc_spm = False
         elif g_fnc_ebs == True:
             g_fnc_ebs = False
-    def procedures(self):
-        global procedures
-        if procedures == "LIVE":
-            procedures = "RANDOM"
-        else:
-            procedures = "LIVE"
-        config_object = ConfigParser()
-        config_object.read(g_file_data)
-        write_procedures = config_object["CONFIG"] #Get the section
-        write_procedures["procedures"] = procedures       #Update the parameter
-        with open(g_file_data, 'w') as conf:    #Write changes back to file
-            config_object.write(conf) 
     def units(self):
         global units
+        global g_units
         if units == "METRIC":
             units = "IMPERIAL"
+            g_units = ["MPH", "MPHg", "MLS", "F", "PSI", "GAL"]
         else:
             units = "METRIC"
+            g_units = ["KPH", "KPHg", "KM", "C", "BAR", "LTR"]
+
         config_object = ConfigParser()
         config_object.read(g_file_data)
         write_units = config_object["CONFIG"] #Get the section
         write_units["units"] = units       #Update the parameter
         with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf) 
+    def cardata(self):
+        global cardata
+        if cardata == "OBD":
+            cardata = "GPS"
+        else:
+            cardata = "OBD"
+        config_object = ConfigParser()
+        config_object.read(g_file_data)
+        write_cardata = config_object["CONFIG"] #Get the section
+        write_cardata["cardata"] = cardata       #Update the parameter
+        with open(g_file_data, 'w') as conf:    #Write changes back to file
+            config_object.write(conf) 
+
+
+
+    def enable_disable(self,element,var):
+        if var == "ON":
+            var = "OFF"
+        else:
+            var = "ON"
+        config_object = ConfigParser()
+        config_object.read(g_file_data)
+        write_var = config_object["CONFIG"] #Get the section
+        write_var[element] = var       #Update the parameter
+        with open(g_file_data, 'w') as conf:    #Write changes back to file
+            config_object.write(conf)
+  
+    #def enable_mic(self):
+    #    global enable_mic
+    #    if enable_mic == "ON":
+    #        enable_mic = "OFF"
+    #    else:
+    #        enable_mic = "ON"
+    #    config_object = ConfigParser()
+    #    config_object.read(g_file_data)
+    #    write_enable_mic = config_object["CONFIG"] #Get the section
+    #    write_enable_mic["enable_mic"] = enable_mic       #Update the parameter
+    #    with open(g_file_data, 'w') as conf:    #Write changes back to file
+    #        config_object.write(conf) 
     def check_gpio(self):
         global state_IB01_I1
         global state_IB01_I2
@@ -9260,27 +9453,6 @@ class myfunctions():
         config_object.read(g_file_data)
         write_data = config_object["CONFIG"]
         write_data["theme"] = var       
-        with open(g_file_data, 'w') as conf:
-            config_object.write(conf) 
-        app.switch_frame(DASH)
-    def trip_reset(self):
-        config_object = ConfigParser()
-        config_object.read("data_u01/DATA.ini")
-        write_procedures = config_object["SPEEDOMETER"] #Get the section
-        write_procedures["02-12_trip"] = "0"         #Update the parameter
-        with open('data_u01/DATA.ini', 'w') as conf:
-            config_object.write(conf)               #Write changes back to file
-    def btn_mphkph(self):
-        config_object = ConfigParser()
-        config_object.read(g_file_data)
-        write_data = config_object["CONFIG"]
-        write_data["02-01_mphkph"] = procedures     
-        if procedures == "MPH":
-            procedures = "KPH"
-        else:
-            procedures = "MPH"
-        write_data = config_object["CONFIG"]
-        write_data["02-01_mphkph"] = procedures       
         with open(g_file_data, 'w') as conf:
             config_object.write(conf) 
         app.switch_frame(DASH)
@@ -9362,13 +9534,10 @@ class myfunctions():
             #integer with leading zeros
             g_int_gps_kph = "{:0>3d}".format(g_rnd_gps_kph)
             g_int_gps_mph = "{:0>3d}".format(g_rnd_gps_mph)
-            g_str_gps_odo = "{:.2f}".format(g_gps_odo_cnt / 1000)
-
-            print(g_gps_odo)
-
-
+            g_str_gps_odo = "{:.2f}".format(g_gps_odo_cnt / 1000)        
         except (pynmea2.ParseError, AttributeError, serial.SerialException):
             pass
+
 #END-----------------------------------------------------------------------------
 if __name__ == "__main__":
     websocket.enableTrace(True)
