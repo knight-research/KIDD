@@ -3,11 +3,11 @@
 REGION = True #I AM JUST HERE FOR A BETTER VIEW
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V1.3.7"
-#LAST CHANGE 2023-03-12 15:24
+#LAST CHANGE 2023-03-12 1619
 #INFOS-----------------------------------
 # VARIABLE SHORTINFORMATIONS
 # g_ global Variable
-# i_ integer (1)
+# i_ integer (1) 
 # f_ float (1.234)
 # s_ string ("Text")
 # b_ bool (True / False)
@@ -133,7 +133,7 @@ if REGION == True:
         global func_06
         global func_07
         global func_08
-        global func_09
+        global func_units
         global func_simu
         enable_rb01 = g_r_file_data.get("CONFIG","enable_rb01")
         enable_rb02 = g_r_file_data.get("CONFIG","enable_rb02")
@@ -147,7 +147,7 @@ if REGION == True:
         func_06 = g_r_file_data.get("CONFIG","func_06")
         func_07 = g_r_file_data.get("CONFIG","func_07")
         func_08 = g_r_file_data.get("CONFIG","func_08")
-        func_09 = g_r_file_data.get("CONFIG","func_09")
+        func_units = g_r_file_data.get("CONFIG","func_units")
         func_simu = g_r_file_data.get("CONFIG","func_simu")
     update_configuration()
 
@@ -472,6 +472,8 @@ if REGION == True:
     img_PROGNO_BG_SRC =file=os.path.join(g_folder, 'images/symbols/knight/PROGNO_BG.png')
     img_LIVE_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/LIVE_SMALL.png')
     img_SIMU_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/SIMU_SMALL.png')
+    img_IMPERIAL_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/IMPERIAL_SMALL.png')
+    img_METRIC_SMALL_SRC =file=os.path.join(g_folder, 'images/symbols/knight/METRIC_SMALL.png')
     #SYS_CLASSIC
     img_CAR_CLASSIC_BREAK_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/BREAK.png')
     img_CAR_CLASSIC_SES_SRC =file=os.path.join(g_folder, 'images/symbols/sys_clas/SES.png')
@@ -644,7 +646,7 @@ class DASH(tk.Frame):
             read.update_text() 
         
         global g_units
-        if units == "METRIC":
+        if func_units == "METRIC":
             g_units = ["KPH", "KPHg", "KM", "C", "BAR", "LTR"]
         else:
             g_units = ["MPH", "MPHg", "MLS", "F", "PSI", "GAL"]
@@ -954,7 +956,7 @@ class DASH(tk.Frame):
                     self.btn_units = tk.Button()
                     self.btn_units.place(x=1105, y=248, width=166, height=81)
                     self.btn_units.configure(**btn_style_units)                                 
-                    self.btn_units.configure(command=lambda:[read.units(),read.dtmf(0),app.switch_frame(DASH)])
+                    self.btn_units.configure(command=lambda:[read.func_units(),read.dtmf(0),app.switch_frame(DASH)])
                 
                 #FUNCTION BUTTONS (LO HI VHF UHF AM FM CB)
                 if REGION == True:
@@ -2721,17 +2723,17 @@ class DASH(tk.Frame):
                             read.gps_data()
 
                         if cardata == "GPS":
-                            if units == "METRIC":
+                            if func_units == "METRIC":
                                 gl_LG01V = g_int_gps_kph
                             else:
                                 gl_LG01V = g_int_gps_mph
                         else:
-                            if units == "METRIC":
+                            if func_units == "METRIC":
                                 gl_LG01V = aldl_speed
                             else:
                                 gl_LG01V = aldl_speed
                     else:
-                        if units == "METRIC":
+                        if func_units == "METRIC":
                             gl_LG01V = aldl_speed
                         else:
                             gl_LG01V = aldl_speed
@@ -7786,21 +7788,7 @@ class SETUP_PAGE_U02(tk.Frame):
         self.Canvas1.create_text(450, 37, fill=MYCOLOR_AQUA, text=version, anchor='ne', font=(font_SRVC))
         self.Canvas1.create_text(450, 65, fill=MYCOLOR_AQUA, text=SYSTEM, anchor='ne', font=(font_SRVC))
 
-        if unit == "UNIT01" or unit == "UNIT02":
-            self.lbl_units = tk.Label()
-            self.lbl_units.place(x=540, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
-            self.lbl_units.configure(background=MYCOLOR_AQUA_DK)
-            self.lbl_units.configure(anchor = "center")
-            self.lbl_units.configure(foreground=MYCOLOR_AQUA)
-            self.lbl_units.configure(font=font_BTN)
-            self.lbl_units.configure(text=units)
-
-            self.btn_units = tk.Button()
-            self.btn_units.place(x=720, y=300, width=MENU_BTN_W, height=MENU_BTN_H)
-            self.btn_units.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_AQUA_DK, foreground=MYCOLOR_AQUA, font=font_BTN)
-            self.btn_units.configure(text="UNITS")
-            self.btn_units.configure(command=lambda:[read.units(), app.switch_frame(SETUP_PAGE_U02), read.dtmf(0)])        
-
+        if unit == "UNIT01" or unit == "UNIT02":    
             self.btn_EXIT = tk.Button()
             self.btn_EXIT.place(x=900, y=40, width=MENU_BTN_W, height=MENU_BTN_H)
             self.btn_EXIT.configure(activebackground="#880000", activeforeground=MYCOLOR_BK, background=MYCOLOR_RD, foreground=MYCOLOR_AQUA, font=font_BTN)
@@ -7896,7 +7884,7 @@ class SETUP_PAGE_U02(tk.Frame):
                 self.btn_f06.configure(command=lambda:[read.enable_disable("func_06",func_06), read.dtmf(0)])
                 self.btn_f07.configure(command=lambda:[read.enable_disable("func_07",func_07), read.dtmf(0)])
                 self.btn_f08.configure(command=lambda:[read.enable_disable("func_08",func_08), read.dtmf(0)])
-                self.btn_f09.configure(command=lambda:[read.enable_disable("func_09",func_09), read.dtmf(0)])
+                self.btn_f09.configure(command=lambda:[read.func_units(), read.dtmf(0)])
                 self.btn_f10.configure(command=lambda:[read.enable_disable("func_simu",func_simu), read.dtmf(0)])
             #BUTTON POSITION
             if REGION == True:
@@ -8458,7 +8446,10 @@ class SETUP_PAGE_U02(tk.Frame):
             self.Canvas1.LIVE_SMALL_LBL = LIVE_SMALL_LBL
             SIMU_SMALL_LBL = tk.PhotoImage(file=img_SIMU_SMALL_SRC)
             self.Canvas1.SIMU_SMALL_LBL = SIMU_SMALL_LBL
-
+            IMPERIAL_SMALL_LBL = tk.PhotoImage(file=img_IMPERIAL_SMALL_SRC)
+            self.Canvas1.IMPERIAL_SMALL_LBL = IMPERIAL_SMALL_LBL
+            METRIC_SMALL_LBL = tk.PhotoImage(file=img_METRIC_SMALL_SRC)
+            self.Canvas1.METRIC_SMALL_LBL = METRIC_SMALL_LBL
 
 
         if unit == "UNIT01":
@@ -8495,10 +8486,10 @@ class SETUP_PAGE_U02(tk.Frame):
                 self.btn_f08.configure(image=R_OFF_SMALL_LBL)
             else:
                 self.btn_f08.configure(image=R_ON_SMALL_LBL)
-            if func_09 == "OFF":
-                self.btn_f09.configure(image=R_OFF_SMALL_LBL)
+            if func_units == "METRIC":
+                self.btn_f09.configure(image=METRIC_SMALL_LBL)
             else:
-                self.btn_f09.configure(image=R_ON_SMALL_LBL)
+                self.btn_f09.configure(image=IMPERIAL_SMALL_LBL)
             if func_simu == "OFF":
                 self.btn_f10.configure(image=LIVE_SMALL_LBL)
             else:
@@ -8813,7 +8804,7 @@ class myfunctions():
         global unit
         global style
         global theme
-        global units
+        global func_units
         global cardata
         global soundmode
         global volume
@@ -8834,12 +8825,11 @@ class myfunctions():
         global func_06
         global func_07
         global func_08
-        global func_09
+        global func_units
         global func_simu
         unit = g_r_file_data.get("CONFIG","unit")
         style = g_r_file_data.get("CONFIG","style")
         theme = g_r_file_data.get("CONFIG","theme")
-        units = g_r_file_data.get("CONFIG","units")
         cardata = g_r_file_data.get("CONFIG","cardata")
         soundmode = g_r_file_data.get("CONFIG","soundmode")
         volume = g_r_file_data.get("CONFIG","volume")
@@ -8860,7 +8850,7 @@ class myfunctions():
         func_06 = g_r_file_data.get("CONFIG","func_06")
         func_07 = g_r_file_data.get("CONFIG","func_07")
         func_08 = g_r_file_data.get("CONFIG","func_08")
-        func_09 = g_r_file_data.get("CONFIG","func_09")
+        func_units = g_r_file_data.get("CONFIG","func_units")
         func_simu = g_r_file_data.get("CONFIG","func_simu")
         #COMPASS
         global nswo
@@ -9334,20 +9324,20 @@ class myfunctions():
             g_fnc_spm = False
         elif g_fnc_ebs == True:
             g_fnc_ebs = False
-    def units(self):
-        global units
+    def func_units(self):
+        global func_units
         global g_units
-        if units == "METRIC":
-            units = "IMPERIAL"
+        if func_units == "METRIC":
+            func_units = "IMPERIAL"
             g_units = ["MPH", "MPHg", "MLS", "F", "PSI", "GAL"]
         else:
-            units = "METRIC"
+            func_units = "METRIC"
             g_units = ["KPH", "KPHg", "KM", "C", "BAR", "LTR"]
 
         config_object = ConfigParser()
         config_object.read(g_file_data)
         write_units = config_object["CONFIG"] #Get the section
-        write_units["units"] = units       #Update the parameter
+        write_units["func_units"] = func_units       #Update the parameter
         with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf) 
     def cardata(self):
@@ -9362,9 +9352,6 @@ class myfunctions():
         write_cardata["cardata"] = cardata       #Update the parameter
         with open(g_file_data, 'w') as conf:    #Write changes back to file
             config_object.write(conf) 
-
-
-
     def enable_disable(self,element,var):
         if var == "ON":
             var = "OFF"
