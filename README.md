@@ -1,7 +1,7 @@
 <br/>
 <p align="center">
   <a href="https://github.com/knight-research/KIDD">
-    <img src="https://github.com/knight-research/KIDD/assets/67843900/e3148c3d-fb5c-4ec1-b307-826be0a08438" alt="Logo" width="1280" height="640">
+    <img src="https://github.com/knight-research/KIDD/assets/67843900/e3148c3d-fb5c-4ec1-b307-826be0a08438" alt="Logo" width="1280" height="600">
   </a>
 
   <h3 align="center">Knight Industries Digital Dash</h3>
