@@ -1,0 +1,5 @@
+#no .vs folder
+.vs/
+
+# Ignore .mp3 files
+*.mp3
