@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#still testing... dont use!
 import os
 import requests
 import subprocess
