@@ -92,19 +92,10 @@ rb00[7] WND LH DN                       #
                        10A: Fxxx PSUSB02     RD          PAGE            X0PIN07
                        10A: Fxxx PSUSB03     RD          PAGE            X0PIN08
                        10A: Fxxx RB01-06 AMP RD          PAGE            X0PIN09
-                       --A: Fxxx ----        --          PAGE            X1PIN01
-                       --A: Fxxx ----        --          PAGE            X1PIN02
-                       --A: Fxxx ----        --          PAGE            X1PIN03
-                       --A: Fxxx ----        --          PAGE            X1PIN04
-                       --A: Fxxx ----        --          PAGE            X1PIN05
-                       --A: Fxxx ----        --          PAGE            X1PIN06
-                       --A: Fxxx ----        --          PAGE            X1PIN07
-                       --A: Fxxx ----        --          PAGE            X1PIN08
-                       --A: Fxxx ----        --          PAGE            X1PIN09
 #------------------------------------------------------------------------------------------
 # DP25 CONNECTORS X2 X3 X4 (DOWN MIDDLE UP)
 #------------------------------------------------------------------------------------------
- ------------------------------------------    PIN25 X2 X3 IS GND
+ ------------------------------------------
  \ 01 02 03 04 05 06 07 08 09 10 11 12 13 /         
   \ 14 15 16 17 18 19 20 21 22 23 24 25  /
    -------------------------------------
@@ -1020,7 +1011,7 @@ if REGION:
     #--------------------------------------------------------------------------------------    
     if REGION:
         #----------------------------------------------------------------------------------
-        # I2C ADRESSES DEV002
+        # I2C ADRESSES DEV002 POSIBBLE ADRESSES: RB: 0x20...0x27; DI: 0x64...0x78
         #----------------------------------------------------------------------------------
         i2c_addr_dev02rb = [0x22, 0x21, 0x20]
         buses = [SMBus(1) for _ in i2c_addr_dev02rb]
@@ -1029,7 +1020,7 @@ if REGION:
         i2c_addr_dev02di01 = 0x58 #2x8CH Digital Input Pos
         i2c_addr_dev02di02 = 0x59 #4x4CH Digital Input Neg
         #----------------------------------------------------------------------------------
-        # RELAIS BOARDS
+        # RELAIS BOARDS 
         #----------------------------------------------------------------------------------
         if SYSTEM == "linux" and btn_states_HW[0] == True:        
             # Set the configuration word to configure all pins as outputs for each board
