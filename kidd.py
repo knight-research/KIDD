@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-09-19-2055"
+last_change = "2023-09-30-1933"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ rb03[13]                            COLOR           PAGE            X3PIN22
 rb03[14]                            COLOR           PAGE            X3PIN23
 rb03[15]                            COLOR           PAGE            X3PIN24
 #------------------------------------------------------------------------------------------
-# 2x8CH POS INPUT MODULE01 / 1x16P I2C GPIO: https://www.waveshare.com/wiki/AW9523B_IO_Expansion_Board
+# 2x8CH POS INPUT MODULE01 / 1x16P I2C GPIO:
 #------------------------------------------------------------------------------------------
 ib01[0]  P or N                     PPL             8A-xxx-0        X4PIN01
 ib01[1]  R                          LT/GRN          8A-112-0        X4PIN02
@@ -1011,14 +1011,30 @@ if REGION:
     #--------------------------------------------------------------------------------------    
     if REGION:
         #----------------------------------------------------------------------------------
-        # I2C ADRESSES DEV002 POSIBBLE ADRESSES: RB: 0x20...0x27; DI: 0x64...0x78
+        # I2C ADRESSES DEV002:
         #----------------------------------------------------------------------------------
-        i2c_addr_dev02rb = [0x22, 0x21, 0x20]
-        buses = [SMBus(1) for _ in i2c_addr_dev02rb]
+        i2cRB01 = 0x22 #DO POSIBBLE 20-27
+        i2cRB02 = 0x21 #DO POSIBBLE 20-27
+        i2cRB03 = 0x20 #DO POSIBBLE 20-27
         
-        i2c_addr_dev02ai01 = 0x48 #1x4CH Analog Input
-        i2c_addr_dev02di01 = 0x58 #2x8CH Digital Input Pos
-        i2c_addr_dev02di02 = 0x59 #4x4CH Digital Input Neg
+        i2cDI01 = 0x64 #DI POSIBBLE 64-78
+        i2cDI02 = 0x65 #DI POSIBBLE 64-78
+        i2cDI03 = 0x66 #DI POSIBBLE 64-78
+        
+        i2cAI01 = 0x00 #AI POSIBBLE
+        
+        i2cRP01 = 0x01
+        i2cRP02 = 0x02
+
+        #----------------------------------------------------------------------------------
+        # INIT RELAIS BOARDS 
+        #----------------------------------------------------------------------------------        
+        i2c_addr_dev02rb = [i2cRB01, i2cRB02, i2cRB03]
+        buses = [SMBus(1) for _ in i2c_addr_dev02rb]
+        #----------------------------------------------------------------------------------
+        # INIT DIGITAL INPUT BOARDS 
+        #----------------------------------------------------------------------------------                
+
         #----------------------------------------------------------------------------------
         # RELAIS BOARDS 
         #----------------------------------------------------------------------------------
@@ -1036,7 +1052,7 @@ if REGION:
         if SYSTEM == "linux" and btn_states_HW[6] == True:
             try:
                 i2c_dev02ai01 = busio.I2C(board.SCL, board.SDA)
-                ads = ADS.ADS1115(i2c_dev02ai01, address=i2c_addr_dev02ai01)
+                ads = ADS.ADS1115(i2c_dev02ai01, address=i2cAI01)
             except:
                 print ("DEVICE AI01 NOT FOUND")
         #----------------------------------------------------------------------------------
@@ -1045,7 +1061,7 @@ if REGION:
         if SYSTEM == "linux" and btn_states_HW[7] == True:
             try:
                 i2c_dev02di01 = board.I2C()
-                aw001 = adafruit_aw9523.AW9523(i2c_dev02di01, address=i2c_addr_dev02di01)
+                aw001 = adafruit_aw9523.AW9523(i2c_dev02di01, address=i2cDI01)
             except:
                 print ("DEVICE DI01 NOT FOUND")
         #----------------------------------------------------------------------------------
@@ -1054,7 +1070,7 @@ if REGION:
         if SYSTEM == "linux" and btn_states_HW[8] == True:
             try:
                 i2c_dev02di02 = board.I2C()
-                aw002 = adafruit_aw9523.AW9523(i2c_dev02di02, address=i2c_addr_dev02di02)
+                aw002 = adafruit_aw9523.AW9523(i2c_dev02di02, address=i2cDI02)
             except:
                 print ("DEVICE DI02 NOT FOUND")
         #----------------------------------------------------------------------------------
