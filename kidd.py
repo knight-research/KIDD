@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-09-30-2246"
+last_change = "2023-10-01-1809"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ last_change = "2023-09-30-2246"
 #------------------------------------------------------------------------------------------
 # INSTALL ME
 #------------------------------------------------------------------------------------------
-
+pip3 install pynmea2, Pillow, pyaudio, pydub, pyserial, SpeechRecognition
 #------------------------------------------------------------------------------------------
 # CARS
 #------------------------------------------------------------------------------------------
@@ -312,7 +312,7 @@ if REGION:
             from tkinter import ttk
             import threading
             from threading import Thread
-            import websocket
+            #import websocket
         #----------------------------------------------------------------------------------
         # ON WINDOWS
         #----------------------------------------------------------------------------------
@@ -1111,7 +1111,6 @@ if REGION:
         #----------------------------------------------------------------------------------
         # I2C 7-SEGMENT 0x70 
         #----------------------------------------------------------------------------------
-        
 #------------------------------------------------------------------------------------------
 # MAIN APP
 #------------------------------------------------------------------------------------------
@@ -2019,6 +2018,14 @@ class P01_DASH(tk.Frame):
                 theme_bg_image = bgDEV002_DASH_img_list
                 background_image = theme_bg_image[theme_txt.index(theme)]
                 self.canvas.create_image(0, 0, image=background_image, anchor='nw')
+                #--------------------------------------------------------------------------
+                # BACKGROUNDIMAGE OVERLAYS
+                #--------------------------------------------------------------------------
+                if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if style == style_txt[0]:
+                        self.canvas.create_rectangle(1808, 30, 2130, 134, fill="#222200")   #PROGNO
+                    elif style == style_txt[1]:
+                        self.canvas.create_rectangle(1808, 30, 2130, 134, fill="#220000")   #PROGNO
             elif device == device_txt[31]:
                 #--------------------------------------------------------------------------
                 # GET BACKGROUNDIMAGE
@@ -6314,38 +6321,11 @@ class myfunctions():
             def switch_RB01(self, var):
                 if btn_states_HW[0] == True:
                     relno = rb01_DEV002.get_pin(var)
-                    relno.direction = Direction.OUTPUT
                     if btn_states_DEV002RB01[var] == False:
                         relno.value = False
                     else:
                         relno.value = True
                     btn_states_DEV002RB01[var] = not relno.value
-        #----------------------------------------------------------------------------------
-        # DEV002 RB02
-        #----------------------------------------------------------------------------------
-        if REGION:
-            def switch_RB02(self, var):
-                if btn_states_HW[1] == True:
-                    relno = rb02_DEV002.get_pin(var)
-                    relno.direction = Direction.OUTPUT
-                    if btn_states_DEV002RB02[var] == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    btn_states_DEV002RB02[var] = not relno.value
-        #----------------------------------------------------------------------------------
-        # DEV002 RB03
-        #----------------------------------------------------------------------------------
-        if REGION:
-            def switch_RB03(self, var):
-                if btn_states_HW[2] == True:
-                    relno = rb03_DEV002.get_pin(var)
-                    relno.direction = Direction.OUTPUT
-                    if btn_states_DEV002RB03[var] == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    btn_states_DEV002RB03[var] = not relno.value
 #------------------------------------------------------------------------------------------
 # END PROGRAM
 #------------------------------------------------------------------------------------------
