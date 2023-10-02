@@ -1056,9 +1056,10 @@ if REGION:
         i2cDI03 = 0x66 #DI POSIBBLE 64-78
         
         i2cAI01 = 0x00 #AI POSIBBLE
-        
-        i2cRP01 = 0x01
-        i2cRP02 = 0x02
+        if device == device_txt[0]:
+            i2cDEVICE = 0x01
+        elif device == device_txt[1]:
+            i2cDEVICE = 0x02
 
         #----------------------------------------------------------------------------------
         # INIT RELAIS BOARDS 
