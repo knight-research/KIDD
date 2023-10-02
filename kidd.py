@@ -85,17 +85,17 @@ rb00[5] HORN            START AT BOOT 1s#
 rb00[6] WND LH UP                       #
 rb00[7] WND LH DN                       #
 #------------------------------------------------------------------------------------------
-# DP9 CONNECTOR X0 X1 (DOWN UP) (POWER SUPPLYS)
+# FUSES
 #------------------------------------------------------------------------------------------
-                       xxA: Fxxx IGNITION    YEL         PAGE            
-                       05A: Fxxx 12V CAR BAT RD          TIMEREL. ALWAYS 
-                       05A: Fxxx FUSE RELAIS YEL         PAGE            
-                       15A: Fxxx PS01        RD          PAGE            
-                       15A: Fxxx PS02        RD          PAGE            
-                       10A: Fxxx PSUSB01     RD          PAGE            
-                       10A: Fxxx PSUSB02     RD          PAGE            
-                       10A: Fxxx PSUSB03     RD          PAGE            
-                       10A: Fxxx RB01-06 AMP RD          PAGE            
+F01     F02            xxA: Fxxx IGNITION       YEL         PAGE            
+F03     F04            05A: Fxxx 12V CAR BAT    RD          TIMEREL. ALWAYS 
+F05     F06            05A: Fxxx FUSE RELAIS    YEL         PAGE            
+F07     F08            20A: F11  PS01 (5V/15A)  RD          PAGE       PI-DEV001 PI-DEV002
+F09     F10            15A: Fxxx PS02           RD          PAGE            
+F11     F12            10A: Fxxx PSUSB01        RD          PAGE            
+                       10A: Fxxx PSUSB02        RD          PAGE            
+                       10A: Fxxx PSUSB03        RD          PAGE            
+                       10A: Fxxx RB01-06 AMP    RD          PAGE            
 #------------------------------------------------------------------------------------------
 # DP25 CONNECTORS X2 X3 X4 (DOWN MIDDLE UP)
 #------------------------------------------------------------------------------------------
