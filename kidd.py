@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-10-01-1809"
+last_change = "2023-10-02-2015"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -1056,10 +1056,6 @@ if REGION:
         i2cDI03 = 0x66 #DI POSIBBLE 64-78
         
         i2cAI01 = 0x00 #AI POSIBBLE
-        if device == device_txt[0]:
-            i2cDEVICE = 0x01
-        elif device == device_txt[1]:
-            i2cDEVICE = 0x02
 
         #----------------------------------------------------------------------------------
         # INIT RELAIS BOARDS 
