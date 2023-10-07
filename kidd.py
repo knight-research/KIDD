@@ -117,7 +117,7 @@ sp02     RGB LEFT                   COLOR           PAGE                        
 sp03     0V DIGITAL RGB             COLOR           PAGE                        X5PIN03
 sp04                                COLOR           PAGE                        X5PIN04
 sp05     +12V SHOW OUT              YEL             PAGE                        X5PIN05     WIRING OK
-sp06     +12V CAR ACC FUSE          ORN             PAGE        HORN            X5PIN06
+sp06     +12V CAR ACC FUSE          ORN             PAGE        HORN/DOORS      X5PIN06
 sp07     +12V CAR GAGES FUSE        PNK             8A-34-0     CRUISE CONTROL  X5PIN07
 sp08     +12V CAR ALWAYS            COLOR           PAGE                        X5PIN08     WIRING OK
 sp09     +12V IGNITION              COLOR           PAGE                        X5PIN09     WIRING OK
@@ -150,104 +150,84 @@ rb01[15] RH TURNSIGNAL              COLOR           PAGE            X1PIN08     
 #------------------------------------------------------------------------------------------
 # RELAIS MODULE 02 / 1x16 REL / MID / 0x21
 #------------------------------------------------------------------------------------------
-rb02[0]  IGNITION                   COLOR           PAGE            X1PIN09
-rb02[1]  START ENGINE               COLOR           PAGE            X1PIN10
-rb02[2]  SECOND BATTERY             COLOR           PAGE            X1PIN11
-rb02[3]  HORN                       COLOR           PAGE            X1PIN12
-rb02[4]                             COLOR           PAGE            X1PIN13
-rb02[5]                             COLOR           PAGE            X1PIN14
-rb02[6]                             COLOR           PAGE            X1PIN15
-rb02[7]                             COLOR           PAGE            X1PIN16
-rb02[8]                             COLOR           PAGE            X1PIN17
-rb02[9]                             COLOR           PAGE            X1PIN18
-rb02[10]                            COLOR           PAGE            X1PIN19   
-rb02[11]                            COLOR           PAGE            X1PIN20
-rb02[12]                            COLOR           PAGE            X1PIN21
-rb02[13]                            COLOR           PAGE            X1PIN22
-rb02[14]                            COLOR           PAGE            X1PIN23
-rb02[15]                            COLOR           PAGE            X1PIN24
+rb02[0]  IGNITION                   COLOR           PAGE            X1PIN09     WIRING OK
+rb02[1]  START ENGINE               COLOR           PAGE            X1PIN10     WIRING OK
+rb02[2]  SECOND BATTERY             COLOR           PAGE            X1PIN11     WIRING OK
+rb02[3]  HORN                       COLOR           PAGE            X1PIN12     WIRING OK
+rb02[4]                             COLOR           PAGE            X1PIN13     WIRING OK
+rb02[5]                             COLOR           PAGE            X1PIN14     WIRING OK
+rb02[6]                             COLOR           PAGE            X1PIN15     WIRING OK
+rb02[7]                             COLOR           PAGE            X1PIN16     WIRING OK
+rb02[8]  RADIO                      COLOR           PAGE            X1PIN17     WIRING OK
+rb02[9]  SCANNER                    COLOR           PAGE            X1PIN18     WIRING OK
+rb02[10]                            COLOR           PAGE            X1PIN19     WIRING OK
+rb02[11]                            COLOR           PAGE            X1PIN20     WIRING OK
+rb02[12]                            COLOR           PAGE            X1PIN21     WIRING OK
+rb02[13]                            COLOR           PAGE            X1PIN22     WIRING OK
+rb02[14]                            COLOR           PAGE            X1PIN23     WIRING OK
+rb02[15]                            COLOR           PAGE            X1PIN24     WIRING OK
+                                                                    X1PIN25     RESERVE
+                                                                    GND         RESERVE
 #------------------------------------------------------------------------------------------
 # RELAIS MODULE 03 / 1x16 REL / UP / 0x22
 #------------------------------------------------------------------------------------------
-rb03[0]  CRUISE OFF/ON              GRY             8A-034-0        X2PIN15
-rb03[1]  CRUISE SET                 DK/BLU          8A-034-0        X2PIN16
-rb03[2]  GAGES CRUISE RES/SPD+      BLK             8A-034-0        X2PIN17
-rb03[3]  SCANNER                    COLOR           PAGE            X2PIN18
-rb03[4]  RADIO                      COLOR           PAGE            X2PIN19
-rb03[5]  PWRACC FUSE  D-CLOSE       COLOR           8A-130-0        X1PIN20
-rb03[6]  PWRACC FUSE  D-OPEN        COLOR           8A-130-0        X1PIN21
-rb03[7]                             COLOR           PAGE            X2PIN22
-rb03[8]  WNDOW LH UP                COLOR           8A-120-0        X2PIN23
-rb03[9]  WNDOW LH UP                COLOR           8A-120-0        X2PIN24
-rb03[10] WNDOW LH UP                COLOR           8A-120-0        X2PIN25
-rb03[11] WNDOW LH UP                COLOR           8A-120-0        X3PIN01
-rb03[12]                            COLOR           PAGE            X3PIN02
-rb03[13]                            COLOR           PAGE            X3PIN03
-rb03[14]                            COLOR           PAGE            X3PIN04
-rb03[15]                            COLOR           PAGE            X3PIN05
+rb03[0]  CRUISE OFF/ON              GRY             8A-034-0        X2PIN01
+rb03[1]  CRUISE SET                 DK/BLU          8A-034-0        X2PIN02
+rb03[2]  GAGES CRUISE RES/SPD+      BLK             8A-034-0        X2PIN03
+rb03[3]                             COLOR           PAGE            X2PIN04
+rb03[4]                             COLOR           PAGE            X2PIN05
+rb03[5]  PWRACC FUSE  D-CLOSE       COLOR           8A-130-0        X2PIN06
+rb03[6]  PWRACC FUSE  D-OPEN        COLOR           8A-130-0        X2PIN07
+rb03[7]                             COLOR           PAGE            X2PIN08
+rb03[8]  WNDOW LH UP                COLOR           8A-120-0        X2PIN09
+rb03[9]  WNDOW LH UP                COLOR           8A-120-0        X2PIN10
+rb03[10] WNDOW LH UP                COLOR           8A-120-0        X2PIN11
+rb03[11] WNDOW LH UP                COLOR           8A-120-0        X2PIN12
+rb03[12]                            COLOR           PAGE            X2PIN13
+rb03[13]                            COLOR           PAGE            X2PIN14
+rb03[14]                            COLOR           PAGE            X2PIN15
+rb03[15]                            COLOR           PAGE            X2PIN16
 #------------------------------------------------------------------------------------------
 # 1x8CH POS INPUT MODULE01:
 #------------------------------------------------------------------------------------------
-ib01[0]  P or N                     PPL             8A-xxx-0        X3PIN06
-ib01[1]  R                          LT/GRN          8A-112-0        X3PIN07
-ib01[2]  IGNITION                   COLOR           8A-xxx-0        X3PIN08
-ib01[3]  LH TRN                     YEL             8A-110-0        X3PIN09
-ib01[4]  RH TRN                     DK/GRN          8A-110-0        X3PIN10
-ib01[5]  FOG LIGHTS                 COLOR           8A-xxx-0        X3PIN11
-ib01[6]  LIGHTS                     COLOR           PAGE            X3PIN12
-ib01[7]  HIGH BEAM                  COLOR           PAGE            X3PIN13
+ib01[0]  P or N                     PPL             8A-xxx-0        X2PIN17
+ib01[1]  R                          LT/GRN          8A-112-0        X2PIN18
+ib01[2]  IGNITION                   COLOR           8A-xxx-0        X2PIN19
+ib01[3]  LH TRN                     YEL             8A-110-0        X2PIN20
+ib01[4]  RH TRN                     DK/GRN          8A-110-0        X2PIN21
+ib01[5]  FOG LIGHTS                 COLOR           8A-xxx-0        X2PIN22
+ib01[6]  LIGHTS                     COLOR           PAGE            X2PIN23
+ib01[7]  HIGH BEAM                  COLOR           PAGE            X2PIN24
 #------------------------------------------------------------------------------------------
 # 1x8CH POS INPUT MODULE02:
 #------------------------------------------------------------------------------------------
-ib02[0]  BREAK LIGHT                COLOR           PAGE            X3PIN14
-ib02[1]                             COLOR           PAGE            X3PIN15
-ib02[2]  CRUISE ON/OFF              GRY             8A-034-0        X3PIN16
-ib02[3]  CRUISE SET                 DK/BLU          PAGE            X3PIN17
-ib02[4]  CRUISE RES/SPD+            BLK             PAGE            X3PIN18
-ib02[5]                             COLOR           PAGE            X3PIN19
-ib02[6]                             COLOR           PAGE            X3PIN20
-ib02[7]                             COLOR           PAGE            X3PIN21
+ib02[0]  BREAK LIGHT                COLOR           PAGE            X3PIN01
+ib02[1]                             COLOR           PAGE            X3PIN02
+ib02[2]  CRUISE ON/OFF              GRY             8A-034-0        X3PIN03
+ib02[3]  CRUISE SET                 DK/BLU          PAGE            X3PIN04
+ib02[4]  CRUISE RES/SPD+            BLK             PAGE            X3PIN05
+ib02[5]                             COLOR           PAGE            X3PIN06
+ib02[6]                             COLOR           PAGE            X3PIN07
+ib02[7]                             COLOR           PAGE            X3PIN08
 #------------------------------------------------------------------------------------------
-# 1x8CH POS INPUT MODULE03:
+# 1x8CH NEG INPUT MODULE03:
 #------------------------------------------------------------------------------------------
-ib03[0]                             COLOR           PAGE            X3PIN22
-ib03[1]                             COLOR           PAGE            X3PIN23
-ib03[2]                             COLOR           PAGE            X3PIN24
-ib03[3]                             COLOR           PAGE            X3PIN25
-ib03[4]                             COLOR           PAGE            X4PIN01
-ib03[5]                             COLOR           PAGE            X4PIN02
-ib03[6]                             COLOR           PAGE            X4PIN03
-ib03[7]                             COLOR           PAGE            X4PIN04
-#------------------------------------------------------------------------------------------
-# 1x8CH NEG INPUT MODULE04:
-#------------------------------------------------------------------------------------------
-ib04[0]  BREAK WARNING              TAN/WHT         8A-041-0        X4PIN05
-ib04[1]  SES LIGHT                  BRN/WHT         8A-xxx-0        X4PIN06
-ib04[2]  SECURITY                   GRY             8A-133-0        X4PIN07
-ib04[3]  DOOR OPEN                  WHT             8A-114-0        X4PIN08
-ib04[4]  PARK BREAK                 COLOR           8A-xxx-0        X4PIN09
-ib04[5]                             COLOR           PAGE            X4PIN10
-ib04[6]                             COLOR           PAGE            X4PIN11
-ib04[7]                             COLOR           PAGE            X4PIN12
-#------------------------------------------------------------------------------------------
-# 1x8CH NEG INPUT MODULE05:
-#------------------------------------------------------------------------------------------
-ib05[0]                             COLOR           PAGE            X4PIN13
-ib05[1]                             COLOR           PAGE            X4PIN14
-ib05[2]                             COLOR           PAGE            X4PIN15
-ib05[3]                             COLOR           PAGE            X4PIN16
-ib05[4]                             COLOR           PAGE            X4PIN17
-ib05[5]                             COLOR           PAGE            X4PIN18
-ib05[6]                             COLOR           PAGE            X4PIN19
-ib05[7]                             COLOR           PAGE            X4PIN20
+ib03[0]  BREAK WARNING              TAN/WHT         8A-041-0        X3PIN09
+ib03[1]  SES LIGHT                  BRN/WHT         8A-xxx-0        X3PIN10
+ib03[2]  SECURITY                   GRY             8A-133-0        X3PIN11
+ib03[3]  DOOR OPEN                  WHT             8A-114-0        X3PIN12
+ib03[4]  PARK BREAK                 COLOR           8A-xxx-0        X3PIN13
+ib03[5]                             COLOR           PAGE            X3PIN14
+ib03[6]                             COLOR           PAGE            X3PIN15
+ib03[7]                             COLOR           PAGE            X3PIN16
 #------------------------------------------------------------------------------------------
 # 1x4CH ANALOG INPUT MODULE 01 I2C 0x18
 #------------------------------------------------------------------------------------------
-ai01[0] TANKCAPACITY                COLOR           PAGE            X3PIN21
-ai01[1]                             COLOR           PAGE            X4PIM22
-ai01[2]                             COLOR           PAGE            X4PIM23
-ai01[3]                             COLOR           PAGE            X4PIM24
-ai01[4]                             COLOR           PAGE            X4PIM25
+ai01[0] TANKCAPACITY                COLOR           PAGE            X3PIN17
+ai01[1]                             COLOR           PAGE            X3PIM18
+ai01[2]                             COLOR           PAGE            X3PIM19
+ai01[3]                             COLOR           PAGE            X3PIM20
+ai01[4]                             COLOR           PAGE            X3PIM21
 #------------------------------------------------------------------------------------------
 # PAGES
 #------------------------------------------------------------------------------------------
