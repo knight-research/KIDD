@@ -154,10 +154,10 @@ rb02[0]  IGNITION                   COLOR           PAGE            X1PIN09
 rb02[1]  START ENGINE               COLOR           PAGE            X1PIN10
 rb02[2]  SECOND BATTERY             COLOR           PAGE            X1PIN11
 rb02[3]  HORN                       COLOR           PAGE            X1PIN12
-rb02[4]  WNDOW LH UP                COLOR           8A-120-0        X1PIN13
-rb02[5]  WNDOW LH DN                COLOR           8A-120-0        X1PIN14
-rb02[6]  WNDOW RH UP                COLOR           8A-120-0        X1PIN15
-rb02[7]  WNDOW RH DN                COLOR           8A-120-0        X1PIN16
+rb02[4]                             COLOR           PAGE            X1PIN13
+rb02[5]                             COLOR           PAGE            X1PIN14
+rb02[6]                             COLOR           PAGE            X1PIN15
+rb02[7]                             COLOR           PAGE            X1PIN16
 rb02[8]                             COLOR           PAGE            X1PIN17
 rb02[9]                             COLOR           PAGE            X1PIN18
 rb02[10]                            COLOR           PAGE            X1PIN19   
@@ -177,14 +177,14 @@ rb03[4]  RADIO                      COLOR           PAGE            X2PIN19
 rb03[5]  PWRACC FUSE  D-CLOSE       COLOR           8A-130-0        X1PIN20
 rb03[6]  PWRACC FUSE  D-OPEN        COLOR           8A-130-0        X1PIN21
 rb03[7]                             COLOR           PAGE            X2PIN22
-rb03[8]  SCANNER LIGHT 01           COLOR           PAGE            X2PIN23
-rb03[9]  SCANNER LIGHT 02           COLOR           PAGE            X2PIN24
-rb03[10] SCANNER LIGHT 03           COLOR           PAGE            X2PIN25
-rb03[11] SCANNER LIGHT 04           COLOR           PAGE            X3PIN01
-rb03[12] SCANNER LIGHT 05           COLOR           PAGE            X3PIN02
-rb03[13] SCANNER LIGHT 06           COLOR           PAGE            X3PIN03
-rb03[14] SCANNER LIGHT 07           COLOR           PAGE            X3PIN04
-rb03[15] SCANNER LIGHT 08           COLOR           PAGE            X3PIN05
+rb03[8]  WNDOW LH UP                COLOR           8A-120-0        X2PIN23
+rb03[9]  WNDOW LH UP                COLOR           8A-120-0        X2PIN24
+rb03[10] WNDOW LH UP                COLOR           8A-120-0        X2PIN25
+rb03[11] WNDOW LH UP                COLOR           8A-120-0        X3PIN01
+rb03[12]                            COLOR           PAGE            X3PIN02
+rb03[13]                            COLOR           PAGE            X3PIN03
+rb03[14]                            COLOR           PAGE            X3PIN04
+rb03[15]                            COLOR           PAGE            X3PIN05
 #------------------------------------------------------------------------------------------
 # 1x8CH POS INPUT MODULE01:
 #------------------------------------------------------------------------------------------
