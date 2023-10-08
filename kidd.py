@@ -104,7 +104,7 @@ F07
 F08 
 F09 20A PS01 (5V/15A)  RD          PAGE
 F11 20A PS02 (5V/15A)  RD          PAGE       PI-DEV001 PI-DEV002
-F12 
+F12 10A AMP (50W)      RD          PAGE       AMP FOR DEV001 DEV002
 #------------------------------------------------------------------------------------------
 # DP09 CONNECTOR SPECIAL INPUT OUTPUT
 #------------------------------------------------------------------------------------------
@@ -117,8 +117,8 @@ sp02     RGB LEFT                   COLOR           PAGE                        
 sp03     0V DIGITAL RGB             COLOR           PAGE                        X5PIN03
 sp04                                COLOR           PAGE                        X5PIN04
 sp05     +12V SHOW OUT              YEL             PAGE                        X5PIN05     WIRING OK
-sp06     +12V CAR ACC FUSE          ORN             PAGE        HORN/DOORS      X5PIN06
-sp07     +12V CAR GAGES FUSE        PNK             8A-34-0     CRUISE CONTROL  X5PIN07
+sp06     +12V CAR ACC FUSE          ORN             PAGE        HORN/DOORS      X5PIN06     WIRING OK
+sp07     +12V CAR GAGES FUSE        PNK             8A-34-0     CRUISE CONTROL  X5PIN07     WIRING OK
 sp08     +12V CAR ALWAYS            COLOR           PAGE                        X5PIN08     WIRING OK
 sp09     +12V IGNITION              COLOR           PAGE                        X5PIN09     WIRING OK
 #------------------------------------------------------------------------------------------
@@ -133,56 +133,56 @@ sp09     +12V IGNITION              COLOR           PAGE                        
 #------------------------------------------------------------------------------------------
 rb01[0]  SHUTDOWN SYSTEM            COLOR           PAGE            INTERNAL
 rb01[1]  SHOWMODE                   COLOR           PAGE            INTERNAL
-rb01[2]                             COLOR           PAGE            INTERNAL
+rb01[2]  AMP                        RED             PAGE            INTERNAL
 rb01[3]                             COLOR           PAGE            INTERNAL
 rb01[4]                             COLOR           PAGE            INTERNAL
 rb01[5]                             COLOR           PAGE            INTERNAL
 rb01[6]                             COLOR           PAGE            INTERNAL
 rb01[7]                             COLOR           PAGE            INTERNAL
-rb01[8]  FRONT FOG LIGHT            COLOR           PAGE            X1PIN01     WIRING OK
-rb01[9]  REAR FOG LIGHT             COLOR           PAGE            X1PIN02     WIRING OK
-rb01[10] HEADLIGHTS                 COLOR           PAGE            X1PIN03     WIRING OK
-rb01[11] HIGH BEAM                  COLOR           PAGE            X1PIN04     WIRING OK
-rb01[12] LH SIDEMARKER              COLOR           PAGE            X1PIN05     WIRING OK
-rb01[13] RH SIDEMARKER              COLOR           PAGE            X1PIN06     WIRING OK
-rb01[14] LH TURNSIGNAL              COLOR           PAGE            X1PIN07     WIRING OK
-rb01[15] RH TURNSIGNAL              COLOR           PAGE            X1PIN08     WIRING OK
+rb01[8]  FRONT FOG LIGHT            RED             PAGE            X1PIN01     WIRING OK
+rb01[9]  REAR FOG LIGHT             RED             PAGE            X1PIN02     WIRING OK
+rb01[10] HEADLIGHTS                 RED             PAGE            X1PIN03     WIRING OK
+rb01[11] HIGH BEAM                  RED             PAGE            X1PIN04     WIRING OK
+rb01[12] LH SIDEMARKER              RED             PAGE            X1PIN05     WIRING OK
+rb01[13] RH SIDEMARKER              RED             PAGE            X1PIN06     WIRING OK
+rb01[14] LH TURNSIGNAL              RED             PAGE            X1PIN07     WIRING OK
+rb01[15] RH TURNSIGNAL              RED             PAGE            X1PIN08     WIRING OK
 #------------------------------------------------------------------------------------------
 # RELAIS MODULE 02 / 1x16 REL / MID / 0x21
 #------------------------------------------------------------------------------------------
-rb02[0]  IGNITION                   COLOR           PAGE            X1PIN09     WIRING OK
-rb02[1]  START ENGINE               COLOR           PAGE            X1PIN10     WIRING OK
-rb02[2]  SECOND BATTERY             COLOR           PAGE            X1PIN11     WIRING OK
-rb02[3]  HORN                       COLOR           PAGE            X1PIN12     WIRING OK
-rb02[4]                             COLOR           PAGE            X1PIN13     WIRING OK
-rb02[5]                             COLOR           PAGE            X1PIN14     WIRING OK
-rb02[6]                             COLOR           PAGE            X1PIN15     WIRING OK
-rb02[7]                             COLOR           PAGE            X1PIN16     WIRING OK
-rb02[8]  RADIO                      COLOR           PAGE            X1PIN17     WIRING OK
-rb02[9]  SCANNER                    COLOR           PAGE            X1PIN18     WIRING OK
-rb02[10]                            COLOR           PAGE            X1PIN19     WIRING OK
-rb02[11]                            COLOR           PAGE            X1PIN20     WIRING OK
-rb02[12]                            COLOR           PAGE            X1PIN21     WIRING OK
-rb02[13]                            COLOR           PAGE            X1PIN22     WIRING OK
-rb02[14]                            COLOR           PAGE            X1PIN23     WIRING OK
-rb02[15]                            COLOR           PAGE            X1PIN24     WIRING OK
+rb02[0]  IGNITION                   RED             PAGE            X1PIN09     WIRING OK
+rb02[1]  START ENGINE               RED             PAGE            X1PIN10     WIRING OK
+rb02[2]  SECOND BATTERY             RED             PAGE            X1PIN11     WIRING OK
+rb02[3]  HORN                       RED             PAGE            X1PIN12     WIRING OK
+rb02[4]                             RED             PAGE            X1PIN13     WIRING OK
+rb02[5]                             RED             PAGE            X1PIN14     WIRING OK
+rb02[6]                             RED             PAGE            X1PIN15     WIRING OK
+rb02[7]                             RED             PAGE            X1PIN16     WIRING OK
+rb02[8]  RADIO                      RED             PAGE            X1PIN17     WIRING OK
+rb02[9]  SCANNER                    RED             PAGE            X1PIN18     WIRING OK
+rb02[10]                            RED             PAGE            X1PIN19     WIRING OK
+rb02[11]                            RED             PAGE            X1PIN20     WIRING OK
+rb02[12] WNDOW LH UP                RED             8A-120-0        X1PIN21     WIRING OK
+rb02[13] WNDOW LH DN                RED             8A-120-0        X1PIN22     WIRING OK
+rb02[14] WNDOW LH UP                RED             8A-120-0        X1PIN23     WIRING OK
+rb02[15] WNDOW LH DN                RED             8A-120-0        X1PIN24     WIRING OK
                                                                     X1PIN25     RESERVE
                                                                     GND         RESERVE
 #------------------------------------------------------------------------------------------
 # RELAIS MODULE 03 / 1x16 REL / UP / 0x22
 #------------------------------------------------------------------------------------------
-rb03[0]  CRUISE OFF/ON              GRY             8A-034-0        X2PIN01
-rb03[1]  CRUISE SET                 DK/BLU          8A-034-0        X2PIN02
-rb03[2]  GAGES CRUISE RES/SPD+      BLK             8A-034-0        X2PIN03
-rb03[3]                             COLOR           PAGE            X2PIN04
-rb03[4]                             COLOR           PAGE            X2PIN05
-rb03[5]  PWRACC FUSE  D-CLOSE       COLOR           8A-130-0        X2PIN06
-rb03[6]  PWRACC FUSE  D-OPEN        COLOR           8A-130-0        X2PIN07
+rb03[0]  CRUISE OFF/ON              GRY             8A-034-0        X2PIN01     WIRING OK
+rb03[1]  CRUISE SET                 DK/BLU          8A-034-0        X2PIN02     WIRING OK
+rb03[2]  CRUISE RES/SPD+            BLK             8A-034-0        X2PIN03     WIRING OK
+rb03[3]  PWRACC FUSE  D-LOCK        LT-BLU          8A-130-0        X2PIN04     WIRING OK
+rb03[4]  PWRACC FUSE  D-UNLOCK      BLK             8A-130-0        X2PIN05     WIRING OK
+rb03[5]                             COLOR           PAGE            X2PIN06
+rb03[6]                             COLOR           PAGE            X2PIN07
 rb03[7]                             COLOR           PAGE            X2PIN08
-rb03[8]  WNDOW LH UP                COLOR           8A-120-0        X2PIN09
-rb03[9]  WNDOW LH UP                COLOR           8A-120-0        X2PIN10
-rb03[10] WNDOW LH UP                COLOR           8A-120-0        X2PIN11
-rb03[11] WNDOW LH UP                COLOR           8A-120-0        X2PIN12
+rb03[8]                             COLOR           PAGE            X2PIN09
+rb03[9]                             COLOR           PAGE            X2PIN10
+rb03[10]                            COLOR           PAGE            X2PIN11
+rb03[11]                            COLOR           PAGE            X2PIN12
 rb03[12]                            COLOR           PAGE            X2PIN13
 rb03[13]                            COLOR           PAGE            X2PIN14
 rb03[14]                            COLOR           PAGE            X2PIN15
@@ -604,9 +604,9 @@ if REGION:
                 ib01_DEV002_txt = ["TURN LEFT", "TURN RIGHT", "IGNITION", "BREAK"]
                 ib02_DEV002_txt = ["PARK", "2ND BATT.", "OIL PRESS.", "ENGINE RUN"]
                 ib03_DEV002_txt = ["SECURITY", "DOOR OPEN", "HIGH BEAM", "SES"]
-                rb01_DEV002_txt = ["SHUTDOWN", "SHOW", "2ND BAT", "F FOG", "R FOG", "LOW", "HIGH", "LH SIDE", "RH SIDE", "LH TURN", "RH TURN", "RADIO", "SCANNER", "HORN", "IGNITION", "START"]
-                rb02_DEV002_txt = ["---", "---", "---", "---", "WND LE UP", "WND LE DN", "WND RI UP", "WND RI DN", "---", "---", "---", "---", "---", "---", "---", "---"]
-                rb03_DEV002_txt = ["---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]
+                rb01_DEV002_txt = ["SHUTDOWN", "SHOW", "---", "---", "---", "---", "---", "---", "F FOG", "R FOG", "LOW", "HIGH", "LH SIDE", "RH SIDE", "LH TURN", "RH SIDE"]
+                rb02_DEV002_txt = ["IGN", "START", "2ND", "HORN", "---", "---", "---", "---", "RADIO", "SCANNER", "---", "---", "WND LH UP", "WND LH DN", "WND RH UP", "WND RH DN"]
+                rb03_DEV002_txt = ["CRUISE", "CRUISE SET", "CRUISE +", "LOCK", "UNLOCK", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]
             #------------------------------------------------------------------------------
             # DEV031
             #------------------------------------------------------------------------------
