@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-10-02-2015"
+last_change = "2023-10-08-2015"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ F07
 F08 
 F09 20A PS01 (5V/15A)  RD          PAGE
 F11 20A PS02 (5V/15A)  RD          PAGE       PI-DEV001 PI-DEV002
-F12 10A AMP (50W)      RD          PAGE       AMP FOR DEV001 DEV002
+F12 10A AMP (50W)      RD          PAGE       AMP FOR DEV001
 #------------------------------------------------------------------------------------------
 # DP09 CONNECTOR SPECIAL INPUT OUTPUT
 #------------------------------------------------------------------------------------------
@@ -828,7 +828,9 @@ if REGION:
             lbl_style_boot = {'foreground':'#00ff00','background':'#003300', 'font':("Triple Dot Digital-7", 18), 'anchor':'c'}
             lbl_style_voicecmd = {'foreground':'#ffdddd','background':'#200000', 'font':("LCDDot TR", 24), 'anchor':'nw'}
             lbl_style_voicecmd_KA = {'foreground':'#ffffdd','background':'#222200', 'font':("LCDDot TR", 24), 'anchor':'nw'}
-            txt_style_pagename = {'fill':'#00CCFF','font':("LCDDot TR", 40), 'anchor':'nw'}
+            txt_style_pagename = {'fill':'#22FF55','font':("Penn Station", 25), 'anchor':'nw'}
+            txt_style_pageinfo = {'fill':'#55FF55','font':("lcars", 16), 'anchor':'nw'}
+            
             txt_style_S12 = {'fill':'#FFFFFF','font':("BankGothic", 22), 'anchor':'c'}
             txt_style_S34c = {'fill':'#FFFFFF','font':("lcars", 24), 'anchor':'c'}
             txt_style_S34e = {'fill':'#FFFFFF','font':("FederationWide", 12), 'anchor':'e'}
@@ -4618,32 +4620,92 @@ class P03_SETUP(tk.Frame):
             y_l20 = 490
             y_l21 = 513
         #----------------------------------------------------------------------------------
-        # UPDATE BACKGROUNDIMAGE
-        #----------------------------------------------------------------------------------
-        if REGION:
-            if device == device_txt[1]:
-                background_image = bgDEV001_img_list[3]
-            elif device == device_txt[2]:
-                background_image = bgDEV002_img_list[3]
-            elif device == device_txt[31]:
-                background_image = bgDEV031_img_list[4]
-        #----------------------------------------------------------------------------------
-        # CREATE BACKGROUND GRID
+        # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
-        if REGION ==True:
+        if REGION:
             canvas = tk.Canvas(self, bg='black', highlightthickness=0)
             canvas.pack(fill='both', expand=True)
-            canvas.create_image(0, 0, image=background_image, anchor='nw')
-            canvas.create_rectangle(15, 15, 1265, 85, outline='#ff0000', width=2)   #TITLEBAR
-            canvas.create_rectangle(15, 90, 1265, 605, outline='#ff0000', width=2)  #PAGE LE
-            if device == device_txt[1]: 
-                canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)  #PAGE RI
-            elif device == device_txt[2]: 
-                canvas.create_rectangle(1295, 15, 2355, 715, outline='#ff0000', width=2)  #PAGE RI
-            canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
-            canvas.create_line(15, 255, 1265, 255, fill='#ff0000', width=2) #PAGEBREAK 01
-            canvas.create_line(290, 255, 290, 605, fill='#ff0000', width=2) #V1
-            canvas.create_line(650, 255, 650, 605, fill='#ff0000', width=2) #V2
+            #------------------------------------------------------------------------------
+            # CREATE BACKGROUND GRID
+            #------------------------------------------------------------------------------ 
+            if REGION:
+                grid_spacing = 15  # Adjust this value to change the spacing between grid lines
+                canvas_width = 2560
+                canvas_height = 720
+                # Draw vertical grid lines
+                for x in range(0, canvas_width, grid_spacing):
+                    canvas.create_line(x, 0, x, canvas_height, fill='#002200')
+                # Draw horizontal grid lines
+                for y in range(0, canvas_height, grid_spacing):
+                    canvas.create_line(0, y, canvas_width, y, fill='#003300')
+            #------------------------------------------------------------------------------
+            # CREATE BACKGROUND GRID OVERLAYS
+            #------------------------------------------------------------------------------
+            if REGION:
+                #--------------------------------------------------------------------------
+                # GLOBALS
+                #--------------------------------------------------------------------------            
+                x1, y1 = 30, 15
+                x2, y2 = 1245, 15
+                x3, y3 = 30, 75
+                x4, y4 = 1245, 75
+                num_segments = 100
+                color_start = "#005500"
+                color_middle = "#00FF00"
+                color_end = "#005500"
+                color_marker_x = "#55FF55"
+                color_marker_y = "#BBFFBB"                
+                #--------------------------------------------------------------------------
+                # CREATE TITLE CORNERS
+                #--------------------------------------------------------------------------
+                canvas.create_line(15, 15, 25, 15, fill=color_marker_x, width=1)     #LT_X
+                canvas.create_line(15, 15, 15, 25, fill=color_marker_y, width=1)     #LT_Y
+                canvas.create_line(15, 75, 25, 75, fill=color_marker_x, width=1)     #LB_X
+                canvas.create_line(15, 75, 15, 65, fill=color_marker_y, width=1)     #LB_Y
+                canvas.create_line(1250, 15, 1260, 15, fill=color_marker_x, width=1) #RT_X
+                canvas.create_line(1260, 15, 1260, 25, fill=color_marker_y, width=1) #RT_Y            
+                canvas.create_line(1250, 75, 1260, 75, fill=color_marker_x, width=1) #RB_X
+                canvas.create_line(1260, 75, 1260, 65, fill=color_marker_y, width=1) #RB_Y
+                #--------------------------------------------------------------------------
+                # CREATE TITLE LINES
+                #--------------------------------------------------------------------------
+                for i in range(num_segments):
+                    if i < num_segments // 2:
+                        r = int(int(color_start[1:3], 16) + (int(color_middle[1:3], 16) - int(color_start[1:3], 16)) * 2 * i / num_segments)
+                        g = int(int(color_start[3:5], 16) + (int(color_middle[3:5], 16) - int(color_start[3:5], 16)) * 2 * i / num_segments)
+                        b = int(int(color_start[5:7], 16) + (int(color_middle[5:7], 16) - int(color_start[5:7], 16)) * 2 * i / num_segments)
+                    else:
+                        r = int(int(color_middle[1:3], 16) + (int(color_end[1:3], 16) - int(color_middle[1:3], 16)) * 2 * (i - num_segments // 2) / num_segments)
+                        g = int(int(color_middle[3:5], 16) + (int(color_end[3:5], 16) - int(color_middle[3:5], 16)) * 2 * (i - num_segments // 2) / num_segments)
+                        b = int(int(color_middle[5:7], 16) + (int(color_end[5:7], 16) - int(color_middle[5:7], 16)) * 2 * (i - num_segments // 2) / num_segments)
+
+                    color = "#{:02x}{:02x}{:02x}".format(r, g, b)
+        
+                    x1_segment = x1 + (x2 - x1) * i / num_segments
+                    y1_segment = y1 + (y2 - y1) * i / num_segments
+                    x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
+                    y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
+                
+                    x3_segment = x3 + (x4 - x3) * i / num_segments
+                    y3_segment = y3 + (y4 - y3) * i / num_segments
+                    x4_segment = x3 + (x4 - x3) * (i + 1) / num_segments
+                    y4_segment = y3 + (y4 - y3) * (i + 1) / num_segments
+                
+                    canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
+                    canvas.create_line(x3_segment, y3_segment, x4_segment, y4_segment, fill=color)            
+                #--------------------------------------------------------------------------
+                # CREATE MAIN CORNERS
+                #--------------------------------------------------------------------------
+                canvas.create_rectangle(15, 90, 1265, 605, outline='#ff0000', width=2)  #PAGE LE
+                if device == device_txt[1]: 
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)  #PAGE RI
+                elif device == device_txt[2]: 
+                    canvas.create_rectangle(1295, 15, 2355, 715, outline='#ff0000', width=2)  #PAGE RI
+                
+                canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
+                canvas.create_line(15, 255, 1265, 255, fill='#ff0000', width=2) #PAGEBREAK 01
+                canvas.create_line(290, 255, 290, 605, fill='#ff0000', width=2) #V1
+                canvas.create_line(650, 255, 650, 605, fill='#ff0000', width=2) #V2
         #----------------------------------------------------------------------------------
         # STATIC TEXT
         #----------------------------------------------------------------------------------
@@ -4654,8 +4716,8 @@ class P03_SETUP(tk.Frame):
                 wlan0_ip = ip_line.split()[1]
             else:
                 wlan0_ip = "127.0.0.1"
-            canvas.create_text(25, 20, text="SETUP", **txt_style_pagename)
-            canvas.create_text(25, 60, fill="#00AAFF", text=(version, last_change, SYSTEM, carno, devno, wlan0_ip), anchor='nw')
+            canvas.create_text(20, 20, **txt_style_pagename, text="SETUP")
+            canvas.create_text(20, 50, **txt_style_pageinfo, text=(version, last_change, SYSTEM, carno, devno, wlan0_ip))
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
@@ -4663,7 +4725,7 @@ class P03_SETUP(tk.Frame):
             btn_EXIT = tk.Button(self, borderwidth=0, highlightthickness=0, width=60, height=60)
             btn_EXIT.config(image=btnON_menu_img_list[12])
             btn_EXIT.configure(command=read.quitDASH)
-            btn_EXIT.place(x=1200, y=20)
+            btn_EXIT.place(x=1180, y=16)
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTON LABELS
         #----------------------------------------------------------------------------------
@@ -5859,6 +5921,28 @@ class myfunctions():
             theme = theme_text
             with open(os.path.join(datadir, 'theme_conf.pickle'), 'wb') as f:
                 pickle.dump(theme, f)
+
+        def create_gradient_line(self, x1, y1, x2, y2, num_segments=100):
+            global color_start
+            global color_middle
+            global color_end
+            global canvas
+            for i in range(num_segments):
+                if i < num_segments // 2:
+                    r = int(int(color_start[1:3], 16) + (int(color_middle[1:3], 16) - int(color_start[1:3], 16)) * 2 * i / num_segments)
+                    g = int(int(color_start[3:5], 16) + (int(color_middle[3:5], 16) - int(color_start[3:5], 16)) * 2 * i / num_segments)
+                    b = int(int(color_start[5:7], 16) + (int(color_middle[5:7], 16) - int(color_start[5:7], 16)) * 2 * i / num_segments)
+                else:
+                    r = int(int(color_middle[1:3], 16) + (int(color_end[1:3], 16) - int(color_middle[1:3], 16)) * 2 * (i - num_segments // 2) / num_segments)
+                    g = int(int(color_middle[3:5], 16) + (int(color_end[3:5], 16) - int(color_middle[3:5], 16)) * 2 * (i - num_segments // 2) / num_segments)
+                    b = int(int(color_middle[5:7], 16) + (int(color_end[5:7], 16) - int(color_middle[5:7], 16)) * 2 * (i - num_segments // 2) / num_segments)
+                color = "#{:02x}{:02x}{:02x}".format(r, g, b)        
+                x1_segment = x1 + (x2 - x1) * i / num_segments
+                y1_segment = y1 + (y2 - y1) * i / num_segments
+                x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
+                y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
+                canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
+             
     #--------------------------------------------------------------------------------------
     # SOUND FUNCTIONS
     #--------------------------------------------------------------------------------------
