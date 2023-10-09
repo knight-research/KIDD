@@ -4645,65 +4645,69 @@ class P03_SETUP(tk.Frame):
                 #--------------------------------------------------------------------------
                 # GLOBALS
                 #--------------------------------------------------------------------------            
-                x1, y1 = 30, 15
-                x2, y2 = 1245, 15
-                x3, y3 = 30, 75
-                x4, y4 = 1245, 75
-                num_segments = 100
-                color_start = "#005500"
-                color_middle = "#00FF00"
-                color_end = "#005500"
-                color_marker_x = "#55FF55"
-                color_marker_y = "#BBFFBB"                
+                # COORDINATES OF HORIZONTAL LINES
+                coordinates = [
+                    (30, 15, 1245, 15),
+                    (30, 75, 1245, 75),
+                    (30, 90, 1245, 90),
+                    (30, 255, 1245, 255),
+                ]
+
+                # Define colors
+                colors_corner = ["#55FF55", "#BBFFBB"]
+                gradient_colors = ["#005500", "#00FF00", "#449944"]
+                num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 15, 25, 15, fill=color_marker_x, width=1)     #LT_X
-                canvas.create_line(15, 15, 15, 25, fill=color_marker_y, width=1)     #LT_Y
-                canvas.create_line(15, 75, 25, 75, fill=color_marker_x, width=1)     #LB_X
-                canvas.create_line(15, 75, 15, 65, fill=color_marker_y, width=1)     #LB_Y
-                canvas.create_line(1250, 15, 1260, 15, fill=color_marker_x, width=1) #RT_X
-                canvas.create_line(1260, 15, 1260, 25, fill=color_marker_y, width=1) #RT_Y            
-                canvas.create_line(1250, 75, 1260, 75, fill=color_marker_x, width=1) #RB_X
-                canvas.create_line(1260, 75, 1260, 65, fill=color_marker_y, width=1) #RB_Y
+                canvas.create_line(15, 15, 25, 15, fill=colors_corner[0], width=1)      #LT_X
+                canvas.create_line(15, 15, 15, 25, fill=colors_corner[1], width=1)      #LT_Y
+                canvas.create_line(1250, 15, 1260, 15, fill=colors_corner[0], width=1)  #RT_X
+                canvas.create_line(1260, 15, 1260, 25, fill=colors_corner[1], width=1)  #RT_Y
+                canvas.create_line(15, 75, 25, 75, fill=colors_corner[0], width=1)      #LB_X
+                canvas.create_line(15, 75, 15, 65, fill=colors_corner[1], width=1)      #LB_Y            
+                canvas.create_line(1250, 75, 1260, 75, fill=colors_corner[0], width=1)  #RB_X
+                canvas.create_line(1260, 75, 1260, 65, fill=colors_corner[1], width=1)  #RB_Y
                 #--------------------------------------------------------------------------
-                # CREATE TITLE LINES
+                # CREATE HORIZONTAL LINES
                 #--------------------------------------------------------------------------
                 for i in range(num_segments):
-                    if i < num_segments // 2:
-                        r = int(int(color_start[1:3], 16) + (int(color_middle[1:3], 16) - int(color_start[1:3], 16)) * 2 * i / num_segments)
-                        g = int(int(color_start[3:5], 16) + (int(color_middle[3:5], 16) - int(color_start[3:5], 16)) * 2 * i / num_segments)
-                        b = int(int(color_start[5:7], 16) + (int(color_middle[5:7], 16) - int(color_start[5:7], 16)) * 2 * i / num_segments)
-                    else:
-                        r = int(int(color_middle[1:3], 16) + (int(color_end[1:3], 16) - int(color_middle[1:3], 16)) * 2 * (i - num_segments // 2) / num_segments)
-                        g = int(int(color_middle[3:5], 16) + (int(color_end[3:5], 16) - int(color_middle[3:5], 16)) * 2 * (i - num_segments // 2) / num_segments)
-                        b = int(int(color_middle[5:7], 16) + (int(color_end[5:7], 16) - int(color_middle[5:7], 16)) * 2 * (i - num_segments // 2) / num_segments)
+                    color_index = min(i // (num_segments // len(gradient_colors)), len(gradient_colors) - 1)
+                    color_start, color_end = gradient_colors[color_index], gradient_colors[min(color_index + 1, len(gradient_colors) - 1)]
+                    t = (i % (num_segments // len(gradient_colors))) / (num_segments // len(gradient_colors))
+
+                    r = int((1 - t) * int(color_start[1:3], 16) + t * int(color_end[1:3], 16))
+                    g = int((1 - t) * int(color_start[3:5], 16) + t * int(color_end[3:5], 16))
+                    b = int((1 - t) * int(color_start[5:7], 16) + t * int(color_end[5:7], 16))
 
                     color = "#{:02x}{:02x}{:02x}".format(r, g, b)
-        
-                    x1_segment = x1 + (x2 - x1) * i / num_segments
-                    y1_segment = y1 + (y2 - y1) * i / num_segments
-                    x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
-                    y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
-                
-                    x3_segment = x3 + (x4 - x3) * i / num_segments
-                    y3_segment = y3 + (y4 - y3) * i / num_segments
-                    x4_segment = x3 + (x4 - x3) * (i + 1) / num_segments
-                    y4_segment = y3 + (y4 - y3) * (i + 1) / num_segments
-                
-                    canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
-                    canvas.create_line(x3_segment, y3_segment, x4_segment, y4_segment, fill=color)            
+
+                    for x1, y1, x2, y2 in coordinates:
+                        x1_segment = x1 + (x2 - x1) * i / num_segments
+                        y1_segment = y1 + (y2 - y1) * i / num_segments
+                        x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
+                        y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
+
+                        canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
                 #--------------------------------------------------------------------------
                 # CREATE MAIN CORNERS
                 #--------------------------------------------------------------------------
-                canvas.create_rectangle(15, 90, 1265, 605, outline='#ff0000', width=2)  #PAGE LE
+                canvas.create_line(15, 90, 25, 90, fill=colors_corner[0], width=1)      #LT_X
+                canvas.create_line(15, 90, 15, 100, fill=colors_corner[1], width=1)     #LT_Y
+                canvas.create_line(1250, 90, 1260, 90, fill=colors_corner[0], width=1)  #RT_X
+                canvas.create_line(1260, 90, 1260, 100, fill=colors_corner[1], width=1) #RT_Y
+                canvas.create_line(15, 255, 25, 255, fill=colors_corner[0], width=1)    #LB_X
+                canvas.create_line(15, 255, 15, 245, fill=colors_corner[1], width=1)    #LB_Y
+                canvas.create_line(1250, 255, 1260, 255, fill=colors_corner[0], width=1)#RB_X
+                canvas.create_line(1260, 255, 1260, 245, fill=colors_corner[1], width=1)#RB_Y
+
                 if device == device_txt[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)  #PAGE RI
                 elif device == device_txt[2]: 
                     canvas.create_rectangle(1295, 15, 2355, 715, outline='#ff0000', width=2)  #PAGE RI
                 
                 canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
-                canvas.create_line(15, 255, 1265, 255, fill='#ff0000', width=2) #PAGEBREAK 01
+                
                 canvas.create_line(290, 255, 290, 605, fill='#ff0000', width=2) #V1
                 canvas.create_line(650, 255, 650, 605, fill='#ff0000', width=2) #V2
         #----------------------------------------------------------------------------------
