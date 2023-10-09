@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-10-08-2015"
+last_change = "2023-10-09-1505"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -802,7 +802,9 @@ if REGION:
         # STYLES
         #----------------------------------------------------------------------------------
         if REGION:
-            btn_style_menu = {'borderwidth':0,'highlightthickness':0,'width':'100','height':'60'}
+            sys_text_color01 = "#88FF88" #LT-GRN
+            sys_back_color01 = "#001000" #DK-GRN
+            btn_style_menu = {'borderwidth':0,'highlightthickness':0,'width':'100','height':'40'}
             btn_style_fnkt = {'borderwidth':0,'highlightthickness':0,'width':'80','height':'40'}
             btn_style_fnkt_s34 = {'borderwidth':0,'highlightthickness':0}
             btn_style_pb_s12 = {'borderwidth':0,'highlightthickness':0,'width':'124','height':'47'}
@@ -811,8 +813,8 @@ if REGION:
             btn_style_units = {'borderwidth':0,'highlightthickness':0}
             btn_style_theme = {'bd':1,'bg':'#000000','fg':'#ffffff','font':("Bebas Neue Bold", 20),'width':'8'}
             keypad_style = {'width': 4, 'height': 2, 'bg': 'dark green', 'fg': 'white', 'font':("BankGothic", 18), 'anchor':'c'}
-            lbl_style_setup_btns = {'foreground':'#66ffff','background':'#003030', 'font':("LCDDot TR", 26), 'anchor':'c'}
-            lbl_style_setup_btns_small = {'foreground':'#66ffff','background':'#003030', 'font':("LCDDot TR", 18), 'anchor':'c','width':'11','height':'1'}
+            lbl_style_setup_btns = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 26), 'anchor':'c'}
+            lbl_style_setup_btns_small = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 18), 'anchor':'c','width':'11','height':'1'}
             lbl_style_7SEG01_S34 = {'borderwidth':0,'highlightthickness':0,'fg':'#ff0000','bg':'#250000','font':("DSEG7 Classic Mini", 60, "bold"), 'anchor':'nw'}
             lbl_style_7SEG01_LCARS = {'borderwidth':0,'highlightthickness':0,'fg':'#ffffff','bg':'#000000','font':("lcars", 160), 'anchor':'nw'}
             lbl_style_7SEG01_S34_KA = {'borderwidth':0,'highlightthickness':0,'fg':'#ffaa00','bg':'#222200','font':("DSEG7 Classic Mini", 60, "bold"), 'anchor':'nw'}
@@ -820,16 +822,17 @@ if REGION:
             lbl_style_7SEG02_S34_KA = {'fill':'#ffaa00','font':("ccar7seg", 164), 'anchor':'nw'}
             lbl_style_7SEG03_S34 = {'borderwidth':0,'highlightthickness':0,'fg':'#ff0000','bg':'#250000','font':('ccar7seg', 165),'anchor':'nw'}
             lbl_style_7SEG03_S34_KA = {'borderwidth':0,'highlightthickness':0,'fg':'#ffaa00','bg':'#101010','font':('ccar7seg', 165),'anchor':'nw'}
-            lbl_style_SETUP = {'foreground':'#66ffff','background':'#003030', 'font':("LCDDot TR", 40), 'anchor':'c'}
-            lbl_style_SETUP2 = {'foreground':'#66ffff','background':'#003030', 'font':("LCDDot TR", 20), 'anchor':'c'}
+            lbl_style_SETUP = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 40), 'anchor':'c'}
+            lbl_style_SETUP2 = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 20), 'anchor':'c'}
             lbl_style_sysinfo = {'foreground':'#ffdddd','background':'#200000', 'font':("LCDDot TR", 36), 'anchor':'nw'}
             lbl_style_sysinfo_LCARS = {'foreground':'#ff1941','background':'#111111', 'font':("lcars", 30), 'anchor':'nw'}
             lbl_style_sysinfo_KA = {'foreground':'#ffffdd','background':'#222200', 'font':("LCDDot TR", 36), 'anchor':'nw'}
             lbl_style_boot = {'foreground':'#00ff00','background':'#003300', 'font':("Triple Dot Digital-7", 18), 'anchor':'c'}
             lbl_style_voicecmd = {'foreground':'#ffdddd','background':'#200000', 'font':("LCDDot TR", 24), 'anchor':'nw'}
             lbl_style_voicecmd_KA = {'foreground':'#ffffdd','background':'#222200', 'font':("LCDDot TR", 24), 'anchor':'nw'}
-            txt_style_pagename = {'fill':'#22FF55','font':("Penn Station", 25), 'anchor':'nw'}
-            txt_style_pageinfo = {'fill':'#55FF55','font':("lcars", 16), 'anchor':'nw'}
+
+            txt_style_pagename = {'fill':sys_text_color01,'font':("Penn Station", 25), 'anchor':'nw'}
+            txt_style_pageinfo = {'fill':sys_text_color01,'font':("lcars", 16), 'anchor':'nw'}
             
             txt_style_S12 = {'fill':'#FFFFFF','font':("BankGothic", 22), 'anchor':'c'}
             txt_style_S34c = {'fill':'#FFFFFF','font':("lcars", 24), 'anchor':'c'}
@@ -4595,7 +4598,7 @@ class P03_SETUP(tk.Frame):
             lbl_w = 105
             lbl_f_h = 20
             lbl_i_h = 15
-            x_start = 20
+            x_start = 68
             x_start_FAV = x_start + btn_w + 5
             x_start_RB = 1300
             x_start_RB_FAV = x_start_RB + btn_w + 5
@@ -4623,7 +4626,7 @@ class P03_SETUP(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
         if REGION:
-            canvas = tk.Canvas(self, bg='black', highlightthickness=0)
+            canvas = tk.Canvas(self, bg='#000500', highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
@@ -4631,13 +4634,13 @@ class P03_SETUP(tk.Frame):
             if REGION:
                 grid_spacing = 15  # Adjust this value to change the spacing between grid lines
                 canvas_width = 2560
-                canvas_height = 720
+                canvas_height = 736
                 # Draw vertical grid lines
                 for x in range(0, canvas_width, grid_spacing):
-                    canvas.create_line(x, 0, x, canvas_height, fill='#002200')
+                    canvas.create_line(x, 0, x, canvas_height, fill='#001000')
                 # Draw horizontal grid lines
                 for y in range(0, canvas_height, grid_spacing):
-                    canvas.create_line(0, y, canvas_width, y, fill='#003300')
+                    canvas.create_line(0, y, canvas_width, y, fill='#051505')
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -4647,10 +4650,12 @@ class P03_SETUP(tk.Frame):
                 #--------------------------------------------------------------------------            
                 # COORDINATES OF HORIZONTAL LINES
                 coordinates = [
-                    (30, 15, 1245, 15),
-                    (30, 75, 1245, 75),
-                    (30, 90, 1245, 90),
-                    (30, 255, 1245, 255),
+                    (30, 15, 1245, 15),   #TITLE TOP
+                    (30, 75, 1245, 75),   #TITLE LOW
+                    (30, 90, 1245, 90),   #MAIN TOP
+                    (30, 255, 1245, 255), #MAIN LOW
+                    (30, 630, 1245, 630),   #MENU TOP
+                    (30, 720, 1245, 720), #MENU LOW
                 ]
 
                 # Define colors
@@ -4700,16 +4705,56 @@ class P03_SETUP(tk.Frame):
                 canvas.create_line(15, 255, 15, 245, fill=colors_corner[1], width=1)    #LB_Y
                 canvas.create_line(1250, 255, 1260, 255, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 255, 1260, 245, fill=colors_corner[1], width=1)#RB_Y
-
+                #--------------------------------------------------------------------------
+                # CREATE ADJUST CORNERS
+                #--------------------------------------------------------------------------
+                canvas.create_line(15, 270, 25, 270, fill=colors_corner[0], width=1)   #LT_X
+                canvas.create_line(15, 270, 15, 280, fill=colors_corner[1], width=1)   #LT_Y
+                canvas.create_line(245, 270, 255, 270, fill=colors_corner[0], width=1) #RT_X
+                canvas.create_line(255, 270, 255, 280, fill=colors_corner[1], width=1) #RT_Y
+                canvas.create_line(15, 480, 25, 480, fill=colors_corner[0], width=1)   #LB_X
+                canvas.create_line(15, 470, 15, 480, fill=colors_corner[1], width=1)   #LB_Y
+                canvas.create_line(245, 480, 255, 480, fill=colors_corner[0], width=1) #RB_X
+                canvas.create_line(255, 470, 255, 480, fill=colors_corner[1], width=1) #RB_Y
+                #--------------------------------------------------------------------------
+                # CREATE INPUTVALUE CORNERS
+                #--------------------------------------------------------------------------
+                canvas.create_line(285, 270, 295, 270, fill=colors_corner[0], width=1) #LT_X
+                canvas.create_line(285, 270, 285, 280, fill=colors_corner[1], width=1) #LT_Y
+                canvas.create_line(470, 270, 480, 270, fill=colors_corner[0], width=1) #RT_X
+                canvas.create_line(480, 270, 480, 280, fill=colors_corner[1], width=1) #RT_Y
+                canvas.create_line(285, 315, 295, 315, fill=colors_corner[0], width=1) #LB_X
+                canvas.create_line(285, 305, 285, 315, fill=colors_corner[1], width=1) #LB_Y
+                canvas.create_line(470, 315, 480, 315, fill=colors_corner[0], width=1) #RB_X
+                canvas.create_line(480, 305, 480, 315, fill=colors_corner[1], width=1) #RB_Y
+                #--------------------------------------------------------------------------
+                # CREATE KEYPAD CORNERS
+                #--------------------------------------------------------------------------
+                if device == device_txt[2]:
+                    canvas.create_line(510, 270, 520, 270, fill=colors_corner[0], width=1) #LT_X
+                    canvas.create_line(510, 270, 510, 280, fill=colors_corner[1], width=1) #LT_Y
+                    canvas.create_line(755, 270, 765, 270, fill=colors_corner[0], width=1) #RT_X
+                    canvas.create_line(765, 270, 765, 280, fill=colors_corner[1], width=1) #RT_Y
+                    canvas.create_line(510, 585, 520, 585, fill=colors_corner[0], width=1) #LB_X
+                    canvas.create_line(510, 575, 510, 585, fill=colors_corner[1], width=1) #LB_Y
+                    canvas.create_line(755, 585, 765, 585, fill=colors_corner[0], width=1) #RB_X
+                    canvas.create_line(765, 575, 765, 585, fill=colors_corner[1], width=1)#RB_Y
+                #RIGHT SCREEN
                 if device == device_txt[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)  #PAGE RI
                 elif device == device_txt[2]: 
                     canvas.create_rectangle(1295, 15, 2355, 715, outline='#ff0000', width=2)  #PAGE RI
-                
-                canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
-                
-                canvas.create_line(290, 255, 290, 605, fill='#ff0000', width=2) #V1
-                canvas.create_line(650, 255, 650, 605, fill='#ff0000', width=2) #V2
+                #--------------------------------------------------------------------------
+                # CREATE MENU CORNERS
+                #--------------------------------------------------------------------------
+                canvas.create_line(15, 630, 25, 630, fill=colors_corner[0], width=1)    #LT_X
+                canvas.create_line(15, 630, 15, 640, fill=colors_corner[1], width=1)    #LT_Y
+                canvas.create_line(1250, 630, 1260, 630, fill=colors_corner[0], width=1)#RT_X
+                canvas.create_line(1260, 630, 1260, 640, fill=colors_corner[1], width=1)#RT_Y
+                canvas.create_line(15, 720, 25, 720, fill=colors_corner[0], width=1)    #LB_X
+                canvas.create_line(15, 710, 15, 720, fill=colors_corner[1], width=1)    #LB_Y
+                canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
+                canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
         #----------------------------------------------------------------------------------
         # STATIC TEXT
         #----------------------------------------------------------------------------------
@@ -4726,10 +4771,10 @@ class P03_SETUP(tk.Frame):
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
         if REGION:
-            btn_EXIT = tk.Button(self, borderwidth=0, highlightthickness=0, width=60, height=60)
+            btn_EXIT = tk.Button(self, borderwidth=0, highlightthickness=0, width=100, height=40)
             btn_EXIT.config(image=btnON_menu_img_list[12])
             btn_EXIT.configure(command=read.quitDASH)
-            btn_EXIT.place(x=1180, y=16)
+            btn_EXIT.place(x=1150, y=25)
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTON LABELS
         #----------------------------------------------------------------------------------
@@ -4827,47 +4872,48 @@ class P03_SETUP(tk.Frame):
             variable_dropdown = tk.StringVar()
             variable_dropdown.set('SPARE')  # Default selection
             dropdown = tk.OptionMenu(self, variable_dropdown, *variables.keys())
-            dropdown.config(bg='#004444', fg= '#ffffff', font=("BankGothic", 20))
-            dropdown["menu"].config(bg='#000000', fg= '#ffffff', font=("BankGothic", 16))
-            dropdown.place(x=50, y=360, width=220)
-
+            dropdown.config(bg='#001000', fg= '#88FF88', font=("BankGothic", 18))
+            dropdown["menu"].config(bg='#001000', fg= '#88FF88', font=("BankGothic", 16))
+            dropdown.place(x=292, y=340, width=176)
             #------------------------------------------------------------------------------
-            # TARGET VALUE LABEL
+            # INPUT VALUE LABEL
             #------------------------------------------------------------------------------
             current_value_label = tk.Label(self, textvariable=current_value, **lbl_style_SETUP)
-            current_value_label.place(x=50, y=410, width=220)
-
+            current_value_label.place(x=292, y=280, width=176, height=28)
+            #------------------------------------------------------------------------------
+            # TARGET VALUES LABEL
+            #------------------------------------------------------------------------------
             lbl_target_val = tk.Label(self, text="", **lbl_style_SETUP2)
-            lbl_target_val.place(x=50, y=450, width=220)
+            lbl_target_val.place(x=25, y=280, width=220, height=192)
             #------------------------------------------------------------------------------
             # KEYPAD BUTTONS
             #------------------------------------------------------------------------------
             if REGION:
                 keypad_buttons = [str(i) for i in range(10)]
-                x_pos_keyR0 = 300
-                x_pos_keyR1 = 300
-                x_pos_keyR2 = 300
+                x_pos_keyR0 = 521
+                x_pos_keyR1 = 521
+                x_pos_keyR2 = 521
                 for i in range(1, 10):
                     btn_key = tk.Button(canvas, text=keypad_buttons[i], command=lambda num=i: read.btn_key_click(num),
                                        **keypad_style)
                     if i < 4:
-                        btn_key.place(x=x_pos_keyR0, y=275)
+                        btn_key.place(x=x_pos_keyR0, y=281)
                         x_pos_keyR0 += +80
                     elif i < 7:
-                        btn_key.place(x=x_pos_keyR1, y=350)
+                        btn_key.place(x=x_pos_keyR1, y=356)
                         x_pos_keyR1 += +80
                     else:
-                        btn_key.place(x=x_pos_keyR2, y=425)
+                        btn_key.place(x=x_pos_keyR2, y=431)
                         x_pos_keyR2 += +80
 
                 btn_dot = tk.Button(canvas, text=".", command=read.btn_dot_click, **keypad_style)
-                btn_dot.place(x=300, y=500)
+                btn_dot.place(x=521, y=506)
 
                 btn_0 = tk.Button(canvas, text="0", command=lambda: read.btn_key_click(0), **keypad_style)
-                btn_0.place(x=380, y=500)
+                btn_0.place(x=601, y=506)
 
                 btn_apply = tk.Button(canvas, text="OK", command=read.btn_apply_click, **keypad_style)
-                btn_apply.place(x=460, y=500)
+                btn_apply.place(x=681, y=506)
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5580,23 +5626,23 @@ class myfunctions():
                     btn_menu.config(image=btnOF_menu_img_list[i])
                     btn_menu.config(command=lambda i=i: kidd.switch_frame(i))
                     btns_menu.append(btn_menu)
-                    btns_menu[i].place(x=x_pos_r1, y=650)
+                    btns_menu[i].place(x=x_pos_r1, y=675)
                     x_pos_r1 += +118
 
-                slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=1245, orient='horizontal', width=30, sliderlength=50, troughcolor='#000000', highlightbackground='#ff0000', bg='#00ffff')
+                slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=1220, orient='horizontal', width=30, sliderlength=50, troughcolor='#000000', highlightbackground='#001000', bg='#AAFFAA')
                 slider.set(1)
-                slider.place(x=15, y=610)
+                slider.place(x=25, y=635)
             #------------------------------------------------------------------------------
             # SHOW MENU BUTTONS IN SLIDER
             #------------------------------------------------------------------------------        
             def show_menu_btns(self, value):
                 start_index = int(float(value))  # Convert float value to integer
-                x_pos_r1 = 20
+                x_pos_r1 = 55
                 for i in range(btn_menu_place):
-                    if i < start_index or i >= start_index + 9:
+                    if i < start_index or i >= start_index + 10:
                         btns_menu[i].place_forget()  # Hide the btns_menu outside the range
                     else:
-                        btns_menu[i].place(x=x_pos_r1, y=650)  # Show the btns_menu within the range
+                        btns_menu[i].place(x=x_pos_r1, y=675)  # Show the btns_menu within the range
                         x_pos_r1 += +118
             #------------------------------------------------------------------------------
             # QOPT PAGE: SHOW FAV BUTTONS (MAX 20)
@@ -5924,29 +5970,7 @@ class myfunctions():
             global theme
             theme = theme_text
             with open(os.path.join(datadir, 'theme_conf.pickle'), 'wb') as f:
-                pickle.dump(theme, f)
-
-        def create_gradient_line(self, x1, y1, x2, y2, num_segments=100):
-            global color_start
-            global color_middle
-            global color_end
-            global canvas
-            for i in range(num_segments):
-                if i < num_segments // 2:
-                    r = int(int(color_start[1:3], 16) + (int(color_middle[1:3], 16) - int(color_start[1:3], 16)) * 2 * i / num_segments)
-                    g = int(int(color_start[3:5], 16) + (int(color_middle[3:5], 16) - int(color_start[3:5], 16)) * 2 * i / num_segments)
-                    b = int(int(color_start[5:7], 16) + (int(color_middle[5:7], 16) - int(color_start[5:7], 16)) * 2 * i / num_segments)
-                else:
-                    r = int(int(color_middle[1:3], 16) + (int(color_end[1:3], 16) - int(color_middle[1:3], 16)) * 2 * (i - num_segments // 2) / num_segments)
-                    g = int(int(color_middle[3:5], 16) + (int(color_end[3:5], 16) - int(color_middle[3:5], 16)) * 2 * (i - num_segments // 2) / num_segments)
-                    b = int(int(color_middle[5:7], 16) + (int(color_end[5:7], 16) - int(color_middle[5:7], 16)) * 2 * (i - num_segments // 2) / num_segments)
-                color = "#{:02x}{:02x}{:02x}".format(r, g, b)        
-                x1_segment = x1 + (x2 - x1) * i / num_segments
-                y1_segment = y1 + (y2 - y1) * i / num_segments
-                x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
-                y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
-                canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
-             
+                pickle.dump(theme, f)            
     #--------------------------------------------------------------------------------------
     # SOUND FUNCTIONS
     #--------------------------------------------------------------------------------------
