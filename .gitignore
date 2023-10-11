@@ -1,5 +1,7 @@
-#no .vs folder
+.git/
 .vs/
+__pycache__/
+.gitignore
 
 # Ignore .mp3 files
 *.mp3
