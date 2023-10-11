@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-10-10-1635"
+last_change = "2023-10-11-2048"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -553,6 +553,8 @@ if REGION:
             # ALL DEVICES
             #------------------------------------------------------------------------------
             if REGION:
+                #PAGES
+                menu_btn_names = ["BOOT", "DASH", "QOPT", "SETUP", "THEMES", "C-FNkT", "K-FNKT", "AUDIO", "VIDEO", "RES", "RES", "RES", "RES", "RES"]
                 #UNITS
                 units_act = []
                 units_eu = ["KPH", "KPHg", "KM", "°C", "BAR", "LTR", "LPH"]
@@ -722,15 +724,6 @@ if REGION:
             vbON_S04_img_dir_srt = sorted(os.listdir(vbON_S04_img_dir), key=str.lower)
             vbON_S04_img_list = []
             #------------------------------------------------------------------------------
-            # btn
-            #------------------------------------------------------------------------------
-            btnOF_menu_img_dir = os.path.join(folder,'images', 'btn', 'menu', 'OFF')
-            btnOF_menu_img_dir_srt = sorted(os.listdir(btnOF_menu_img_dir), key=str.lower)
-            btnOF_menu_img_list = []
-            btnON_menu_img_dir = os.path.join(folder,'images', 'btn', 'menu', 'ON')
-            btnON_menu_img_dir_srt = sorted(os.listdir(btnON_menu_img_dir), key=str.lower)
-            btnON_menu_img_list = []
-            #------------------------------------------------------------------------------
             # bttf
             #------------------------------------------------------------------------------
             bttf_img_dir = os.path.join(folder,'images', 'bttf')
@@ -806,8 +799,7 @@ if REGION:
             sys_grid_x = "#001000"
             sys_grid_y = "#051505"
             grid_spacing = 15
-            
-            btn_style_menu = {'borderwidth':0,'highlightthickness':0,'width':'100','height':'40'}
+
             btn_style_fnkt = {'borderwidth':0,'highlightthickness':0,'width':'80','height':'40'}
             btn_style_fnkt_s34 = {'borderwidth':0,'highlightthickness':0}
             btn_style_pb_s12 = {'borderwidth':0,'highlightthickness':0,'width':'124','height':'47'}
@@ -1485,23 +1477,6 @@ class P00_BOOT(tk.Frame):
                     vbON_S04_img_list.append(ImageTk.PhotoImage(image))
             print ("40%")
         #----------------------------------------------------------------------------------
-        # BUTTON IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            #------------------------------------------------------------------------------
-            # BTN MENU
-            #------------------------------------------------------------------------------
-            for filename in btnOF_menu_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(os.path.join(btnOF_menu_img_dir, filename))
-                    btnOF_menu_img_list.append(ImageTk.PhotoImage(image))
-
-            for filename in btnON_menu_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(os.path.join(btnON_menu_img_dir, filename))
-                    btnON_menu_img_list.append(ImageTk.PhotoImage(image))
-            print ("50%")
-        #----------------------------------------------------------------------------------
         # BTTF IMAGES
         #----------------------------------------------------------------------------------
         if REGION:
@@ -1592,7 +1567,7 @@ class P00_BOOT(tk.Frame):
                 background_image = bgDEV031_img_list[1]
             self.canvas.create_image(0, 0, image=background_image, anchor='nw')
 
-            btn_menu_dash = tk.Button(self, **btn_style_fnkt, image=btnOF_menu_img_list[2])
+            btn_menu_dash = tk.Button(self, bd=0, bg=sys_back_color01, fg="#FF8800", font=("Bebas Neue Bold", 28))
             btn_menu_dash.configure(text="DASH", command=lambda: self.master.switch_frame(P01_DASH))
             btn_menu_dash.place(x=215, y=20)
         self.master.after(100, lambda: self.master.switch_frame(P01_DASH))
@@ -4579,6 +4554,15 @@ class P02_QOPT(tk.Frame):
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
                 #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118                
+                #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
@@ -4832,6 +4816,15 @@ class P03_SETUP(tk.Frame):
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
                 #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118
+                #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
@@ -4861,10 +4854,10 @@ class P03_SETUP(tk.Frame):
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
         if REGION:
-            btn_EXIT = tk.Button(self, borderwidth=0, highlightthickness=0, width=100, height=40)
-            btn_EXIT.config(image=btnON_menu_img_list[12])
+            btn_EXIT = tk.Button(self, bd=0, bg=sys_back_color01, fg="#FF8800", font=("Bebas Neue Bold", 28))
+            btn_EXIT.config(text="X")
             btn_EXIT.configure(command=read.quitDASH)
-            btn_EXIT.place(x=1150, y=25)
+            btn_EXIT.place(x=1195, y=21, w=50, h=50)
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTON LABELS
         #----------------------------------------------------------------------------------
@@ -5378,6 +5371,15 @@ class P04_THEMES(tk.Frame):
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
                 #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118
+                #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
@@ -5683,6 +5685,15 @@ class P07_AUDIO(tk.Frame):
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
                 #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118
+                #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
@@ -5835,6 +5846,15 @@ class P08_VIDEO(tk.Frame):
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
                 #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118
+                #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
@@ -5968,6 +5988,15 @@ class P09_RES(tk.Frame):
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
                 #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118
+                #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
@@ -6098,6 +6127,15 @@ class P10_RES(tk.Frame):
                 canvas.create_line(15, 710, 15, 720, fill=colors_corner[1], width=1)    #LB_Y
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
+                #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
@@ -6230,6 +6268,15 @@ class P11_RES(tk.Frame):
                 canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
                 canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
                 #--------------------------------------------------------------------------
+                # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
+                #--------------------------------------------------------------------------              
+                x = 54
+                for i in range(10):
+                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118    
+                #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
@@ -6289,12 +6336,13 @@ class myfunctions():
                 btn_menu_place = 12
                 btns_menu = []
                 x_pos_r1 = 20
+                btn_w = 100
+                btn_h = 40
                 for i in range(btn_menu_place):
-                    btn_menu = tk.Button(**btn_style_menu)
-                    btn_menu.config(image=btnOF_menu_img_list[i])
+                    btn_menu = tk.Button(text=menu_btn_names[i], bd=0, bg=sys_back_color01, fg=sys_text_color01, font=("Bebas Neue Bold", 28))
                     btn_menu.config(command=lambda i=i: kidd.switch_frame(i))
                     btns_menu.append(btn_menu)
-                    btns_menu[i].place(x=x_pos_r1, y=675)
+                    btns_menu[i].place(x=x_pos_r1, y=675, w=btn_w, h=btn_h)
                     x_pos_r1 += +118
 
                 slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=1220, orient='horizontal', width=30, sliderlength=50, troughcolor='#000000', highlightbackground=sys_back_color01, bg=sys_corners_y)
@@ -6306,11 +6354,13 @@ class myfunctions():
             def show_menu_btns(self, value):
                 start_index = int(float(value))  # Convert float value to integer
                 x_pos_r1 = 55
+                btn_w = 100
+                btn_h = 40
                 for i in range(btn_menu_place):
                     if i < start_index or i >= start_index + 10:
                         btns_menu[i].place_forget()  # Hide the btns_menu outside the range
                     else:
-                        btns_menu[i].place(x=x_pos_r1, y=675)  # Show the btns_menu within the range
+                        btns_menu[i].place(x=x_pos_r1, y=675, w=btn_w, h=btn_h)  # Show the btns_menu within the range
                         x_pos_r1 += +118
             #------------------------------------------------------------------------------
             # QOPT PAGE: SHOW FAV BUTTONS (MAX 20)
