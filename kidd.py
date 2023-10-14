@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-10-11-2155"
+last_change = "2023-10-14-1218"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -563,7 +563,7 @@ if REGION:
                 style_txt = ['KARR', 'KITT', '---', '---', '---']
                 #ONLY INFO      0         1         2         3         4         5         6         7          8         9        10       11     12     13     14       15        16
                 theme_txt = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
-                device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV020', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV030']
+                device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
                 btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
                 states_txt_act = []
                 states_txt_de = ["AUS", "EIN", "OBEN", "UNTEN", "HOCH", "RUNTER", "LINKS", "RECHTS"]
@@ -815,6 +815,8 @@ if REGION:
             lbl_style_7SEG01_S34_KA = {'borderwidth':0,'highlightthickness':0,'fg':'#ffaa00','bg':'#222200','font':("DSEG7 Classic Mini", 60, "bold"), 'anchor':'nw'}
             lbl_style_7SEG02_S34 = {'fill':'#ff0000','font':("ccar7seg", 164), 'anchor':'nw'}
             lbl_style_7SEG02_S34_KA = {'fill':'#ffaa00','font':("ccar7seg", 164), 'anchor':'nw'}
+            lbl_style_7SEG01_S12 = {'fg':'#00ffcc','bg':'#102525','font':('led16sgmnt', 77), 'anchor':'nw'}
+            lbl_style_7SEG03_S12 = {'borderwidth':0,'highlightthickness':0,'fg':'#ff0000','bg':'#250000','font':('ccar7seg', 127),'anchor':'nw'}
             lbl_style_7SEG03_S34 = {'borderwidth':0,'highlightthickness':0,'fg':'#ff0000','bg':'#250000','font':('ccar7seg', 165),'anchor':'nw'}
             lbl_style_7SEG03_S34_KA = {'borderwidth':0,'highlightthickness':0,'fg':'#ffaa00','bg':'#101010','font':('ccar7seg', 165),'anchor':'nw'}
             lbl_style_SETUP = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 40), 'anchor':'c'}
@@ -839,7 +841,6 @@ if REGION:
             #todo delete convert to style
             font_S05S = ("Cheapsman Free", 36)
             font_BTN = ("Cheapsman Free", 28)
-            font_S12_DG01a = ("ccar7seg", 127)
             font_RPM01 = ("DSEG7 Classic", 134)
             font_RPMS01 = ("ccar7seg", 165)
             font_RPMS03 = ("ccar7seg", 164)
@@ -1180,7 +1181,7 @@ class MainApplication(tk.Tk):
 class P00_BOOT(tk.Frame):
     def __init__(self, master):
         if debug == True:
-            print ("BOOT INIT LOADED")
+            print (menu_btn_names[0])
         #------------------------------------------------------------------------------
         # UPDATE CONFIGURATION
         #------------------------------------------------------------------------------
@@ -1580,10 +1581,8 @@ class P01_DASH(tk.Frame):
     #--------------------------------------------------------------------------------------
     if REGION:
         if debug == True:
-            print ("DASH CLASS LOADED")
+            print (menu_btn_names[1])
         def __init__(self, master):
-            if debug == True:
-                print ("DASH INIT LOADED")
             tk.Frame.__init__(self, master)     
             self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
             self.canvas.pack(fill='both', expand=True)
@@ -1617,8 +1616,8 @@ class P01_DASH(tk.Frame):
                         localstyle05 = lbl_style_sysinfo_KA
                 elif style == style_txt[1]:
                     if theme in theme_txt[:3]:
-                        localstyle01 = lbl_style_7SEG03_S34
-                        localstyle02 = lbl_style_7SEG01_S34
+                        localstyle01 = lbl_style_7SEG03_S12
+                        localstyle02 = lbl_style_7SEG01_S12
                         localstyle03 = lbl_style_voicecmd
                         localstyle04 = txt_style_sysinfo
                         localstyle05 = lbl_style_sysinfo
@@ -1636,12 +1635,15 @@ class P01_DASH(tk.Frame):
                     if theme in [theme_txt[0]]:
                         localimagelist01 = list(vbON_PILOT_img_list)
                         localimagelist02 = list(vbOF_PILOT_img_list)
+                        localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[1]]:
                         localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S01_img_list)
+                        localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[2]]:
                         localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S02_img_list)
+                        localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[3]]:
                         localimage01 = sledON_img_list[10] #MPH
                         localimage02 = sledON_img_list[9] #KPH
@@ -1794,12 +1796,27 @@ class P01_DASH(tk.Frame):
                     if theme in [theme_txt[0]]:
                         localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_PILOT_img_list)
+                        localimage01 = sledON_img_list[30] #MPH
+                        localimage02 = sledON_img_list[29] #KPH
+                        localimage06 = ledFU_img_list[9] #HI LO VHF
+                        localimage07 = ledOF_img_list[9] #HI LO VHF
+                        localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[1]]:
                         localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S01_img_list)
+                        localimage01 = sledON_img_list[30] #MPH
+                        localimage02 = sledON_img_list[29] #KPH
+                        localimage06 = ledFU_img_list[9] #HI LO VHF
+                        localimage07 = ledOF_img_list[9] #HI LO VHF
+                        localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[2]]:
                         localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S02_img_list)
+                        localimage01 = sledON_img_list[30] #MPH
+                        localimage02 = sledON_img_list[29] #KPH
+                        localimage06 = ledFU_img_list[9] #HI LO VHF
+                        localimage07 = ledOF_img_list[9] #HI LO VHF
+                        localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[3]]:
                         localimage01 = sledON_img_list[14] #MPH
                         localimage02 = sledON_img_list[13] #KPH
@@ -2527,7 +2544,9 @@ class P01_DASH(tk.Frame):
             global btn_units
             if device == device_txt[1]:
                 btn_units = tk.Button(self, **btn_style_units, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
-                if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                if theme_txt[0:3].count(theme) > 0: # THEME 3 to 8
+                    btn_units.place(x=1040, y=218, width=166, height=81)
+                elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1105, y=248, width=166, height=81)
                 elif theme in [theme_txt[15], theme_txt[16]]:
                     btn_units.place(x=770, y=110, width=202, height=68)
@@ -3109,7 +3128,9 @@ class P01_DASH(tk.Frame):
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
                 #--------------------------------------------------------------------------
                 if REGION: 
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if theme_txt[0:3].count(theme) > 0: # THEME 0 to 2
+                        label_7SEG001.place(x=582, y=160, width=370, height=147)
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         if btn_states_SW[3] == False:
                             if btn_states_SW[1] == True:
                                 label_7SEG001.config(image=localimage03, compound="center")
@@ -3119,12 +3140,15 @@ class P01_DASH(tk.Frame):
                             label_7SEG001.config(image=localimage05, compound="center")
                         label_7SEG001.place(x=609, y=116, width=496, height=212)
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        label_7SEG001.place(x=985, y=100, width=220, height=200)            
+                        label_7SEG001.place(x=985, y=100, width=220, height=200)
                 #--------------------------------------------------------------------------
                 # 7-SEGMENT DISPLAY 003: TOTAL / ---
                 #--------------------------------------------------------------------------
-                if REGION:                
-                    label_7SEG003.place(x=800, y=590, width=460, height=90)
+                if REGION:
+                    if theme_txt[0:3].count(theme) > 0: # THEME 0 to 3
+                        label_7SEG003.place(x=940, y=470, width=285, height=84)
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        label_7SEG003.place(x=800, y=590, width=460, height=90)
             elif device == device_txt[2]:
                 #--------------------------------------------------------------------------
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
@@ -3135,6 +3159,17 @@ class P01_DASH(tk.Frame):
                         label_7SEG001.place(x=567, y=164, width=496, height=212)
                     elif theme in [theme_txt[15], theme_txt[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
+            elif device == device_txt[31]:
+                #--------------------------------------------------------------------------
+                # 7-SEGMENT DISPLAY 001: SPEED / RPM
+                #--------------------------------------------------------------------------
+                if REGION:
+                    label_7SEG001.place(x=609, y=116, width=496, height=212)
+                #--------------------------------------------------------------------------
+                # 7-SEGMENT DISPLAY 003: TOTAL / ---
+                #--------------------------------------------------------------------------
+                if REGION:                
+                    label_7SEG003.place(x=800, y=590, width=460, height=90)
         #----------------------------------------------------------------------------------
         # END INIT PAGE
         #----------------------------------------------------------------------------------
@@ -3265,8 +3300,6 @@ class P01_DASH(tk.Frame):
     #--------------------------------------------------------------------------------------                        
     def update_page(self):
         start_time = time.time()
-        if debug == True:            
-            print ("DASH UPDATE")
         read = myfunctions()
         #----------------------------------------------------------------------------------
         # GLOBALS
@@ -4345,6 +4378,39 @@ class P01_DASH(tk.Frame):
                 if btn_states_HW[0] == True:  #SW0 = GPS MODUL
                     if gps_port is not None:                    
                         read.gps_data()
+                #--------------------------------------------------------------------------
+                # SIMULATE VARIABLE
+                #--------------------------------------------------------------------------
+                if btn_states_SW[3] == True:
+                    if count_SIM_DEV001G000:
+                        count_ctr_SIM_DEV001G000 += 5
+                        if count_ctr_SIM_DEV001G000 > 310:
+                            count_SIM_DEV001G000 = False
+                            count_ctr_SIM_DEV001G000 -= 2
+                    else:
+                        count_ctr_SIM_DEV001G000 -= 5
+                        if count_ctr_SIM_DEV001G000 < 0:
+                            count_SIM_DEV001G000 = True
+                            count_ctr_SIM_DEV001G000 += 2
+                #--------------------------------------------------------------------------
+                # WRITE SPEED VARIABLE TO 7SEG VARIABLE
+                #--------------------------------------------------------------------------
+                if btn_states_SW[3]:
+                    seven_seg_speed = count_ctr_SIM_DEV001G000
+                elif btn_states_SW[0] and not btn_states_SW[1]:
+                    seven_seg_speed = aldl_vehicle_speed_mph
+                elif not btn_states_SW[0] and not btn_states_SW[1]:
+                    seven_seg_speed = aldl_vehicle_speed_kph
+                elif btn_states_HW[0] and btn_states_SW[1]:
+                    if btn_states_SW[0]:
+                        seven_seg_speed = gps_mph_0str
+                    else:
+                        seven_seg_speed = gps_kph_0str
+                else:
+                    if btn_states_SW[0]:
+                        seven_seg_speed = aldl_vehicle_speed_mph
+                    else:
+                        seven_seg_speed = aldl_vehicle_speed_kph
             #------------------------------------------------------------------------------
             # UPDATE VOICECOMMAND TEXT IN TOTAL DISPLAY
             #------------------------------------------------------------------------------
@@ -4441,10 +4507,12 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             if device == device_txt[1]:
-                label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")                
-                label_7SEG003.config(text=str(seven_seg_speed).zfill(6), anchor="c")
+                label_7SEG001.config(text=str(seven_seg_speed).zfill(3))                
+                label_7SEG003.config(text=str(seven_seg_speed).zfill(6))
             elif device == device_txt[2]:
                 label_7SEG001.config(text=str(seven_seg_DEV002GMASTER).zfill(3), anchor="nw")
+            elif device == device_txt[31]:
+                label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")                
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
@@ -4457,10 +4525,8 @@ class P01_DASH(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P02_QOPT(tk.Frame):
     if debug == True:
-        print ("QOPT CLASS LOADED")
+        print (menu_btn_names[2])
     def __init__(self, master):
-        if debug == True:
-            print ("QOPT INIT LOADED")
         read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -4592,10 +4658,7 @@ class P02_QOPT(tk.Frame):
         if REGION:
             read.qopt()
         self.update_page()
-
     def update_page(self):
-        if debug == True:
-            print ("QOPT UPDATE")
         #----------------------------------------------------------------------------------
         # QOPT BUTTONS
         #----------------------------------------------------------------------------------
@@ -4611,10 +4674,8 @@ class P02_QOPT(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P03_SETUP(tk.Frame):
     if debug == True:
-        print ("SETUP CLASS LOADED")
+        print (menu_btn_names[3])
     def __init__(self, master):
-        if debug == True:
-            print ("SETUP INIT LOADED")
         read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -5177,8 +5238,6 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         self.update_page()
     def update_page(self):
-        if debug == True:
-            print ("SETUP UPDATE")
         #----------------------------------------------------------------------------------
         # HW BUTTONS
         #----------------------------------------------------------------------------------
@@ -5243,10 +5302,8 @@ class P03_SETUP(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P04_THEMES(tk.Frame):
     if debug == True:
-        print ("THEMES CLASS LOADED")
+        print (menu_btn_names[4])
     def __init__(self, master):
-        if debug == True:
-            print ("THEMES INIT LOADED")
         read = myfunctions()
         tk.Frame.__init__(self, master)
         btn_w = 100
@@ -5499,21 +5556,17 @@ class P04_THEMES(tk.Frame):
         # END INIT
         #----------------------------------------------------------------------------------
         self.update_page()
-
     def update_page(self):
         if debug == True:
-            print ("THEMES UPDATE")
-
+            print (menu_btn_names[4])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 05: CAR FUNCTIONS
 #------------------------------------------------------------------------------------------
 class P05_CARFUNCTIONS(tk.Frame):
     if debug == True:
-        print ("C-FUNC CLASS LOADED")
+        print (menu_btn_names[5])
     def __init__(self, master):
-        if debug == True:
-            print ("C-FUNC INIT LOADED")
         read = myfunctions()
         tk.Frame.__init__(self, master)
 
@@ -5538,21 +5591,17 @@ class P05_CARFUNCTIONS(tk.Frame):
         if REGION:
             read.menu()
         self.update_page()
-
     def update_page(self):
         if debug == True:
-            print ("C-FUNC UPDATE")
-
+            print (menu_btn_names[5])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 06: KNIGHT FUNCTIONS
 #------------------------------------------------------------------------------------------
 class P06_KNIGHTFUNCTIONS(tk.Frame):
     if debug == True:
-        print ("K-FUNC CLASS LOADED")
+        print (menu_btn_names[6])
     def __init__(self, master):
-        if debug == True:
-            print ("K-FUNC INIT LOADED")
         read = myfunctions()
         tk.Frame.__init__(self, master)
 
@@ -5588,10 +5637,8 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P07_AUDIO(tk.Frame):
     if debug == True:
-        print ("AUDIO CLASS LOADED")
+        print (menu_btn_names[7])
     def __init__(self, master):
-        if debug == True:
-            print ("AUDIO INIT LOADED")
         read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -5740,19 +5787,15 @@ class P07_AUDIO(tk.Frame):
         self.update_page()
     def update_page(self):
         if debug == True:
-            print ("AUDIO UPDATE")
+            print (menu_btn_names[7])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 08: VIDEO
 #------------------------------------------------------------------------------------------
 class P08_VIDEO(tk.Frame):
     if debug == True:
-        print ("VIDEO CLASS LOADED")
-        if debug == True:
-            print ("VIDEO INIT LOADED")
+        print (menu_btn_names[8])
     def __init__(self, master):
-        if debug == True:
-            print ("VIDEO INIT LOADED")
         read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -5884,17 +5927,15 @@ class P08_VIDEO(tk.Frame):
         self.update_page()
     def update_page(self):
         if debug == True:
-            print ("VIDEO UPDATE")
+            print (menu_btn_names[8])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 09: RES
 #------------------------------------------------------------------------------------------
 class P09_RES(tk.Frame):
     if debug == True:
-        print ("P09 CLASS LOADED")
+        print (menu_btn_names[9])
     def __init__(self, master):
-        if debug == True:
-            print ("P09 INIT LOADED")
         read = myfunctions()       
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
@@ -6021,20 +6062,17 @@ class P09_RES(tk.Frame):
         if REGION:
             read.menu()
         self.update_page()
-
     def update_page(self):
         if debug == True:
-            print ("P09 UPDATE")
+            print (menu_btn_names[9])
         self.update_job = self.after(1000, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 10: RES
 #------------------------------------------------------------------------------------------
 class P10_RES(tk.Frame):
     if debug == True:
-        print ("P10 CLASS LOADED")
+        print (menu_btn_names[10])
     def __init__(self, master):
-        if debug == True:
-            print ("P10 INIT LOADED")
         read = myfunctions()       
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
@@ -6161,20 +6199,17 @@ class P10_RES(tk.Frame):
         if REGION:
             read.menu()
         self.update_page()
-
     def update_page(self):
         if debug == True:
-            print ("P10 UPDATE")
+            print (menu_btn_names[10])
         self.update_job = self.after(1000, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 11: RES
 #------------------------------------------------------------------------------------------
 class P11_RES(tk.Frame):
     if debug == True:
-        print ("P11 CLASS LOADED")
+        print (menu_btn_names[11])
     def __init__(self, master):
-        if debug == True:
-            print ("P11 INIT LOADED")
         read = myfunctions()       
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
@@ -6301,10 +6336,9 @@ class P11_RES(tk.Frame):
         if REGION:
             read.menu()
         self.update_page()
-
     def update_page(self):
         if debug == True:
-            print ("P11 UPDATE")
+            print (menu_btn_names[11])
         self.update_job = self.after(1000, self.update_page)
 #------------------------------------------------------------------------------------------
 # FUNCTIONS
