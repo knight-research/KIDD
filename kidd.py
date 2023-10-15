@@ -1804,16 +1804,16 @@ class P01_DASH(tk.Frame):
                     elif theme in [theme_txt[1]]:
                         localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S01_img_list)
-                        localimage01 = sledON_img_list[30] #MPH
-                        localimage02 = sledON_img_list[29] #KPH
+                        localimage01 = sledON_img_list[32] #MPH
+                        localimage02 = sledON_img_list[31] #KPH
                         localimage06 = ledFU_img_list[9] #HI LO VHF
                         localimage07 = ledOF_img_list[9] #HI LO VHF
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[2]]:
                         localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S02_img_list)
-                        localimage01 = sledON_img_list[30] #MPH
-                        localimage02 = sledON_img_list[29] #KPH
+                        localimage01 = sledON_img_list[32] #MPH
+                        localimage02 = sledON_img_list[31] #KPH
                         localimage06 = ledFU_img_list[9] #HI LO VHF
                         localimage07 = ledOF_img_list[9] #HI LO VHF
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
