@@ -15,3 +15,4 @@ Thumbs.db
 # Logs and Temp #
 ######################
 __pycache__
+.vs
