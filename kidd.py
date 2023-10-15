@@ -787,70 +787,53 @@ if REGION:
         # STYLES
         #----------------------------------------------------------------------------------
         if REGION:
-            sys_text_color01 = "#88FF88" #LT-GRN
-            sys_text_color02 = "#FF8888" #LT-RED
-            sys_back_color01 = "#002000" #DK-GRN
-            sys_gradient_start = "#005500"     
-            sys_gradient_middle = "#00FF00"
-            sys_gradient_end = "#449944"
-            sys_corners_x = "#55FF55"
-            sys_corners_y = "#BBFFBB"
-            sys_grid_bg = "#000500"
-            sys_grid_x = "#001000"
-            sys_grid_y = "#051505"
             grid_spacing = 15
-
-            btn_style_fnkt = {'borderwidth':0,'highlightthickness':0,'width':'80','height':'40'}
-            btn_style_fnkt_s34 = {'borderwidth':0,'highlightthickness':0}
-            btn_style_pb_s12 = {'borderwidth':0,'highlightthickness':0,'width':'124','height':'47'}
-            btn_style_pb_s34 = {'borderwidth':0,'highlightthickness':0,'width':'78','height':'40'}
-            btn_style_pb_lcars = {'borderwidth':0,'highlightthickness':0,'width':'181','height':'87'}
-            btn_style_units = {'borderwidth':0,'highlightthickness':0}
-            btn_style_theme = {'bd':1,'bg':'#000000','fg':'#ffffff','font':("Bebas Neue Bold", 20),'width':'8'}
-            keypad_style = {'width': 4, 'height': 2, 'bg':sys_back_color01, 'fg':sys_text_color01, 'font':("BankGothic", 18), 'anchor':'c'}
-            lbl_style_setup_btns = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 26), 'anchor':'c'}
-            lbl_style_setup_btns_small = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 18), 'anchor':'c','width':'11','height':'1'}
-            lbl_style_7SEG01_S34 = {'borderwidth':0,'highlightthickness':0,'fg':'#ff0000','bg':'#250000','font':("DSEG7 Classic Mini", 60, "bold"), 'anchor':'nw'}
-            lbl_style_7SEG01_LCARS = {'borderwidth':0,'highlightthickness':0,'fg':'#ffffff','bg':'#000000','font':("lcars", 160), 'anchor':'nw'}
-            lbl_style_7SEG01_S34_KA = {'borderwidth':0,'highlightthickness':0,'fg':'#ffaa00','bg':'#222200','font':("DSEG7 Classic Mini", 60, "bold"), 'anchor':'nw'}
-            lbl_style_7SEG02_S34 = {'fill':'#ff0000','font':("ccar7seg", 164), 'anchor':'nw'}
-            lbl_style_7SEG02_S34_KA = {'fill':'#ffaa00','font':("ccar7seg", 164), 'anchor':'nw'}
-            lbl_style_7SEG01_S12 = {'fg':'#00ffcc','bg':'#102525','font':('led16sgmnt', 77), 'anchor':'nw'}
-            lbl_style_7SEG03_S12 = {'borderwidth':0,'highlightthickness':0,'fg':'#ff0000','bg':'#250000','font':('ccar7seg', 127),'anchor':'nw'}
-            lbl_style_7SEG03_S34 = {'borderwidth':0,'highlightthickness':0,'fg':'#ff0000','bg':'#250000','font':('ccar7seg', 165),'anchor':'nw'}
-            lbl_style_7SEG03_S34_KA = {'borderwidth':0,'highlightthickness':0,'fg':'#ffaa00','bg':'#101010','font':('ccar7seg', 165),'anchor':'nw'}
-            lbl_style_SETUP = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 40), 'anchor':'c'}
-            lbl_style_SETUP2 = {'foreground':sys_text_color01,'background':sys_back_color01, 'font':("LCDDot TR", 25), 'anchor':'c'}
-            lbl_style_sysinfo = {'foreground':'#ffdddd','background':'#200000', 'font':("LCDDot TR", 36), 'anchor':'nw'}
-            lbl_style_sysinfo_LCARS = {'foreground':'#ff1941','background':'#111111', 'font':("lcars", 30), 'anchor':'nw'}
-            lbl_style_sysinfo_KA = {'foreground':'#ffffdd','background':'#222200', 'font':("LCDDot TR", 36), 'anchor':'nw'}
-            lbl_style_boot = {'foreground':'#00ff00','background':'#003300', 'font':("Triple Dot Digital-7", 18), 'anchor':'c'}
-            lbl_style_voicecmd = {'foreground':'#ffdddd','background':'#200000', 'font':("LCDDot TR", 24), 'anchor':'nw'}
-            lbl_style_voicecmd_KA = {'foreground':'#ffffdd','background':'#222200', 'font':("LCDDot TR", 24), 'anchor':'nw'}
-
-            txt_style_pagename = {'fill':sys_text_color01,'font':("Penn Station", 25), 'anchor':'nw'}
-            txt_style_pageinfo = {'fill':sys_text_color01,'font':("lcars", 16), 'anchor':'nw'}
             
-            txt_style_S12 = {'fill':'#FFFFFF','font':("BankGothic", 22), 'anchor':'c'}
-            txt_style_S34c = {'fill':'#FFFFFF','font':("lcars", 24), 'anchor':'c'}
-            txt_style_S34e = {'fill':'#FFFFFF','font':("FederationWide", 12), 'anchor':'e'}
-            txt_style_sysinfo = {'fill':'#ff0000','font':("LCDDot TR", 36), 'anchor':'nw'}
-            txt_style_sysinfo_LCARS = {'fill':'#ffffff','font':("lcars", 30), 'anchor':'nw'}
-            txt_style_sysinfo_KA = {'fill':'#ffaa00','font':("LCDDot TR", 36), 'anchor':'nw'}
+            #          00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG
+            sys_clr = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000"]
+            #          00_WHT     01_RED     02_AMBER   03_LTRED   04_LTAMBER 05_LTGRN   06_LTRED
+            txt_clr = ["#FFFFFF", "#FF0000", "#FFAA00", "#FFDDDD", "#FFFFDD", "#88FF88", "#FF8888"]
+            #          00_DK-GRY  01_DK-RED  02_DK-YEL   03_BLK
+            bg__clr = ["#101010", "#250000", "#222200", "#000000"]
+            #        00            01                 02          03                    04                05       06           07             08
+            fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
+
+            btn_style_imgbtn = {'borderwidth':0,'highlightthickness':0}
+            btn_style_imgbtn_lcars = {'borderwidth':0,'highlightthickness':0,'width':'181','height':'87'}
+            keypad_style = {'bg':sys_clr[8], 'fg':txt_clr[5], 'font':(fonts[0], 18), 'anchor':'c','width': 4, 'height': 2}
+
+            lbl_style_7SEG02_S34 =          {'fill':txt_clr[1],'font':(fonts[2], 164), 'anchor':'nw'}
+            lbl_style_7SEG02_S34_KA =       {'fill':txt_clr[2],'font':(fonts[2], 164), 'anchor':'nw'}            
+            lbl_style_setup_btns =          {'bg':sys_clr[8], 'fg':txt_clr[5], 'font':(fonts[6], 26), 'anchor':'c'}
+            lbl_style_setup_btns_small =    {'bg':sys_clr[8], 'fg':txt_clr[5], 'font':(fonts[6], 18), 'anchor':'c','width':'11','height':'1'}
+            lbl_style_7SEG01_S34 =          {'bg':bg__clr[1], 'fg':txt_clr[1], 'font':(fonts[3], 60, "bold"), 'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_7SEG01_LCARS =        {'bg':bg__clr[3], 'fg':txt_clr[0], 'font':(fonts[5], 160),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_7SEG01_S34_KA =       {'bg':bg__clr[2], 'fg':txt_clr[2], 'font':(fonts[3], 60, "bold"), 'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_7SEG01_S12 =          {'bg':'#102525',  'fg':'#00ffcc',  'font':(fonts[7], 77), 'anchor':'nw'}
+            lbl_style_7SEG03_S12 =          {'bg':bg__clr[1], 'fg':txt_clr[1], 'font':(fonts[2], 127),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_7SEG03_S34 =          {'bg':bg__clr[1], 'fg':txt_clr[1], 'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_7SEG03_S34_KA =       {'bg':bg__clr[0], 'fg':txt_clr[2], 'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_SETUP =               {'bg':sys_clr[8], 'fg':txt_clr[5], 'font':(fonts[6], 40), 'anchor':'c'}
+            lbl_style_SETUP2 =              {'bg':sys_clr[8], 'fg':txt_clr[5], 'font':(fonts[6], 25), 'anchor':'c'}
+            lbl_style_sysinfo =             {'bg':bg__clr[1], 'fg':txt_clr[3], 'font':(fonts[6], 36), 'anchor':'nw'}
+            lbl_style_sysinfo_LCARS =       {'bg':bg__clr[0], 'fg':'#ff1941',  'font':(fonts[5], 30), 'anchor':'nw'}
+            lbl_style_sysinfo_KA =          {'bg':bg__clr[2], 'fg':txt_clr[4], 'font':(fonts[6], 36), 'anchor':'nw'}
+            lbl_style_voicecmd =            {'bg':bg__clr[1], 'fg':txt_clr[3], 'font':(fonts[6], 24), 'anchor':'nw'}
+            lbl_style_voicecmd_KA =         {'bg':bg__clr[2], 'fg':txt_clr[4], 'font':(fonts[6], 24), 'anchor':'nw'}
+
+            txt_style_pagename =            {'fill':txt_clr[5],'font':(fonts[8], 25), 'anchor':'nw'}
+            txt_style_pageinfo =            {'fill':txt_clr[5],'font':(fonts[5], 16), 'anchor':'nw'}
+            
+            txt_style_S12 =                 {'fill':txt_clr[0],'font':(fonts[0], 22), 'anchor':'c'}
+            txt_style_S34c =                {'fill':txt_clr[0],'font':(fonts[5], 24), 'anchor':'c'}
+            txt_style_S34e =                {'fill':txt_clr[0],'font':(fonts[5], 24), 'anchor':'e'}
+            txt_style_sysinfo =             {'fill':txt_clr[1],'font':(fonts[6], 36), 'anchor':'nw'}
+            txt_style_sysinfo_LCARS =       {'fill':txt_clr[0],'font':(fonts[5], 30), 'anchor':'nw'}
+            txt_style_sysinfo_KA =          {'fill':txt_clr[2],'font':(fonts[6], 36), 'anchor':'nw'}
         
             #todo delete convert to style
-            font_S05S = ("Cheapsman Free", 36)
-            font_BTN = ("Cheapsman Free", 28)
-            font_RPM01 = ("DSEG7 Classic", 134)
-            font_RPMS01 = ("ccar7seg", 165)
-            font_RPMS03 = ("ccar7seg", 164)
-            font_RPMS05 = ("Nostromo Outline Black", 180)
-            font_PROGNOS34 = ("DSEG7 Classic Mini", 62)
-            font_PROGNOS05 = ("Nostromo Outline Black", 50)
-            font_BTTF01 = ("ccar7seg", 90)
-            font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
-            font_STATUS = ("Korataki", 14)
-            MITRIPRANGEFONT_S12 = ("DSEG7 Classic", 96, "italic")   
+            #font_BTTF01 = ("ccar7seg", 90)
+            #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
     #--------------------------------------------------------------------------------------
     # UPDATE LAST CONFIGURATIONS
     #--------------------------------------------------------------------------------------
@@ -1568,7 +1551,7 @@ class P00_BOOT(tk.Frame):
                 background_image = bgDEV031_img_list[1]
             self.canvas.create_image(0, 0, image=background_image, anchor='nw')
 
-            btn_menu_dash = tk.Button(self, bd=0, bg=sys_back_color01, fg="#FF8800", font=("Bebas Neue Bold", 28))
+            btn_menu_dash = tk.Button(self, bd=0, bg=sys_clr[8], fg=txt_clr[0])
             btn_menu_dash.configure(text="DASH", command=lambda: self.master.switch_frame(P01_DASH))
             btn_menu_dash.place(x=215, y=20)
         self.master.after(100, lambda: self.master.switch_frame(P01_DASH))
@@ -1986,11 +1969,11 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                     if style == style_txt[0]:
-                        self.canvas.create_rectangle(4, 195, 355, 332, fill="#222200")      #MTR
-                        self.canvas.create_rectangle(498, 571, 1270, 699, fill="#222200")   #TOTAL
+                        self.canvas.create_rectangle(4, 195, 355, 332, fill=bg__clr[2])      #MTR
+                        self.canvas.create_rectangle(498, 571, 1270, 699, fill=bg__clr[2])   #TOTAL
                     elif style == style_txt[1]:
-                        self.canvas.create_rectangle(4, 195, 355, 332, fill="#220000")      #MTR
-                        self.canvas.create_rectangle(498, 571, 1270, 699, fill="#220000")   #TOTAL
+                        self.canvas.create_rectangle(4, 195, 355, 332, fill=bg__clr[1])      #MTR
+                        self.canvas.create_rectangle(498, 571, 1270, 699, fill=bg__clr[1])   #TOTAL
             elif device == device_txt[2]:
                 #--------------------------------------------------------------------------
                 # GET BACKGROUNDIMAGE
@@ -2003,9 +1986,9 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                     if style == style_txt[0]:
-                        self.canvas.create_rectangle(1808, 30, 2130, 134, fill="#222200")   #PROGNO
+                        self.canvas.create_rectangle(1808, 30, 2130, 134, fill=bg__clr[2])   #PROGNO
                     elif style == style_txt[1]:
-                        self.canvas.create_rectangle(1808, 30, 2130, 134, fill="#220000")   #PROGNO
+                        self.canvas.create_rectangle(1808, 30, 2130, 134, fill=bg__clr[1])   #PROGNO
             elif device == device_txt[31]:
                 #--------------------------------------------------------------------------
                 # GET BACKGROUNDIMAGE
@@ -2313,33 +2296,33 @@ class P01_DASH(tk.Frame):
             button = tk.Button(self, command=lambda: self.master.switch_frame(P02_QOPT))
             if device == device_txt[1]:
                 if theme in theme_txt[:3]:
-                    button.config(**btn_style_pb_s12, image=localimage15)
-                    button.place(x=4, y=64)
+                    button.config(**btn_style_imgbtn, image=localimage15)
+                    button.place(x=4, y=364)
                 elif theme in (theme_txt[3:9]):
-                    button.config(**btn_style_pb_s34, image=localimage15)
+                    button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=64)
                 elif theme in [theme_txt[15], theme_txt[16]]:
-                    button.config(**btn_style_pb_lcars, image=lcarsOF_img_list[2])
+                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
             elif device == device_txt[2]:
                 if theme in (theme_txt[:3]):
-                    button.config(**btn_style_pb_s12, image=localimage15)
+                    button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
                 elif theme in (theme_txt[3:9]):
-                    button.config(**btn_style_pb_s34, image=localimage15)
+                    button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
                 elif theme in [theme_txt[15], theme_txt[16]]:
-                    button.config(**btn_style_pb_lcars, image=lcarsOF_img_list[2])
+                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
             elif device == device_txt[31]:
                 if theme in (theme_txt[:3]):
-                    button.config(**btn_style_pb_s12, image=localimage15)
+                    button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
                 elif theme in (theme_txt[3:9]):
-                    button.config(**btn_style_pb_s34, image=localimage15)
+                    button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
                 elif theme in [theme_txt[15], theme_txt[16]]:
-                    button.config(**btn_style_pb_lcars, image=lcarsOF_img_list[2])
+                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
         #----------------------------------------------------------------------------------
         # POWER BUTTONS DASH
@@ -2407,7 +2390,7 @@ class P01_DASH(tk.Frame):
                     amount_PB = 5
                     
                 for pb_text in btn_PB_txt:
-                    btns_PB = tk.Button(self, **btn_style_pb_s34, command=lambda text=pb_text: [read.toggle_PB(text), self.master.switch_frame(P01_DASH)])
+                    btns_PB = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [read.toggle_PB(text), self.master.switch_frame(P01_DASH)])
                     brn_PB.append(btns_PB)
                 for i in range(amount_PB):
                     brn_PB[i].place(x=x_btn_pb[i], y=y_btn_pb[i], width=w_btn_pb[i], height=h_btn_pb[i])
@@ -2528,7 +2511,7 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             if REGION:
                 for i in range(amount_FNKT):
-                    btn_FNKT = tk.Button(self, **btn_style_fnkt_s34, command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
+                    btn_FNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
                     btn_FNKT.place(x=x_btn_FNKT, y=y_btn_FNKT, width=w_btn_FNKT, height=h_btn_FNKT)
                     x_btn_FNKT += x_btn_FNKT_next
                     btns_FNKT.append(btn_FNKT)
@@ -2543,7 +2526,7 @@ class P01_DASH(tk.Frame):
         if REGION:
             global btn_units
             if device == device_txt[1]:
-                btn_units = tk.Button(self, **btn_style_units, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
+                btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 if theme_txt[0:3].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1040, y=218, width=166, height=81)
                 elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
@@ -2555,7 +2538,7 @@ class P01_DASH(tk.Frame):
                 else:
                     btn_units.config(image=localimage02)
             elif device == device_txt[2]:
-                btn_units = tk.Button(self, **btn_style_units, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
+                btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 btn_units.place(x=1064, y=296, width=166, height=81)
                 if btn_states_SW[0] == True:
                     btn_units.config(image=localimage08)
@@ -2623,7 +2606,7 @@ class P01_DASH(tk.Frame):
                     height_SPEED = 77
 
                 for i in range(0, 14):
-                    led_gauge_DEV001SPEED = tk.Label(self, **btn_style_fnkt_s34)
+                    led_gauge_DEV001SPEED = tk.Label(self, **btn_style_imgbtn)
                     led_gauge_DEV001SPEED.place(x=x_pos_SPEED, y=y_pos_SPEED, width=width_SPEED, height=height_SPEED)
                     x_pos_SPEED += x_pos_SPEED_next
                     led_DEV001G000.append(led_gauge_DEV001SPEED)                     
@@ -2636,7 +2619,7 @@ class P01_DASH(tk.Frame):
                 led_DEV001G004 = []
                 x_pos_SIGNAL = 5
                 for i in range(0, 20):
-                    led_gauge_DEV001SIGNAL = tk.Label(self, **btn_style_fnkt_s34)
+                    led_gauge_DEV001SIGNAL = tk.Label(self, **btn_style_imgbtn)
                     led_gauge_DEV001SIGNAL.place(x=x_pos_SIGNAL, y=465, width=20, height=77)
                     x_pos_SIGNAL += +20
                     led_DEV001G004.append(led_gauge_DEV001SIGNAL)
@@ -2649,7 +2632,7 @@ class P01_DASH(tk.Frame):
                 led_DEV001G005 = []
                 x_pos_TUNING = 5
                 for i in range(0, 20):
-                    led_gauge_DEV001TUNING = tk.Label(self, **btn_style_fnkt_s34)
+                    led_gauge_DEV001TUNING = tk.Label(self, **btn_style_imgbtn)
                     led_gauge_DEV001TUNING.place(x=x_pos_TUNING, y=640, width=20, height=77)
                     x_pos_TUNING += +20
                     led_DEV001G005.append(led_gauge_DEV001TUNING)
@@ -2681,12 +2664,12 @@ class P01_DASH(tk.Frame):
                 if theme in theme_txt[:9]: #0 to 8
                     for i in range(no_VBBRN):
                         if i < (no_VBBRN/2):
-                            btn_DEV001VBBTN = tk.Button(self, **btn_style_fnkt_s34, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
+                            btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
                             btn_DEV001VBBTN.place(x=x_pos_VBBTN, y=y_pos_VBBTN, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
                             y_pos_VBBTN += y_pos_VBBTN_next
                             btns_DEV001VBBTN.append(btn_DEV001VBBTN)
                         else:
-                            btn_DEV001VBBTN = tk.Button(self, **btn_style_fnkt_s34, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
+                            btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
                             btn_DEV001VBBTN.place(x=x_pos_VBBTN2, y=y_pos_VBBTN2, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
                             y_pos_VBBTN2 += y_pos_VBBTN2_next
                             btns_DEV001VBBTN.append(btn_DEV001VBBTN)
@@ -2712,7 +2695,7 @@ class P01_DASH(tk.Frame):
                     no_VBBRN = 3
                 if theme in theme_txt[:9]: #0 to 8
                     for i in range(3):
-                        btn_DEV001VBSTBTN = tk.Label(self, **btn_style_fnkt_s34)
+                        btn_DEV001VBSTBTN = tk.Label(self, **btn_style_imgbtn)
                         btn_DEV001VBSTBTN.place(x=x_pos_VBSTBTN, y=y_pos_VBSTBTN, width=wh_btn_VBSTBTN[0], height=wh_btn_VBSTBTN[1])
                         y_pos_VBSTBTN += +(wh_btn_VBSTBTN[1] +5)
                         btns_DEV001VBSTBTN.append(btn_DEV001VBSTBTN)
@@ -2734,17 +2717,17 @@ class P01_DASH(tk.Frame):
                     y_pos_VBL02 = 10
                     y_pos_VBL03 = 10
                     for i in range(0, 20):
-                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
                         y_pos_VBL01 += +20
                         led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
                     for i in range(0, 20):
-                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
                         y_pos_VBL02 += +20
                         led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
                     for i in range(0, 20):
-                        led_gauge_U01VB34L03 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
                         y_pos_VBL03 += +20
                         led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
@@ -2756,17 +2739,17 @@ class P01_DASH(tk.Frame):
                     y_pos_VBL02 = 10
                     y_pos_VBL03 = 10
                     for i in range(0, 20):
-                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
                         y_pos_VBL01 += +20
                         led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
                     for i in range(0, 20):
-                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
                         y_pos_VBL02 += +20
                         led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
                     for i in range(0, 20):
-                        led_gauge_U01VB34L03 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
                         y_pos_VBL03 += +20
                         led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
@@ -2776,12 +2759,12 @@ class P01_DASH(tk.Frame):
                     y_pos_VBL01 = 10
                     y_pos_VBL02 = 10
                     for i in range(0, 8):
-                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L01.place(x=1410, y=y_pos_VBL01, width=95, height=35)
                         y_pos_VBL01 += +45
                         led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
                     for i in range(0, 8):
-                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_fnkt_s34)
+                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L02.place(x=1530, y=y_pos_VBL02, width=95, height=35)
                         y_pos_VBL02 += +45
                         led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
@@ -2805,7 +2788,7 @@ class P01_DASH(tk.Frame):
                     y_pos_RPM = [15]*32
                     x_pos_RPM_next = +28                   
                 for i in range(0, 32):
-                    led_gauge_U02MASTER = tk.Label(self, **btn_style_fnkt_s34)
+                    led_gauge_U02MASTER = tk.Label(self, **btn_style_imgbtn)
                     led_gauge_U02MASTER.place(x=x_pos_RPM, y=y_pos_RPM[i])
                     x_pos_RPM += x_pos_RPM_next
                     led_DEV002GMASTER.append(led_gauge_U02MASTER)
@@ -2818,7 +2801,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G000 = []
                 x_pos_DEV002G000 = 3
                 for i in range(0, 7):
-                    val_DEV002G000 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G000 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G000.place(x=x_pos_DEV002G000, y=459, width=80, height=40)
                     x_pos_DEV002G000 += +84
                     led_DEV002G000.append(val_DEV002G000)
@@ -2831,7 +2814,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G001 = []
                 x_pos_DEV002G001 = 696
                 for i in range(0, 7):
-                    val_DEV002G001 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G001 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G001.place(x=x_pos_DEV002G001, y=459, width=80, height=40)
                     x_pos_DEV002G001 += +84
                     led_DEV002G001.append(val_DEV002G001)
@@ -2844,7 +2827,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G002 = []
                 x_pos_DEV002G002 = 3
                 for i in range(0, 7):
-                    val_DEV002G002 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G002 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G002.place(x=x_pos_DEV002G002, y=568, width=80, height=40)
                     x_pos_DEV002G002 += +84
                     led_DEV002G002.append(val_DEV002G002)
@@ -2857,7 +2840,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G003 = []
                 x_pos_DEV002G003 = 696
                 for i in range(0, 7):
-                    val_DEV002G003 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G003 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G003.place(x=x_pos_DEV002G003, y=568, width=80, height=40)
                     x_pos_DEV002G003 += +84
                     led_DEV002G003.append(val_DEV002G003)
@@ -2870,7 +2853,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G004 = []
                 x_pos_DEV002G004 = 3
                 for i in range(0, 7):
-                    val_DEV002G004 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G004 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G004.place(x=x_pos_DEV002G004, y=676, width=80, height=40)
                     x_pos_DEV002G004 += +84
                     led_DEV002G004.append(val_DEV002G004)
@@ -2883,7 +2866,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G005 = []
                 x_pos_DEV002G005 = 697
                 for i in range(0, 7):
-                    val_DEV002G005 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G005 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G005.place(x=x_pos_DEV002G005, y=676, width=80, height=40)
                     x_pos_DEV002G005 += +84
                     led_DEV002G005.append(val_DEV002G005)
@@ -2896,7 +2879,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G006 = []
                 x_pos_DEV002G006 = 1285
                 for i in range(0, 5):
-                    val_DEV002G006 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G006 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G006.place(x=x_pos_DEV002G006, y=71, width=80, height=40)
                     x_pos_DEV002G006 += +84
                     led_DEV002G006.append(val_DEV002G006)
@@ -2909,7 +2892,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G007 = []
                 x_pos_DEV002G007 = 1285
                 for i in range(0, 5):
-                    val_DEV002G007 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G007 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G007.place(x=x_pos_DEV002G007, y=184, width=80, height=40)
                     x_pos_DEV002G007 += +84
                     led_DEV002G007.append(val_DEV002G007)
@@ -2922,7 +2905,7 @@ class P01_DASH(tk.Frame):
                 led_DEV002G008 = []
                 x_pos_DEV002G008 = 1285
                 for i in range(0, 5):
-                    val_DEV002G008 = tk.Label(self, **btn_style_fnkt_s34)
+                    val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
                     val_DEV002G008.place(x=x_pos_DEV002G008, y=297, width=80, height=40)
                     x_pos_DEV002G008 += +84
                     led_DEV002G008.append(val_DEV002G008)
@@ -2935,7 +2918,7 @@ class P01_DASH(tk.Frame):
                     btns_PBFNKT = []
                     x_pos_PBFNKT = 1285
                     for i in range(4):
-                        btn_PBFNKT = tk.Button(self, **btn_style_fnkt_s34, command=lambda i=i: [read.toggle_button_states_PBFNKT(i),self.master.switch_frame(P01_DASH)])
+                        btn_PBFNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_PBFNKT(i),self.master.switch_frame(P01_DASH)])
                         btn_PBFNKT.place(x=x_pos_PBFNKT, y=546, width=82, height=154)
                         x_pos_PBFNKT += +265
                         btns_PBFNKT.append(btn_PBFNKT)
@@ -2955,7 +2938,7 @@ class P01_DASH(tk.Frame):
                 global led_gauge_DEV002IC
                 led_DEV002IC = []
                 for i in range(0, 16):
-                    led_gauge_DEV002IC = tk.Label(self, **btn_style_fnkt_s34)
+                    led_gauge_DEV002IC = tk.Label(self, **btn_style_imgbtn)
                     led_DEV002IC.append(led_gauge_DEV002IC)
                 led_DEV002IC[0].place(x=2174, y=17, width=80, height=80)
                 led_DEV002IC[1].place(x=2257, y=17, width=80, height=80)
@@ -4533,16 +4516,16 @@ class P02_QOPT(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -4562,8 +4545,8 @@ class P02_QOPT(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -4632,7 +4615,7 @@ class P02_QOPT(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)  #PAGE RI
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=txt_clr[1], width=2)  #PAGE RI
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -4665,9 +4648,9 @@ class P02_QOPT(tk.Frame):
         if REGION:
             for i in range(btn_qopt_place):
                 if btn_states_qopt[i]:
-                    btns_qopt[i].config(text=states_txt_act[1], fg=sys_text_color01)
+                    btns_qopt[i].config(text=states_txt_act[1], fg=txt_clr[5])
                 else:
-                    btns_qopt[i].config(text=states_txt_act[0], fg=sys_text_color02)
+                    btns_qopt[i].config(text=states_txt_act[0], fg=txt_clr[6])
         self.update_job = self.after(1000, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 03: SETUP
@@ -4756,16 +4739,16 @@ class P03_SETUP(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -4785,8 +4768,8 @@ class P03_SETUP(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -4915,7 +4898,7 @@ class P03_SETUP(tk.Frame):
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
         if REGION:
-            btn_EXIT = tk.Button(self, bd=0, bg=sys_back_color01, fg="#FF8800", font=("Bebas Neue Bold", 28))
+            btn_EXIT = tk.Button(self, bd=0, bg=sys_clr[8], fg=txt_clr[3], font=(fonts[1], 28))
             btn_EXIT.config(text="X")
             btn_EXIT.configure(command=read.quitDASH)
             btn_EXIT.place(x=1195, y=21, w=50, h=50)
@@ -4971,7 +4954,7 @@ class P03_SETUP(tk.Frame):
             btns_HW = []
             x_pos = x_start
             for i in range(quant_btns_HW):
-                btn_HW = tk.Button(canvas, bg=sys_back_color01, font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_btn_HW(i),self.master.switch_frame(P03_SETUP)])
+                btn_HW = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_btn_HW(i),self.master.switch_frame(P03_SETUP)])
                 btn_HW.place(x=x_pos, y=y_l3, width=btn_w, height=btn_h)
                 x_pos += +px_to_next
                 btns_HW.append(btn_HW)
@@ -4982,7 +4965,7 @@ class P03_SETUP(tk.Frame):
             btns_SW = []
             x_pos = x_start
             for i in range(quant_btns_SW):
-                btn_SW = tk.Button(canvas, bg=sys_back_color01, font=("Bebas Neue Bold", 28),  command=lambda i=i: read.toggle_btn_SW(i))
+                btn_SW = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 28),  command=lambda i=i: read.toggle_btn_SW(i))
                 btn_SW.place(x=x_pos, y=y_l5, width=btn_w, height=btn_h)
                 x_pos += +px_to_next
                 btns_SW.append(btn_SW)
@@ -5016,8 +4999,8 @@ class P03_SETUP(tk.Frame):
             variable_dropdown = tk.StringVar()
             variable_dropdown.set('SPARE')  # Default selection
             dropdown = tk.OptionMenu(self, variable_dropdown, *variables.keys())
-            dropdown.config(bg=sys_back_color01, fg=sys_text_color01, font=("BankGothic", 18))
-            dropdown["menu"].config(bg=sys_back_color01, fg=sys_text_color01, font=("BankGothic", 16))
+            dropdown.config(bg=sys_clr[8], fg=txt_clr[5], font=("BankGothic", 18))
+            dropdown["menu"].config(bg=sys_clr[8], fg=txt_clr[5], font=("BankGothic", 16))
             dropdown.place(x=292, y=355, width=176)
             #------------------------------------------------------------------------------
             # INPUT VALUE LABEL
@@ -5133,7 +5116,7 @@ class P03_SETUP(tk.Frame):
                 x_pos = x_start_RB
                 x_pos2 = x_start_RB
                 for i in range(quant_btns_RB01):
-                    btn_RB01 = tk.Button(canvas, bg="#103010", font=("Bebas Neue Bold", 28), command=lambda i=i: read.toggle_relay(i))
+                    btn_RB01 = tk.Button(canvas, bg=sys_clr[8], font=(fonts[1], 28), command=lambda i=i: read.toggle_relay(i))
                     if i < (quant_btns_RB01/2):
                         btn_RB01.place(x=x_pos, y=y_l11, width=btn_w, height=btn_h)
                         x_pos += +px_to_next
@@ -5148,7 +5131,7 @@ class P03_SETUP(tk.Frame):
                 x_pos = x_start_RB
                 x_pos2 = x_start_RB
                 for i in range(quant_btns_RB02):
-                    btn_RB02 = tk.Button(canvas, bg="#103010", font=("Bebas Neue Bold", 28), command=lambda i=i: read.toggle_relay(i+16))
+                    btn_RB02 = tk.Button(canvas, bg=sys_clr[8], font=(fonts[1], 28), command=lambda i=i: read.toggle_relay(i+16))
                     if i < (quant_btns_RB02/2):
                         btn_RB02.place(x=x_pos, y=y_l15, width=btn_w, height=btn_h)
                         x_pos += +px_to_next
@@ -5163,7 +5146,7 @@ class P03_SETUP(tk.Frame):
                 x_pos = x_start_RB
                 x_pos2 = x_start_RB
                 for i in range(quant_btns_RB03):
-                    btn_RB03 = tk.Button(canvas, bg="#103010", font=("Bebas Neue Bold", 28), command=lambda i=i: read.toggle_relay(i+32))
+                    btn_RB03 = tk.Button(canvas, bg=sys_clr[8], font=(fonts[1], 28), command=lambda i=i: read.toggle_relay(i+32))
                     if i < (quant_btns_RB03/2):
                         btn_RB03.place(x=x_pos, y=y_l19, width=btn_w, height=btn_h)
                         x_pos += +px_to_next
@@ -5197,7 +5180,7 @@ class P03_SETUP(tk.Frame):
             read.load_button_states_FAV(quant_btns_FAV)
             
             for i in range(quant_btns_FAV):
-                btn_FAV = tk.Button(canvas, bg="#103010", text="F", font=("Bebas Neue Bold", 20), command=lambda i=i: read.toggle_btn_FAV(i))
+                btn_FAV = tk.Button(canvas, bg=sys_clr[8], text="F", font=(fonts[1], 20), command=lambda i=i: read.toggle_btn_FAV(i))
                 
                 if i < 10:
                     btn_FAV.place(x=x_pos, y=y_l3, width=btn_f_w, height=btn_h)
@@ -5244,27 +5227,27 @@ class P03_SETUP(tk.Frame):
         if REGION:
             for i in range(quant_btns_HW):                     
                 if btn_states_HW[i]:
-                    btns_HW[i].config(text=states_txt_act[1], fg=sys_text_color01)
+                    btns_HW[i].config(text=states_txt_act[1], fg=txt_clr[5])
                 else:
-                    btns_HW[i].config(text=states_txt_act[0], fg=sys_text_color02)
+                    btns_HW[i].config(text=states_txt_act[0], fg=txt_clr[6])
         #----------------------------------------------------------------------------------
         # SW BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
             for i in range(quant_btns_SW):
                 if btn_states_SW[i]:
-                    btns_SW[i].config(text=btnsw_DEV001_txt_1[i], fg=sys_text_color01)
+                    btns_SW[i].config(text=btnsw_DEV001_txt_1[i], fg=txt_clr[5])
                 else:
-                    btns_SW[i].config(text=btnsw_DEV001_txt_0[i], fg=sys_text_color01)
+                    btns_SW[i].config(text=btnsw_DEV001_txt_0[i], fg=txt_clr[5])
         #----------------------------------------------------------------------------------
         # FAV BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
             for i in range(quant_btns_FAV):
                 if btn_states_FAV[i]:
-                    btns_FAV[i].config(fg="#ffff00")
+                    btns_FAV[i].config(fg=txt_clr[2])
                 else:
-                    btns_FAV[i].config(fg=sys_text_color02)
+                    btns_FAV[i].config(fg=txt_clr[6])
         #----------------------------------------------------------------------------------
         # RB BUTTONS
         #----------------------------------------------------------------------------------
@@ -5275,27 +5258,27 @@ class P03_SETUP(tk.Frame):
             if REGION:
                 for i in range(quant_btns_RB01):
                     if btn_states_DEV002RB01[i]:
-                        btns_RB01[i].config(text=states_txt_act[1], fg=sys_text_color01)
+                        btns_RB01[i].config(text=states_txt_act[1], fg=txt_clr[5])
                     else:
-                        btns_RB01[i].config(text=states_txt_act[0], fg=sys_text_color02)
+                        btns_RB01[i].config(text=states_txt_act[0], fg=txt_clr[6])
             #------------------------------------------------------------------------------
             # DEV002 BTNRB02
             #------------------------------------------------------------------------------
             if REGION:
                 for i in range(quant_btns_RB02):
                     if btn_states_DEV002RB02[i]:
-                        btns_RB02[i].config(text=states_txt_act[1], fg=sys_text_color01)
+                        btns_RB02[i].config(text=states_txt_act[1], fg=txt_clr[5])
                     else:
-                        btns_RB02[i].config(text=states_txt_act[0], fg=sys_text_color02)
+                        btns_RB02[i].config(text=states_txt_act[0], fg=txt_clr[6])
             #------------------------------------------------------------------------------
             # DEV002 BTNRB03
             #------------------------------------------------------------------------------
             if REGION:
                 for i in range(quant_btns_RB03):
                     if btn_states_DEV002RB03[i]:
-                        btns_RB03[i].config(text=states_txt_act[1], fg=sys_text_color01)
+                        btns_RB03[i].config(text=states_txt_act[1], fg=txt_clr[5])
                     else:
-                        btns_RB03[i].config(text=states_txt_act[0], fg=sys_text_color02)
+                        btns_RB03[i].config(text=states_txt_act[0], fg=txt_clr[6])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 04: THEMES
@@ -5312,16 +5295,16 @@ class P04_THEMES(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -5348,8 +5331,8 @@ class P04_THEMES(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -5440,7 +5423,7 @@ class P04_THEMES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)  #PAGE RI
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=txt_clr[1], width=2)  #PAGE RI
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -5472,7 +5455,7 @@ class P04_THEMES(tk.Frame):
             x_pos_device = 50
             y_pos_device = 145
             for device_text in device_txt:
-                button_device = tk.Button(canvas, bg=sys_back_color01, font=("Bebas Neue Bold", 24), text=device_text, command=lambda text=device_text: [read.toggle_button_device(text),self.master.switch_frame(P00_BOOT)])
+                button_device = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=device_text, command=lambda text=device_text: [read.toggle_button_device(text),self.master.switch_frame(P00_BOOT)])
                 btns_device.append(button_device)
             btns_device[1].place(x=x_pos_device, y=y_pos_device, width=btn_w, height=btn_h)
             btns_device[2].place(x=x_pos_device +110, y=y_pos_device, width=btn_w, height=btn_h)
@@ -5481,9 +5464,9 @@ class P04_THEMES(tk.Frame):
 
             for i, text in enumerate(device_txt):
                 if device == text:
-                    btns_device[i].config(fg=sys_text_color01)
+                    btns_device[i].config(fg=txt_clr[5])
                 else:
-                    btns_device[i].config(fg=sys_text_color02)
+                    btns_device[i].config(fg=txt_clr[6])
         #----------------------------------------------------------------------------------
         # STYLE BUTTONS
         #----------------------------------------------------------------------------------   
@@ -5493,7 +5476,7 @@ class P04_THEMES(tk.Frame):
             x_pos_style = 50
             y_pos_style = 325
             for style_text in style_txt:
-                button_style = tk.Button(canvas, bg=sys_back_color01, font=("Bebas Neue Bold", 24), text=style_text, command=lambda text=style_text: [read.toggle_button_style(text), self.master.switch_frame(P04_THEMES)])
+                button_style = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=style_text, command=lambda text=style_text: [read.toggle_button_style(text), self.master.switch_frame(P04_THEMES)])
                 button_style.place(x=x_pos_style, y=y_pos_style, width=btn_w, height=btn_h)
                 x_pos_style += +119
                 btns_style.append(button_style)
@@ -5505,9 +5488,9 @@ class P04_THEMES(tk.Frame):
 
             for i, text in enumerate(style_txt):
                 if style == text:
-                    btns_style[i].config(fg=sys_text_color01)
+                    btns_style[i].config(fg=txt_clr[5])
                 else:
-                    btns_style[i].config(fg=sys_text_color02)
+                    btns_style[i].config(fg=txt_clr[6])
         #----------------------------------------------------------------------------------
         # THEME BUTTONS
         #----------------------------------------------------------------------------------   
@@ -5518,7 +5501,7 @@ class P04_THEMES(tk.Frame):
             x_pos_btns1_theme = 50
             x_pos_btns2_theme = 50
             for i, theme_text in enumerate(theme_txt):
-                btn_theme = tk.Button(canvas, bg=sys_back_color01, font=("Bebas Neue Bold", 24), text=theme_text, command=lambda text=theme_text: [read.toggle_button_theme(text), self.master.switch_frame(P01_DASH)])
+                btn_theme = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=theme_text, command=lambda text=theme_text: [read.toggle_button_theme(text), self.master.switch_frame(P01_DASH)])
                 if i < 10:
                     btn_theme.place(x=x_pos_btns1_theme, y=460, width=btn_w, height=btn_h)
                     x_pos_btns1_theme += 119
@@ -5529,9 +5512,9 @@ class P04_THEMES(tk.Frame):
 
             for i, text in enumerate(theme_txt):
                 if theme == text:
-                    btns_theme[i].config(fg=sys_text_color01)
+                    btns_theme[i].config(fg=txt_clr[5])
                 else:
-                    btns_theme[i].config(fg=sys_text_color02)
+                    btns_theme[i].config(fg=txt_clr[6])
 
             # ENABLE DISABLE BUTTONS
             if REGION:
@@ -5582,9 +5565,9 @@ class P05_CARFUNCTIONS(tk.Frame):
         canvas.pack(fill='both', expand=True)
         canvas.create_image(0, 0, image=background_image, anchor='nw')
         canvas.create_text(25, 20, text="C-FUNC", **txt_style_pagename)
-        canvas.create_rectangle(15, 15, 1265, 85, outline='#ff0000', width=2)  #TITLEBAR            
-        canvas.create_rectangle(15, 90, 1265, 605, outline='#ff0000', width=2) #PAGE            
-        canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
+        canvas.create_rectangle(15, 15, 1265, 85, outline=txt_clr[1], width=2)  #TITLEBAR            
+        canvas.create_rectangle(15, 90, 1265, 605, outline=txt_clr[1], width=2) #PAGE            
+        canvas.create_rectangle(15, 645, 1265, 715, outline=txt_clr[1], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5617,9 +5600,9 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
         canvas.pack(fill='both', expand=True)
         canvas.create_image(0, 0, image=background_image, anchor='nw')
         canvas.create_text(25, 20, text="K-FUNC", **txt_style_pagename)
-        canvas.create_rectangle(15, 15, 1265, 85, outline='#ff0000', width=2)  #TITLEBAR            
-        canvas.create_rectangle(15, 90, 1265, 605, outline='#ff0000', width=2) #PAGE            
-        canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
+        canvas.create_rectangle(15, 15, 1265, 85, outline=txt_clr[1], width=2)  #TITLEBAR            
+        canvas.create_rectangle(15, 90, 1265, 605, outline=txt_clr[1], width=2) #PAGE            
+        canvas.create_rectangle(15, 645, 1265, 715, outline=txt_clr[1], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5645,16 +5628,16 @@ class P07_AUDIO(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -5674,8 +5657,8 @@ class P07_AUDIO(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -5744,7 +5727,7 @@ class P07_AUDIO(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=txt_clr[1], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -5762,10 +5745,10 @@ class P07_AUDIO(tk.Frame):
             canvas.create_text(300, 20, text="ACTUAL PLAYING", **txt_style_pagename)
             canvas.create_text(700, 20, text="NEXT PLAYING", **txt_style_pagename)
             canvas.create_text(1090, 20, text="NEXT:", **txt_style_pagename)
-            #canvas.create_rectangle(15, 15, 1265, 85, outline='#ff0000', width=2)   #TITLEBAR            
-            #canvas.create_rectangle(15, 120, 1265, 190, outline='#ff0000', width=2) #SUBMENU
-            #canvas.create_rectangle(15, 195, 1265, 605, outline='#ff0000', width=2) #PAGE            
-            #canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
+            #canvas.create_rectangle(15, 15, 1265, 85, outline=txt_clr[1], width=2)   #TITLEBAR            
+            #canvas.create_rectangle(15, 120, 1265, 190, outline=txt_clr[1], width=2) #SUBMENU
+            #canvas.create_rectangle(15, 195, 1265, 605, outline=txt_clr[1], width=2) #PAGE            
+            #canvas.create_rectangle(15, 645, 1265, 715, outline=txt_clr[1], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5802,16 +5785,16 @@ class P08_VIDEO(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -5831,8 +5814,8 @@ class P08_VIDEO(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -5901,7 +5884,7 @@ class P08_VIDEO(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=txt_clr[1], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -5916,9 +5899,9 @@ class P08_VIDEO(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             canvas.create_text(20, 20, **txt_style_pagename, text="VIDEO")
-            #canvas.create_rectangle(15, 15, 1265, 85, outline='#ff0000', width=2)  #TITLEBAR
-            #canvas.create_rectangle(15, 90, 1265, 605, outline='#ff0000', width=2) #PAGE
-            #canvas.create_rectangle(15, 645, 1265, 715, outline='#ff0000', width=2) #MENU
+            #canvas.create_rectangle(15, 15, 1265, 85, outline=txt_clr[1], width=2)  #TITLEBAR
+            #canvas.create_rectangle(15, 90, 1265, 605, outline=txt_clr[1], width=2) #PAGE
+            #canvas.create_rectangle(15, 645, 1265, 715, outline=txt_clr[1], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5942,16 +5925,16 @@ class P09_RES(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -5971,8 +5954,8 @@ class P09_RES(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -6041,7 +6024,7 @@ class P09_RES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=txt_clr[1], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -6079,16 +6062,16 @@ class P10_RES(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -6108,8 +6091,8 @@ class P10_RES(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -6178,7 +6161,7 @@ class P10_RES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=txt_clr[1], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -6216,16 +6199,16 @@ class P11_RES(tk.Frame):
         # CREATE BACKGROUND
         #----------------------------------------------------------------------------------        
         if REGION:
-            canvas = tk.Canvas(self, bg=sys_grid_bg, highlightthickness=0)
+            canvas = tk.Canvas(self, bg=sys_clr[0], highlightthickness=0)
             canvas.pack(fill='both', expand=True)
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
                 for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_grid_x)
+                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
                 for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_grid_y)
+                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -6245,8 +6228,8 @@ class P11_RES(tk.Frame):
                     (1310, 720, 2340, 720), #RIGHT BOTTOM
                 ]
                 # Define colors
-                colors_corner = [sys_corners_x, sys_corners_y]
-                gradient_colors = [sys_gradient_start, sys_gradient_middle, sys_gradient_end]
+                colors_corner = [sys_clr[3], sys_clr[4]]
+                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
                 num_segments = 50                
                 #--------------------------------------------------------------------------
                 # CREATE TITLE CORNERS
@@ -6315,7 +6298,7 @@ class P11_RES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#ff0000', width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=txt_clr[1], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -6373,13 +6356,13 @@ class myfunctions():
                 btn_w = 100
                 btn_h = 40
                 for i in range(btn_menu_place):
-                    btn_menu = tk.Button(text=menu_btn_names[i], bd=0, bg=sys_back_color01, fg=sys_text_color01, font=("Bebas Neue Bold", 28))
+                    btn_menu = tk.Button(text=menu_btn_names[i], bd=0, bg=sys_clr[8], fg=txt_clr[5], font=("Bebas Neue Bold", 28))
                     btn_menu.config(command=lambda i=i: kidd.switch_frame(i))
                     btns_menu.append(btn_menu)
                     btns_menu[i].place(x=x_pos_r1, y=675, w=btn_w, h=btn_h)
                     x_pos_r1 += +118
 
-                slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=1220, orient='horizontal', width=30, sliderlength=50, troughcolor='#000000', highlightbackground=sys_back_color01, bg=sys_corners_y)
+                slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=1220, orient='horizontal', width=30, sliderlength=50, troughcolor=bg__clr[3], highlightbackground=sys_clr[8], bg=sys_clr[4])
                 slider.set(1)
                 slider.place(x=25, y=635)
             #------------------------------------------------------------------------------
@@ -6412,7 +6395,7 @@ class myfunctions():
                 x_pos = 20
                 x_pos2 = 20
                 for i in range(btn_qopt_place):
-                    btn_qopt = tk.Button(bg=sys_back_color01, font=("Bebas Neue Bold", 28))
+                    btn_qopt = tk.Button(bg=sys_clr[8], font=("Bebas Neue Bold", 28))
                     btn_qopt.config(command=lambda i=i: read.toggle_btn_qopt(i))
                     btns_qopt.append(btn_qopt)
                     if i < (btn_qopt_place/2):
@@ -6794,10 +6777,10 @@ class myfunctions():
                 time_label_value = tk.Label(**lbl_style_sysinfo ,text="88.88")
                 time_label_value.place(x=1180, y=20)
             
-                start_button = tk.Button(bg="#005500", fg="#ffffff", font=("Bebas Neue Bold", 24) ,text="START", command=read.start_playing)
+                start_button = tk.Button(bg=bg__clr[1], fg=txt_clr[0], font=(fonts[1], 24) ,text="START", command=read.start_playing)
                 start_button.place(x=128, y=21, width=80, height=50)
 
-                stop_button = tk.Button(bg="#550000", fg="#ffffff", font=("Bebas Neue Bold", 24), text="STOP", command=read.stop_playing)
+                stop_button = tk.Button(bg=bg__clr[1], fg=txt_clr[0], font=(fonts[1], 24), text="STOP", command=read.stop_playing)
                 stop_button.place(x=210, y=21, width=80, height=50)
 
                 read.load_playlist()
@@ -6906,13 +6889,13 @@ class myfunctions():
             snd_menu_btns = []
             x_pos_ssb_r1 = 20
             for i in range(snd_menu_btn_place):
-                snd_menu_btn = tk.Button(bg="#000055", fg="#ffffff", font=("Bebas Neue Bold", 24), text=subfolders_list[i])
+                snd_menu_btn = tk.Button(bg=bg__clr[1], fg=txt_clr[0], font=(fonts[1], 24), text=subfolders_list[i])
                 snd_menu_btn.config(command=lambda i=i: (read.get_snd_menu_btn_txt(snd_menu_btns[i]), read.load_soundfolder(), read.snd_mp3_btns(), kidd.switch_frame(7))) #todo variablen name ändern damit sich ordnername snd ändert
                 snd_menu_btns.append(snd_menu_btn)
                 snd_menu_btns[i].place(x=x_pos_ssb_r1, y=90, width=115, height=55)
                 x_pos_ssb_r1 += +120
 
-            slider_snd_menu_btns = tk.Scale(from_=0, to=snd_menu_btn_place-5, command=read.show_snd_menu_btns, showvalue=0, length=1245, orient='horizontal', width=30, sliderlength=50, troughcolor='#000000', highlightbackground='#ff0000', bg='#00ffff')
+            slider_snd_menu_btns = tk.Scale(from_=0, to=snd_menu_btn_place-5, command=read.show_snd_menu_btns, showvalue=0, length=1245, orient='horizontal', width=30, sliderlength=50, troughcolor=bg__clr[3], highlightbackground=txt_clr[1], bg='#00ffff')
             slider_snd_menu_btns.set(1)
             slider_snd_menu_btns.place(x=15, y=90)
         #----------------------------------------------------------------------------------
@@ -6943,7 +6926,7 @@ class myfunctions():
             rows_displayed = 0  # Variable to keep track of the number of rows displayed
 
             for i in range(snd_mp3_btn_place):
-                snd_mp3_btn = tk.Button(bg="#000044", fg="#ffffff", font=("lcars", 16), text=mp3files_list[i], wraplength=100)
+                snd_mp3_btn = tk.Button(bg="#000044", fg=txt_clr[0], font=("lcars", 16), text=mp3files_list[i], wraplength=100)
                 snd_mp3_btn.config(command=lambda i=i: read.play_mp3_thread(act_mp3_files_path, mp3files_list[i]))
                 snd_mp3_btns.append(snd_mp3_btn)
 
@@ -6963,7 +6946,7 @@ class myfunctions():
                 # Add a vertical slider when there are more buttons than can be displayed
                 slider_snd_mp3_btns = tk.Scale(from_=0, to=snd_mp3_btn_place - row_length, command=read.show_snd_mp3_btns,
                                                showvalue=0, length=500, orient='vertical', sliderlength=50,
-                                               troughcolor='#000000', highlightbackground='#ff0000', bg='#00ffff')
+                                               troughcolor=bg__clr[3], highlightbackground=txt_clr[1], bg='#00ffff')
                 slider_snd_mp3_btns.set(0)
                 slider_snd_mp3_btns.place(x=1300, y=200)  # Adjust the x and y positions accordingly
         def show_snd_mp3_btns(self, value):
