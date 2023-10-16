@@ -787,8 +787,7 @@ if REGION:
         # STYLES
         #----------------------------------------------------------------------------------
         if REGION:
-            grid_spacing = 15
-            
+            grid_spacing = 15            
             #          00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG
             sys_clr = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000"]
             #          00_WHT     01_RED     02_AMBER   03_LTRED   04_LTAMBER 05_LTGRN   06_LTRED
@@ -1619,14 +1618,17 @@ class P01_DASH(tk.Frame):
                         localimagelist01 = list(vbON_PILOT_img_list)
                         localimagelist02 = list(vbOF_PILOT_img_list)
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
+                        localimage16 = ledOF_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[1]]:
                         localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S01_img_list)
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
+                        localimage16 = ledOF_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[2]]:
                         localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S02_img_list)
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
+                        localimage16 = ledOF_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[3]]:
                         localimage01 = sledON_img_list[10] #MPH
                         localimage02 = sledON_img_list[9] #KPH
@@ -1784,6 +1786,7 @@ class P01_DASH(tk.Frame):
                         localimage06 = ledFU_img_list[9] #HI LO VHF
                         localimage07 = ledOF_img_list[9] #HI LO VHF
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
+                        localimage16 = ledOF_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[1]]:
                         localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S01_img_list)
@@ -1792,6 +1795,7 @@ class P01_DASH(tk.Frame):
                         localimage06 = ledFU_img_list[9] #HI LO VHF
                         localimage07 = ledOF_img_list[9] #HI LO VHF
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
+                        localimage16 = ledOF_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[2]]:
                         localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S02_img_list)
@@ -1800,6 +1804,7 @@ class P01_DASH(tk.Frame):
                         localimage06 = ledFU_img_list[9] #HI LO VHF
                         localimage07 = ledOF_img_list[9] #HI LO VHF
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
+                        localimage16 = ledOF_img_list[6] #SELECT BUTTONS
                     elif theme in [theme_txt[3]]:
                         localimage01 = sledON_img_list[14] #MPH
                         localimage02 = sledON_img_list[13] #KPH
@@ -2297,7 +2302,7 @@ class P01_DASH(tk.Frame):
             if device == device_txt[1]:
                 if theme in theme_txt[:3]:
                     button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=364)
+                    button.place(x=4, y=45)
                 elif theme in (theme_txt[3:9]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=64)
@@ -2336,10 +2341,10 @@ class P01_DASH(tk.Frame):
             if REGION:
                 if device == device_txt[1]:
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_pb = [94, 176, 258, 4, 4]
-                        y_btn_pb = [120, 120, 120, 400, 578]
-                        w_btn_pb = [80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40]
+                        x_btn_pb = [575, 375, 575, 4, 1]
+                        y_btn_pb = [45, 165, 375, 375, 1]
+                        w_btn_pb = [124, 124, 124, 124, 1]
+                        h_btn_pb = [47, 47, 47, 47, 1]
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn_pb = [94, 176, 258, 4, 4]
                         y_btn_pb = [120, 120, 120, 400, 578]
@@ -2400,12 +2405,12 @@ class P01_DASH(tk.Frame):
             if REGION:
                 for i, text in enumerate(btn_PB_txt):
                     if btn_states_PB == text:
-                        if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                            brn_PB[i].config(image=localimage15) #todo theme S12 S34 auch anzahl begrenzen
+                        if theme_txt[0:9].count(theme) > 0: # THEME 0 to 9
+                            brn_PB[i].config(image=localimage15)
                         elif theme in [theme_txt[15], theme_txt[16]]:
                             brn_PB[i].config(image=lcarsON_img_list[3])
                     else:
-                        if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        if theme_txt[0:9].count(theme) > 0: # THEME 0 to 9
                             brn_PB[i].config(image=localimage16)
                         elif theme in [theme_txt[15], theme_txt[16]]:
                             brn_PB[i].config(image=lcarsOF_img_list[3])
@@ -2421,11 +2426,11 @@ class P01_DASH(tk.Frame):
             if REGION:
                 if device == device_txt[1]:
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_FNKT = 507
-                        x_btn_FNKT_next = 113
-                        y_btn_FNKT = 374
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
+                        x_btn_FNKT = 585
+                        x_btn_FNKT_next = 50
+                        y_btn_FNKT = 663
+                        w_btn_FNKT = 30
+                        h_btn_FNKT = 30
                         localimageON_FNKT = localimage06
                         localimageOF_FNKT = localimage07
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
@@ -2587,11 +2592,11 @@ class P01_DASH(tk.Frame):
                 global led_gauge_DEV001SPEED
                 led_DEV001G000 = []
                 if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_SPEED = 95
-                    y_pos_SPEED = 8
-                    x_pos_SPEED_next = +84
-                    width_SPEED = 80
-                    height_SPEED = 40
+                    x_pos_SPEED = 580
+                    y_pos_SPEED = 103
+                    x_pos_SPEED_next = +32
+                    width_SPEED = 30
+                    height_SPEED = 30
                 elif theme in theme_txt[3:9]: # THEME 3 to 8
                     x_pos_SPEED = 95
                     y_pos_SPEED = 8
@@ -2616,12 +2621,34 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV001G004
                 global led_gauge_DEV001SIGNAL
+                global ammount_SIGNAL
                 led_DEV001G004 = []
-                x_pos_SIGNAL = 5
-                for i in range(0, 20):
+                if theme in theme_txt[:3]: # THEME 0 1 2
+                    x_pos_SIGNAL = 10
+                    y_pos_SIGNAL = 442
+                    x_pos_SIGNAL_next = +31
+                    width_SIGNAL = 30
+                    height_SIGNAL = 30
+                    ammount_SIGNAL = 16
+                elif theme in theme_txt[3:9]: # THEME 3 to 8
+                    x_pos_SIGNAL = 5
+                    y_pos_SIGNAL = 465
+                    x_pos_SIGNAL_next = +20
+                    width_SIGNAL = 20
+                    height_SIGNAL = 77
+                    ammount_SIGNAL = 20
+                elif theme in [theme_txt[15], theme_txt[16]]:
+                    x_pos_SIGNAL = 5
+                    y_pos_SIGNAL = 465
+                    x_pos_SIGNAL_next = +32
+                    width_SIGNAL = 20
+                    height_SIGNAL = 77
+                    ammount_SIGNAL = 20
+
+                for i in range(0, ammount_SIGNAL):
                     led_gauge_DEV001SIGNAL = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_DEV001SIGNAL.place(x=x_pos_SIGNAL, y=465, width=20, height=77)
-                    x_pos_SIGNAL += +20
+                    led_gauge_DEV001SIGNAL.place(x=x_pos_SIGNAL, y=y_pos_SIGNAL, width=width_SIGNAL, height=height_SIGNAL)
+                    x_pos_SIGNAL += x_pos_SIGNAL_next
                     led_DEV001G004.append(led_gauge_DEV001SIGNAL)
             #------------------------------------------------------------------------------
             # DEV001G005 (TUNING)
@@ -2631,11 +2658,12 @@ class P01_DASH(tk.Frame):
                 global led_gauge_DEV001TUNING
                 led_DEV001G005 = []
                 x_pos_TUNING = 5
-                for i in range(0, 20):
-                    led_gauge_DEV001TUNING = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_DEV001TUNING.place(x=x_pos_TUNING, y=640, width=20, height=77)
-                    x_pos_TUNING += +20
-                    led_DEV001G005.append(led_gauge_DEV001TUNING)
+                if theme in theme_txt[3:9]: # THEME 3 to 8
+                    for i in range(0, 20):
+                        led_gauge_DEV001TUNING = tk.Label(self, **btn_style_imgbtn)
+                        led_gauge_DEV001TUNING.place(x=x_pos_TUNING, y=640, width=20, height=77)
+                        x_pos_TUNING += +20
+                        led_DEV001G005.append(led_gauge_DEV001TUNING)
             #------------------------------------------------------------------------------
             # VOICEBOX BUTTONS (PILOT S01 S02 OTTO = 8/3) / (S03 S04 S05 S06 MAX =10/6)
             #------------------------------------------------------------------------------ 
@@ -2709,24 +2737,34 @@ class P01_DASH(tk.Frame):
                 global led_gauge_U01VB34L02
                 global led_DEV001VBS34L03
                 global led_gauge_U01VB34L03
-                if theme == theme_txt[3] or theme == theme_txt[4] or theme == theme_txt[5] or theme == theme_txt[6]:
+                global ammount_VB
+                global middle_index
+                
+                if theme in theme_txt[:3]: # THEME 0 1 2
+                    ammount_VB = 18
+                    middle_index = 9  # Index of the middle LED
+                elif theme in theme_txt[3:9]: # THEME 3 to 8
+                    ammount_VB = 20
+                    middle_index = 10  # Index of the middle LED
+                
+                if theme in theme_txt[0:7]: # THEME 1 to 8
                     led_DEV001VBS34L01 = []
                     led_DEV001VBS34L02 = []
                     led_DEV001VBS34L03 = []
                     y_pos_VBL01 = 10
                     y_pos_VBL02 = 10
                     y_pos_VBL03 = 10
-                    for i in range(0, 20):
+                    for i in range(0, ammount_VB):
                         led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
                         y_pos_VBL01 += +20
                         led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                    for i in range(0, 20):
+                    for i in range(0, ammount_VB):
                         led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
                         y_pos_VBL02 += +20
                         led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
-                    for i in range(0, 20):
+                    for i in range(0, ammount_VB):
                         led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
                         y_pos_VBL03 += +20
@@ -2738,17 +2776,17 @@ class P01_DASH(tk.Frame):
                     y_pos_VBL01 = 10
                     y_pos_VBL02 = 10
                     y_pos_VBL03 = 10
-                    for i in range(0, 20):
+                    for i in range(0, ammount_VB):
                         led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
                         y_pos_VBL01 += +20
                         led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                    for i in range(0, 20):
+                    for i in range(0, ammount_VB):
                         led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
                         y_pos_VBL02 += +20
                         led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
-                    for i in range(0, 20):
+                    for i in range(0, ammount_VB):
                         led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
                         y_pos_VBL03 += +20
@@ -3322,14 +3360,14 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             if theme in [theme_txt[0], theme_txt[1], theme_txt[2]]:
-                localimage10 = ledOF_img_list[6]
-                localimage11 = ledOF_img_list[6]
-                localimage12 = ledOF_img_list[6]
-                localimage13 = ledFU_img_list[32] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[32] #SIGNAL OFRD
-                localimage15 = ledOF_img_list[2]
-                localimage16 = ledOF_img_list[6]
-                localimage17 = ledOF_img_list[4]
+                localimage10 = ledOF_img_list[11] #SPEED OFRD
+                localimage11 = ledOF_img_list[11] #SPEED OFRD
+                localimage12 = ledOF_img_list[11] #SPEED OFRD
+                localimage13 = ledFU_img_list[11] #SIGNAL FURD
+                localimage14 = ledOF_img_list[11] #SIGNAL OFRD
+                localimage15 = ledFU_img_list[11] #SPEED FURD
+                localimage16 = ledFU_img_list[11] #SPEED FURD
+                localimage17 = ledFU_img_list[11] #SPEED FURD
                 localimage18 = rpmON_img_list
                 localimage19 = rpmOF_img_list
                 if theme == theme_txt[0]:
@@ -3338,6 +3376,16 @@ class P01_DASH(tk.Frame):
                 if theme == theme_txt[1]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
+                    if style == style_txt[0]:
+                        localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                        localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                        localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                        localimage23 = ledOF_img_list[48]
+                    elif style == style_txt[1]:
+                        localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                        localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                        localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                        localimage23 = ledOF_img_list[46]
                 elif theme == theme_txt[2]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list) #VOICEBOX
@@ -3617,7 +3665,7 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # DISPLAY THE 20 LEDs
                     #----------------------------------------------------------------------            
-                    for i in range (0, 20):
+                    for i in range (0, ammount_SIGNAL):
                         if val_DEV001G004 >= i:
                             led_DEV001G004[i].config(image=localimage13)
                         else:
@@ -3632,25 +3680,26 @@ class P01_DASH(tk.Frame):
             # UPDATE DEV001G005 (TUNING)
             #------------------------------------------------------------------------------
             if REGION:
-                if btn_states_FNKT[3] == True:
-                    #----------------------------------------------------------------------
-                    # CALCULATE 0-300 TO 20 LEDs
-                    #----------------------------------------------------------------------
-                    val_DEV001G005 = speed_int/15 #todo new variable
-                    #----------------------------------------------------------------------
-                    # DISPLAY THE 20 LEDs
-                    #----------------------------------------------------------------------            
-                    for i in range (0, 20):
-                        if val_DEV001G005 >= i:
-                            led_DEV001G005[i].config(image=localimage13)
-                        else:
+                if theme in theme_txt[3:9]: # THEME 3 to 8
+                    if btn_states_FNKT[3] == True:
+                        #----------------------------------------------------------------------
+                        # CALCULATE 0-300 TO 20 LEDs
+                        #----------------------------------------------------------------------
+                        val_DEV001G005 = speed_int/15 #todo new variable
+                        #----------------------------------------------------------------------
+                        # DISPLAY THE 20 LEDs
+                        #----------------------------------------------------------------------            
+                        for i in range (0, 20):
+                            if val_DEV001G005 >= i:
+                                led_DEV001G005[i].config(image=localimage13)
+                            else:
+                                led_DEV001G005[i].config(image=localimage14)
+                    else:
+                        #----------------------------------------------------------------------
+                        # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
+                        #----------------------------------------------------------------------
+                        for i in range (0, 20):
                             led_DEV001G005[i].config(image=localimage14)
-                else:
-                    #----------------------------------------------------------------------
-                    # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
-                    #----------------------------------------------------------------------
-                    for i in range (0, 20):
-                        led_DEV001G005[i].config(image=localimage14)
             #------------------------------------------------------------------------------
             # DEV001VBS34 (VOICEBOX)
             #------------------------------------------------------------------------------
@@ -3662,9 +3711,8 @@ class P01_DASH(tk.Frame):
                     DEV001VBS34 = random.randint(0, 8)
                     DEV001VBOTTO = random.randint(0, 8)
                     DEV001VBMAX = random.randint(0, 8)
-                    middle_index = 10  # Index of the middle LED
-                    if theme == theme_txt[3] or theme == theme_txt[4] or theme == theme_txt[5] or theme == theme_txt[6]:
-                        for i in range(20):
+                    if theme in theme_txt[1:7] or theme in theme_txt[9]: # THEME 1 to 6 or 8
+                        for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
                             if style == style_txt[0]:
                                 #LEFT
@@ -3723,7 +3771,7 @@ class P01_DASH(tk.Frame):
                                 else:
                                     led_DEV001VBS34L02[i].config(image=localimage23)
                     elif theme == theme_txt[8]:
-                        for i in range(20):
+                        for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
                             if style == style_txt[0]:
                                 #LEFT
@@ -3787,8 +3835,8 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
                     #----------------------------------------------------------------------
-                    if theme == theme_txt[3] or theme == theme_txt[4] or theme == theme_txt[5] or theme == theme_txt[6] or theme == theme_txt[8]:
-                        for i in range(20):
+                    if theme in theme_txt[1:9]: # THEME 1 to 8
+                        for i in range(ammount_VB):
                             led_DEV001VBS34L01[i].config(image=localimage23)
                             led_DEV001VBS34L02[i].config(image=localimage23)
                             led_DEV001VBS34L03[i].config(image=localimage23)
@@ -4898,7 +4946,7 @@ class P03_SETUP(tk.Frame):
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
         if REGION:
-            btn_EXIT = tk.Button(self, bd=0, bg=sys_clr[8], fg=txt_clr[3], font=(fonts[1], 28))
+            btn_EXIT = tk.Button(self, bd=0, bg=sys_clr[8], fg=txt_clr[1], font=(fonts[1], 28))
             btn_EXIT.config(text="X")
             btn_EXIT.configure(command=read.quitDASH)
             btn_EXIT.place(x=1195, y=21, w=50, h=50)
