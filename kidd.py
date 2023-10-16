@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-10-15-1320"
+last_change = "2023-10-16-2053"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -555,19 +555,22 @@ if REGION:
             if REGION:
                 #PAGES
                 menu_btn_names = ["BOOT", "DASH", "QOPT", "SETUP", "THEMES", "C-FNkT", "K-FNKT", "AUDIO", "VIDEO", "RES", "RES", "RES", "RES", "RES"]
-                #UNITS
+                #CONFIG
+                device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
+                style_txt = ['KARR', 'KITT', '---', '---', '---']
+                system_txt = ['GREEN', 'BLUE']
+                #ONLY INFO      0         1         2         3         4         5         6         7          8         9        10       11     12     13     14       15        16
+                theme_txt = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
+                btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
+
                 units_act = []
                 units_eu = ["KPH", "KPHg", "KM", "°C", "BAR", "LTR", "LPH"]
                 units_us = ["MPH", "MPHg", "MLS", "°F", "PSI", "GALS", "GPH"]
-                #CONFIG
-                style_txt = ['KARR', 'KITT', '---', '---', '---']
-                #ONLY INFO      0         1         2         3         4         5         6         7          8         9        10       11     12     13     14       15        16
-                theme_txt = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
-                device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
-                btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
+                
                 states_txt_act = []
                 states_txt_de = ["AUS", "EIN", "OBEN", "UNTEN", "HOCH", "RUNTER", "LINKS", "RECHTS"]
                 states_txt_en = ["OFF", "ON", "HIGH", "LOW", "UP", "DOWN", "LEFT", "RIGHT"]
+                
                 sysinfo01_txt = ["HDD_USED", "HDD_MAX", "RAM_USED", "RAM_MAX", "CPU_USED", "CPU_TEMP", "UPDATE_DURATION"]
                 sysinfo02_txt = ["GPS_TIME", "GPS_DATE","ALT","GPS_LAT", "GPS_LONG", "GPS_MPH", "GPS_KPH"]
                 voicecmd_txt = ["SYSTEM", "TEXT", "INFO"]
@@ -787,15 +790,35 @@ if REGION:
         # STYLES
         #----------------------------------------------------------------------------------
         if REGION:
-            grid_spacing = 15            
-            #          00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG
-            sys_clr = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000"]
-            #          00_WHT     01_RED     02_AMBER   03_LTRED   04_LTAMBER 05_LTGRN   06_LTRED
-            txt_clr = ["#FFFFFF", "#FF0000", "#FFAA00", "#FFDDDD", "#FFFFDD", "#88FF88", "#FF8888"]
+            #------------------------------------------------------------------------------
+            # UPDATE LAST STYLE
+            #------------------------------------------------------------------------------
+            try:
+                with open(os.path.join(datadir, 'system_conf.pickle'), 'rb') as f:
+                    system = pickle.load(f)
+            except FileNotFoundError:
+                system = 'GREEN'
+            
+            grid_spacing = 15
+            sys_clr = []
+            txt_clr = []
+            #             00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG
+            sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000"]
+            sys_clr_BU = ["#000005", "#000010", "#050515", "#5555FF", "#BBBBFF", "#000055", "#0000FF", "#444499", "#000020"]
+            #             00_WHT     01_RED     02_AMBER   03_LTRED   04_LTAMBER 05_LTGRN   06_LTRED
+            txt_clr_GN = ["#FFFFFF", "#FF0000", "#FFAA00", "#FFDDDD", "#FFFFDD", "#88FF88", "#FF8888"]
+            txt_clr_BU = ["#FFFFFF", "#FF0000", "#FFAA00", "#FFDDDD", "#FFFFDD", "#8888FF", "#FF8888"]
             #          00_DK-GRY  01_DK-RED  02_DK-YEL   03_BLK
             bg__clr = ["#101010", "#250000", "#222200", "#000000"]
             #        00            01                 02          03                    04                05       06           07             08
             fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
+
+            if system == system_txt[0]:
+                sys_clr = sys_clr_GN
+                txt_clr = txt_clr_GN
+            elif system == system_txt[1]: 
+                sys_clr = sys_clr_BU
+                txt_clr = txt_clr_BU
 
             btn_style_imgbtn = {'borderwidth':0,'highlightthickness':0}
             btn_style_imgbtn_lcars = {'borderwidth':0,'highlightthickness':0,'width':'181','height':'87'}
@@ -854,7 +877,7 @@ if REGION:
                 with open(os.path.join(datadir, 'style_conf.pickle'), 'rb') as f:
                     style = pickle.load(f)
             except FileNotFoundError:
-                style = 'KARR'
+                style = 'KITT'
         #----------------------------------------------------------------------------------
         # UPDATE LAST THEME
         #----------------------------------------------------------------------------------
@@ -1151,7 +1174,6 @@ class MainApplication(tk.Tk):
             newframe = P11_RES
         else:
             newframe = frame_class
-
         # Function to switch between frames
         if self.current_frame is not None:
             self.current_frame.destroy()
@@ -5423,13 +5445,14 @@ class P04_THEMES(tk.Frame):
                     (30, 15, 1245, 15),     #TITLE TOP
                     (30, 75, 1245, 75),     #TITLE BOTTOM
                     
-                    (30, 105, 1245, 105),   #DEV TOP
-                    (30, 210, 1245, 210),   #DEV BOTTOM
-                    (30, 285, 1245, 285),   #STYLE TOP
-                    (30, 390, 1245, 390),   #STYLE BOTTOM
-                    (30, 420, 1245, 420),   #THEME TOP
-                    (30, 600, 1245, 600),   #THEME BOTTOM
-
+                    (30, 90, 1245, 90),     #DEV TOP
+                    (30, 195, 1245, 195),   #DEV BOTTOM
+                    (30, 210, 1245, 210),   #STYLE TOP
+                    (30, 315, 1245, 315),   #STYLE BOTTOM
+                    (30, 330, 1245, 330),   #THEME TOP
+                    (30, 510, 1245, 510),   #THEME BOTTOM
+                    (30, 525, 1245, 525),   #SYSTEM TOP
+                    (30, 615, 1245, 615),   #SYSTEM BOTTOM                    
 
                     (30, 630, 1245, 630),   #MENU TOP
                     (30, 720, 1245, 720),   #MENU BOTTOM
@@ -5475,36 +5498,47 @@ class P04_THEMES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # CREATE DEVICE CORNERS
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 105, 25, 105, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 105, 15, 115, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 105, 1260, 105, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 105, 1260, 115, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 210, 25, 210, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 200, 15, 210, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 210, 1260, 210, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 200, 1260, 210, fill=colors_corner[1], width=1) #RB_Y
+                canvas.create_line(15, 90, 25, 90, fill=colors_corner[0], width=1)     #LT_X
+                canvas.create_line(15, 90, 15, 100, fill=colors_corner[1], width=1)     #LT_Y
+                canvas.create_line(1250, 90, 1260, 90, fill=colors_corner[0], width=1) #RT_X
+                canvas.create_line(1260, 90, 1260, 100, fill=colors_corner[1], width=1) #RT_Y               
+                canvas.create_line(15, 195, 25, 195, fill=colors_corner[0], width=1)     #LB_X
+                canvas.create_line(15, 185, 15, 195, fill=colors_corner[1], width=1)     #LB_Y
+                canvas.create_line(1250, 195, 1260, 195, fill=colors_corner[0], width=1) #RB_X
+                canvas.create_line(1260, 185, 1260, 195, fill=colors_corner[1], width=1) #RB_Y
                 #--------------------------------------------------------------------------
                 # CREATE STYLE CORNERS
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 285, 25, 285, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 285, 15, 295, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 285, 1260, 285, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 285, 1260, 295, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 390, 25, 390, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 380, 15, 390, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 390, 1260, 390, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 380, 1260, 390, fill=colors_corner[1], width=1) #RB_Y
+                canvas.create_line(15, 210, 25, 210, fill=colors_corner[0], width=1)     #LT_X
+                canvas.create_line(15, 210, 15, 220, fill=colors_corner[1], width=1)     #LT_Y
+                canvas.create_line(1250, 210, 1260, 210, fill=colors_corner[0], width=1) #RT_X
+                canvas.create_line(1260, 210, 1260, 220, fill=colors_corner[1], width=1) #RT_Y               
+                canvas.create_line(15, 315, 25, 315, fill=colors_corner[0], width=1)     #LB_X
+                canvas.create_line(15, 305, 15, 315, fill=colors_corner[1], width=1)     #LB_Y
+                canvas.create_line(1250, 315, 1260, 315, fill=colors_corner[0], width=1) #RB_X
+                canvas.create_line(1260, 305, 1260, 315, fill=colors_corner[1], width=1) #RB_Y
                 #--------------------------------------------------------------------------
                 # CREATE THEME CORNERS
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 420, 25, 420, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 420, 15, 430, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 420, 1260, 420, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 420, 1260, 430, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 600, 25, 600, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 590, 15, 600, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 600, 1260, 600, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 590, 1260, 600, fill=colors_corner[1], width=1) #RB_Y
+                canvas.create_line(15, 330, 25, 330, fill=colors_corner[0], width=1)     #LT_X
+                canvas.create_line(15, 330, 15, 340, fill=colors_corner[1], width=1)     #LT_Y
+                canvas.create_line(1250, 330, 1260, 330, fill=colors_corner[0], width=1) #RT_X
+                canvas.create_line(1260, 330, 1260, 340, fill=colors_corner[1], width=1) #RT_Y               
+                canvas.create_line(15, 510, 25, 510, fill=colors_corner[0], width=1)     #LB_X
+                canvas.create_line(15, 500, 15, 510, fill=colors_corner[1], width=1)     #LB_Y
+                canvas.create_line(1250, 510, 1260, 510, fill=colors_corner[0], width=1) #RB_X
+                canvas.create_line(1260, 500, 1260, 510, fill=colors_corner[1], width=1) #RB_Y
+                #--------------------------------------------------------------------------
+                # CREATE SYSTEM CORNERS
+                #--------------------------------------------------------------------------
+                canvas.create_line(15, 525, 25, 525, fill=colors_corner[0], width=1)     #LT_X
+                canvas.create_line(15, 525, 15, 535, fill=colors_corner[1], width=1)     #LT_Y
+                canvas.create_line(1250, 525, 1260, 525, fill=colors_corner[0], width=1) #RT_X
+                canvas.create_line(1260, 525, 1260, 535, fill=colors_corner[1], width=1) #RT_Y               
+                canvas.create_line(15, 615, 25, 615, fill=colors_corner[0], width=1)     #LB_X
+                canvas.create_line(15, 605, 15, 615, fill=colors_corner[1], width=1)     #LB_Y
+                canvas.create_line(1250, 615, 1260, 615, fill=colors_corner[0], width=1) #RB_X
+                canvas.create_line(1260, 605, 1260, 615, fill=colors_corner[1], width=1) #RB_Y
                 #--------------------------------------------------------------------------
                 # CREATE MENU CORNERS
                 #--------------------------------------------------------------------------
@@ -5544,9 +5578,10 @@ class P04_THEMES(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             canvas.create_text(20, 20, **txt_style_pagename, text="THEMES")
-            canvas.create_text(20, 110, **txt_style_pagename, text="DEVICE")
-            canvas.create_text(20, 290, **txt_style_pagename, text="STYLE")
-            canvas.create_text(20, 425, **txt_style_pagename, text="THEME")
+            canvas.create_text(20, 95, **txt_style_pagename, text="DEVICE")
+            canvas.create_text(20,215, **txt_style_pagename, text="STYLE")
+            canvas.create_text(20,335, **txt_style_pagename, text="THEME")
+            canvas.create_text(20,530, **txt_style_pagename, text="SYSTEM")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5559,7 +5594,7 @@ class P04_THEMES(tk.Frame):
             global btns_device
             btns_device = []
             x_pos_device = 50
-            y_pos_device = 145
+            y_pos_device = 130
             for device_text in device_txt:
                 button_device = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=device_text, command=lambda text=device_text: [read.toggle_button_device(text),self.master.switch_frame(P00_BOOT)])
                 btns_device.append(button_device)
@@ -5580,7 +5615,7 @@ class P04_THEMES(tk.Frame):
             global btns_style
             btns_style = []
             x_pos_style = 50
-            y_pos_style = 325
+            y_pos_style = 250
             for style_text in style_txt:
                 button_style = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=style_text, command=lambda text=style_text: [read.toggle_button_style(text), self.master.switch_frame(P04_THEMES)])
                 button_style.place(x=x_pos_style, y=y_pos_style, width=btn_w, height=btn_h)
@@ -5609,10 +5644,10 @@ class P04_THEMES(tk.Frame):
             for i, theme_text in enumerate(theme_txt):
                 btn_theme = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=theme_text, command=lambda text=theme_text: [read.toggle_button_theme(text), self.master.switch_frame(P01_DASH)])
                 if i < 10:
-                    btn_theme.place(x=x_pos_btns1_theme, y=460, width=btn_w, height=btn_h)
+                    btn_theme.place(x=x_pos_btns1_theme, y=370, width=btn_w, height=btn_h)
                     x_pos_btns1_theme += 119
                 else:
-                    btn_theme.place(x=x_pos_btns2_theme, y=535, width=btn_w, height=btn_h)
+                    btn_theme.place(x=x_pos_btns2_theme, y=445, width=btn_w, height=btn_h)
                     x_pos_btns2_theme += 119
                 btns_theme.append(btn_theme)
 
@@ -5641,6 +5676,25 @@ class P04_THEMES(tk.Frame):
                 btns_theme[14].config(state=tk.DISABLED)
                 #btns_theme[15].config(state=tk.DISABLED)
                 #btns_theme[16].config(state=tk.DISABLED)
+        #----------------------------------------------------------------------------------
+        # SYSTEM STYLE BUTTONS
+        #----------------------------------------------------------------------------------   
+        if REGION:
+            global btns_system
+            btns_system = []
+            x_pos_system = 170
+            y_pos_system = 540
+            for system_text in system_txt:
+                button_system = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=system_text, command=lambda text=system_text: [read.toggle_button_system(text), self.master.switch_frame(P04_THEMES)])
+                button_system.place(x=x_pos_system, y=y_pos_system, width=btn_w, height=btn_h)
+                x_pos_system += +119
+                btns_system.append(button_system)
+
+            for i, text in enumerate(system_txt):
+                if system == text:
+                    btns_system[i].config(fg=txt_clr[5])
+                else:
+                    btns_system[i].config(fg=txt_clr[6])
         #----------------------------------------------------------------------------------
         # END INIT
         #----------------------------------------------------------------------------------
@@ -6818,6 +6872,20 @@ class myfunctions():
             theme = theme_text
             with open(os.path.join(datadir, 'theme_conf.pickle'), 'wb') as f:
                 pickle.dump(theme, f)
+                
+        def toggle_button_system(self, system_text):
+            global system
+            global sys_clr
+            global txt_clr
+            system = system_text
+            if system == system_txt[0]:
+                sys_clr = sys_clr_GN
+                txt_clr = txt_clr_GN
+            elif system == system_txt[1]: 
+                sys_clr = sys_clr_BU
+                txt_clr = txt_clr_BU            
+            with open(os.path.join(datadir, 'system_conf.pickle'), 'wb') as f:
+                pickle.dump(system, f)
     #--------------------------------------------------------------------------------------
     # SOUND FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -7262,19 +7330,6 @@ class myfunctions():
             
             # Write to the output registers for all relays for the specific board
             buses[board_num].write_word_data(i2c_addr_dev02rb[board_num], relay_states_1to8[board_num], relay_states_9to16[board_num])
-
-        #----------------------------------------------------------------------------------
-        # DEV002 RB01
-        #----------------------------------------------------------------------------------
-        if REGION:
-            def switch_RB01(self, var):
-                if btn_states_HW[0] == True:
-                    relno = rb01_DEV002.get_pin(var)
-                    if btn_states_DEV002RB01[var] == False:
-                        relno.value = False
-                    else:
-                        relno.value = True
-                    btn_states_DEV002RB01[var] = not relno.value
 #------------------------------------------------------------------------------------------
 # END PROGRAM
 #------------------------------------------------------------------------------------------
