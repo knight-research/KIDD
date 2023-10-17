@@ -621,11 +621,11 @@ if REGION:
             #------------------------------------------------------------------------------
             if REGION:
                 #SETUP BUTTONS AND LABELS
-                btnhw_DEV031_txt = ["---", "---", "---", "---", "---", "SCANNER", "---", "---", "---", "---"]
-                lbl_btnsw_DEV031_txt = ["EU/US", "---", "AUDIO", "SIMU", "LANG", "---", "---", "---", "---", "---"]
+                btnhw_DEV031_txt = ["GPS", "MICRO", "---", "---", "---", "SCANNER", "---", "---", "---", "---"]
+                lbl_btnsw_DEV031_txt = ["EU/US", "OBD/GPS", "AUDIO", "SIMU", "LANG", "---", "---", "---", "---", "---"]
                 btnsw_DEV031_txt_0 = ["EU", "OBD","HDMI1", "LIVE", "DEU", "---", "---", "---", "---", "---"]
                 btnsw_DEV031_txt_1 = ["US", "GPS", "HDMI2", "SIMU", "ENG", "---", "---", "---", "---", "---"]
-                btnsw_DEV031_txt_3 = ["--", "---", "AV   ", "----", "---", "---", "---", "---", "---", "---"]
+                btnsw_DEV031_txt_3 = ["--", "---", "AV", "----", "---", "---", "---", "---", "---", "---"]
             #------------------------------------------------------------------------------
             # LANGUAGE LISTS
             #------------------------------------------------------------------------------
@@ -5035,11 +5035,11 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             lbls_btnhw = []
+            lbls_btnsw = []
             lbls_btnhw_info = []
             lbls_btnhw_info_txt_DEV001 = [gps_port, "---", "---", "---", "---", "---", "---", "---", "---", "---"]
             lbls_btnhw_info_txt_DEV002 = ["---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]
-            lbls_btnhw_info_txt_DEV031 = ["---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]
-            lbls_btnsw = []
+            lbls_btnhw_info_txt_DEV031 = [gps_port, "---", "---", "---", "---", "---", "---", "---", "---", "---"]           
             x_pos = x_start
             for i in range(quant_btns_HW):
                 lbls_btnhw = tk.Label(self, **lbl_style_setup_btns)
@@ -5047,6 +5047,8 @@ class P03_SETUP(tk.Frame):
                     lbls_btnhw.config(text=btnhw_DEV001_txt[i])
                 elif device == device_txt[2]:
                     lbls_btnhw.config(text=btnhw_DEV002_txt[i])
+                elif device == device_txt[31]:
+                    lbls_btnhw.config(text=btnhw_DEV031_txt[i])
                 lbls_btnhw.place(x=x_pos, y=y_l1, width=lbl_w, height=lbl_f_h)
                 x_pos += +px_to_next
             x_pos = x_start
@@ -5056,6 +5058,8 @@ class P03_SETUP(tk.Frame):
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV001[i])
                 elif device == device_txt[2]:
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV002[i])
+                elif device == device_txt[31]:
+                    lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV031[i])
                 lbls_btnhw_info.place(x=x_pos, y=y_l2, width=lbl_w, height=lbl_i_h)
                 x_pos += +px_to_next
             x_pos = x_start
@@ -5065,6 +5069,8 @@ class P03_SETUP(tk.Frame):
                     lbls_btnsw.config(text=lbl_btnsw_DEV001_txt[i])
                 elif device == device_txt[2]:
                     lbls_btnsw.config(text=lbl_btnsw_DEV002_txt[i])
+                elif device == device_txt[31]:
+                    lbls_btnsw.config(text=lbl_btnsw_DEV031_txt[i])
                 lbls_btnsw.place(x=x_pos, y=y_l4, width=lbl_w, height=lbl_f_h)
                 x_pos += +px_to_next
         #----------------------------------------------------------------------------------
