@@ -786,92 +786,6 @@ if REGION:
             sysnew_img_dir = os.path.join(folder,'images', 'sys_new')
             sysnew_img_dir_srt = sorted(os.listdir(sysnew_img_dir), key=str.lower)
             sysnew_img_list = []
-        #----------------------------------------------------------------------------------
-        # STYLES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            #----------------------------------------------------------------------------------
-            # UPDATE LAST STYLE
-            #----------------------------------------------------------------------------------
-            try:
-                with open(os.path.join(datadir, 'style_conf.pickle'), 'rb') as f:
-                    style = pickle.load(f)
-            except FileNotFoundError:
-                style = 'KITT'
-            #------------------------------------------------------------------------------
-            # UPDATE LAST SYSTEM STYLE
-            #------------------------------------------------------------------------------
-            try:
-                with open(os.path.join(datadir, 'system_conf.pickle'), 'rb') as f:
-                    system = pickle.load(f)
-            except FileNotFoundError:
-                system = system_txt[0]
-
-            grid_spacing = 15
-            sys_clr = []
-            txt_clr = []
-            sty_clr = []
-            #             00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG_BTN  09_TXT_BTN 10_ON      11_OFF     12_MAX
-            sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#77FF77", "#FF7777", "#00FFFF"]
-            sys_clr_BU = ["#000005", "#000010", "#050515", "#5555FF", "#BBBBFF", "#000055", "#0000FF", "#444499", "#000020", "#8888FF", "#77FF77", "#FF7777", "#0000FF"]
-            sys_clr_OR = ["#080400", "#151000", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#442211", "#501505", "#FFBB55", "#77FF77", "#FF7777", "#FFBB00"]
-            #             00_WHT     01_RED     02_AMBER   03_LTRED   04_LTAMBER 05_LTGRN   06_LTRED
-            txt_clr_GN = ["#000000", "#FF0000", "#FFAA00", "#000000", "#000000", "#000000", "#000000"]
-            txt_clr_BU = ["#000000", "#FF0000", "#FFAA00", "#000000", "#000000", "#000000", "#000000"]
-            txt_clr_OR = ["#000000", "#FF0000", "#FFAA00", "#000000", "#000000", "#000000", "#000000"]
-            #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG
-            sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200"]
-            sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000"]
-            
-            #        00            01                 02          03                    04                05       06           07             08
-            fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
-
-            if system == system_txt[0]:
-                sys_clr = sys_clr_GN
-                txt_clr = txt_clr_GN
-            elif system == system_txt[1]: 
-                sys_clr = sys_clr_BU
-                txt_clr = txt_clr_BU
-            elif system == system_txt[2]: 
-                sys_clr = sys_clr_OR
-                txt_clr = txt_clr_OR
-                
-            if style == style_txt[0]:
-                sty_clr = sty_clr_ka
-            elif style == style_txt[1]:
-                sty_clr = sty_clr_ki
-                
-            btn_style_imgbtn = {'borderwidth':0,'highlightthickness':0}
-            btn_style_imgbtn_lcars = {'borderwidth':0,'highlightthickness':0,'width':'181','height':'87'}
-            keypad_style = {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[0], 18), 'anchor':'c','width': 4, 'height': 2}
-
-            lbl_style_7SEG02_S34 =          {'fill':sty_clr[2],'font':(fonts[2], 164), 'anchor':'nw'}          
-            lbl_style_setup_btns =          {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 26), 'anchor':'c'}
-            lbl_style_setup_btns_small =    {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 18), 'anchor':'c','width':'11','height':'1'}
-            lbl_style_7SEG01_S34 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[3], 60, "bold"), 'anchor':'nw','borderwidth':0,'highlightthickness':0}
-            lbl_style_7SEG01_LCARS =        {'bg':"#000000", 'fg':sty_clr[0], 'font':(fonts[5], 160),'anchor':'nw','borderwidth':0,'highlightthickness':0}
-            
-            lbl_style_7SEG01_S12 =          {'bg':'#102525',  'fg':'#00ffcc',  'font':(fonts[7], 77), 'anchor':'nw'}
-            lbl_style_7SEG03_S12 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[2], 127),'anchor':'nw','borderwidth':0,'highlightthickness':0}
-            lbl_style_7SEG03_S34 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}
-
-            lbl_style_SETUP =               {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 40), 'anchor':'c'}
-            lbl_style_SETUP2 =              {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 25), 'anchor':'c'}
-            
-            lbl_style_sysinfo =             {'bg':sty_clr[3], 'fg':sty_clr[1], 'font':(fonts[6], 36), 'anchor':'nw'}
-            lbl_style_voicecmd =            {'bg':sty_clr[3], 'fg':sty_clr[1], 'font':(fonts[6], 24), 'anchor':'nw'}
-
-            txt_style_pagename =            {'fill':sys_clr[9],'font':(fonts[8], 25), 'anchor':'nw'}
-            txt_style_pageinfo =            {'fill':sys_clr[9],'font':(fonts[5], 16), 'anchor':'nw'}
-            
-            txt_style_S12 =                 {'fill':sty_clr[0],'font':(fonts[0], 22), 'anchor':'c'}
-            txt_style_S34c =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'c'}
-            txt_style_S34e =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'e'}
-            txt_style_sysinfo =             {'fill':sty_clr[2],'font':(fonts[6], 36), 'anchor':'nw'}
-        
-            #todo delete convert to style
-            #font_BTTF01 = ("ccar7seg", 90)
-            #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
     #--------------------------------------------------------------------------------------
     # UPDATE LAST CONFIGURATIONS
     #--------------------------------------------------------------------------------------
@@ -886,6 +800,14 @@ if REGION:
             except FileNotFoundError:
                 device = 'DEV001'
         #----------------------------------------------------------------------------------
+        # UPDATE LAST STYLE
+        #----------------------------------------------------------------------------------
+        try:
+            with open(os.path.join(datadir, 'style_conf.pickle'), 'rb') as f:
+                style = pickle.load(f)
+        except FileNotFoundError:
+            style = 'KITT'
+        #----------------------------------------------------------------------------------
         # UPDATE LAST THEME
         #----------------------------------------------------------------------------------
         if REGION:
@@ -894,6 +816,14 @@ if REGION:
                     theme = pickle.load(f)
             except FileNotFoundError:
                 theme = 'K2_S05'
+        #----------------------------------------------------------------------------------
+        # UPDATE LAST SYSTEM STYLE
+        #----------------------------------------------------------------------------------
+        try:
+            with open(os.path.join(datadir, 'system_conf.pickle'), 'rb') as f:
+                system = pickle.load(f)
+        except FileNotFoundError:
+            system = system_txt[0]
         #----------------------------------------------------------------------------------
         # UPDATE LAST POWER BUTTON STATE
         #----------------------------------------------------------------------------------
@@ -1028,6 +958,73 @@ if REGION:
         # UPDATE LAST CONFIG DEV002RB03 (DONT LOAD LAST STATE ALWAYS START WITH ALL OFF)
         #------------------------------------------------------------------------------
         btn_states_DEV002RB03 = [False] * 16
+        #----------------------------------------------------------------------------------
+        # STYLES
+        #----------------------------------------------------------------------------------
+        if REGION:           
+            bggrid = [2560, 800]
+            grid_spacing = 15
+            kidd_left   =  "%s" % 0
+            kidd_top    =  "%s" % 0
+            kidd_width  =  "%s" % bggrid[0]
+            kidd_height =  "%s" % bggrid[1]
+            
+            sys_clr = []
+            sty_clr = []
+            #             00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG_BTN  09_TXT_BTN 10_ON      11_OFF     12_MAX
+            sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#77FF77", "#FF7777", "#00FFFF"]
+            sys_clr_BU = ["#000005", "#000010", "#050515", "#5555FF", "#BBBBFF", "#000055", "#0000FF", "#444499", "#000020", "#8888FF", "#77FF77", "#FF7777", "#0000FF"]
+            sys_clr_OR = ["#080400", "#151000", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#442211", "#501505", "#FFBB55", "#77FF77", "#FF7777", "#FFBB00"]
+            #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG
+            sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200"]
+            sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000"]
+            
+            #        00            01                 02          03                    04                05       06           07             08
+            fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
+
+            if system == system_txt[0]:
+                sys_clr = sys_clr_GN
+            elif system == system_txt[1]: 
+                sys_clr = sys_clr_BU
+            elif system == system_txt[2]: 
+                sys_clr = sys_clr_OR
+                
+            if style == style_txt[0]:
+                sty_clr = sty_clr_ka
+            elif style == style_txt[1]:
+                sty_clr = sty_clr_ki
+                
+            btn_style_imgbtn = {'borderwidth':0,'highlightthickness':0}
+            btn_style_imgbtn_lcars = {'borderwidth':0,'highlightthickness':0,'width':'181','height':'87'}
+            keypad_style = {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[0], 18), 'anchor':'c','width': 4, 'height': 2}
+
+            lbl_style_7SEG02_S34 =          {'fill':sty_clr[2],'font':(fonts[2], 164), 'anchor':'nw'}          
+            lbl_style_setup_btns =          {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 26), 'anchor':'c'}
+            lbl_style_setup_btns_small =    {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 18), 'anchor':'c','width':'11','height':'1'}
+            lbl_style_7SEG01_S34 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[3], 60, "bold"), 'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_7SEG01_LCARS =        {'bg':"#000000", 'fg':sty_clr[0], 'font':(fonts[5], 160),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            
+            lbl_style_7SEG01_S12 =          {'bg':'#102525',  'fg':'#00ffcc',  'font':(fonts[7], 77), 'anchor':'nw'}
+            lbl_style_7SEG03_S12 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[2], 127),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+            lbl_style_7SEG03_S34 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+
+            lbl_style_SETUP =               {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 40), 'anchor':'c'}
+            lbl_style_SETUP2 =              {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 25), 'anchor':'c'}
+            
+            lbl_style_sysinfo =             {'bg':sty_clr[3], 'fg':sty_clr[1], 'font':(fonts[6], 36), 'anchor':'nw'}
+            lbl_style_voicecmd =            {'bg':sty_clr[3], 'fg':sty_clr[1], 'font':(fonts[6], 24), 'anchor':'nw'}
+
+            txt_style_pagename =            {'fill':sys_clr[9],'font':(fonts[8], 25), 'anchor':'nw'}
+            txt_style_pageinfo =            {'fill':sys_clr[9],'font':(fonts[5], 16), 'anchor':'nw'}
+            
+            txt_style_S12 =                 {'fill':sty_clr[0],'font':(fonts[0], 22), 'anchor':'c'}
+            txt_style_S34c =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'c'}
+            txt_style_S34e =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'e'}
+            txt_style_sysinfo =             {'fill':sty_clr[2],'font':(fonts[6], 36), 'anchor':'nw'}
+        
+            #todo delete convert to style
+            #font_BTTF01 = ("ccar7seg", 90)
+            #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
     #--------------------------------------------------------------------------------------
     # SETUP HARDWARE DEV001 AND DEV031
     #--------------------------------------------------------------------------------------
@@ -1125,21 +1122,9 @@ if REGION:
 class MainApplication(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
+        global read
+        read = myfunctions()
         self.title(version)
-        global kidd_left, kidd_top, kidd_width, kidd_height
-        global bggrid
-        bggrid = [2560, 736]
-        kidd_left   =  "%s" % 0
-        kidd_top    =  "%s" % 0
-        if device == device_txt[1]:
-            kidd_width  =  "%s" % 2560
-            kidd_height =  "%s" % 800
-        elif device == device_txt[2]:
-            kidd_width  =  "%s" % 2560
-            kidd_height =  "%s" % 800
-        elif device == device_txt[31]:
-            kidd_width  =  "%s" % 2560  # 1280 /720
-            kidd_height =  "%s" % 800   #  720 /400
         self.geometry(kidd_width+"x"+kidd_height+"+"+kidd_left+"+"+kidd_top)
 
         if (SYSTEM == "win32") or (SYSTEM == "win64"):
@@ -1155,33 +1140,21 @@ class MainApplication(tk.Tk):
             self.switch_frame(P00_BOOT)
 
     def switch_frame(self, frame_class):
-        if frame_class == 0:
-            newframe = P00_BOOT
-        elif frame_class == 1:
-            newframe = P01_DASH
-        elif frame_class == 2:
-            newframe = P02_QOPT
-        elif frame_class == 3:
-            newframe = P03_SETUP
-        elif frame_class == 4:
-            newframe = P04_THEMES
-        elif frame_class == 5:
-            newframe = P05_CARFUNCTIONS
-        elif frame_class == 6:
-            newframe = P06_KNIGHTFUNCTIONS
-        elif frame_class == 7:
-            newframe = P07_AUDIO
-        elif frame_class == 8:
-            newframe = P08_VIDEO
-        elif frame_class == 9:
-            newframe = P09_RES
-        elif frame_class == 10:
-            newframe = P10_RES
-        elif frame_class == 11:
-            newframe = P11_RES
-        else:
-            newframe = frame_class
-        # Function to switch between frames
+        frame_mapping = {
+            0: P00_BOOT,
+            1: P01_DASH,
+            2: P02_QOPT,
+            3: P03_SETUP,
+            4: P04_THEMES,
+            5: P05_CARFUNCTIONS,
+            6: P06_KNIGHTFUNCTIONS,
+            7: P07_AUDIO,
+            8: P08_VIDEO,
+            9: P09_RES,
+            10: P10_RES,
+            11: P11_RES
+        }    
+        newframe = frame_mapping.get(frame_class, frame_class)
         if self.current_frame is not None:
             self.current_frame.destroy()
         self.current_frame = newframe(self)
@@ -1602,7 +1575,6 @@ class P01_DASH(tk.Frame):
     # CREATE THE WIDGETS
     #--------------------------------------------------------------------------------------
     def create_widgets(self):
-        read = myfunctions()
         read.load_soundfolder()
         #----------------------------------------------------------------------------------
         # UPDATE STYLES AND THEMES
@@ -1612,32 +1584,11 @@ class P01_DASH(tk.Frame):
             # STYLE DEVICE01 AND DEVICE02
             #------------------------------------------------------------------------------
             if REGION:
-                if style == style_txt[0]:
-                    if theme in theme_txt[:3]:
-                        localstyle01 = lbl_style_7SEG03_S34
-                        localstyle02 = lbl_style_7SEG01_S34
-                        localstyle03 = lbl_style_voicecmd
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
-                    elif theme in (theme_txt[3:9]):
-                        localstyle01 = lbl_style_7SEG03_S34
-                        localstyle02 = lbl_style_7SEG01_S34
-                        localstyle03 = lbl_style_voicecmd
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
-                elif style == style_txt[1]:
-                    if theme in theme_txt[:3]:
-                        localstyle01 = lbl_style_7SEG03_S12
-                        localstyle02 = lbl_style_7SEG01_S12
-                        localstyle03 = lbl_style_voicecmd
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
-                    elif theme in (theme_txt[3:9]):
-                        localstyle01 = lbl_style_7SEG03_S34
-                        localstyle02 = lbl_style_7SEG01_S34
-                        localstyle03 = lbl_style_voicecmd
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
+                localstyle01 = lbl_style_7SEG03_S34
+                localstyle02 = lbl_style_7SEG01_S34
+                localstyle03 = lbl_style_voicecmd
+                localstyle04 = txt_style_sysinfo
+                localstyle05 = lbl_style_sysinfo
             #------------------------------------------------------------------------------
             # THEME DEVICE001 AND DEVICE002
             #------------------------------------------------------------------------------
@@ -3217,10 +3168,10 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # GAUGE 7-SEGMENT DISPLAYS
         #----------------------------------------------------------------------------------
-        if REGION:
+        if REGION:                
             global label_7SEG001
             global label_7SEG003
-            label_7SEG001 = tk.Label(self, **localstyle01)
+            label_7SEG001 = tk.Label(self, **lbl_style_7SEG03_S34)
             label_7SEG003 = tk.Label(self, **localstyle02)
 
             if device == device_txt[1]:
@@ -3400,7 +3351,6 @@ class P01_DASH(tk.Frame):
     #--------------------------------------------------------------------------------------                        
     def update_page(self):
         start_time = time.time()
-        read = myfunctions()
         #----------------------------------------------------------------------------------
         # GLOBALS
         #----------------------------------------------------------------------------------
@@ -4638,7 +4588,6 @@ class P02_QOPT(tk.Frame):
     if debug == True:
         print (menu_btn_names[2])
     def __init__(self, master):
-        read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
         # CREATE BACKGROUND
@@ -4787,7 +4736,6 @@ class P03_SETUP(tk.Frame):
     if debug == True:
         print (menu_btn_names[3])
     def __init__(self, master):
-        read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
         # INFO AND GRID CONFIG
@@ -5379,7 +5327,7 @@ class P03_SETUP(tk.Frame):
         if REGION:
             for i in range(quant_btns_FAV):
                 if btn_states_FAV[i]:
-                    btns_FAV[i].config(fg=txt_clr[10])
+                    btns_FAV[i].config(fg=sys_clr[10])
                 else:
                     btns_FAV[i].config(fg=sys_clr[11])
         #----------------------------------------------------------------------------------
@@ -5421,7 +5369,6 @@ class P04_THEMES(tk.Frame):
     if debug == True:
         print (menu_btn_names[4])
     def __init__(self, master):
-        read = myfunctions()
         tk.Frame.__init__(self, master)
         btn_w = 100
         btn_h = 60
@@ -5716,7 +5663,6 @@ class P05_CARFUNCTIONS(tk.Frame):
     if debug == True:
         print (menu_btn_names[5])
     def __init__(self, master):
-        read = myfunctions()
         tk.Frame.__init__(self, master)
 
         # load background image
@@ -5751,7 +5697,6 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
     if debug == True:
         print (menu_btn_names[6])
     def __init__(self, master):
-        read = myfunctions()
         tk.Frame.__init__(self, master)
 
         # load background image
@@ -5788,7 +5733,6 @@ class P07_AUDIO(tk.Frame):
     if debug == True:
         print (menu_btn_names[7])
     def __init__(self, master):
-        read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
         # CREATE BACKGROUND
@@ -5945,7 +5889,6 @@ class P08_VIDEO(tk.Frame):
     if debug == True:
         print (menu_btn_names[8])
     def __init__(self, master):
-        read = myfunctions()
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
         # CREATE BACKGROUND
@@ -6084,8 +6027,7 @@ class P08_VIDEO(tk.Frame):
 class P09_RES(tk.Frame):
     if debug == True:
         print (menu_btn_names[9])
-    def __init__(self, master):
-        read = myfunctions()       
+    def __init__(self, master):   
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
         # CREATE BACKGROUND
@@ -6221,8 +6163,7 @@ class P09_RES(tk.Frame):
 class P10_RES(tk.Frame):
     if debug == True:
         print (menu_btn_names[10])
-    def __init__(self, master):
-        read = myfunctions()       
+    def __init__(self, master):      
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
         # CREATE BACKGROUND
@@ -6358,8 +6299,7 @@ class P10_RES(tk.Frame):
 class P11_RES(tk.Frame):
     if debug == True:
         print (menu_btn_names[11])
-    def __init__(self, master):
-        read = myfunctions()       
+    def __init__(self, master):       
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
         # CREATE BACKGROUND
@@ -6512,7 +6452,6 @@ class myfunctions():
             # MENU BUTTONS
             #------------------------------------------------------------------------------
             def menu(self):
-                read = myfunctions()
                 global btns_menu
                 global btn_menu
                 global btn_menu_place
@@ -6549,7 +6488,6 @@ class myfunctions():
             # QOPT PAGE: SHOW FAV BUTTONS (MAX 20)
             #------------------------------------------------------------------------------
             def qopt(self):
-                read = myfunctions()
                 global btns_qopt
                 global btn_qopt
                 global btn_qopt_place
@@ -6585,7 +6523,6 @@ class myfunctions():
             # SETUP PAGE: APPLY KEY
             #------------------------------------------------------------------------------
             def btn_apply_click(self):
-                read = myfunctions()
                 try:
                     new_value = float(current_value.get())
                     selected_variable = variable_dropdown.get()
@@ -6609,7 +6546,6 @@ class myfunctions():
             # POWER BUTTONS
             #------------------------------------------------------------------------------
             def toggle_PB(self, pb_text):
-                read = myfunctions()
                 global btn_states_PB
                 btn_states_PB = pb_text
                 if device == device_txt[1]:
@@ -6640,7 +6576,6 @@ class myfunctions():
                         var = [False] * ammount
             
                 def toggle_button_states_FNKT(self, i):
-                    read = myfunctions()
                     if btn_states_FNKT[i] == True:
                         btn_states_FNKT[i] = False
                     else:
@@ -6662,7 +6597,6 @@ class myfunctions():
             #------------------------------------------------------------------------------        
             if REGION:
                 def toggle_button_states_PBFNKT(self, i):
-                    read = myfunctions()
                     if btn_states_PBFNKT[i] == True:
                         btn_states_PBFNKT[i] = False
                     else:
@@ -6704,7 +6638,6 @@ class myfunctions():
                         var = [False] * ammount
 
                 def toggle_btn_HW(self, i):
-                    read = myfunctions()
                     if btn_states_HW[i] == True:
                         btn_states_HW[i] = False
                     else:
@@ -6741,7 +6674,6 @@ class myfunctions():
                         var = [False] * ammount
 
                 def toggle_btn_SW(self, i):
-                    read = myfunctions()
                     global states_txt_act
                     if btn_states_SW[i] == True:
                         btn_states_SW[i] = False
@@ -6784,7 +6716,6 @@ class myfunctions():
                         var = [False] * ammount
 
                 def toggle_btn_qopt(self, i):
-                    read = myfunctions()
                     if btn_states_qopt[i] == True:
                         btn_states_qopt[i] = False
                     else:
@@ -6821,7 +6752,6 @@ class myfunctions():
                         var = [False] * ammount
 
                 def toggle_btn_FAV(self, i):
-                    read = myfunctions()
                     if btn_states_FAV[i] == True:
                         btn_states_FAV[i] = False
                     else:
@@ -6890,17 +6820,13 @@ class myfunctions():
         def toggle_button_system(self, system_text):
             global system
             global sys_clr
-            global txt_clr
             system = system_text
             if system == system_txt[0]:
                 sys_clr = sys_clr_GN
-                txt_clr = txt_clr_GN
             elif system == system_txt[1]: 
                 sys_clr = sys_clr_BU
-                txt_clr = txt_clr_BU
             elif system == system_txt[2]: 
                 sys_clr = sys_clr_OR
-                txt_clr = txt_clr_OR
             with open(os.path.join(datadir, 'system_conf.pickle'), 'wb') as f:
                 pickle.dump(system, f)
     #--------------------------------------------------------------------------------------
@@ -6939,7 +6865,6 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         if REGION:
             def snd_random_btns(self):
-                read = myfunctions()
                 global playing
                 global playlist
                 global current_index
@@ -6977,7 +6902,6 @@ class myfunctions():
                 read.load_playlist()
                 
             def load_playlist(self):
-                read = myfunctions()
                 for root_folder, _, files in os.walk(snd_fldr):
                     if "time" in root_folder.lower():
                         continue
@@ -6992,7 +6916,6 @@ class myfunctions():
                 random.shuffle(playlist)
 
             def play_next(self):
-                read = myfunctions()
                 global current_index
                 if playing:
                     if current_index >= len(playlist):
@@ -7010,7 +6933,6 @@ class myfunctions():
                     thread.start()
 
             def play_audio(self, current_file):
-                read = myfunctions()
                 global current_index
                 global start_time
                 audio = AudioSegment.from_mp3(current_file)
@@ -7036,7 +6958,6 @@ class myfunctions():
                 self.next_callback = kidd.after(30000, self.play_next)  # Wait 20 seconds before playing the next track
 
             def update_time_to_next(self):
-                read = myfunctions()
                 if playing:
                     elapsed_time = time.time() - start_time
                     remaining_time = max(30 - elapsed_time, 0)
@@ -7044,7 +6965,6 @@ class myfunctions():
                     kidd.after(200, self.update_time_to_next)
 
             def start_playing(self):
-                read = myfunctions()
                 global playing
                 if not playing:
                     playing = True
@@ -7059,7 +6979,6 @@ class myfunctions():
                     read.update_time_to_next()  # Start updating time to next MP3 f
 
             def stop_playing(self):
-                read = myfunctions()
                 global playing
                 if playing:
                     playing = False
@@ -7072,7 +6991,6 @@ class myfunctions():
         # CREATE THE SOUND MENU BUTTONS
         #----------------------------------------------------------------------------------
         def snd_menu_btns(self):
-            read = myfunctions()
             global snd_menu_btns
             global snd_menu_btn
             global snd_menu_btn_place
@@ -7105,7 +7023,6 @@ class myfunctions():
         # CREATE THE MP3 BUTTONS
         #----------------------------------------------------------------------------------
         def snd_mp3_btns(self):
-            read = myfunctions()
             global snd_mp3_btns
             global snd_mp3_btn_place
             snd_mp3_btn_place = mp3files_count  # Number of Buttons
@@ -7162,7 +7079,6 @@ class myfunctions():
         # GET THE ACTUAL SOUNDFOLDER WITH SUBFOLDER AND KIND OF SOUND WITH INCLUDING FILES
         #----------------------------------------------------------------------------------
         def load_soundfolder(self):
-            read = myfunctions()
             global snd_fldr
             global subfolders_count
             global subfolders_list
@@ -7199,7 +7115,6 @@ class myfunctions():
         # OPEN AND PLAY THE MP3 FILE
         #----------------------------------------------------------------------------------
         def play_mp3_thread(self, path, file):
-            read = myfunctions()
             thread_01 = threading.Thread(target=read.play_mp3(path, file))
             thread_01.start()
 
@@ -7213,7 +7128,6 @@ class myfunctions():
                 pass
 
         def play_mp3_time_thread(self, hour, minute):
-            read = myfunctions()
             thread_02 = threading.Thread(target=read.play_mp3_time(hour, minute))
             thread_02.start()
 
