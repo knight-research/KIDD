@@ -558,7 +558,7 @@ if REGION:
                 #CONFIG
                 device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
                 style_txt = ['KARR', 'KITT', '---', '---', '---']
-                system_txt = ['80s', '2000s', 'TVA']
+                system_txt = ['GREEN', 'BLUE', 'ORANGE']
                 #ONLY INFO      0         1         2         3         4         5         6         7          8         9        10       11     12     13     14       15        16
                 theme_txt = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
                 btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
@@ -958,73 +958,66 @@ if REGION:
         # UPDATE LAST CONFIG DEV002RB03 (DONT LOAD LAST STATE ALWAYS START WITH ALL OFF)
         #------------------------------------------------------------------------------
         btn_states_DEV002RB03 = [False] * 16
-        #----------------------------------------------------------------------------------
-        # STYLES
-        #----------------------------------------------------------------------------------
-        if REGION:           
-            bggrid = [2560, 800]
-            grid_spacing = 15
-            kidd_left   =  "%s" % 0
-            kidd_top    =  "%s" % 0
-            kidd_width  =  "%s" % bggrid[0]
-            kidd_height =  "%s" % bggrid[1]
-            
-            sys_clr = []
-            sty_clr = []
-            #             00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG_BTN  09_TXT_BTN 10_ON      11_OFF     12_MAX
-            sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#77FF77", "#FF7777", "#00FFFF"]
-            sys_clr_BU = ["#000005", "#000010", "#050515", "#5555FF", "#BBBBFF", "#000055", "#0000FF", "#444499", "#000020", "#8888FF", "#77FF77", "#FF7777", "#0000FF"]
-            sys_clr_OR = ["#080400", "#151000", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#442211", "#501505", "#FFBB55", "#77FF77", "#FF7777", "#FFBB00"]
-            #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG
-            sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200"]
-            sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000"]
-            
-            #        00            01                 02          03                    04                05       06           07             08
-            fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
+    #----------------------------------------------------------------------------------
+    # STYLES
+    #----------------------------------------------------------------------------------
+    if REGION:
+        bggrid = [2560, 800]
+        grid_spacing = 15
+        kidd_left   =  "%s" % 0
+        kidd_top    =  "%s" % 0
+        kidd_width  =  "%s" % bggrid[0]
+        kidd_height =  "%s" % bggrid[1]
+                    
+        #        00            01                 02          03                    04                05       06           07             08
+        fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
 
-            if system == system_txt[0]:
-                sys_clr = sys_clr_GN
-            elif system == system_txt[1]: 
-                sys_clr = sys_clr_BU
-            elif system == system_txt[2]: 
-                sys_clr = sys_clr_OR
-                
-            if style == style_txt[0]:
-                sty_clr = sty_clr_ka
-            elif style == style_txt[1]:
-                sty_clr = sty_clr_ki
-                
-            btn_style_imgbtn = {'borderwidth':0,'highlightthickness':0}
-            btn_style_imgbtn_lcars = {'borderwidth':0,'highlightthickness':0,'width':'181','height':'87'}
-            keypad_style = {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[0], 18), 'anchor':'c','width': 4, 'height': 2}
-
-            lbl_style_7SEG02_S34 =          {'fill':sty_clr[2],'font':(fonts[2], 164), 'anchor':'nw'}          
-            lbl_style_setup_btns =          {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 26), 'anchor':'c'}
-            lbl_style_setup_btns_small =    {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 18), 'anchor':'c','width':'11','height':'1'}
-            lbl_style_7SEG01_S34 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[3], 60, "bold"), 'anchor':'nw','borderwidth':0,'highlightthickness':0}
-            lbl_style_7SEG01_LCARS =        {'bg':"#000000", 'fg':sty_clr[0], 'font':(fonts[5], 160),'anchor':'nw','borderwidth':0,'highlightthickness':0}
-            
-            lbl_style_7SEG01_S12 =          {'bg':'#102525',  'fg':'#00ffcc',  'font':(fonts[7], 77), 'anchor':'nw'}
-            lbl_style_7SEG03_S12 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[2], 127),'anchor':'nw','borderwidth':0,'highlightthickness':0}
-            lbl_style_7SEG03_S34 =          {'bg':sty_clr[3], 'fg':sty_clr[2], 'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}
-
-            lbl_style_SETUP =               {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 40), 'anchor':'c'}
-            lbl_style_SETUP2 =              {'bg':sys_clr[8], 'fg':sys_clr[9], 'font':(fonts[6], 25), 'anchor':'c'}
-            
-            lbl_style_sysinfo =             {'bg':sty_clr[3], 'fg':sty_clr[1], 'font':(fonts[6], 36), 'anchor':'nw'}
-            lbl_style_voicecmd =            {'bg':sty_clr[3], 'fg':sty_clr[1], 'font':(fonts[6], 24), 'anchor':'nw'}
-
-            txt_style_pagename =            {'fill':sys_clr[9],'font':(fonts[8], 25), 'anchor':'nw'}
-            txt_style_pageinfo =            {'fill':sys_clr[9],'font':(fonts[5], 16), 'anchor':'nw'}
-            
-            txt_style_S12 =                 {'fill':sty_clr[0],'font':(fonts[0], 22), 'anchor':'c'}
-            txt_style_S34c =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'c'}
-            txt_style_S34e =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'e'}
-            txt_style_sysinfo =             {'fill':sty_clr[2],'font':(fonts[6], 36), 'anchor':'nw'}
+        #01
+        sys_clr = []
+        sty_clr = []
+        #             00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG_BTN  09_TXT_BTN 10_ON      11_OFF
+        sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#77FF77", "#FF7777"]
+        sys_clr_BU = ["#000005", "#000010", "#050515", "#5555FF", "#BBBBFF", "#000055", "#0000FF", "#444499", "#000020", "#8888FF", "#77FF77", "#FF7777"]
+        sys_clr_OR = ["#100500", "#151000", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#442211", "#341203", "#FFF862", "#77FF77", "#FF7777"]
+        #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG
+        sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200"]
+        sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000"]
         
-            #todo delete convert to style
-            #font_BTTF01 = ("ccar7seg", 90)
-            #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
+        if system == system_txt[0]:
+            sys_clr = sys_clr_GN
+        elif system == system_txt[1]: 
+            sys_clr = sys_clr_BU
+        elif system == system_txt[2]: 
+            sys_clr = sys_clr_OR
+                
+        if style == style_txt[0]:
+            sty_clr = sty_clr_ka
+        elif style == style_txt[1]:
+            sty_clr = sty_clr_ki
+        
+        btn_style_imgbtn =              {'borderwidth':0,'highlightthickness':0}
+        btn_style_imgbtn_lcars =        {'borderwidth':0,'highlightthickness':0,'width':'181','height':'87'}
+       
+        lbl_style_setup_btns =          {'font':(fonts[6], 26), 'anchor':'c'}
+        lbl_style_setup_btns_small =    {'font':(fonts[6], 18), 'anchor':'c','width':'11','height':'1'}
+        lbl_style_7SEG01_S34 =          {'font':(fonts[3], 60, "bold"), 'anchor':'nw','borderwidth':0,'highlightthickness':0}           
+        lbl_style_7SEG03_S34 =          {'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+
+        lbl_style_SETUP =               {'font':(fonts[6], 40), 'anchor':'c'}
+        lbl_style_SETUP2 =              {'font':(fonts[6], 25), 'anchor':'c'}            
+        keypad_style =                  {'font':(fonts[0], 18), 'anchor':'c','width': 4, 'height': 2}
+        txt_style_pagename =            {'font':(fonts[8], 25), 'anchor':'nw'}
+        txt_style_pageinfo =            {'font':(fonts[5], 16), 'anchor':'nw'}
+
+        lbl_style_sysinfo =             {'font':(fonts[6], 36), 'anchor':'nw'}
+        lbl_style_voicecmd =            {'font':(fonts[6], 24), 'anchor':'nw'}
+        
+        txt_style_sysinfo =             {'font':(fonts[6], 36), 'anchor':'nw'}
+        txt_style_S34c =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'c'}
+        txt_style_S34e =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'e'}
+        #todo delete convert to style
+        #font_BTTF01 = ("ccar7seg", 90)
+        #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
     #--------------------------------------------------------------------------------------
     # SETUP HARDWARE DEV001 AND DEV031
     #--------------------------------------------------------------------------------------
@@ -1581,15 +1574,6 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             #------------------------------------------------------------------------------
-            # STYLE DEVICE01 AND DEVICE02
-            #------------------------------------------------------------------------------
-            if REGION:
-                localstyle01 = lbl_style_7SEG03_S34
-                localstyle02 = lbl_style_7SEG01_S34
-                localstyle03 = lbl_style_voicecmd
-                localstyle04 = txt_style_sysinfo
-                localstyle05 = lbl_style_sysinfo
-            #------------------------------------------------------------------------------
             # THEME DEVICE001 AND DEVICE002
             #------------------------------------------------------------------------------
             if REGION:
@@ -1748,18 +1732,10 @@ class P01_DASH(tk.Frame):
                     elif theme in [theme_txt[14]]:
                         pass
                     elif theme in [theme_txt[15]]:
-                        localstyle01 = lbl_style_7SEG01_LCARS
-                        localstyle02 = lbl_style_7SEG01_LCARS
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
                         localimage01 = lcarsON_img_list[0]
                         localimage02 = lcarsOF_img_list[0]
                         localimage03 = segmentKA_img_list[11]
                     elif theme in [theme_txt[16]]:
-                        localstyle01 = lbl_style_7SEG01_LCARS
-                        localstyle02 = lbl_style_7SEG01_LCARS
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
                         localimage01 = lcarsON_img_list[0]
                         localimage02 = lcarsOF_img_list[0]
                         localimage03 = segmentKA_img_list[11]
@@ -1948,20 +1924,12 @@ class P01_DASH(tk.Frame):
                     elif theme in [theme_txt[14]]:
                         pass
                     elif theme in [theme_txt[15]]:
-                        localstyle01 = lbl_style_7SEG01_LCARS
-                        localstyle02 = lbl_style_7SEG01_LCARS
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
                         localimage01 = lcarsON_img_list[0]
                         localimage02 = lcarsOF_img_list[0]
                         localimage03 = segmentKI_img_list[11]
                         localimage06 = lcarsON_img_list[7] #HI LO VHF
                         localimage07 = lcarsOF_img_list[7] #HI LO VHF
                     elif theme in [theme_txt[16]]:
-                        localstyle01 = lbl_style_7SEG01_LCARS
-                        localstyle02 = lbl_style_7SEG01_LCARS
-                        localstyle04 = txt_style_sysinfo
-                        localstyle05 = lbl_style_sysinfo
                         localimage01 = lcarsON_img_list[0]
                         localimage02 = lcarsOF_img_list[0]
                         localimage03 = segmentKI_img_list[11]
@@ -2570,7 +2538,7 @@ class P01_DASH(tk.Frame):
             if device == device_txt[1]:
                 lbls_voicecmd = []
                 for voicecmdtext in voicecmd_txt:
-                    label_voicecmd = tk.Label(self.canvas, **localstyle03)
+                    label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
                     lbls_voicecmd.append(label_voicecmd)
                     
                 if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
@@ -2583,7 +2551,7 @@ class P01_DASH(tk.Frame):
             elif device == device_txt[31]:
                 lbls_voicecmd = []
                 for voicecmdtext in voicecmd_txt:
-                    label_voicecmd = tk.Label(self.canvas, **localstyle03)
+                    label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
                     lbls_voicecmd.append(label_voicecmd)
                     
                 if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
@@ -3104,30 +3072,30 @@ class P01_DASH(tk.Frame):
                     # MTR DISPLAY
                     #----------------------------------------------------------------------
                     if (btn_states_PB in ["pb00"] and (device == device_txt[1] or device == device_txt[31])) or (btn_states_PB in ["pb09"] and device == device_txt[2]):
-                        self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **localstyle04, text="HDD:            of               GB")
-                        self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **localstyle04, text="RAM:            %                 GB")
-                        self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **localstyle04, text="CPU:            %           USED")
-                        self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **localstyle04, text="CPU:            C           TEMP")
+                        self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="HDD:            of               GB")
+                        self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="RAM:            %                 GB")
+                        self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="CPU:            %           USED")
+                        self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="CPU:            C           TEMP")
                         if device == device_txt[1] or device == device_txt[31]:
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **localstyle04, text="SYS:                            sec.")
+                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                            sec.")
                     elif btn_states_PB == "pb01":
                         if device == device_txt[1] or device == device_txt[31]:
-                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **localstyle04, text="TME:")
-                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **localstyle04, text="DTE:")
-                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **localstyle04, text="ALT:")
-                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **localstyle04, text="LON:")
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **localstyle04, text="LAT:")
+                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="TME:")
+                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="DTE:")
+                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="ALT:")
+                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="LON:")
+                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="LAT:")
                     elif btn_states_PB == "pb02":
                         if device == device_txt[1] or device == device_txt[31]:
-                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **localstyle04, text="SPD:")
-                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **localstyle04, text="SPD:")
-                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **localstyle04, text="TRP:")
-                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **localstyle04, text="TRP:")
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **localstyle04, text="SYS:                                       sec.")
-                            self.canvas.create_text(x_txt_sysinfo[5], y_txt_sysinfo[0], **localstyle04, text="MPH")
-                            self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **localstyle04, text="KPH")
-                            self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **localstyle04, text="MLS")
-                            self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **localstyle04, text="KM")
+                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="SPD:")
+                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="SPD:")
+                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="TRP:")
+                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="TRP:")
+                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                                       sec.")
+                            self.canvas.create_text(x_txt_sysinfo[5], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="MPH")
+                            self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="KPH")
+                            self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
+                            self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
             #------------------------------------------------------------------------------
             # PLACE LABEL
             #------------------------------------------------------------------------------
@@ -3136,7 +3104,7 @@ class P01_DASH(tk.Frame):
                 if device == device_txt[1] or device == device_txt[31]:
                     if theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb00", "pb01", "pb02"]:
                         for i in range(8):
-                            label_sysinfo = tk.Label(self.canvas, **localstyle05)
+                            label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
                             lbls_sysinfo.append(label_sysinfo)
                         lbls_sysinfo[0].place(x=x_lbl_sysinfo[0], y=y_lbl_sysinfo[0], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])   
                         lbls_sysinfo[1].place(x=x_lbl_sysinfo[1], y=y_lbl_sysinfo[1], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
@@ -3147,12 +3115,12 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
                         lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
                     elif theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb03", "pb04"]:                        
-                        label_7SEG002 = tk.Label(self, **localstyle02)
+                        label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                         label_7SEG002.place(x=2, y=220, width=320, height=100)
                 elif device == device_txt[2]:
                     if theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb09"]:
                         for i in range(8):
-                            label_sysinfo = tk.Label(self.canvas, **localstyle05)
+                            label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
                             lbls_sysinfo.append(label_sysinfo)
                         lbls_sysinfo[0].place(x=x_lbl_sysinfo[0], y=y_lbl_sysinfo[0], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])   
                         lbls_sysinfo[1].place(x=x_lbl_sysinfo[1], y=y_lbl_sysinfo[1], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
@@ -3163,7 +3131,7 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
                         lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
                     elif theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb01", "pb02", "pb03", "pb04", "pb05", "pb06", "pb07", "pb08", "pb10", "pb11", "pb12"]:
-                        label_7SEG002 = tk.Label(self, **localstyle02)
+                        label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                         label_7SEG002.place(x=1810, y=34, width=320, height=100)
         #----------------------------------------------------------------------------------
         # GAUGE 7-SEGMENT DISPLAYS
@@ -3171,8 +3139,8 @@ class P01_DASH(tk.Frame):
         if REGION:                
             global label_7SEG001
             global label_7SEG003
-            label_7SEG001 = tk.Label(self, **lbl_style_7SEG03_S34)
-            label_7SEG003 = tk.Label(self, **localstyle02)
+            label_7SEG001 = tk.Label(self, **lbl_style_7SEG03_S34, bg=sty_clr[3], fg=sty_clr[2])
+            label_7SEG003 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
 
             if device == device_txt[1]:
                 #--------------------------------------------------------------------------
@@ -4692,7 +4660,7 @@ class P02_QOPT(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[12], width=2)  #PAGE RI
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -4706,7 +4674,7 @@ class P02_QOPT(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, text="QOPT")
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="QOPT")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -4948,7 +4916,7 @@ class P03_SETUP(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline='#00ff00', width=2)  #PAGE RI
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -4968,8 +4936,8 @@ class P03_SETUP(tk.Frame):
                 wlan0_ip = ip_line.split()[1]
             else:
                 wlan0_ip = "127.0.0.1"
-            canvas.create_text(20, 20, **txt_style_pagename, text="SETUP")
-            canvas.create_text(20, 50, **txt_style_pageinfo, text=(version, last_change, SYSTEM, carno, devno, wlan0_ip))
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="SETUP")
+            canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=(version, last_change, SYSTEM, carno, devno, wlan0_ip))
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
@@ -4990,7 +4958,7 @@ class P03_SETUP(tk.Frame):
             lbls_btnhw_info_txt_DEV031 = [gps_port, "---", "---", "---", "---", "---", "---", "---", "---", "---"]           
             x_pos = x_start
             for i in range(quant_btns_HW):
-                lbls_btnhw = tk.Label(self, **lbl_style_setup_btns)
+                lbls_btnhw = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
                 if device == device_txt[1]:
                     lbls_btnhw.config(text=btnhw_DEV001_txt[i])
                 elif device == device_txt[2]:
@@ -5001,7 +4969,7 @@ class P03_SETUP(tk.Frame):
                 x_pos += +px_to_next
             x_pos = x_start
             for i in range(quant_btns_HW):
-                lbls_btnhw_info = tk.Label(self, **lbl_style_setup_btns_small)
+                lbls_btnhw_info = tk.Label(self, **lbl_style_setup_btns_small, bg=sys_clr[8], fg=sys_clr[9])
                 if device == device_txt[1]:
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV001[i])
                 elif device == device_txt[2]:
@@ -5012,7 +4980,7 @@ class P03_SETUP(tk.Frame):
                 x_pos += +px_to_next
             x_pos = x_start
             for i in range(quant_btns_SW):
-                lbls_btnsw = tk.Label(self, **lbl_style_setup_btns)
+                lbls_btnsw = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
                 if device == device_txt[1]:
                     lbls_btnsw.config(text=lbl_btnsw_DEV001_txt[i])
                 elif device == device_txt[2]:
@@ -5047,7 +5015,7 @@ class P03_SETUP(tk.Frame):
             btns_SW = []
             x_pos = x_start
             for i in range(quant_btns_SW):
-                btn_SW = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 28),  command=lambda i=i: read.toggle_btn_SW(i))
+                btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28),  command=lambda i=i: read.toggle_btn_SW(i))
                 btn_SW.place(x=x_pos, y=y_l5, width=btn_w, height=btn_h)
                 x_pos += +px_to_next
                 btns_SW.append(btn_SW)
@@ -5087,12 +5055,12 @@ class P03_SETUP(tk.Frame):
             #------------------------------------------------------------------------------
             # INPUT VALUE LABEL
             #------------------------------------------------------------------------------
-            current_value_label = tk.Label(self, textvariable=current_value, **lbl_style_SETUP)
+            current_value_label = tk.Label(self, textvariable=current_value, **lbl_style_SETUP, bg=sys_clr[8], fg=sys_clr[9])
             current_value_label.place(x=292, y=295, width=176, height=28)
             #------------------------------------------------------------------------------
             # TARGET VALUES LABEL
             #------------------------------------------------------------------------------
-            lbl_target_val = tk.Label(self, text="", **lbl_style_SETUP2)
+            lbl_target_val = tk.Label(self, text="", **lbl_style_SETUP2, bg=sys_clr[8], fg=sys_clr[9])
             lbl_target_val.place(x=25, y=295, width=220, height=192)
             #------------------------------------------------------------------------------
             # KEYPAD BUTTONS
@@ -5103,8 +5071,7 @@ class P03_SETUP(tk.Frame):
                 x_pos_keyR1 = 521
                 x_pos_keyR2 = 521
                 for i in range(1, 10):
-                    btn_key = tk.Button(canvas, text=keypad_buttons[i], command=lambda num=i: read.btn_key_click(num),
-                                       **keypad_style)
+                    btn_key = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text=keypad_buttons[i], command=lambda num=i: read.btn_key_click(num))
                     if i < 4:
                         btn_key.place(x=x_pos_keyR0, y=296)
                         x_pos_keyR0 += +80
@@ -5115,13 +5082,13 @@ class P03_SETUP(tk.Frame):
                         btn_key.place(x=x_pos_keyR2, y=446)
                         x_pos_keyR2 += +80
 
-                btn_dot = tk.Button(canvas, text=".", command=read.btn_dot_click, **keypad_style)
+                btn_dot = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text=".", command=read.btn_dot_click)
                 btn_dot.place(x=521, y=521)
 
-                btn_0 = tk.Button(canvas, text="0", command=lambda: read.btn_key_click(0), **keypad_style)
+                btn_0 = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text="0", command=lambda: read.btn_key_click(0))
                 btn_0.place(x=601, y=521)
 
-                btn_apply = tk.Button(canvas, text="OK", command=read.btn_apply_click, **keypad_style)
+                btn_apply = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text="OK", command=read.btn_apply_click)
                 btn_apply.place(x=681, y=521)
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
@@ -5139,7 +5106,7 @@ class P03_SETUP(tk.Frame):
             x_pos = x_start_RB
             x_pos2 = x_start_RB
             for i in range(quant_btns_RB01):
-                lbls_btnrb01 = tk.Label(self, **lbl_style_setup_btns)
+                lbls_btnrb01 = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
                 if device == device_txt[2]:
                     lbls_btnrb01.config(text=rb01_DEV002_txt[i])
                     if i < (quant_btns_RB01/2):
@@ -5155,7 +5122,7 @@ class P03_SETUP(tk.Frame):
             x_pos = x_start_RB
             x_pos2 = x_start_RB
             for i in range(quant_btns_RB02):
-                lbls_btnRB02 = tk.Label(self, **lbl_style_setup_btns)
+                lbls_btnRB02 = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
                 if device == device_txt[2]:
                     lbls_btnRB02.config(text=rb02_DEV002_txt[i])
                     if i < (quant_btns_RB02/2):
@@ -5171,7 +5138,7 @@ class P03_SETUP(tk.Frame):
             x_pos = x_start_RB
             x_pos2 = x_start_RB
             for i in range(quant_btns_RB03):
-                lbls_btnRB03 = tk.Label(self, **lbl_style_setup_btns)
+                lbls_btnRB03 = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
                 if device == device_txt[2]:
                     lbls_btnRB03.config(text=rb03_DEV002_txt[i])
                     if i < (quant_btns_RB03/2):
@@ -5318,9 +5285,9 @@ class P03_SETUP(tk.Frame):
         if REGION:
             for i in range(quant_btns_SW):
                 if btn_states_SW[i]:
-                    btns_SW[i].config(text=btnsw_DEV001_txt_1[i], fg=sys_clr[9])
+                    btns_SW[i].config(text=btnsw_DEV001_txt_1[i])
                 else:
-                    btns_SW[i].config(text=btnsw_DEV001_txt_0[i], fg=sys_clr[9])
+                    btns_SW[i].config(text=btnsw_DEV001_txt_0[i])
         #----------------------------------------------------------------------------------
         # FAV BUTTONS
         #----------------------------------------------------------------------------------
@@ -5516,7 +5483,7 @@ class P04_THEMES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[12], width=2)  #PAGE RI
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -5530,11 +5497,11 @@ class P04_THEMES(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, text="THEMES")
-            canvas.create_text(20, 95, **txt_style_pagename, text="DEVICE")
-            canvas.create_text(20,215, **txt_style_pagename, text="STYLE")
-            canvas.create_text(20,335, **txt_style_pagename, text="THEME")
-            canvas.create_text(20,530, **txt_style_pagename, text="SYSTEM")
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="THEMES")
+            canvas.create_text(20, 95, **txt_style_pagename, fill=sys_clr[9], text="DEVICE")
+            canvas.create_text(20,215, **txt_style_pagename, fill=sys_clr[9], text="STYLE")
+            canvas.create_text(20,335, **txt_style_pagename, fill=sys_clr[9], text="THEME")
+            canvas.create_text(20,530, **txt_style_pagename, fill=sys_clr[9], text="SYSTEM")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5676,10 +5643,10 @@ class P05_CARFUNCTIONS(tk.Frame):
         canvas = tk.Canvas(self, bg='black', highlightthickness=0)
         canvas.pack(fill='both', expand=True)
         canvas.create_image(0, 0, image=background_image, anchor='nw')
-        canvas.create_text(25, 20, text="C-FUNC", **txt_style_pagename)
-        canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[12], width=2)  #TITLEBAR            
-        canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[12], width=2) #PAGE            
-        canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[12], width=2) #MENU
+        canvas.create_text(25, 20, **txt_style_pagename, fill=sys_clr[9], text="C-FUNC")
+        canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[6], width=2)  #TITLEBAR            
+        canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[6], width=2) #PAGE            
+        canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[6], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5710,10 +5677,10 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
         canvas = tk.Canvas(self, bg='black', highlightthickness=0)
         canvas.pack(fill='both', expand=True)
         canvas.create_image(0, 0, image=background_image, anchor='nw')
-        canvas.create_text(25, 20, text="K-FUNC", **txt_style_pagename)
-        canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[12], width=2)  #TITLEBAR            
-        canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[12], width=2) #PAGE            
-        canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[12], width=2) #MENU
+        canvas.create_text(25, 20, **txt_style_pagename, fill=sys_clr[9], text="K-FUNC")
+        canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[6], width=2)  #TITLEBAR            
+        canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[6], width=2) #PAGE            
+        canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[6], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5837,7 +5804,7 @@ class P07_AUDIO(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[12], width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -5851,14 +5818,14 @@ class P07_AUDIO(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, text="AUDIO")
-            canvas.create_text(300, 20, text="ACTUAL PLAYING", **txt_style_pagename)
-            canvas.create_text(700, 20, text="NEXT PLAYING", **txt_style_pagename)
-            canvas.create_text(1090, 20, text="NEXT:", **txt_style_pagename)
-            #canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[12], width=2)   #TITLEBAR            
-            #canvas.create_rectangle(15, 120, 1265, 190, outline=sys_clr[12], width=2) #SUBMENU
-            #canvas.create_rectangle(15, 195, 1265, 605, outline=sys_clr[12], width=2) #PAGE            
-            #canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[12], width=2) #MENU
+            canvas.create_text(20, 20,   **txt_style_pagename, fill=sys_clr[9], text="AUDIO")
+            canvas.create_text(300, 20,  **txt_style_pagename, fill=sys_clr[9], text="ACTUAL PLAYING")
+            canvas.create_text(700, 20,  **txt_style_pagename, fill=sys_clr[9], text="NEXT PLAYING")
+            canvas.create_text(1090, 20, **txt_style_pagename, fill=sys_clr[9], text="NEXT:")
+            #canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[6], width=2)   #TITLEBAR            
+            #canvas.create_rectangle(15, 120, 1265, 190, outline=sys_clr[6], width=2) #SUBMENU
+            #canvas.create_rectangle(15, 195, 1265, 605, outline=sys_clr[6], width=2) #PAGE            
+            #canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[6], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5993,7 +5960,7 @@ class P08_VIDEO(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[12], width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -6007,10 +5974,10 @@ class P08_VIDEO(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, text="VIDEO")
-            #canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[12], width=2)  #TITLEBAR
-            #canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[12], width=2) #PAGE
-            #canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[12], width=2) #MENU
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="VIDEO")
+            #canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[6], width=2)  #TITLEBAR
+            #canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[6], width=2) #PAGE
+            #canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[6], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -6132,7 +6099,7 @@ class P09_RES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[12], width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -6146,7 +6113,7 @@ class P09_RES(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, text="RES")   
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="RES")   
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -6268,7 +6235,7 @@ class P10_RES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[12], width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -6282,7 +6249,7 @@ class P10_RES(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, text="RES")  
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="RES")  
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -6404,7 +6371,7 @@ class P11_RES(tk.Frame):
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
                 if device == device_txt[1]: 
-                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[12], width=2)
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
                 elif device == device_txt[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
@@ -6418,7 +6385,7 @@ class P11_RES(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, text="RES")  
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="RES")  
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -6801,9 +6768,6 @@ class myfunctions():
             global style
             global sty_clr
             style = style_text
-            print (sty_clr)
-            print (sty_clr_ka)
-            print (sty_clr_ki)
             if style == style_txt[0]:
                 sty_clr = sty_clr_ka
             elif style == style_txt[1]:
@@ -6884,13 +6848,13 @@ class myfunctions():
                 next_callback = None
                 p = pyaudio.PyAudio()
 
-                playing_label = tk.Label(**lbl_style_sysinfo ,text="unknown filename.mp3")
+                playing_label = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="unknown filename.mp3")
                 playing_label.place(x=300, y=48)
 
-                next_label_value = tk.Label(**lbl_style_sysinfo ,text="unknown filename.mp3")
+                next_label_value = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="unknown filename.mp3")
                 next_label_value.place(x=700, y=48)
 
-                time_label_value = tk.Label(**lbl_style_sysinfo ,text="88.88")
+                time_label_value = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="88.88")
                 time_label_value.place(x=1180, y=20)
             
                 start_button = tk.Button(bg=sys_clr[8], fg=sty_clr[0], font=(fonts[1], 24) ,text="START", command=read.start_playing)
@@ -7004,7 +6968,7 @@ class myfunctions():
                 snd_menu_btns[i].place(x=x_pos_ssb_r1, y=90, width=115, height=55)
                 x_pos_ssb_r1 += +120
 
-            slider_snd_menu_btns = tk.Scale(from_=0, to=snd_menu_btn_place-5, command=read.show_snd_menu_btns, showvalue=0, length=1245, orient='horizontal', width=30, sliderlength=50, troughcolor="#000000", highlightbackground=sys_clr[12], bg='#00ffff')
+            slider_snd_menu_btns = tk.Scale(from_=0, to=snd_menu_btn_place-5, command=read.show_snd_menu_btns, showvalue=0, length=1245, orient='horizontal', width=30, sliderlength=50, troughcolor="#000000", highlightbackground=sys_clr[6], bg='#00ffff')
             slider_snd_menu_btns.set(1)
             slider_snd_menu_btns.place(x=15, y=90)
         #----------------------------------------------------------------------------------
@@ -7054,7 +7018,7 @@ class myfunctions():
                 # Add a vertical slider when there are more buttons than can be displayed
                 slider_snd_mp3_btns = tk.Scale(from_=0, to=snd_mp3_btn_place - row_length, command=read.show_snd_mp3_btns,
                                                showvalue=0, length=500, orient='vertical', sliderlength=50,
-                                               troughcolor="#000000", highlightbackground=sys_clr[12], bg='#00ffff')
+                                               troughcolor="#000000", highlightbackground=sys_clr[6], bg='#00ffff')
                 slider_snd_mp3_btns.set(0)
                 slider_snd_mp3_btns.place(x=1300, y=200)  # Adjust the x and y positions accordingly
         def show_snd_mp3_btns(self, value):
