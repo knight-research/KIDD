@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
-version = "V2.0.0"
+version = "V2.0.1"
 last_change = "2023-10-21-1844"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
@@ -565,7 +565,7 @@ if REGION:
                 #CONFIG
                 device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
                 style_txt = ['KARR', 'KITT', '---', '---', '---']
-                system_txt = ['GREEN', 'BLUE', 'ORANGE']
+                system_txt = ['ORANGE', 'GREEN', 'AQUA', 'WHITE']
                 #ONLY INFO      0         1         2         3         4         5         6         7          8         9        10       11     12     13     14       15        16
                 theme_txt = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
                 btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
@@ -974,29 +974,30 @@ if REGION:
         kidd_left   =  "%s" % 0
         kidd_top    =  "%s" % 0
         kidd_width  =  "%s" % bggrid[0]
-        kidd_height =  "%s" % bggrid[1]
-                    
+        kidd_height =  "%s" % bggrid[1]                    
         #        00            01                 02          03                    04                05       06           07             08
         fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
 
-        #01
         sys_clr = []
         sty_clr = []
         #             00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG_BTN  09_TXT_BTN 10_ON      11_OFF
-        sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#77FF77", "#FF7777"]
-        sys_clr_BU = ["#000005", "#000010", "#050515", "#5555FF", "#BBBBFF", "#000055", "#0000FF", "#444499", "#000020", "#8888FF", "#77FF77", "#FF7777"]
-        sys_clr_OR = ["#100500", "#151000", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#442211", "#341203", "#FFF862", "#77FF77", "#FF7777"]
+        sys_clr_OR = ["#100500", "#151000", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#AA5500", "#301000", "#FFF862", "#44FF44", "#FF4444"]
+        sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#44FF44", "#FF4444"]
+        sys_clr_BU = ["#000505", "#001015", "#001025", "#55AAFF", "#BBFFFF", "#005555", "#00FFFF", "#009999", "#002020", "#AAFFFF", "#44FF44", "#FF4444"]        
+        sys_clr_WH = ["#000000", "#101010", "#151515", "#AAAAAA", "#BBBBBB", "#555555", "#FFFFFF", "#999999", "#202020", "#FFFFFF", "#44FF44", "#FF4444"]
         #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG
         sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200"]
         sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000"]
         
         if system == system_txt[0]:
-            sys_clr = sys_clr_GN
-        elif system == system_txt[1]: 
-            sys_clr = sys_clr_BU
-        elif system == system_txt[2]: 
             sys_clr = sys_clr_OR
-                
+        elif system == system_txt[1]: 
+            sys_clr = sys_clr_GN
+        elif system == system_txt[2]: 
+            sys_clr = sys_clr_BU
+        elif system == system_txt[3]: 
+            sys_clr = sys_clr_WH
+            
         if style == style_txt[0]:
             sty_clr = sty_clr_ka
         elif style == style_txt[1]:
@@ -2578,27 +2579,31 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV001G000
                 global led_gauge_DEV001SPEED
+                global ammount_SPEED
                 led_DEV001G000 = []
                 if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_SPEED = 580
+                    x_pos_SPEED = 585
                     y_pos_SPEED = 103
-                    x_pos_SPEED_next = +32
+                    x_pos_SPEED_next = +31
                     width_SPEED = 30
                     height_SPEED = 30
+                    ammount_SPEED = 21
                 elif theme in theme_txt[3:9]: # THEME 3 to 8
                     x_pos_SPEED = 95
                     y_pos_SPEED = 8
                     x_pos_SPEED_next = +84
                     width_SPEED = 80
                     height_SPEED = 40
+                    ammount_SPEED = 14
                 elif theme in [theme_txt[15], theme_txt[16]]:
                     x_pos_SPEED = 554
                     y_pos_SPEED = 15
                     x_pos_SPEED_next = +29
                     width_SPEED = 25
                     height_SPEED = 77
+                    ammount_SPEED = 20
 
-                for i in range(0, 14):
+                for i in range(0, ammount_SPEED):
                     led_gauge_DEV001SPEED = tk.Label(self, **btn_style_imgbtn)
                     led_gauge_DEV001SPEED.place(x=x_pos_SPEED, y=y_pos_SPEED, width=width_SPEED, height=height_SPEED)
                     x_pos_SPEED += x_pos_SPEED_next
@@ -3146,7 +3151,7 @@ class P01_DASH(tk.Frame):
         if REGION:                
             global label_7SEG001
             global label_7SEG003
-            label_7SEG001 = tk.Label(self, **lbl_style_7SEG03_S34, bg=sty_clr[3], fg=sty_clr[2])
+            label_7SEG001 = tk.Label(self, bg=sty_clr[3], fg=sty_clr[2])
             label_7SEG003 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
 
             if device == device_txt[1]:
@@ -3155,6 +3160,7 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if REGION: 
                     if theme_txt[0:3].count(theme) > 0: # THEME 0 to 2
+                        label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
                         label_7SEG001.place(x=582, y=160, width=370, height=147)
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         if btn_states_SW[3] == False:
@@ -3164,6 +3170,7 @@ class P01_DASH(tk.Frame):
                                 label_7SEG001.config(image=localimage04, compound="center")
                         else:
                             label_7SEG001.config(image=localimage05, compound="center")
+                        label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.place(x=609, y=116, width=496, height=212)
                     elif theme in [theme_txt[15], theme_txt[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
@@ -3631,7 +3638,7 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # DISPLAY THE 14 LEDs
                     #----------------------------------------------------------------------            
-                    for i in range (0, 14):
+                    for i in range (0, ammount_SPEED):
                         if val_DEV001G000 >= i:
                             if i < 7:
                                 led_DEV001G000[i].config(image=localimage17)
@@ -3650,7 +3657,7 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # ALL 14 LEDs OFF FOR FASTER CYCLE TIME
                     #----------------------------------------------------------------------
-                    for i in range (0, 14):
+                    for i in range (0, ammount_SPEED):
                         if i < 7:
                             led_DEV001G000[i].config(image=localimage12)
                         elif i < 8:
@@ -5601,8 +5608,8 @@ class P04_THEMES(tk.Frame):
                 btns_theme[12].config(state=tk.DISABLED)
                 btns_theme[13].config(state=tk.DISABLED)
                 btns_theme[14].config(state=tk.DISABLED)
-                #btns_theme[15].config(state=tk.DISABLED)
-                #btns_theme[16].config(state=tk.DISABLED)
+                btns_theme[15].config(state=tk.DISABLED)
+                btns_theme[16].config(state=tk.DISABLED)
         #----------------------------------------------------------------------------------
         # SYSTEM STYLE BUTTONS
         #----------------------------------------------------------------------------------   
@@ -5651,9 +5658,6 @@ class P05_CARFUNCTIONS(tk.Frame):
         canvas.pack(fill='both', expand=True)
         canvas.create_image(0, 0, image=background_image, anchor='nw')
         canvas.create_text(25, 20, **txt_style_pagename, fill=sys_clr[9], text="C-FUNC")
-        canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[6], width=2)  #TITLEBAR            
-        canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[6], width=2) #PAGE            
-        canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[6], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5685,9 +5689,6 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
         canvas.pack(fill='both', expand=True)
         canvas.create_image(0, 0, image=background_image, anchor='nw')
         canvas.create_text(25, 20, **txt_style_pagename, fill=sys_clr[9], text="K-FUNC")
-        canvas.create_rectangle(15, 15, 1265, 85, outline=sys_clr[6], width=2)  #TITLEBAR            
-        canvas.create_rectangle(15, 90, 1265, 605, outline=sys_clr[6], width=2) #PAGE            
-        canvas.create_rectangle(15, 645, 1265, 715, outline=sys_clr[6], width=2) #MENU
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -6793,11 +6794,13 @@ class myfunctions():
             global sys_clr
             system = system_text
             if system == system_txt[0]:
-                sys_clr = sys_clr_GN
-            elif system == system_txt[1]: 
-                sys_clr = sys_clr_BU
-            elif system == system_txt[2]: 
                 sys_clr = sys_clr_OR
+            elif system == system_txt[1]: 
+                sys_clr = sys_clr_GN
+            elif system == system_txt[2]: 
+                sys_clr = sys_clr_BU
+            elif system == system_txt[3]: 
+                sys_clr = sys_clr_WH
             with open(os.path.join(datadir, 'system_conf.pickle'), 'wb') as f:
                 pickle.dump(system, f)
     #--------------------------------------------------------------------------------------
