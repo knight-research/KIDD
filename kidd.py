@@ -2,15 +2,11 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.0"
-last_change = "2023-10-20-1915"
+last_change = "2023-10-21-1609"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
 """
-#------------------------------------------------------------------------------------------
-# INSTALL ME
-#------------------------------------------------------------------------------------------
-pip3 install pynmea2, Pillow, pyaudio, pydub, pyserial, SpeechRecognition
 #------------------------------------------------------------------------------------------
 # CARS
 #------------------------------------------------------------------------------------------
@@ -73,6 +69,16 @@ DEV031 PORT01 (3.0) = TOUCH LEFT
 DEV031 PORT02 (3.0) = TOUCH RIGHT
 DEV031 PORT03 (2.0) = GPS MOUSE
 DEV031 PORT04 (2.0) = MIC
+#------------------------------------------------------------------------------------------
+# I2C ADRESSES SETUP
+#------------------------------------------------------------------------------------------
+DIGITAL INPUT AND RELAIS OUTPUTS
+
+ADDR 20:  ADDR 21:  ADDR 22:  ADDR 23:  ADDR 24:  ADDR 25:  ADDR 26:  ADDR 27:
+1 2 3     1 2 3     1 2 3     1 2 3     1 2 3     1 2 3     1 2 3     1 2 3
+X X X     X X O     X O X     X O O     O X X     O X O     O O X     O O O    OFF
+X X X     X X X     X X X     X X X     X X X     X X X     X X X     X X X
+0 0 0     O O X     O X O     O X X     X O O     X O X     X X O     X X X    ON
 #------------------------------------------------------------------------------------------
 # 8x OUTPUT RELAIS WIFI MODULE 00
 #------------------------------------------------------------------------------------------
@@ -249,24 +255,25 @@ PAGE 11: RES
 #------------------------------------------------------------------------------------------
 """
 OLD TO NEW:
-TODO: OBD2 CONNECTION FOR DEV031
-TODO: Switchpod communication with sending labels texts (S34) from here
 DONE: Favorites - Make relaisboard buttons and things as favorites, to show them on the qopt page.
-TODO: Connect the Favoritebuttons with the spare buttons on qopt page (max 20 buttons)
-TODO: aldl connection
-TODO: serial output window (show serial data in KIDD)
 DONE: button obd/aldl (variable cardata == GPS)
-TODO: Integrade scannerfunction
-TODO: voicebox sync with mic - turn mic on and off with F-Buttons
 DONE: enable_gps mic scanner rb01.... make it with one myfunction give variable in function command -done
-TODO: Switch from IP to Hostname for communication (SWPDLE_RE...) Websocket communication with Hostname not IP
 DONE: V1.3.6 switch unit in settings
 DONE: Otto button on Switchpod with Ottifantenlogo and otto knight rider theme
-TODO: 2x DIGITAL RGB OUTPUT FOR AMBILIGHT
 DONE: PB DEV USE SEPARATE PICKLEFILE FOR EACH DEVICE
 DONE: GPS NOW ALSO WORKS ON WINDOWS
 DONE: SWITCH LANGUAGE (TEXTS)
-TODO: THEME COLOR SWITCHER (PREPARED ALL THEME COLORS NOW IN "BEFORE MAIN APP GLOBALS")
+DONE: THEME COLOR SWITCHER (PREPARED ALL THEME COLORS NOW IN "BEFORE MAIN APP GLOBALS")
+
+TODO: OBD2 CONNECTION FOR DEV031
+TODO: Switchpod communication with sending labels texts (S34) from here
+TODO: Connect the Favoritebuttons with the spare buttons on qopt page (max 20 buttons)
+TODO: aldl connection
+TODO: serial output window (show serial data in KIDD)
+TODO: Integrade scannerfunction
+TODO: voicebox sync with mic - turn mic on and off with F-Buttons
+TODO: Switch from IP to Hostname for communication (SWPDLE_RE...) Websocket communication with Hostname not IP
+TODO: 2x DIGITAL RGB OUTPUT FOR AMBILIGHT
 """
 #------------------------------------------------------------------------------------------
 # BEFORE MAINAPP
