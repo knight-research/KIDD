@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-10-22-1000"
+last_change = "2023-10-22-1610"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ TODO: Switchpod communication with sending labels texts (S34) from here
 TODO: Connect the Favoritebuttons with the spare buttons on qopt page (max 20 buttons)
 TODO: aldl connection
 TODO: serial output window (show serial data in KIDD)
-TODO: Integrade scannerfunction
+TODO: Integrate scannerfunction
 TODO: voicebox sync with mic - turn mic on and off with F-Buttons
 TODO: Switch from IP to Hostname for communication (SWPDLE_RE...) Websocket communication with Hostname not IP
 TODO: 2x DIGITAL RGB OUTPUT FOR AMBILIGHT
@@ -1588,26 +1588,56 @@ class P01_DASH(tk.Frame):
             if REGION:
                 if style == style_txt[0]:
                     if theme in [theme_txt[0]]:
-                        localimagelist01 = list(vbON_PILOT_img_list)
+                        localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_PILOT_img_list)
-                        localimage08 = sledON_img_list[17] #RPMi
-                        localimage09 = sledON_img_list[18] #RPMm
+                        localimage01 = sledON_img_list[30] #MPH
+                        localimage02 = sledON_img_list[29] #KPH
+                        localimage06 = ledFU_img_list[9] #HI LO VHF
+                        localimage07 = ledOF_img_list[9] #HI LO VHF
+                        localimage08 = sledON_img_list[33] #RPMi
+                        localimage09 = sledON_img_list[34] #RPMm
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                         localimage16 = ledOF_img_list[6] #SELECT BUTTONS
+                        localimage17 = ledFU_img_list[65] #POWER BTNS GN
+                        localimage18 = ledFU_img_list[67] #POWER BTNS RD
+                        localimage19 = ledFU_img_list[69] #POWER BTNS YE
+                        localimage20 = ledOF_img_list[65] #POWER BTNS GN
+                        localimage21 = ledOF_img_list[67] #POWER BTNS RD
+                        localimage22 = ledOF_img_list[69] #POWER BTNS YE
                     elif theme in [theme_txt[1]]:
                         localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S01_img_list)
-                        localimage08 = sledON_img_list[17] #RPMi
-                        localimage09 = sledON_img_list[18] #RPMm
+                        localimage01 = sledON_img_list[32] #MPH
+                        localimage02 = sledON_img_list[31] #KPH
+                        localimage06 = ledFU_img_list[9] #HI LO VHF
+                        localimage07 = ledOF_img_list[9] #HI LO VHF
+                        localimage08 = sledON_img_list[35] #RPMi
+                        localimage09 = sledON_img_list[36] #RPMm
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                         localimage16 = ledOF_img_list[6] #SELECT BUTTONS
+                        localimage17 = ledFU_img_list[65] #POWER BTNS GN
+                        localimage18 = ledFU_img_list[67] #POWER BTNS RD
+                        localimage19 = ledFU_img_list[69] #POWER BTNS YE
+                        localimage20 = ledOF_img_list[65] #POWER BTNS GN
+                        localimage21 = ledOF_img_list[67] #POWER BTNS RD
+                        localimage22 = ledOF_img_list[69] #POWER BTNS YE
                     elif theme in [theme_txt[2]]:
                         localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                         localimagelist02 = list(vbOF_S02_img_list)
-                        localimage08 = sledON_img_list[17] #RPMi
-                        localimage09 = sledON_img_list[18] #RPMm
+                        localimage01 = sledON_img_list[32] #MPH
+                        localimage02 = sledON_img_list[31] #KPH
+                        localimage06 = ledFU_img_list[9] #HI LO VHF
+                        localimage07 = ledOF_img_list[9] #HI LO VHF
+                        localimage08 = sledON_img_list[35] #RPMi
+                        localimage09 = sledON_img_list[36] #RPMm
                         localimage15 = ledFU_img_list[6] #SELECT BUTTONS
                         localimage16 = ledOF_img_list[6] #SELECT BUTTONS
+                        localimage17 = ledFU_img_list[65] #POWER BTNS GN
+                        localimage18 = ledFU_img_list[67] #POWER BTNS RD
+                        localimage19 = ledFU_img_list[69] #POWER BTNS YE
+                        localimage20 = ledOF_img_list[65] #POWER BTNS GN
+                        localimage21 = ledOF_img_list[67] #POWER BTNS RD
+                        localimage22 = ledOF_img_list[69] #POWER BTNS YE
                     elif theme in [theme_txt[3]]:
                         localimage01 = sledON_img_list[10] #MPH
                         localimage02 = sledON_img_list[9] #KPH
@@ -2834,13 +2864,14 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV002G000
                 global val_DEV002G000
+                global ammount_DEV002G000
                 led_DEV002G000 = []
                 if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G000 = 105
-                    y_pos_DEV002G000 = 432
+                    x_pos_DEV002G000 = 108
+                    y_pos_DEV002G000 = 440
                     x_pos_DEV002G000_next = +29
                     width_DEV002G000 = 29
-                    height_DEV002G000 = 24
+                    height_DEV002G000 = 22
                     ammount_DEV002G000 = 12
                 elif theme in theme_txt[3:9]: # THEME 3 to 9
                     x_pos_DEV002G000 = 3
@@ -2851,7 +2882,7 @@ class P01_DASH(tk.Frame):
                     ammount_DEV002G000 = 7
                 for i in range(0, ammount_DEV002G000):
                     val_DEV002G000 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G000.place(x=x_pos_DEV002G000, y=y_pos_DEV002G000, width=width_DEV002G000, height=height_DEV002G000)
+                    val_DEV002G000.place(x=x_pos_DEV002G000, y=y_pos_DEV002G000, w=width_DEV002G000, h=height_DEV002G000)
                     x_pos_DEV002G000 += x_pos_DEV002G000_next
                     led_DEV002G000.append(val_DEV002G000)
             #------------------------------------------------------------------------------
@@ -2860,12 +2891,26 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV002G001
                 global val_DEV002G001
+                global ammount_DEV002G001
                 led_DEV002G001 = []
-                x_pos_DEV002G001 = 696
-                for i in range(0, 7):
+                if theme in theme_txt[:3]: # THEME 0 1 2
+                    x_pos_DEV002G001 = 815
+                    y_pos_DEV002G001 = 440
+                    x_pos_DEV002G001_next = +29
+                    width_DEV002G001 = 29
+                    height_DEV002G001 = 22
+                    ammount_DEV002G001 = 12
+                elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    x_pos_DEV002G001 = 696
+                    y_pos_DEV002G001 = 459
+                    x_pos_DEV002G001_next = +84
+                    width_DEV002G001 = 80
+                    height_DEV002G001 = 40
+                    ammount_DEV002G001 = 7
+                for i in range(0, ammount_DEV002G001):
                     val_DEV002G001 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G001.place(x=x_pos_DEV002G001, y=459, width=80, height=40)
-                    x_pos_DEV002G001 += +84
+                    val_DEV002G001.place(x=x_pos_DEV002G001, y=y_pos_DEV002G001, w=width_DEV002G001, h=height_DEV002G001)
+                    x_pos_DEV002G001 += x_pos_DEV002G001_next
                     led_DEV002G001.append(val_DEV002G001)
             #------------------------------------------------------------------------------
             # DEV002G002 (EGT TEMP)
@@ -2873,12 +2918,26 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV002G002
                 global val_DEV002G002
+                global ammount_DEV002G002
                 led_DEV002G002 = []
-                x_pos_DEV002G002 = 3
-                for i in range(0, 7):
+                if theme in theme_txt[:3]: # THEME 0 1 2
+                    x_pos_DEV002G002 = 108
+                    y_pos_DEV002G002 = 540
+                    x_pos_DEV002G002_next = +29
+                    width_DEV002G002 = 29
+                    height_DEV002G002 = 22
+                    ammount_DEV002G002 = 12
+                elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    x_pos_DEV002G002 = 3
+                    y_pos_DEV002G002 = 568
+                    x_pos_DEV002G002_next = +84
+                    width_DEV002G002 = 80
+                    height_DEV002G002 = 40
+                    ammount_DEV002G002 = 7
+                for i in range(0, ammount_DEV002G002):
                     val_DEV002G002 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G002.place(x=x_pos_DEV002G002, y=568, width=80, height=40)
-                    x_pos_DEV002G002 += +84
+                    val_DEV002G002.place(x=x_pos_DEV002G002, y=y_pos_DEV002G002, w=width_DEV002G002, h=height_DEV002G002)
+                    x_pos_DEV002G002 += x_pos_DEV002G002_next
                     led_DEV002G002.append(val_DEV002G002)
             #------------------------------------------------------------------------------
             # DEV002G003 (OIL PREASSURE)
@@ -2886,12 +2945,26 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV002G003
                 global val_DEV002G003
+                global ammount_DEV002G003
                 led_DEV002G003 = []
-                x_pos_DEV002G003 = 696
-                for i in range(0, 7):
+                if theme in theme_txt[:3]: # THEME 0 1 2
+                    x_pos_DEV002G003 = 815
+                    y_pos_DEV002G003 = 540
+                    x_pos_DEV002G003_next = +29
+                    width_DEV002G003 = 29
+                    height_DEV002G003 = 22
+                    ammount_DEV002G003 = 12
+                elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    x_pos_DEV002G003 = 696
+                    y_pos_DEV002G003 = 568
+                    x_pos_DEV002G003_next = +84
+                    width_DEV002G003 = 80
+                    height_DEV002G003 = 40
+                    ammount_DEV002G003 = 7
+                for i in range(0, ammount_DEV002G003):
                     val_DEV002G003 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G003.place(x=x_pos_DEV002G003, y=568, width=80, height=40)
-                    x_pos_DEV002G003 += +84
+                    val_DEV002G003.place(x=x_pos_DEV002G003, y=y_pos_DEV002G003, w=width_DEV002G003, h=height_DEV002G003)
+                    x_pos_DEV002G003 += x_pos_DEV002G003_next
                     led_DEV002G003.append(val_DEV002G003)
             #------------------------------------------------------------------------------
             # DEV002G004 (TANK CAPACITY)
@@ -2899,12 +2972,26 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV002G004
                 global val_DEV002G004
+                global ammount_DEV002G004
                 led_DEV002G004 = []
-                x_pos_DEV002G004 = 3
-                for i in range(0, 7):
+                if theme in theme_txt[:3]: # THEME 0 1 2
+                    x_pos_DEV002G004 = 108
+                    y_pos_DEV002G004 = 640
+                    x_pos_DEV002G004_next = +29
+                    width_DEV002G004 = 29
+                    height_DEV002G004 = 22
+                    ammount_DEV002G004 = 12
+                elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    x_pos_DEV002G004 = 3
+                    y_pos_DEV002G004 = 676
+                    x_pos_DEV002G004_next = +84
+                    width_DEV002G004 = 80
+                    height_DEV002G004 = 40
+                    ammount_DEV002G004 = 7
+                for i in range(0, ammount_DEV002G004):
                     val_DEV002G004 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G004.place(x=x_pos_DEV002G004, y=676, width=80, height=40)
-                    x_pos_DEV002G004 += +84
+                    val_DEV002G004.place(x=x_pos_DEV002G004, y=y_pos_DEV002G004, w=width_DEV002G004, h=height_DEV002G004)
+                    x_pos_DEV002G004 += x_pos_DEV002G004_next
                     led_DEV002G004.append(val_DEV002G004)
             #------------------------------------------------------------------------------
             # DEV002G005 (FUEL FLOW)
@@ -2912,12 +2999,26 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global led_DEV002G005
                 global val_DEV002G005
+                global ammount_DEV002G005
                 led_DEV002G005 = []
-                x_pos_DEV002G005 = 697
-                for i in range(0, 7):
+                if theme in theme_txt[:3]: # THEME 0 1 2
+                    x_pos_DEV002G005 = 815
+                    y_pos_DEV002G005 = 640
+                    x_pos_DEV002G005_next = +29
+                    width_DEV002G005 = 29
+                    height_DEV002G005 = 22
+                    ammount_DEV002G005 = 12
+                elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    x_pos_DEV002G005 = 696
+                    y_pos_DEV002G005 = 676
+                    x_pos_DEV002G005_next = +84
+                    width_DEV002G005 = 80
+                    height_DEV002G005 = 40
+                    ammount_DEV002G005 = 7
+                for i in range(0, ammount_DEV002G005):
                     val_DEV002G005 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G005.place(x=x_pos_DEV002G005, y=676, width=80, height=40)
-                    x_pos_DEV002G005 += +84
+                    val_DEV002G005.place(x=x_pos_DEV002G005, y=y_pos_DEV002G005, w=width_DEV002G005, h=height_DEV002G005)
+                    x_pos_DEV002G005 += x_pos_DEV002G005_next
                     led_DEV002G005.append(val_DEV002G005)
             #------------------------------------------------------------------------------
             # DEV002G006 (VDC)
@@ -3060,7 +3161,14 @@ class P01_DASH(tk.Frame):
                         y_lbl_sysinfo = [100, 100, 144, 144, 188, 232, 276, 320, 276, 320, 100, 140]
                         wh_lbl_sysinfo = [40, 70, 100]
                 elif device == device_txt[2]:
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if theme_txt[0:3].count(theme) > 0: # THEME 0 to 3
+                        xywh_7SEG002 = [2, 220, 320, 100]
+                        x_txt_sysinfo = [1810, 1810, 1810, 1810, 1810]
+                        y_txt_sysinfo = [35, 60, 85, 110, 135]
+                        x_lbl_sysinfo = [1870, 1970, 1870, 1970, 1870, 1870, 2260, 2260]
+                        y_lbl_sysinfo = [32, 32, 58, 58, 84, 110, 450, 476]
+                        wh_lbl_sysinfo = [65, 24, 140, 24]
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [1810, 1810, 1810, 1810, 1810]
                         y_txt_sysinfo = [35, 60, 85, 110, 135]
@@ -3075,7 +3183,25 @@ class P01_DASH(tk.Frame):
                         y_lbl_sysinfo = [42, 42, 64, 64, 86, 108, 118]
                         wh_lbl_sysinfo = [20, 60, 100, 120]
                 elif device == device_txt[31]:
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if theme_txt[0:3].count(theme) > 0: # THEME 3 to 8
+                        xywh_7SEG002 = [15, 520, 320, 100]
+                        y_txt_sysinfo = [500, 527, 554, 581, 608]
+                        if btn_states_PB == "pb00":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15]
+                            x_lbl_sysinfo = [80, 180, 80, 180, 80, 80, 80]
+                            y_lbl_sysinfo = [498, 498, 525, 525, 552, 579, 606]
+                            wh_lbl_sysinfo = [65, 24, 140, 24]
+                        elif btn_states_PB == "pb01":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15]
+                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 330, 330, 330]
+                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 550, 580, 605]
+                            wh_lbl_sysinfo = [180, 24, 24, 24]
+                        elif btn_states_PB == "pb02":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
+                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
+                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
+                            wh_lbl_sysinfo = [180, 24, 0,0]
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [2, 220, 320, 100]
                         y_txt_sysinfo = [200, 227, 254, 281, 308]
                         if btn_states_PB == "pb00":
@@ -3156,7 +3282,7 @@ class P01_DASH(tk.Frame):
                         label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                         label_7SEG002.place(x=xywh_7SEG002[0], y=xywh_7SEG002[1], width=xywh_7SEG002[2], height=xywh_7SEG002[3])
                 elif device == device_txt[2]:
-                    if theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb09"]:
+                    if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb09"]:
                         for i in range(8):
                             label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
                             lbls_sysinfo.append(label_sysinfo)
@@ -3216,6 +3342,7 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if REGION:
                     if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.config(image=localimage04, compound="center")
                         label_7SEG001.place(x=567, y=164, width=496, height=212)
                     elif theme in [theme_txt[15], theme_txt[16]]:
@@ -3399,12 +3526,12 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             if theme in [theme_txt[0], theme_txt[1], theme_txt[2]]:
-                localimage10 = ledOF_img_list[11] #SPEED OFRD
+                localimage10 = ledOF_img_list[16] #SPEED OFRD
                 localimage11 = ledOF_img_list[11] #SPEED OFRD
                 localimage12 = ledOF_img_list[11] #SPEED OFRD
                 localimage13 = ledFU_img_list[11] #SIGNAL FURD
                 localimage14 = ledOF_img_list[11] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[11] #SPEED FURD
+                localimage15 = ledFU_img_list[16] #SPEED FURD
                 localimage16 = ledFU_img_list[11] #SPEED FURD
                 localimage17 = ledFU_img_list[11] #SPEED FURD
                 localimage18 = rpmON_img_list
@@ -3412,15 +3539,57 @@ class P01_DASH(tk.Frame):
                 if theme == theme_txt[0]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
-                if theme == theme_txt[1]:
-                    localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
-                    localimagelist02 = list(vbOF_S01_img_list)
                     if style == style_txt[0]:
+                        localimage30 = ledOF_img_list[19] #DEV002GAUGES 1GN
+                        localimage31 = ledOF_img_list[19] #DEV002GAUGES 1RD
+                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        localimage40 = ledOF_img_list[19] #DEV002GAUGES 2GN
+                        localimage41 = ledOF_img_list[19] #DEV002GAUGES 2RD
+                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
                         localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
                         localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[48]
                     elif style == style_txt[1]:
+                        localimage30 = ledOF_img_list[19] #DEV002GAUGES 1GN
+                        localimage31 = ledOF_img_list[19] #DEV002GAUGES 1RD
+                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        localimage40 = ledOF_img_list[19] #DEV002GAUGES 2GN
+                        localimage41 = ledOF_img_list[19] #DEV002GAUGES 2RD
+                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                        localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                        localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                        localimage23 = ledOF_img_list[46]
+                elif theme == theme_txt[1]:
+                    localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
+                    localimagelist02 = list(vbOF_S01_img_list)
+                    if style == style_txt[0]:
+                        localimage30 = ledOF_img_list[20] #DEV002GAUGES 1GN
+                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        localimage32 = ledFU_img_list[20] #DEV002GAUGES 1GN
+                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        localimage40 = ledOF_img_list[20] #DEV002GAUGES 2GN
+                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        localimage42 = ledFU_img_list[20] #DEV002GAUGES 2GN
+                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                        localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                        localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                        localimage23 = ledOF_img_list[48]
+                    elif style == style_txt[1]:
+                        localimage30 = ledOF_img_list[16] #DEV002GAUGES 1GN
+                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        localimage40 = ledOF_img_list[16] #DEV002GAUGES 2GN
+                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
                         localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                         localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
@@ -3429,16 +3598,40 @@ class P01_DASH(tk.Frame):
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list) #VOICEBOX
                     if style == style_txt[0]:
+                        localimage30 = ledOF_img_list[14] #DEV002GAUGES 1GN
+                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        localimage32 = ledFU_img_list[14] #DEV002GAUGES 1GN
+                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        localimage40 = ledOF_img_list[14] #DEV002GAUGES 2GN
+                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        localimage42 = ledFU_img_list[14] #DEV002GAUGES 2GN
+                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
                         localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
                         localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[48]
                     elif style == style_txt[1]:
+                        localimage30 = ledOF_img_list[16] #DEV002GAUGES 1GN
+                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        localimage40 = ledOF_img_list[16] #DEV002GAUGES 2GN
+                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
                         localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                         localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[46]
             elif theme == theme_txt[3]:
+                localimage30 = ledOF_img_list[61] #DEV002GAUGES 1GY
+                localimage31 = ledOF_img_list[61] #DEV002GAUGES 1GY
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage40 = ledOF_img_list[61] #DEV002GAUGES 2GN
+                localimage41 = ledOF_img_list[61] #DEV002GAUGES 2RD
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
                 localimage10 = ledOF_img_list[61] #RPM OF GY
                 localimage11 = ledOF_img_list[61] #RPM OF GY
                 localimage12 = ledOF_img_list[61] #RPM OF GY
@@ -3462,6 +3655,14 @@ class P01_DASH(tk.Frame):
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
             elif theme == theme_txt[4]:
+                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN                
                 localimage10 = ledOF_img_list[60] #RPM RD
                 localimage11 = ledOF_img_list[62] #YE
                 localimage12 = ledOF_img_list[58] #RPM GN
@@ -3485,6 +3686,14 @@ class P01_DASH(tk.Frame):
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
             elif theme == theme_txt[5]:
+                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
                 localimage10 = ledOF_img_list[60] #RD
                 localimage11 = ledOF_img_list[62] #YE
                 localimage12 = ledOF_img_list[58] #RD
@@ -3508,6 +3717,14 @@ class P01_DASH(tk.Frame):
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
             elif theme == theme_txt[6]:
+                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
                 localimage10 = ledOF_img_list[60] #RD
                 localimage11 = ledOF_img_list[62] #YE
                 localimage12 = ledOF_img_list[58] #RD
@@ -3531,6 +3748,14 @@ class P01_DASH(tk.Frame):
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
             elif theme == theme_txt[7]:
+                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
                 localimage10 = ledOF_img_list[60] #RD
                 localimage11 = ledOF_img_list[62] #YE
                 localimage12 = ledOF_img_list[58] #RD
@@ -3554,6 +3779,14 @@ class P01_DASH(tk.Frame):
                 localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_OTTO_img_list)
             elif theme == theme_txt[8]:
+                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
                 localimage10 = ledOF_img_list[60] #RD
                 localimage11 = ledOF_img_list[62] #YE
                 localimage12 = ledOF_img_list[58] #RD
@@ -3992,9 +4225,8 @@ class P01_DASH(tk.Frame):
                 # SETUP
                 #--------------------------------------------------------------------------
                 min_DEV002G000 = 0
-                max_DEV002G000 = 120
+                max_DEV002G000 = 160
                 conv_min_DEV002G000 = 0
-                conv_max_DEV002G000 = 7
                 cnt_DEV002G000 = 10 #HIGHER NUMBER FASTER SIMULATION
                 #--------------------------------------------------------------------------
                 # SIMULATION
@@ -4012,23 +4244,32 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G000 = int(aldl_mainfold_air_temp)
                 else:
                     seven_seg_DEV002G000 = count_ctr_SIM_DEV002G000
-                val_DEV002G000 = seven_seg_DEV002G000/conv_max_DEV002G000
+                val_DEV002G000 = seven_seg_DEV002G000/ammount_DEV002G000
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G000 = int (val_DEV002G000 - min_DEV002G000) * (conv_max_DEV002G000 - conv_min_DEV002G000) / (conv_max_DEV002G000 - conv_min_DEV002G000) + conv_min_DEV002G000
+                perc_DEV002G000 = int (val_DEV002G000 - min_DEV002G000) * (ammount_DEV002G000 - conv_min_DEV002G000) / (ammount_DEV002G000 - conv_min_DEV002G000) + conv_min_DEV002G000
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G000, conv_max_DEV002G000):
+                    for i in range (conv_min_DEV002G000, ammount_DEV002G000):
                         if perc_DEV002G000 >= i+1:
-                            led_DEV002G000[i].config(image=localimage15)
+                            if i<8:
+                                led_DEV002G000[i].config(image=localimage32)
+                            else:
+                                led_DEV002G000[i].config(image=localimage33)
                         else:
-                            led_DEV002G000[i].config(image=localimage10)
+                            if i<8:
+                                led_DEV002G000[i].config(image=localimage30)
+                            else:
+                                led_DEV002G000[i].config(image=localimage31)
                 else:
-                    for i in range (conv_min_DEV002G000, conv_max_DEV002G000):
-                        led_DEV002G000[i].config(image=localimage10)
+                    for i in range (conv_min_DEV002G000, ammount_DEV002G000):
+                            if i<8:
+                                led_DEV002G000[i].config(image=localimage30)
+                            else:
+                                led_DEV002G000[i].config(image=localimage31)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G001 (OIL TEMP)
             #------------------------------------------------------------------------------
@@ -4037,9 +4278,8 @@ class P01_DASH(tk.Frame):
                 # SETUP
                 #--------------------------------------------------------------------------
                 min_DEV002G001 = 0
-                max_DEV002G001 = 120
+                max_DEV002G001 = 160
                 conv_min_DEV002G001 = 0
-                conv_max_DEV002G001 = 7
                 cnt_DEV002G001 = 14 #HIGHER NUMBER FASTER SIMULATION
                 #--------------------------------------------------------------------------
                 # SIMULATION
@@ -4057,23 +4297,32 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G001 = int(aldl_coolant_temp)
                 else:
                     seven_seg_DEV002G001 = count_ctr_SIM_DEV002G001
-                val_DEV002G001 = seven_seg_DEV002G001/conv_max_DEV002G001
+                val_DEV002G001 = seven_seg_DEV002G001/ammount_DEV002G001
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G001 = int (val_DEV002G001 - min_DEV002G001) * (conv_max_DEV002G001 - conv_min_DEV002G001) / (conv_max_DEV002G001 - conv_min_DEV002G001) + conv_min_DEV002G001
+                perc_DEV002G001 = int (val_DEV002G001 - min_DEV002G001) * (ammount_DEV002G001 - conv_min_DEV002G001) / (ammount_DEV002G001 - conv_min_DEV002G001) + conv_min_DEV002G001
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G001, conv_max_DEV002G001):
+                    for i in range (conv_min_DEV002G001, ammount_DEV002G001):
                         if perc_DEV002G001 >= i+1:
-                            led_DEV002G001[i].config(image=localimage17)
+                            if i<8:
+                                led_DEV002G001[i].config(image=localimage42)
+                            else:
+                                led_DEV002G001[i].config(image=localimage43)
                         else:
-                            led_DEV002G001[i].config(image=localimage12)
+                            if i<8:
+                                led_DEV002G001[i].config(image=localimage40)
+                            else:
+                                led_DEV002G001[i].config(image=localimage41)
                 else:
-                    for i in range (conv_min_DEV002G001, conv_max_DEV002G001):
-                        led_DEV002G001[i].config(image=localimage12)
+                    for i in range (conv_min_DEV002G001, ammount_DEV002G001):
+                            if i<8:
+                                led_DEV002G001[i].config(image=localimage40)
+                            else:
+                                led_DEV002G001[i].config(image=localimage41)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G002 (EGT TEMP)
             #------------------------------------------------------------------------------
@@ -4082,9 +4331,8 @@ class P01_DASH(tk.Frame):
                 # SETUP
                 #--------------------------------------------------------------------------
                 min_DEV002G002 = 0
-                max_DEV002G002 = 120
+                max_DEV002G002 = 160
                 conv_min_DEV002G002 = 0
-                conv_max_DEV002G002 = 7
                 cnt_DEV002G002 = 8 #HIGHER NUMBER FASTER SIMULATION
                 #--------------------------------------------------------------------------
                 # SIMULATION
@@ -4102,23 +4350,32 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G002 = int(aldl_coolant_temp)
                 else:
                     seven_seg_DEV002G002 = count_ctr_SIM_DEV002G002
-                val_DEV002G002 = seven_seg_DEV002G002/conv_max_DEV002G002
+                val_DEV002G002 = seven_seg_DEV002G002/ammount_DEV002G002
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G002 = int (val_DEV002G002 - min_DEV002G002) * (conv_max_DEV002G002 - conv_min_DEV002G002) / (conv_max_DEV002G002 - conv_min_DEV002G002) + conv_min_DEV002G002
+                perc_DEV002G002 = int (val_DEV002G002 - min_DEV002G002) * (ammount_DEV002G002 - conv_min_DEV002G002) / (ammount_DEV002G002 - conv_min_DEV002G002) + conv_min_DEV002G002
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G002, conv_max_DEV002G002):
+                    for i in range (conv_min_DEV002G002, ammount_DEV002G002):
                         if perc_DEV002G002 >= i+1:
-                            led_DEV002G002[i].config(image=localimage17)
+                            if i<8:
+                                led_DEV002G002[i].config(image=localimage42)
+                            else:
+                                led_DEV002G002[i].config(image=localimage43)
                         else:
-                            led_DEV002G002[i].config(image=localimage12)
+                            if i<8:
+                                led_DEV002G002[i].config(image=localimage40)
+                            else:
+                                led_DEV002G002[i].config(image=localimage41)
                 else:
-                    for i in range (conv_min_DEV002G002, conv_max_DEV002G002):
-                        led_DEV002G002[i].config(image=localimage12)
+                    for i in range (conv_min_DEV002G002, ammount_DEV002G002):
+                            if i<8:
+                                led_DEV002G002[i].config(image=localimage40)
+                            else:
+                                led_DEV002G002[i].config(image=localimage41)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G003 (OIL PRESSURE)
             #------------------------------------------------------------------------------
@@ -4127,9 +4384,8 @@ class P01_DASH(tk.Frame):
                 # SETUP
                 #--------------------------------------------------------------------------
                 min_DEV002G003 = 0
-                max_DEV002G003 = 100
+                max_DEV002G003 = 160
                 conv_min_DEV002G003 = 0
-                conv_max_DEV002G003 = 7
                 cnt_DEV002G003 = 2 #HIGHER NUMBER FASTER SIMULATION
                 #--------------------------------------------------------------------------
                 # SIMULATION
@@ -4147,23 +4403,32 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G003 = int(aldl_barometric_pressure)
                 else:
                     seven_seg_DEV002G003 = count_ctr_SIM_DEV002G003
-                val_DEV002G003 = seven_seg_DEV002G003/conv_max_DEV002G003
+                val_DEV002G003 = seven_seg_DEV002G003/ammount_DEV002G003
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G003 = int (val_DEV002G003 - min_DEV002G003) * (conv_max_DEV002G003 - conv_min_DEV002G003) / (conv_max_DEV002G003 - conv_min_DEV002G003) + conv_min_DEV002G003
+                perc_DEV002G003 = int (val_DEV002G003 - min_DEV002G003) * (ammount_DEV002G003 - conv_min_DEV002G003) / (ammount_DEV002G003 - conv_min_DEV002G003) + conv_min_DEV002G003
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G003, conv_max_DEV002G003):
+                    for i in range (conv_min_DEV002G003, ammount_DEV002G003):
                         if perc_DEV002G003 >= i+1:
-                            led_DEV002G003[i].config(image=localimage15)
+                            if i<8:
+                                led_DEV002G003[i].config(image=localimage32)
+                            else:
+                                led_DEV002G003[i].config(image=localimage33)
                         else:
-                            led_DEV002G003[i].config(image=localimage10)
+                            if i<8:
+                                led_DEV002G003[i].config(image=localimage30)
+                            else:
+                                led_DEV002G003[i].config(image=localimage31)
                 else:
-                    for i in range (conv_min_DEV002G003, conv_max_DEV002G003):
-                        led_DEV002G003[i].config(image=localimage10)
+                    for i in range (conv_min_DEV002G003, ammount_DEV002G003):
+                            if i<8:
+                                led_DEV002G003[i].config(image=localimage30)
+                            else:
+                                led_DEV002G003[i].config(image=localimage31)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G004 (TANK CAPACITY)
             #------------------------------------------------------------------------------
@@ -4174,7 +4439,6 @@ class P01_DASH(tk.Frame):
                 min_DEV002G004 = 0 #0to100 = [30, 35, 40, 45, 50, 55, 57] # if LG06V >= val  43=50%
                 max_DEV002G004 = 57
                 conv_min_DEV002G004 = 0
-                conv_max_DEV002G004 = 7
                 cnt_DEV002G004 = 6 #HIGHER NUMBER FASTER SIMULATION
                 #--------------------------------------------------------------------------
                 # GET NEW DATA
@@ -4207,23 +4471,32 @@ class P01_DASH(tk.Frame):
                         seven_seg_DEV002G004 = min_DEV002G004
                     else:
                         seven_seg_DEV002G004 = count_ctr_SIM_DEV002G004
-                val_DEV002G004 = seven_seg_DEV002G004/conv_max_DEV002G004
+                val_DEV002G004 = seven_seg_DEV002G004/ammount_DEV002G004
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G004 = int (val_DEV002G004 - min_DEV002G004) * (conv_max_DEV002G004 - conv_min_DEV002G004) / (conv_max_DEV002G004 - conv_min_DEV002G004) + conv_min_DEV002G004
+                perc_DEV002G004 = int (val_DEV002G004 - min_DEV002G004) * (ammount_DEV002G004 - conv_min_DEV002G004) / (ammount_DEV002G004 - conv_min_DEV002G004) + conv_min_DEV002G004
                 #-------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G004, conv_max_DEV002G004):
+                    for i in range (conv_min_DEV002G004, ammount_DEV002G004):
                         if perc_DEV002G004 >= i+1:
-                            led_DEV002G004[i].config(image=localimage15)
+                            if i<8:
+                                led_DEV002G004[i].config(image=localimage32)
+                            else:
+                                led_DEV002G004[i].config(image=localimage33)
                         else:
-                            led_DEV002G004[i].config(image=localimage10)
+                            if i<8:
+                                led_DEV002G004[i].config(image=localimage30)
+                            else:
+                                led_DEV002G004[i].config(image=localimage31)
                 else:
-                    for i in range (conv_min_DEV002G004, conv_max_DEV002G004):
-                        led_DEV002G004[i].config(image=localimage10)
+                    for i in range (conv_min_DEV002G004, ammount_DEV002G004):
+                            if i<8:
+                                led_DEV002G004[i].config(image=localimage30)
+                            else:
+                                led_DEV002G004[i].config(image=localimage31)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G005 (FUEL FLOW)
             #------------------------------------------------------------------------------
@@ -4232,9 +4505,8 @@ class P01_DASH(tk.Frame):
                 # SETUP
                 #--------------------------------------------------------------------------
                 min_DEV002G005 = 0
-                max_DEV002G005 = 100
+                max_DEV002G005 = 160
                 conv_min_DEV002G005 = 0
-                conv_max_DEV002G005 = 7
                 cnt_DEV002G005 = 10 #HIGHER NUMBER FASTER SIMULATION
                 #--------------------------------------------------------------------------
                 # SIMULATION
@@ -4252,23 +4524,32 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G005 = int(aldl_throttle_pos)
                 else:
                     seven_seg_DEV002G005 = count_ctr_SIM_DEV002G005
-                val_DEV002G005 = seven_seg_DEV002G005/conv_max_DEV002G005
+                val_DEV002G005 = seven_seg_DEV002G005/ammount_DEV002G005
                 #-------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #-------------------------------------------------------------------------
-                perc_DEV002G005 = int (val_DEV002G005 - min_DEV002G005) * (conv_max_DEV002G005 - conv_min_DEV002G005) / (conv_max_DEV002G005 - conv_min_DEV002G005) + conv_min_DEV002G005
+                perc_DEV002G005 = int (val_DEV002G005 - min_DEV002G005) * (ammount_DEV002G005 - conv_min_DEV002G005) / (ammount_DEV002G005 - conv_min_DEV002G005) + conv_min_DEV002G005
                 #-------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #-------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G005, conv_max_DEV002G005):
+                    for i in range (conv_min_DEV002G005, ammount_DEV002G005):
                         if perc_DEV002G005 >= i+1:
-                            led_DEV002G005[i].config(image=localimage17)
+                            if i<8:
+                                led_DEV002G005[i].config(image=localimage42)
+                            else:
+                                led_DEV002G005[i].config(image=localimage43)
                         else:
-                            led_DEV002G005[i].config(image=localimage12)
+                            if i<8:
+                                led_DEV002G005[i].config(image=localimage40)
+                            else:
+                                led_DEV002G005[i].config(image=localimage41)
                 else:
-                    for i in range (conv_min_DEV002G005, conv_max_DEV002G005):
-                        led_DEV002G005[i].config(image=localimage12)
+                    for i in range (conv_min_DEV002G005, ammount_DEV002G005):
+                            if i<8:
+                                led_DEV002G005[i].config(image=localimage40)
+                            else:
+                                led_DEV002G005[i].config(image=localimage41)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G006 (VDC)
             #------------------------------------------------------------------------------
