@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-10-21-1844"
+last_change = "2023-10-22-1000"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -985,9 +985,9 @@ if REGION:
         sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#44FF44", "#FF4444"]
         sys_clr_BU = ["#000505", "#001015", "#001025", "#55AAFF", "#BBFFFF", "#005555", "#00FFFF", "#009999", "#002020", "#AAFFFF", "#44FF44", "#FF4444"]        
         sys_clr_WH = ["#000000", "#101010", "#151515", "#AAAAAA", "#BBBBBB", "#555555", "#FFFFFF", "#999999", "#202020", "#FFFFFF", "#44FF44", "#FF4444"]
-        #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG
-        sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200"]
-        sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000"]
+        #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG  04_BG_INF  05_TXT_INF
+        sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200", "#142827", "#00FFFF"]
+        sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000", "#142827", "#00FFFF"]
         
         if system == system_txt[0]:
             sys_clr = sys_clr_OR
@@ -1008,8 +1008,9 @@ if REGION:
        
         lbl_style_setup_btns =          {'font':(fonts[6], 26), 'anchor':'c'}
         lbl_style_setup_btns_small =    {'font':(fonts[6], 18), 'anchor':'c','width':'11','height':'1'}
+        lbl_style_7SEG01_S12 =          {'font':(fonts[7], 75),'anchor':'nw','borderwidth':0,'highlightthickness':0}
         lbl_style_7SEG01_S34 =          {'font':(fonts[3], 60, "bold"), 'anchor':'nw','borderwidth':0,'highlightthickness':0}           
-        lbl_style_7SEG03_S34 =          {'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}
+        lbl_style_7SEG03_S34 =          {'font':(fonts[2], 165),'anchor':'nw','borderwidth':0,'highlightthickness':0}        
 
         lbl_style_SETUP =               {'font':(fonts[6], 40), 'anchor':'c'}
         lbl_style_SETUP2 =              {'font':(fonts[6], 25), 'anchor':'c'}            
@@ -3015,7 +3016,26 @@ class P01_DASH(tk.Frame):
             #------------------------------------------------------------------------------
             if REGION:
                 if device == device_txt[1]:
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if theme_txt[0:3].count(theme) > 0: # THEME 3 to 8
+                        xywh_7SEG002 = [15, 520, 320, 100]
+                        y_txt_sysinfo = [500, 527, 554, 581, 608]
+                        if btn_states_PB == "pb00":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15]
+                            x_lbl_sysinfo = [80, 180, 80, 180, 80, 80, 80]
+                            y_lbl_sysinfo = [498, 498, 525, 525, 552, 579, 606]
+                            wh_lbl_sysinfo = [65, 24, 140, 24]
+                        elif btn_states_PB == "pb01":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15]
+                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 330, 330, 330]
+                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 550, 580, 605]
+                            wh_lbl_sysinfo = [180, 24, 24, 24]
+                        elif btn_states_PB == "pb02":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
+                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
+                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
+                            wh_lbl_sysinfo = [180, 24, 0,0]
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        xywh_7SEG002 = [2, 220, 320, 100]
                         y_txt_sysinfo = [200, 227, 254, 281, 308]
                         if btn_states_PB == "pb00":
                             x_txt_sysinfo = [5, 5, 5, 5, 5]
@@ -3033,6 +3053,7 @@ class P01_DASH(tk.Frame):
                             y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
                     elif theme in [theme_txt[15], theme_txt[16]]:
+                        xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [73, 73, 110, 110, 135, 135, 320, 320]
                         y_txt_sysinfo = [100, 145, 190, 234, 278, 325, 280, 325]
                         x_lbl_sysinfo = [5, 100, 5, 100, 5, 5, 5, 5, 250, 250, 600, 600]
@@ -3040,12 +3061,14 @@ class P01_DASH(tk.Frame):
                         wh_lbl_sysinfo = [40, 70, 100]
                 elif device == device_txt[2]:
                     if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [1810, 1810, 1810, 1810, 1810]
                         y_txt_sysinfo = [35, 60, 85, 110, 135]
                         x_lbl_sysinfo = [1870, 1970, 1870, 1970, 1870, 1870, 2260, 2260]
                         y_lbl_sysinfo = [32, 32, 58, 58, 84, 110, 450, 476]
                         wh_lbl_sysinfo = [65, 24, 140, 24]
                     elif theme in [theme_txt[15], theme_txt[16]]:
+                        xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [1870, 1870, 1930, 1930]
                         y_txt_sysinfo = [42, 64, 86, 108]
                         x_lbl_sysinfo = [1805, 1900, 1805, 1900, 1805, 1805, 1805]
@@ -3053,6 +3076,7 @@ class P01_DASH(tk.Frame):
                         wh_lbl_sysinfo = [20, 60, 100, 120]
                 elif device == device_txt[31]:
                     if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        xywh_7SEG002 = [2, 220, 320, 100]
                         y_txt_sysinfo = [200, 227, 254, 281, 308]
                         if btn_states_PB == "pb00":
                             x_txt_sysinfo = [5, 5, 5, 5, 5]
@@ -3070,6 +3094,7 @@ class P01_DASH(tk.Frame):
                             y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
                     elif theme in [theme_txt[15], theme_txt[16]]:
+                        xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [73, 73, 110, 110, 135, 135, 320, 320]
                         y_txt_sysinfo = [100, 145, 190, 234, 278, 325, 280, 325]
                         x_lbl_sysinfo = [5, 100, 5, 100, 5, 5, 5, 5, 250, 250, 600, 600]
@@ -3079,7 +3104,7 @@ class P01_DASH(tk.Frame):
             # PLACE TEXT
             #------------------------------------------------------------------------------
             if REGION:
-                if theme in theme_txt[3:9] + theme_txt[15:17]: #T3-8,15,16
+                if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17]: #T3-8,15,16
                     #----------------------------------------------------------------------
                     # MTR DISPLAY
                     #----------------------------------------------------------------------
@@ -3114,21 +3139,22 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global label_7SEG002
                 if device == device_txt[1] or device == device_txt[31]:
-                    if theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb00", "pb01", "pb02"]:
+                    if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb00", "pb01", "pb02"]:
                         for i in range(8):
                             label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
                             lbls_sysinfo.append(label_sysinfo)
-                        lbls_sysinfo[0].place(x=x_lbl_sysinfo[0], y=y_lbl_sysinfo[0], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])   
-                        lbls_sysinfo[1].place(x=x_lbl_sysinfo[1], y=y_lbl_sysinfo[1], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[2].place(x=x_lbl_sysinfo[2], y=y_lbl_sysinfo[2], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[3].place(x=x_lbl_sysinfo[3], y=y_lbl_sysinfo[3], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[4].place(x=x_lbl_sysinfo[4], y=y_lbl_sysinfo[4], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[5].place(x=x_lbl_sysinfo[5], y=y_lbl_sysinfo[5], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])                
-                        lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
-                        lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
-                    elif theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb03", "pb04"]:                        
+                        lbls_sysinfo[0].place(x=x_lbl_sysinfo[0], y=y_lbl_sysinfo[0], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])   
+                        lbls_sysinfo[1].place(x=x_lbl_sysinfo[1], y=y_lbl_sysinfo[1], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
+                        lbls_sysinfo[2].place(x=x_lbl_sysinfo[2], y=y_lbl_sysinfo[2], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
+                        lbls_sysinfo[3].place(x=x_lbl_sysinfo[3], y=y_lbl_sysinfo[3], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
+                        lbls_sysinfo[4].place(x=x_lbl_sysinfo[4], y=y_lbl_sysinfo[4], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
+                        lbls_sysinfo[5].place(x=x_lbl_sysinfo[5], y=y_lbl_sysinfo[5], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])                
+                        lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
+                        if btn_states_PB in ["pb01"]:
+                            lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
+                    elif theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb03", "pb04"]:                        
                         label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                        label_7SEG002.place(x=2, y=220, width=320, height=100)
+                        label_7SEG002.place(x=xywh_7SEG002[0], y=xywh_7SEG002[1], width=xywh_7SEG002[2], height=xywh_7SEG002[3])
                 elif device == device_txt[2]:
                     if theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb09"]:
                         for i in range(8):
@@ -3148,11 +3174,11 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # GAUGE 7-SEGMENT DISPLAYS
         #----------------------------------------------------------------------------------
-        if REGION:                
+        if REGION:
             global label_7SEG001
             global label_7SEG003
             label_7SEG001 = tk.Label(self, bg=sty_clr[3], fg=sty_clr[2])
-            label_7SEG003 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+            label_7SEG003 = tk.Label(self)
 
             if device == device_txt[1]:
                 #--------------------------------------------------------------------------
@@ -3179,8 +3205,10 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if REGION:
                     if theme_txt[0:3].count(theme) > 0: # THEME 0 to 3
+                        label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
                         label_7SEG003.place(x=940, y=470, width=285, height=84)
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                         label_7SEG003.place(x=800, y=590, width=460, height=90)
             elif device == device_txt[2]:
                 #--------------------------------------------------------------------------
@@ -4469,7 +4497,7 @@ class P01_DASH(tk.Frame):
         # UPDATE SYSINFO MTR DISPLAY
         #----------------------------------------------------------------------------------
         if REGION:
-            if theme in [theme_txt[3], theme_txt[4], theme_txt[5], theme_txt[6], theme_txt[7], theme_txt[8], theme_txt[15], theme_txt[16]]:
+            if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17]:
                 if device == device_txt[1] or device == device_txt[31]:
                     if btn_states_PB == "pb00":
                         if SYSTEM == "linux":
