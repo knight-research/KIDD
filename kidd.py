@@ -2,7 +2,7 @@
 REGION = True #I AM JUST HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-10-22-1651"
+last_change = "2023-10-28-1035"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -981,9 +981,9 @@ if REGION:
         sys_clr = []
         sty_clr = []
         #             00_GRD-BG  01_GRD-X   02_GRD-Y   03_CRNR-X  04_CRNR-Y  05_GRAD_1  06_GRAD_2  07_GRAD_3  08_BG_BTN  09_TXT_BTN 10_ON      11_OFF
-        sys_clr_OR = ["#100500", "#151000", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#AA5500", "#301000", "#FFF862", "#44FF44", "#FF4444"]
-        sys_clr_GN = ["#000500", "#001000", "#051505", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#44FF44", "#FF4444"]
-        sys_clr_BU = ["#000505", "#001015", "#001025", "#55AAFF", "#BBFFFF", "#005555", "#00FFFF", "#009999", "#002020", "#AAFFFF", "#44FF44", "#FF4444"]        
+        sys_clr_OR = ["#151000", "#251500", "#201500", "#FF7700", "#FFBB00", "#551100", "#FF5500", "#AA5500", "#301000", "#FFF862", "#44FF44", "#FF4444"]
+        sys_clr_GN = ["#001500", "#003010", "#103010", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#44FF44", "#FF4444"]
+        sys_clr_BU = ["#001515", "#003030", "#002030", "#55AAFF", "#BBFFFF", "#005555", "#00FFFF", "#009999", "#002020", "#AAFFFF", "#44FF44", "#FF4444"]        
         sys_clr_WH = ["#000000", "#101010", "#151515", "#AAAAAA", "#BBBBBB", "#555555", "#FFFFFF", "#999999", "#202020", "#FFFFFF", "#44FF44", "#FF4444"]
         #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG  04_BG_INF  05_TXT_INF
         sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200", "#142827", "#00FFFF"]
@@ -1080,7 +1080,7 @@ if REGION:
         #----------------------------------------------------------------------------------
         # RELAIS BOARDS 
         #----------------------------------------------------------------------------------
-        if SYSTEM == "linux" and btn_states_HW[0] == True:        
+        if SYSTEM == "linux" and btn_states_HW[0] == True and device == device_txt[2]:        
             # Set the configuration word to configure all pins as outputs for each board
             for i, address in enumerate(i2c_addr_dev02rb):
                 buses[i].write_word_data(address, 0x00FF, 0x00FF)
