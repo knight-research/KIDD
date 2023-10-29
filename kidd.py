@@ -325,8 +325,10 @@ if REGION:
                 try:
                     with open('/sys/firmware/devicetree/base/model', 'r') as f:
                         model = f.read().strip()
-                    print (model)
-                    SYSTEMPI = model
+                    if 'Raspberry Pi' in model:
+                        SYSTEMPI = "PI"
+                    else:
+                        SYSTEMPI = "NOPI"
                 except FileNotFoundError:
                     SYSTEMPI = "NOPI"
                     print("except")
@@ -346,7 +348,7 @@ if REGION:
                 import tkinter as tk
                 from smbus2 import SMBus
                 #--------------------------------------------------------------------------
-                if SYSTEMPI == "RaspberryPI":
+                if SYSTEMPI == "PI":
                     import RPi.GPIO as GPIO
                     import board
                     import busio
@@ -1138,7 +1140,7 @@ if REGION:
         # INIT RELAIS BOARDS 
         #----------------------------------------------------------------------------------        
         i2c_addr_dev02rb = [i2cRB01, i2cRB02, i2cRB03]
-        if SYSTEM == "linux" and SYSTEMPI == "RaspberryPi":
+        if SYSTEM == "linux" and SYSTEMPI == "PI":
             buses = [SMBus(1) for _ in i2c_addr_dev02rb]
         #----------------------------------------------------------------------------------
         # INIT DIGITAL INPUT BOARDS 
