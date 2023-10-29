@@ -320,6 +320,17 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             SYSTEM = sys.platform
+            if SYSTEM == 'linux':
+                # Check if it's a Raspberry Pi by examining the system's hardware
+                try:
+                    with open('/sys/firmware/devicetree/base/model', 'r') as f:
+                        model = f.read().strip()
+                    print (model)
+                    SYSTEMPI = model
+                except FileNotFoundError:
+                    SYSTEMPI = "NOPI"
+                    print("except")
+                
             if SYSTEM == "win32" or SYSTEM == "win64":
                 import _fake_GPIO as GPIO
                 import serial.tools.list_ports
@@ -335,11 +346,12 @@ if REGION:
                 import tkinter as tk
                 from smbus2 import SMBus
                 #--------------------------------------------------------------------------
-                import RPi.GPIO as GPIO
-                import board
-                import busio
-                import adafruit_ads1x15.ads1115 as ADS
-                from adafruit_ads1x15.analog_in import AnalogIn
+                if SYSTEMPI == "RaspberryPI":
+                    import RPi.GPIO as GPIO
+                    import board
+                    import busio
+                    import adafruit_ads1x15.ads1115 as ADS
+                    from adafruit_ads1x15.analog_in import AnalogIn
                 #import adafruit_aw9523 #16xDIDO BOARD
                 #from digitalio import Direction
                 #from adafruit_mcp230xx.mcp23017 import MCP23017
@@ -1106,7 +1118,7 @@ if REGION:
         # INIT RELAIS BOARDS 
         #----------------------------------------------------------------------------------        
         i2c_addr_dev02rb = [i2cRB01, i2cRB02, i2cRB03]
-        if SYSTEM == "linux":
+        if SYSTEM == "linux" and SYSTEMPI == "RaspberryPi":
             buses = [SMBus(1) for _ in i2c_addr_dev02rb]
         #----------------------------------------------------------------------------------
         # INIT DIGITAL INPUT BOARDS 
