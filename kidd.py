@@ -325,6 +325,7 @@ if REGION:
                 try:
                     with open('/sys/firmware/devicetree/base/model', 'r') as f:
                         model = f.read().strip()
+                    print (model)
                     if 'Raspberry Pi' in model:
                         SYSTEMPI = "PI"
                     else:
