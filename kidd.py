@@ -670,6 +670,12 @@ if REGION:
             bgDEV002_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV002', 'DASH')
             bgDEV002_DASH_img_dir_srt = sorted(os.listdir(bgDEV002_DASH_img_dir), key=str.lower)
             bgDEV002_DASH_img_list = []
+            bgDEV004_img_dir = os.path.join(folder,'images', '000_bg', 'DEV004')
+            bgDEV004_img_dir_srt = sorted(os.listdir(bgDEV004_img_dir), key=str.lower)
+            bgDEV004_img_list = []
+            bgDEV004_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV004', 'DASH')
+            bgDEV004_DASH_img_dir_srt = sorted(os.listdir(bgDEV004_DASH_img_dir), key=str.lower)
+            bgDEV004_DASH_img_list = []
             bgDEV008_img_dir = os.path.join(folder,'images', '000_bg', 'DEV008')
             bgDEV008_img_dir_srt = sorted(os.listdir(bgDEV008_img_dir), key=str.lower)
             bgDEV008_img_list = []
@@ -858,6 +864,8 @@ if REGION:
                     file = 'btn_states_DEV001PB.pickle'
                 elif device == device_txt[2]:
                     file = 'btn_states_DEV002PB.pickle'
+                elif device == device_txt[4]:
+                    file = 'btn_states_DEV004PB.pickle'
                 elif device == device_txt[8]:
                     file = 'btn_states_DEV008PB.pickle'
                 elif device == device_txt[31]:
@@ -884,6 +892,8 @@ if REGION:
                     file = 'btn_states_DEV001FNKT.pickle'
                 elif device == device_txt[2]:
                     file = 'btn_states_DEV002FNKT.pickle'
+                elif device == device_txt[4]:
+                    file = 'btn_states_DEV004FNKT.pickle'
                 elif device == device_txt[8]:
                     file = 'btn_states_DEV008FNKT.pickle'
                 elif device == device_txt[31]:
@@ -1008,8 +1018,10 @@ if REGION:
             bggrid = [2560, 800]
         elif device == device_txt[3]:
             bggrid = [2560, 800]
+        elif device == device_txt[4]:
+            bggrid = [1920, 1200]
         elif device == device_txt[8]:
-            bggrid = [960, 1280] #(2x 480x1280)                        
+            bggrid = [800, 2560] #(2x 480x1280)                        
         grid_spacing = 15
         kidd_left   =  "%s" % 0
         kidd_top    =  "%s" % 0
@@ -2387,6 +2399,16 @@ class P01_DASH(tk.Frame):
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
             elif device == device_txt[2]:
+                if theme in (theme_txt[:3]):
+                    button.config(**btn_style_imgbtn, image=localimage15)
+                    button.place(x=2, y=42)
+                elif theme in (theme_txt[3:9]):
+                    button.config(**btn_style_imgbtn, image=localimage15)
+                    button.place(x=4, y=21)
+                elif theme in [theme_txt[15], theme_txt[16]]:
+                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
+                    button.place(x=10, y=10)
+            elif device == device_txt[4]:
                 if theme in (theme_txt[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=2, y=42)
@@ -6009,8 +6031,9 @@ class P04_THEMES(tk.Frame):
                 btns_device.append(button_device)
             btns_device[1].place(x=x_pos_device, y=y_pos_device, width=btn_w, height=btn_h)
             btns_device[2].place(x=x_pos_device +110, y=y_pos_device, width=btn_w, height=btn_h)
-            btns_device[8].place(x=x_pos_device +220, y=y_pos_device, width=btn_w, height=btn_h)
-            btns_device[31].place(x=x_pos_device +330, y=y_pos_device, width=btn_w, height=btn_h)
+            btns_device[4].place(x=x_pos_device +220, y=y_pos_device, width=btn_w, height=btn_h)
+            btns_device[8].place(x=x_pos_device +330, y=y_pos_device, width=btn_w, height=btn_h)
+            btns_device[31].place(x=x_pos_device +440, y=y_pos_device, width=btn_w, height=btn_h)
             #btns_device[8].config(state=tk.DISABLED)
 
             for i, text in enumerate(device_txt):
