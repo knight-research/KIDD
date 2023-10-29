@@ -2,7 +2,7 @@
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-10-29-1000"
+last_change = "2023-10-29-1430"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -869,7 +869,7 @@ if REGION:
                 elif device == device_txt[8]:
                     file = 'btn_states_DEV008PB.pickle'
                 elif device == device_txt[31]:
-                    file = 'btn_states_DEV031PB.pickle'
+                    file = 'btn_states_DEV031PB.pickle'    
                 with open(os.path.join(datadir, file), 'rb') as f:
                     btn_states_PB = pickle.load(f)
             except FileNotFoundError:
@@ -911,6 +911,8 @@ if REGION:
                     file = 'btn_states_DEV001HW.pickle'
                 elif device == device_txt[2]:
                     file = 'btn_states_DEV002HW.pickle'
+                elif device == device_txt[4]:
+                    file = 'btn_states_DEV004HW.pickle'
                 elif device == device_txt[8]:
                     file = 'btn_states_DEV008HW.pickle'
                 elif device == device_txt[31]:
@@ -928,6 +930,8 @@ if REGION:
                     file = 'btn_states_DEV001SW.pickle'
                 elif device == device_txt[2]:
                     file = 'btn_states_DEV002SW.pickle'
+                elif device == device_txt[4]:
+                    file = 'btn_states_DEV004SW.pickle'
                 elif device == device_txt[8]:
                     file = 'btn_states_DEV008SW.pickle'
                 elif device == device_txt[31]:
@@ -950,6 +954,8 @@ if REGION:
                     file = 'btn_states_DEV001qopt.pickle'
                 elif device == device_txt[2]:
                     file = 'btn_states_DEV002qopt.pickle'
+                elif device == device_txt[4]:
+                    file = 'btn_states_DEV004qopt.pickle'
                 elif device == device_txt[8]:
                     file = 'btn_states_DEV008qopt.pickle'
                 elif device == device_txt[31]:
@@ -967,6 +973,8 @@ if REGION:
                     file = 'btn_states_DEV001FAV.pickle'
                 elif device == device_txt[2]:
                     file = 'btn_states_DEV002FAV.pickle'
+                elif device == device_txt[4]:
+                    file = 'btn_states_DEV004FAV.pickle'
                 elif device == device_txt[8]:
                     file = 'btn_states_DEV008FAV.pickle'
                 elif device == device_txt[31]:
@@ -1271,6 +1279,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV001PB.pickle'
                     elif device == device_txt[2]:
                         file = 'btn_states_DEV002PB.pickle'
+                    elif device == device_txt[4]:
+                        file = 'btn_states_DEV004PB.pickle'
                     elif device == device_txt[8]:
                         file = 'btn_states_DEV008PB.pickle'
                     elif device == device_txt[31]:
@@ -1299,6 +1309,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV001FNKT.pickle'
                     elif device == device_txt[2]:
                         file = 'btn_states_DEV002FNKT.pickle'
+                    elif device == device_txt[4]:
+                        file = 'btn_states_DEV004FNKT.pickle'
                     elif device == device_txt[8]:
                         file = 'btn_states_DEV008FNKT.pickle'
                     elif device == device_txt[31]:
@@ -1317,6 +1329,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV001HW.pickle'
                     elif device == device_txt[2]:
                         file = 'btn_states_DEV002HW.pickle'
+                    elif device == device_txt[4]:
+                        file = 'btn_states_DEV004HW.pickle'
                     elif device == device_txt[8]:
                         file = 'btn_states_DEV008HW.pickle'
                     elif device == device_txt[31]:
@@ -1335,6 +1349,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV001SW.pickle'
                     elif device == device_txt[2]:
                         file = 'btn_states_DEV002SW.pickle'
+                    elif device == device_txt[4]:
+                        file = 'btn_states_DEV004SW.pickle'
                     elif device == device_txt[8]:
                         file = 'btn_states_DEV008SW.pickle'
                     elif device == device_txt[31]:
@@ -1358,6 +1374,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV001FAV.pickle'
                     elif device == device_txt[2]:
                         file = 'btn_states_DEV002FAV.pickle'
+                    elif device == device_txt[4]:
+                        file = 'btn_states_DEV004FAV.pickle'
                     elif device == device_txt[8]:
                         file = 'btn_states_DEV008FAV.pickle'
                     elif device == device_txt[31]:
@@ -1395,13 +1413,25 @@ class P00_BOOT(tk.Frame):
                         image = Image.open(os.path.join(bgDEV002_DASH_img_dir, filename))
                         bgDEV002_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
+            elif device == device_txt[4]:
+                # IMAGES BACKGROUND UNIT04
+                for filename in bgDEV004_img_dir_srt:
+                    if filename.endswith(".jpg"):
+                        image = Image.open(os.path.join(bgDEV004_img_dir, filename))
+                        bgDEV004_img_list.append(ImageTk.PhotoImage(image))
+                # IMAGES BACKGROUND UNIT04 DASH
+                for filename in bgDEV004_DASH_img_dir_srt:
+                    if filename.endswith(".jpg"):
+                        image = Image.open(os.path.join(bgDEV004_DASH_img_dir, filename))
+                        bgDEV004_DASH_img_list.append(ImageTk.PhotoImage(image))
+                print ("10%")
             elif device == device_txt[8]:
                 # IMAGES BACKGROUND UNIT08
                 for filename in bgDEV008_img_dir_srt:
                     if filename.endswith(".jpg"):
                         image = Image.open(os.path.join(bgDEV008_img_dir, filename))
                         bgDEV008_img_list.append(ImageTk.PhotoImage(image))
-                # IMAGES BACKGROUND UNIT02 DASH
+                # IMAGES BACKGROUND UNIT08 DASH
                 for filename in bgDEV008_DASH_img_dir_srt:
                     if filename.endswith(".jpg"):
                         image = Image.open(os.path.join(bgDEV008_DASH_img_dir, filename))
@@ -1631,8 +1661,10 @@ class P00_BOOT(tk.Frame):
                 background_image = bgDEV001_img_list[1]
             elif device == device_txt[2]:
                 background_image = bgDEV002_img_list[1]
+            elif device == device_txt[4]:
+                background_image = bgDEV004_img_list[1]
             elif device == device_txt[8]:
-                background_image = bgDEV008_img_list[1]
+                background_image = bgDEV008_img_list[1]    
             elif device == device_txt[31]:
                 background_image = bgDEV031_img_list[1]
             self.canvas.create_image(0, 0, image=background_image, anchor='nw')
@@ -2480,6 +2512,22 @@ class P01_DASH(tk.Frame):
                         y_btn_pb = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
                         w_btn_pb = [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
                         h_btn_pb = [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+                elif device == device_txt[4]:
+                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                        x_btn_pb = [575, 375, 575, 4, 1]
+                        y_btn_pb = [45, 165, 375, 375, 1]
+                        w_btn_pb = [124, 124, 124, 124, 1]
+                        h_btn_pb = [47, 47, 47, 47, 1]
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        x_btn_pb = [94, 176, 258, 4, 4]
+                        y_btn_pb = [120, 120, 120, 400, 578]
+                        w_btn_pb = [80, 80, 80, 80, 80]
+                        h_btn_pb = [40, 40, 40, 40, 40]
+                    elif theme in [theme_txt[15], theme_txt[16]]:
+                        x_btn_pb = [200, 317, 433, 4, 4]
+                        y_btn_pb = [10, 10, 10, 400, 578]
+                        w_btn_pb = [105, 105, 105, 105, 105]
+                        h_btn_pb = [87, 87, 87, 87, 87]
                 elif device == device_txt[8]:
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn_pb = [575, 375, 575, 4, 1]
@@ -2521,6 +2569,8 @@ class P01_DASH(tk.Frame):
                     amount_PB = 5
                 elif device == device_txt[2]:
                     amount_PB = 13
+                elif device == device_txt[4]:
+                    amount_PB = 5
                 elif device == device_txt[8]:
                     amount_PB = 5
                 elif device == device_txt[31]:
@@ -2606,6 +2656,31 @@ class P01_DASH(tk.Frame):
                         h_btn_FNKT = 52
                         localimageON_FNKT = lcarsON_img_list[7]
                         localimageOF_FNKT = lcarsOF_img_list[7]
+                elif device == device_txt[4]:
+                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
+                        x_btn_FNKT = 585
+                        x_btn_FNKT_next = 50
+                        y_btn_FNKT = 663
+                        w_btn_FNKT = 30
+                        h_btn_FNKT = 30
+                        localimageON_FNKT = localimage06
+                        localimageOF_FNKT = localimage07
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        x_btn_FNKT = 507
+                        x_btn_FNKT_next = 113
+                        y_btn_FNKT = 374
+                        w_btn_FNKT = 80
+                        h_btn_FNKT = 80
+                        localimageON_FNKT = localimage06
+                        localimageOF_FNKT = localimage07
+                    elif theme in [theme_txt[15], theme_txt[16]]:
+                        x_btn_FNKT = 10
+                        x_btn_FNKT_next = 182
+                        y_btn_FNKT = 380
+                        w_btn_FNKT = 166
+                        h_btn_FNKT = 52
+                        localimageON_FNKT = lcarsON_img_list[7]
+                        localimageOF_FNKT = lcarsOF_img_list[7]
                 elif device == device_txt[8]:
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
                         x_btn_FNKT = 585
@@ -2664,6 +2739,8 @@ class P01_DASH(tk.Frame):
                 if device == device_txt[1]:
                     amount_FNKT = 7
                 elif device == device_txt[2]:
+                    amount_FNKT = 4
+                elif device == device_txt[4]:
                     amount_FNKT = 4
                 elif device == device_txt[8]:
                     amount_FNKT = 4
@@ -5733,8 +5810,10 @@ class P03_SETUP(tk.Frame):
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
             elif device == device_txt[2]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW + quant_btns_RB01 + quant_btns_RB02 + quant_btns_RB03
-            elif device == device_txt[8]:
+            elif device == device_txt[4]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
+            elif device == device_txt[8]:
+                quant_btns_FAV = quant_btns_HW + quant_btns_SW    
             elif device == device_txt[31]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
             read.load_button_states_FAV(quant_btns_FAV)
@@ -7566,7 +7645,7 @@ class myfunctions():
             # GET THE SOUNDFOLDER
             #------------------------------------------------------------------------------
             if REGION:
-                if device in [device_txt[1], device_txt[2], device_txt[8]]:
+                if device in [device_txt[1], device_txt[2], device_txt[4], device_txt[8]]:
                     if style == style_txt[0]:
                         soundfolder = "KARR2000"
                     elif style == style_txt[1]:
