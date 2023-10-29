@@ -5519,7 +5519,7 @@ class P03_SETUP(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            if SYSTEM == "linux":
+            if SYSTEM == "linux" and SYSTEMPI == "PI":
                 ip_address = subprocess.check_output(["ip", "address", "show", "wlan0"]).decode("utf-8")
                 ip_line = [line.strip() for line in ip_address.split("\n") if "inet " in line][0]
                 wlan0_ip = ip_line.split()[1]
@@ -6997,7 +6997,7 @@ class myfunctions():
         # QUIT THE PROGRAM
         #----------------------------------------------------------------------------------
         def quitDASH(self):
-            if SYSTEM == "linux":
+            if SYSTEM == "linux" and SYSTEMPI == "PI":
                 GPIO.cleanup()
             kidd.destroy()
         #----------------------------------------------------------------------------------
