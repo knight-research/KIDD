@@ -2,7 +2,7 @@
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-10-29-1557"
+last_change = "2023-10-29-1613"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -316,12 +316,15 @@ if REGION:
             from threading import Thread
             #import websocket
         #----------------------------------------------------------------------------------
-        # ON WINDOWS
+        # CHECK SYSTEM
         #----------------------------------------------------------------------------------
         if REGION:
             SYSTEM = sys.platform
-            if SYSTEM == 'linux':
-                # Check if it's a Raspberry Pi by examining the system's hardware
+            SYSTEMPI = "NOPI"
+            #------------------------------------------------------------------------------
+            # CHECK IF ITS A RASPBERRY PI
+            #------------------------------------------------------------------------------
+            if SYSTEM == "linux":
                 try:
                     with open('/sys/firmware/devicetree/base/model', 'r') as f:
                         model = f.read().strip()
@@ -332,13 +335,15 @@ if REGION:
                         SYSTEMPI = "NOPI"
                 except FileNotFoundError:
                     SYSTEMPI = "NOPI"
-                    print("except")
-                
+        #----------------------------------------------------------------------------------
+        # ON WINDOWS
+        #----------------------------------------------------------------------------------
+        if REGION:               
             if SYSTEM == "win32" or SYSTEM == "win64":
                 import _fake_GPIO as GPIO
                 import serial.tools.list_ports
         #----------------------------------------------------------------------------------
-        # ON LINUX (RASPBERRY PI)
+        # ON LINUX
         #----------------------------------------------------------------------------------        
         if REGION:  
             if SYSTEM == "linux":
@@ -346,19 +351,21 @@ if REGION:
                 #--------------------------------------------------------------------------
                 # I2C INTERFACE
                 #--------------------------------------------------------------------------
-                import tkinter as tk
                 from smbus2 import SMBus
-                #--------------------------------------------------------------------------
-                if SYSTEMPI == "PI":
-                    import RPi.GPIO as GPIO
-                    import board
-                    import busio
-                    import adafruit_ads1x15.ads1115 as ADS
-                    from adafruit_ads1x15.analog_in import AnalogIn
+                import serial.tools.list_ports
+        #----------------------------------------------------------------------------------
+        # ON RASPBERRY PI
+        #----------------------------------------------------------------------------------
+        if REGION:
+            if SYSTEMPI == "PI":
+                import RPi.GPIO as GPIO
+                import board
+                import busio
+                import adafruit_ads1x15.ads1115 as ADS
+                from adafruit_ads1x15.analog_in import AnalogIn
                 #import adafruit_aw9523 #16xDIDO BOARD
                 #from digitalio import Direction
                 #from adafruit_mcp230xx.mcp23017 import MCP23017
-                import serial.tools.list_ports
     #--------------------------------------------------------------------------------------
     # GLOBAL VARIABLES
     #--------------------------------------------------------------------------------------
