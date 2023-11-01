@@ -298,9 +298,9 @@ if REGION:
         for package in required_packages:
             try:
                 imp_mod[package] = importlib.import_module(package)
-                #print(f'Successfully imported {package}')
+                print(f'Successfully imported {package}')
             except ImportError:
-                #print(f'Failed to import {package}')
+                print(f'Failed to import {package}')
                 pass    
         if checkinstall:
             # Function to check and install packages
@@ -7579,7 +7579,7 @@ class myfunctions():
                     else:
                         next_label_value.config(text="End of playlist")
 
-                    thread = threading.Thread(target=read.play_audio, args=(current_file,))
+                    thread = imp_mod['threading'].Thread(target=read.play_audio, args=(current_file,))
                     thread.start()
 
             def play_audio(self, current_file):
@@ -7603,13 +7603,13 @@ class myfunctions():
                 stream.close()
 
                 current_index += 1
-                start_time = time.time()  # Record the time when the track started
+                start_time = imp_mod['time'].time()  # Record the time when the track started
 
                 self.next_callback = kidd.after(30000, self.play_next)  # Wait 20 seconds before playing the next track
 
             def update_time_to_next(self):
                 if playing:
-                    elapsed_time = time.time() - start_time
+                    elapsed_time = imp_mod['time'].time() - start_time
                     remaining_time = max(30 - elapsed_time, 0)
                     time_label_value.config(text=f"{remaining_time:.1f}")
                     kidd.after(200, self.update_time_to_next)
@@ -7624,7 +7624,7 @@ class myfunctions():
                         self.after_cancel(next_callback)  # Cancel the scheduled callback
                     current_index = 0  # Reset current_index to start from the beginning
                     read.shuffle_playlist()  # Shuffle the playlist
-                    start_time = time.time()  # Reset the start time
+                    start_time = imp_mod['time'].time()  # Reset the start time
                     read.play_next()
                     read.update_time_to_next()  # Start updating time to next MP3 f
 
@@ -7765,7 +7765,7 @@ class myfunctions():
         # OPEN AND PLAY THE MP3 FILE
         #----------------------------------------------------------------------------------
         def play_mp3_thread(self, path, file):
-            thread_01 = threading.Thread(target=read.play_mp3(path, file))
+            thread_01 = imp_mod['threading'].Thread(target=read.play_mp3(path, file))
             thread_01.start()
 
         def play_mp3(self, path, file):
@@ -7778,7 +7778,7 @@ class myfunctions():
                 pass
 
         def play_mp3_time_thread(self, hour, minute):
-            thread_02 = threading.Thread(target=read.play_mp3_time(hour, minute))
+            thread_02 = imp_mod['threading'].Thread(target=read.play_mp3_time(hour, minute))
             thread_02.start()
 
         def play_mp3_time(self, hour, minute):
