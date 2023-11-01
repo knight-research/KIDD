@@ -7431,11 +7431,11 @@ class myfunctions():
             global sys_cputemp
             global power_info
 
-            sys_diskused = str(round(imp_mod['psutil'].disk_usage('/').used / (1024.0 ** 3), 2))
-            sys_diskmax = str(round(imp_mod['psutil'].disk_usage('/').total / (1024.0 ** 3), 2))
-            sys_memused = str(imp_mod['psutil'].virtual_memory().percent)
-            sys_memmax = str(round(imp_mod['psutil'].virtual_memory().total / (1024.0 ** 3), 2))
-            sys_cpuload = str(imp_mod['psutil'].cpu_percent())
+            sys_diskused = str(round(psutil.disk_usage('/').used / (1024.0 ** 3), 2))
+            sys_diskmax = str(round(psutil.disk_usage('/').total / (1024.0 ** 3), 2))
+            sys_memused = str(psutil.virtual_memory().percent)
+            sys_memmax = str(round(psutil.virtual_memory().total / (1024.0 ** 3), 2))
+            sys_cpuload = str(psutil.cpu_percent())
             res01 = imp_mod['os'].popen('vcgencmd measure_temp').readline()
             sys_cputemp = res01.replace("temp=","").replace("'C\n","")
     #--------------------------------------------------------------------------------------
@@ -7532,7 +7532,7 @@ class myfunctions():
                 current_index = 0
                 start_time = 0
                 next_callback = None
-                p = pyaudio.PyAudio()
+                p = imp_mod['pyaudio'].PyAudio()
 
                 playing_label = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="unknown filename.mp3")
                 playing_label.place(x=300, y=48)
