@@ -7431,11 +7431,11 @@ class myfunctions():
             global sys_cputemp
             global power_info
 
-            sys_diskused = str(round(psutil.disk_usage('/').used / (1024.0 ** 3), 2))
-            sys_diskmax = str(round(psutil.disk_usage('/').total / (1024.0 ** 3), 2))
-            sys_memused = str(psutil.virtual_memory().percent)
-            sys_memmax = str(round(psutil.virtual_memory().total / (1024.0 ** 3), 2))
-            sys_cpuload = str(psutil.cpu_percent())
+            sys_diskused = str(round(imp_mod['psutil'].disk_usage('/').used / (1024.0 ** 3), 2))
+            sys_diskmax = str(round(imp_mod['psutil'].disk_usage('/').total / (1024.0 ** 3), 2))
+            sys_memused = str(imp_mod['psutil'].virtual_memory().percent)
+            sys_memmax = str(round(imp_mod['psutil'].virtual_memory().total / (1024.0 ** 3), 2))
+            sys_cpuload = str(imp_mod['psutil'].cpu_percent())
             res01 = imp_mod['os'].popen('vcgencmd measure_temp').readline()
             sys_cputemp = res01.replace("temp=","").replace("'C\n","")
     #--------------------------------------------------------------------------------------
