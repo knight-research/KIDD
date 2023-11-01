@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
+checkinstall = False #AUTO INSTALL LIBS
 version = "V2.0.1"
-last_change = "2023-11-01-1938"
+last_change = "2023-11-01-2128"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -283,43 +284,54 @@ if REGION:
     # IMPORTS
     #--------------------------------------------------------------------------------------
     if REGION:
+        import importlib
+        import subprocess
+        required_packages = [
+            'sys', 'multiprocessing', 'os', 'time', 'math', 'string', 'socket',
+            'websocket', 'websocket-client', 'python-vlc',
+            'pyserial', 'pynmea2', 'pydub', 'Pillow', 'pyaudio', 'psutil',
+            'simpleaudio', 'pickle', 'posixpath', 'random', 'serial', 'platform', 
+            'shutil', 'threading',
+            'board', 'busio'
+        ]
+        imp_mod = {}
+        for package in required_packages:
+            try:
+                imp_mod[package] = importlib.import_module(package)
+                #print(f'Successfully imported {package}')
+            except ImportError:
+                #print(f'Failed to import {package}')
+                pass    
+        if checkinstall:
+            # Function to check and install packages
+            def install_missing_packages(packages):
+                for package in packages:
+                    try:
+                        imp_mod[package] = importlib.import_module(package)
+                    except ImportError:
+                        print(f"{package} is not installed. Installing...")
+                        subprocess.call(['pip3', 'install', package])
+
+            if __name__ == '__main__':
+                install_missing_packages(required_packages)
         #----------------------------------------------------------------------------------
         # SYSTEM INDEPENDENT
         #----------------------------------------------------------------------------------
         if REGION:
-            import datetime
             from datetime import timedelta
-            import math
-            import multiprocessing
-            import os
-            import pickle
             from PIL import ImageTk, Image
-            import posixpath
-            import platform
-            import pyaudio
             from pydub import AudioSegment
             from pydub.playback import _play_with_simpleaudio as play  # Import the non-blocking play function
-            import pynmea2
-            import random
-            import serial
-            import shutil
-            import socket
             import speech_recognition as sr
-            import string
-            import subprocess
-            import sys
-            import time
             import tkinter as tk
             from tkinter import filedialog
             from tkinter import ttk
-            import threading
             from threading import Thread
-            #import websocket
         #----------------------------------------------------------------------------------
         # CHECK SYSTEM
         #----------------------------------------------------------------------------------
         if REGION:
-            SYSTEM = sys.platform
+            SYSTEM = imp_mod['sys'].platform
             SYSTEMPI = "NOPI"
             #------------------------------------------------------------------------------
             # CHECK IF ITS A RASPBERRY PI
@@ -347,7 +359,6 @@ if REGION:
         #----------------------------------------------------------------------------------        
         if REGION:  
             if SYSTEM == "linux":
-                import psutil
                 #--------------------------------------------------------------------------
                 # I2C INTERFACE
                 #--------------------------------------------------------------------------
@@ -359,13 +370,8 @@ if REGION:
         if REGION:
             if SYSTEMPI == "PI":
                 import RPi.GPIO as GPIO
-                import board
-                import busio
                 import adafruit_ads1x15.ads1115 as ADS
                 from adafruit_ads1x15.analog_in import AnalogIn
-                #import adafruit_aw9523 #16xDIDO BOARD
-                #from digitalio import Direction
-                #from adafruit_mcp230xx.mcp23017 import MCP23017
     #--------------------------------------------------------------------------------------
     # GLOBAL VARIABLES
     #--------------------------------------------------------------------------------------
@@ -374,8 +380,8 @@ if REGION:
         # PATHS AND EXTERNAL FILES
         #----------------------------------------------------------------------------------
         if REGION:
-            folder = os.path.dirname(os.path.abspath(__file__))
-            datadir = os.path.join(folder,'data')
+            folder = imp_mod['os'].path.dirname(imp_mod['os'].path.abspath(__file__))
+            datadir = imp_mod['os'].path.join(folder,'data')
             soundfolder = None
             subfolders_count = None
             subfolders_list = None
@@ -393,7 +399,7 @@ if REGION:
             carno = "carxxx"
             devno = "devxxx"
             if SYSTEM == "linux":
-                hostname = socket.gethostname()            
+                hostname = imp_mod['socket'].gethostname()            
                 parts = hostname.split("dev")
                 carno = parts[0]
                 devno = "dev" + parts[1]
@@ -668,164 +674,164 @@ if REGION:
             #------------------------------------------------------------------------------
             # 000_bg
             #------------------------------------------------------------------------------
-            bgDEV001_img_dir = os.path.join(folder,'images', '000_bg', 'DEV001')
-            bgDEV001_img_dir_srt = sorted(os.listdir(bgDEV001_img_dir), key=str.lower)
+            bgDEV001_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV001')
+            bgDEV001_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV001_img_dir), key=str.lower)
             bgDEV001_img_list = []
-            bgDEV001_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV001', 'DASH')
-            bgDEV001_DASH_img_dir_srt = sorted(os.listdir(bgDEV001_DASH_img_dir), key=str.lower)
+            bgDEV001_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV001', 'DASH')
+            bgDEV001_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV001_DASH_img_dir), key=str.lower)
             bgDEV001_DASH_img_list = []
-            bgDEV002_img_dir = os.path.join(folder,'images', '000_bg', 'DEV002')
-            bgDEV002_img_dir_srt = sorted(os.listdir(bgDEV002_img_dir), key=str.lower)
+            bgDEV002_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV002')
+            bgDEV002_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV002_img_dir), key=str.lower)
             bgDEV002_img_list = []
-            bgDEV002_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV002', 'DASH')
-            bgDEV002_DASH_img_dir_srt = sorted(os.listdir(bgDEV002_DASH_img_dir), key=str.lower)
+            bgDEV002_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV002', 'DASH')
+            bgDEV002_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV002_DASH_img_dir), key=str.lower)
             bgDEV002_DASH_img_list = []
-            bgDEV004_img_dir = os.path.join(folder,'images', '000_bg', 'DEV004')
-            bgDEV004_img_dir_srt = sorted(os.listdir(bgDEV004_img_dir), key=str.lower)
+            bgDEV004_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV004')
+            bgDEV004_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV004_img_dir), key=str.lower)
             bgDEV004_img_list = []
-            bgDEV004_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV004', 'DASH')
-            bgDEV004_DASH_img_dir_srt = sorted(os.listdir(bgDEV004_DASH_img_dir), key=str.lower)
+            bgDEV004_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV004', 'DASH')
+            bgDEV004_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV004_DASH_img_dir), key=str.lower)
             bgDEV004_DASH_img_list = []
-            bgDEV008_img_dir = os.path.join(folder,'images', '000_bg', 'DEV008')
-            bgDEV008_img_dir_srt = sorted(os.listdir(bgDEV008_img_dir), key=str.lower)
+            bgDEV008_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV008')
+            bgDEV008_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV008_img_dir), key=str.lower)
             bgDEV008_img_list = []
-            bgDEV008_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV008', 'DASH')
-            bgDEV008_DASH_img_dir_srt = sorted(os.listdir(bgDEV008_DASH_img_dir), key=str.lower)
+            bgDEV008_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV008', 'DASH')
+            bgDEV008_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV008_DASH_img_dir), key=str.lower)
             bgDEV008_DASH_img_list = []
-            bgDEV031_img_dir = os.path.join(folder,'images', '000_bg', 'DEV031')
-            bgDEV031_img_dir_srt = sorted(os.listdir(bgDEV031_img_dir), key=str.lower)
+            bgDEV031_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV031')
+            bgDEV031_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV031_img_dir), key=str.lower)
             bgDEV031_img_list = []
-            bgDEV031_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV031', 'DASH')
-            bgDEV031_DASH_img_dir_srt = sorted(os.listdir(bgDEV031_DASH_img_dir), key=str.lower)
+            bgDEV031_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV031', 'DASH')
+            bgDEV031_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV031_DASH_img_dir), key=str.lower)
             bgDEV031_DASH_img_list = []
             #------------------------------------------------------------------------------
             # 001_led
             #------------------------------------------------------------------------------
-            ledOF_img_dir = os.path.join(folder,'images', '001_led', '000_OFF')
-            ledOF_img_dir_srt = sorted(os.listdir(ledOF_img_dir), key=str.lower)
+            ledOF_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '000_OFF')
+            ledOF_img_dir_srt = sorted(imp_mod['os'].listdir(ledOF_img_dir), key=str.lower)
             ledOF_img_list = []
-            ledLO_img_dir = os.path.join(folder,'images', '001_led', '001_LOW')
-            ledLO_img_dir_srt = sorted(os.listdir(ledLO_img_dir), key=str.lower)
+            ledLO_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '001_LOW')
+            ledLO_img_dir_srt = sorted(imp_mod['os'].listdir(ledLO_img_dir), key=str.lower)
             ledLO_img_list = []
-            ledMI_img_dir = os.path.join(folder,'images', '001_led', '002_MID')
-            ledMI_img_dir_srt = sorted(os.listdir(ledMI_img_dir), key=str.lower)
+            ledMI_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '002_MID')
+            ledMI_img_dir_srt = sorted(imp_mod['os'].listdir(ledMI_img_dir), key=str.lower)
             ledMI_img_list = []
-            ledFU_img_dir = os.path.join(folder,'images', '001_led', '003_FUL')
-            ledFU_img_dir_srt = sorted(os.listdir(ledFU_img_dir), key=str.lower)
+            ledFU_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '003_FUL')
+            ledFU_img_dir_srt = sorted(imp_mod['os'].listdir(ledFU_img_dir), key=str.lower)
             ledFU_img_list = []
             #------------------------------------------------------------------------------
             # 002_sled
             #------------------------------------------------------------------------------
-            sledOF_img_dir = os.path.join(folder,'images', '002_sled', 'OFF')
-            sledOF_img_dir_srt = sorted(os.listdir(sledOF_img_dir), key=str.lower)
+            sledOF_img_dir = imp_mod['os'].path.join(folder,'images', '002_sled', 'OFF')
+            sledOF_img_dir_srt = sorted(imp_mod['os'].listdir(sledOF_img_dir), key=str.lower)
             sledOF_img_list = []
-            sledON_img_dir = os.path.join(folder,'images', '002_sled', 'ON')
-            sledON_img_dir_srt = sorted(os.listdir(sledON_img_dir), key=str.lower)
+            sledON_img_dir = imp_mod['os'].path.join(folder,'images', '002_sled', 'ON')
+            sledON_img_dir_srt = sorted(imp_mod['os'].listdir(sledON_img_dir), key=str.lower)
             sledON_img_list = []
             #------------------------------------------------------------------------------
             # 003_vb
             #------------------------------------------------------------------------------
-            vbOF_MAX_img_dir = os.path.join(folder,'images', '003_vb', 'MAX','OFF')
-            vbOF_MAX_img_dir_srt = sorted(os.listdir(vbOF_MAX_img_dir), key=str.lower)
+            vbOF_MAX_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'MAX','OFF')
+            vbOF_MAX_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_MAX_img_dir), key=str.lower)
             vbOF_MAX_img_list = []
-            vbON_MAX_img_dir = os.path.join(folder,'images', '003_vb', 'MAX', 'ON')
-            vbON_MAX_img_dir_srt = sorted(os.listdir(vbON_MAX_img_dir), key=str.lower)
+            vbON_MAX_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'MAX', 'ON')
+            vbON_MAX_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_MAX_img_dir), key=str.lower)
             vbON_MAX_img_list = []
-            vbOF_OTTO_img_dir = os.path.join(folder,'images', '003_vb', 'OTTO','OFF')
-            vbOF_OTTO_img_dir_srt = sorted(os.listdir(vbOF_OTTO_img_dir), key=str.lower)
+            vbOF_OTTO_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'OTTO','OFF')
+            vbOF_OTTO_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_OTTO_img_dir), key=str.lower)
             vbOF_OTTO_img_list = []
-            vbON_OTTO_img_dir = os.path.join(folder,'images', '003_vb', 'OTTO', 'ON')
-            vbON_OTTO_img_dir_srt = sorted(os.listdir(vbON_OTTO_img_dir), key=str.lower)
+            vbON_OTTO_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'OTTO', 'ON')
+            vbON_OTTO_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_OTTO_img_dir), key=str.lower)
             vbON_OTTO_img_list = []
-            vbOF_PILOT_img_dir = os.path.join(folder,'images', '003_vb', 'PILOT','OFF')
-            vbOF_PILOT_img_dir_srt = sorted(os.listdir(vbOF_PILOT_img_dir), key=str.lower)
+            vbOF_PILOT_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'PILOT','OFF')
+            vbOF_PILOT_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_PILOT_img_dir), key=str.lower)
             vbOF_PILOT_img_list = []
-            vbON_PILOT_img_dir = os.path.join(folder,'images', '003_vb', 'PILOT', 'ON')
-            vbON_PILOT_img_dir_srt = sorted(os.listdir(vbON_PILOT_img_dir), key=str.lower)
+            vbON_PILOT_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'PILOT', 'ON')
+            vbON_PILOT_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_PILOT_img_dir), key=str.lower)
             vbON_PILOT_img_list = []
-            vbOF_S01_img_dir = os.path.join(folder,'images', '003_vb', 'S01','OFF')
-            vbOF_S01_img_dir_srt = sorted(os.listdir(vbOF_S01_img_dir), key=str.lower)
+            vbOF_S01_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S01','OFF')
+            vbOF_S01_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S01_img_dir), key=str.lower)
             vbOF_S01_img_list = []
-            vbON_S01_img_dir = os.path.join(folder,'images', '003_vb', 'S01', 'ON')
-            vbON_S01_img_dir_srt = sorted(os.listdir(vbON_S01_img_dir), key=str.lower)
+            vbON_S01_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S01', 'ON')
+            vbON_S01_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S01_img_dir), key=str.lower)
             vbON_S01_img_list = []
-            vbOF_S02_img_dir = os.path.join(folder,'images', '003_vb', 'S02','OFF')
-            vbOF_S02_img_dir_srt = sorted(os.listdir(vbOF_S02_img_dir), key=str.lower)
+            vbOF_S02_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S02','OFF')
+            vbOF_S02_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S02_img_dir), key=str.lower)
             vbOF_S02_img_list = []
-            vbON_S02_img_dir = os.path.join(folder,'images', '003_vb', 'S02', 'ON')
-            vbON_S02_img_dir_srt = sorted(os.listdir(vbON_S02_img_dir), key=str.lower)
+            vbON_S02_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S02', 'ON')
+            vbON_S02_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S02_img_dir), key=str.lower)
             vbON_S02_img_list = []
-            vbOF_S03_img_dir = os.path.join(folder,'images', '003_vb', 'S03','OFF')
-            vbOF_S03_img_dir_srt = sorted(os.listdir(vbOF_S03_img_dir), key=str.lower)
+            vbOF_S03_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S03','OFF')
+            vbOF_S03_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S03_img_dir), key=str.lower)
             vbOF_S03_img_list = []
-            vbON_S03_img_dir = os.path.join(folder,'images', '003_vb', 'S03', 'ON')
-            vbON_S03_img_dir_srt = sorted(os.listdir(vbON_S03_img_dir), key=str.lower)
+            vbON_S03_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S03', 'ON')
+            vbON_S03_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S03_img_dir), key=str.lower)
             vbON_S03_img_list = []
-            vbOF_S04_img_dir = os.path.join(folder,'images', '003_vb', 'S04','OFF')
-            vbOF_S04_img_dir_srt = sorted(os.listdir(vbOF_S04_img_dir), key=str.lower)
+            vbOF_S04_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S04','OFF')
+            vbOF_S04_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S04_img_dir), key=str.lower)
             vbOF_S04_img_list = []
-            vbON_S04_img_dir = os.path.join(folder,'images', '003_vb', 'S04', 'ON')
-            vbON_S04_img_dir_srt = sorted(os.listdir(vbON_S04_img_dir), key=str.lower)
+            vbON_S04_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S04', 'ON')
+            vbON_S04_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S04_img_dir), key=str.lower)
             vbON_S04_img_list = []
             #------------------------------------------------------------------------------
             # bttf
             #------------------------------------------------------------------------------
-            bttf_img_dir = os.path.join(folder,'images', 'bttf')
-            bttf_img_dir_srt = sorted(os.listdir(bttf_img_dir), key=str.lower)
+            bttf_img_dir = imp_mod['os'].path.join(folder,'images', 'bttf')
+            bttf_img_dir_srt = sorted(imp_mod['os'].listdir(bttf_img_dir), key=str.lower)
             bttf_img_list = []
             #------------------------------------------------------------------------------
             # infocenter
             #------------------------------------------------------------------------------
-            infocenterOF_img_dir = os.path.join(folder,'images', 'infocenter', 'OFF')
-            infocenterOF_img_dir_srt = sorted(os.listdir(infocenterOF_img_dir), key=str.lower)
+            infocenterOF_img_dir = imp_mod['os'].path.join(folder,'images', 'infocenter', 'OFF')
+            infocenterOF_img_dir_srt = sorted(imp_mod['os'].listdir(infocenterOF_img_dir), key=str.lower)
             infocenterOF_img_list = []
-            infocenterON_img_dir = os.path.join(folder,'images', 'infocenter', 'ON')
-            infocenterON_img_dir_srt = sorted(os.listdir(infocenterON_img_dir), key=str.lower)
+            infocenterON_img_dir = imp_mod['os'].path.join(folder,'images', 'infocenter', 'ON')
+            infocenterON_img_dir_srt = sorted(imp_mod['os'].listdir(infocenterON_img_dir), key=str.lower)
             infocenterON_img_list = []
             #------------------------------------------------------------------------------
             # knight
             #------------------------------------------------------------------------------
-            knight_img_dir = os.path.join(folder,'images', 'knight')
-            knight_img_dir_srt = sorted(os.listdir(knight_img_dir), key=str.lower)
+            knight_img_dir = imp_mod['os'].path.join(folder,'images', 'knight')
+            knight_img_dir_srt = sorted(imp_mod['os'].listdir(knight_img_dir), key=str.lower)
             knight_img_list = []
             #------------------------------------------------------------------------------
             # lcars
             #------------------------------------------------------------------------------
-            lcarsOF_img_dir = os.path.join(folder,'images', 'lcars', 'OFF')
-            lcarsOF_img_dir_srt = sorted(os.listdir(lcarsOF_img_dir), key=str.lower)
+            lcarsOF_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'OFF')
+            lcarsOF_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsOF_img_dir), key=str.lower)
             lcarsOF_img_list = []
-            lcarsON_img_dir = os.path.join(folder,'images', 'lcars', 'ON')
-            lcarsON_img_dir_srt = sorted(os.listdir(lcarsON_img_dir), key=str.lower)
+            lcarsON_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'ON')
+            lcarsON_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsON_img_dir), key=str.lower)
             lcarsON_img_list = []
-            lcarsOF_R_img_dir = os.path.join(folder,'images', 'lcars', 'OFF_R')
-            lcarsOF_R_img_dir_srt = sorted(os.listdir(lcarsOF_R_img_dir), key=str.lower)
+            lcarsOF_R_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'OFF_R')
+            lcarsOF_R_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsOF_R_img_dir), key=str.lower)
             lcarsOF_R_img_list = []
-            lcarsON_R_img_dir = os.path.join(folder,'images', 'lcars', 'ON_R')
-            lcarsON_R_img_dir_srt = sorted(os.listdir(lcarsON_R_img_dir), key=str.lower)
+            lcarsON_R_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'ON_R')
+            lcarsON_R_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsON_R_img_dir), key=str.lower)
             lcarsON_R_img_list = []
             #------------------------------------------------------------------------------
             # rpm
             #------------------------------------------------------------------------------
-            rpmOF_img_dir = os.path.join(folder,'images', 'rpm', 'OFF')
-            rpmOF_img_dir_srt = sorted(os.listdir(rpmOF_img_dir), key=str.lower)
+            rpmOF_img_dir = imp_mod['os'].path.join(folder,'images', 'rpm', 'OFF')
+            rpmOF_img_dir_srt = sorted(imp_mod['os'].listdir(rpmOF_img_dir), key=str.lower)
             rpmOF_img_list = []
-            rpmON_img_dir = os.path.join(folder,'images', 'rpm', 'ON')
-            rpmON_img_dir_srt = sorted(os.listdir(rpmON_img_dir), key=str.lower)
+            rpmON_img_dir = imp_mod['os'].path.join(folder,'images', 'rpm', 'ON')
+            rpmON_img_dir_srt = sorted(imp_mod['os'].listdir(rpmON_img_dir), key=str.lower)
             rpmON_img_list = []
             #------------------------------------------------------------------------------
             # segment
             #------------------------------------------------------------------------------
-            segmentKA_img_dir = os.path.join(folder,'images', 'segment', 'KA')
-            segmentKA_img_dir_srt = sorted(os.listdir(segmentKA_img_dir), key=str.lower)
+            segmentKA_img_dir = imp_mod['os'].path.join(folder,'images', 'segment', 'KA')
+            segmentKA_img_dir_srt = sorted(imp_mod['os'].listdir(segmentKA_img_dir), key=str.lower)
             segmentKA_img_list = []
-            segmentKI_img_dir = os.path.join(folder,'images', 'segment', 'KI')
-            segmentKI_img_dir_srt = sorted(os.listdir(segmentKI_img_dir), key=str.lower)
+            segmentKI_img_dir = imp_mod['os'].path.join(folder,'images', 'segment', 'KI')
+            segmentKI_img_dir_srt = sorted(imp_mod['os'].listdir(segmentKI_img_dir), key=str.lower)
             segmentKI_img_list = []
             #------------------------------------------------------------------------------
             # sysnew
             #------------------------------------------------------------------------------
-            sysnew_img_dir = os.path.join(folder,'images', 'sys_new')
-            sysnew_img_dir_srt = sorted(os.listdir(sysnew_img_dir), key=str.lower)
+            sysnew_img_dir = imp_mod['os'].path.join(folder,'images', 'sys_new')
+            sysnew_img_dir_srt = sorted(imp_mod['os'].listdir(sysnew_img_dir), key=str.lower)
             sysnew_img_list = []
     #--------------------------------------------------------------------------------------
     # UPDATE LAST CONFIGURATIONS
@@ -836,16 +842,16 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                with open(os.path.join(datadir, 'device_conf.pickle'), 'rb') as f:
-                    device = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, 'device_conf.pickle'), 'rb') as f:
+                    device = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 device = 'DEV001'
         #----------------------------------------------------------------------------------
         # UPDATE LAST STYLE
         #----------------------------------------------------------------------------------
         try:
-            with open(os.path.join(datadir, 'style_conf.pickle'), 'rb') as f:
-                style = pickle.load(f)
+            with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'rb') as f:
+                style = imp_mod['pickle'].load(f)
         except FileNotFoundError:
             style = 'KITT'
         #----------------------------------------------------------------------------------
@@ -853,16 +859,16 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                with open(os.path.join(datadir, 'theme_conf.pickle'), 'rb') as f:
-                    theme = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, 'theme_conf.pickle'), 'rb') as f:
+                    theme = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 theme = 'K2_S05'
         #----------------------------------------------------------------------------------
         # UPDATE LAST SYSTEM STYLE
         #----------------------------------------------------------------------------------
         try:
-            with open(os.path.join(datadir, 'system_conf.pickle'), 'rb') as f:
-                system = pickle.load(f)
+            with open(imp_mod['os'].path.join(datadir, 'system_conf.pickle'), 'rb') as f:
+                system = imp_mod['pickle'].load(f)
         except FileNotFoundError:
             system = system_txt[0]
         #----------------------------------------------------------------------------------
@@ -880,8 +886,8 @@ if REGION:
                     file = 'btn_states_DEV008PB.pickle'
                 elif device == device_txt[31]:
                     file = 'btn_states_DEV031PB.pickle'    
-                with open(os.path.join(datadir, file), 'rb') as f:
-                    btn_states_PB = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                    btn_states_PB = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 btn_states_PB = 'pb02'
         #----------------------------------------------------------------------------------
@@ -889,8 +895,8 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                with open(os.path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
-                    btn_states_PBFNKT = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
+                    btn_states_PBFNKT = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 btn_states_PBFNKT = [False] * 20
         #----------------------------------------------------------------------------------
@@ -908,8 +914,8 @@ if REGION:
                     file = 'btn_states_DEV008FNKT.pickle'
                 elif device == device_txt[31]:
                     file = 'btn_states_DEV031FNKT.pickle'
-                with open(os.path.join(datadir, file), 'rb') as f:
-                    btn_states_FNKT = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                    btn_states_FNKT = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 btn_states_FNKT = [False] * 20
         #----------------------------------------------------------------------------------
@@ -927,8 +933,8 @@ if REGION:
                     file = 'btn_states_DEV008HW.pickle'
                 elif device == device_txt[31]:
                     file = 'btn_states_DEV031HW.pickle'
-                with open(os.path.join(datadir, file), 'rb') as f:
-                    btn_states_HW = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                    btn_states_HW = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 btn_states_HW = [False] * 10
         #----------------------------------------------------------------------------------
@@ -946,8 +952,8 @@ if REGION:
                     file = 'btn_states_DEV008SW.pickle'
                 elif device == device_txt[31]:
                     file = 'btn_states_DEV031SW.pickle'
-                with open(os.path.join(datadir, file), 'rb') as f:
-                    btn_states_SW = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                    btn_states_SW = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 btn_states_SW = [False] * 10
             #LANGUAGE
@@ -970,8 +976,8 @@ if REGION:
                     file = 'btn_states_DEV008qopt.pickle'
                 elif device == device_txt[31]:
                     file = 'btn_states_DEV031qopt.pickle'
-                with open(os.path.join(datadir, file), 'rb') as f:
-                    btn_states_qopt = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                    btn_states_qopt = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 btn_states_qopt = [False] * 20
         #----------------------------------------------------------------------------------
@@ -989,8 +995,8 @@ if REGION:
                     file = 'btn_states_DEV008FAV.pickle'
                 elif device == device_txt[31]:
                     file = 'btn_states_DEV031FAV.pickle'
-                with open(os.path.join(datadir, file), 'rb') as f:
-                    btn_states_FAV = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                    btn_states_FAV = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 btn_states_FAV = [False] * 72
         #----------------------------------------------------------------------------------
@@ -998,8 +1004,8 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                with open(os.path.join(datadir, 'odo_trip_metric.pickle'), 'rb') as f:
-                    gps_odo_metric_cnt_old = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, 'odo_trip_metric.pickle'), 'rb') as f:
+                    gps_odo_metric_cnt_old = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 pass
         #----------------------------------------------------------------------------------
@@ -1007,8 +1013,8 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                with open(os.path.join(datadir, 'odo_trip_imperial.pickle'), 'rb') as f:
-                    gps_odo_imperial_cnt_old = pickle.load(f)
+                with open(imp_mod['os'].path.join(datadir, 'odo_trip_imperial.pickle'), 'rb') as f:
+                    gps_odo_imperial_cnt_old = imp_mod['pickle'].load(f)
             except FileNotFoundError:
                 pass
         #------------------------------------------------------------------------------
@@ -1256,8 +1262,8 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global device
                 try:
-                    with open(os.path.join(datadir, 'device_conf.pickle'), 'rb') as f:
-                        device = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, 'device_conf.pickle'), 'rb') as f:
+                        device = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     device = 'DEV001'
             #------------------------------------------------------------------------------
@@ -1266,8 +1272,8 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global style
                 try:
-                    with open(os.path.join(datadir, 'style_conf.pickle'), 'rb') as f:
-                        style = pickle.load(f)  
+                    with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'rb') as f:
+                        style = imp_mod['pickle'].load(f)  
                 except FileNotFoundError:
                     style = 'KARR'
             #------------------------------------------------------------------------------
@@ -1276,8 +1282,8 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global theme
                 try:
-                    with open(os.path.join(datadir, 'theme_conf.pickle'), 'rb') as f:
-                        theme = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, 'theme_conf.pickle'), 'rb') as f:
+                        theme = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     theme = 'K2_S05'
             #------------------------------------------------------------------------------
@@ -1296,8 +1302,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV008PB.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031PB.pickle'
-                    with open(os.path.join(datadir, file), 'rb') as f:
-                        btn_states_PB = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                        btn_states_PB = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     btn_states_PB = 'pb01'
             #------------------------------------------------------------------------------
@@ -1306,8 +1312,8 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global btn_states_PBFNKT
                 try:
-                    with open(os.path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
-                        btn_states_PBFNKT = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
+                        btn_states_PBFNKT = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     btn_states_PBFNKT = [False] * 20
             #------------------------------------------------------------------------------
@@ -1326,8 +1332,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV008FNKT.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031FNKT.pickle'
-                    with open(os.path.join(datadir, file), 'rb') as f:
-                        btn_states_FNKT = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                        btn_states_FNKT = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     btn_states_FNKT = [False] * 20
             #------------------------------------------------------------------------------
@@ -1346,8 +1352,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV008HW.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031HW.pickle'
-                    with open(os.path.join(datadir, file), 'rb') as f:
-                        btn_states_HW = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                        btn_states_HW = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     btn_states_HW = [False] * 10
             #------------------------------------------------------------------------------
@@ -1366,8 +1372,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV008SW.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031SW.pickle'
-                    with open(os.path.join(datadir, file), 'rb') as f:
-                        btn_states_SW = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                        btn_states_SW = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     btn_states_SW = [False] * 10
                 #LANGUAGE
@@ -1391,8 +1397,8 @@ class P00_BOOT(tk.Frame):
                         file = 'btn_states_DEV008FAV.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031FAV.pickle'
-                    with open(os.path.join(datadir, file), 'rb') as f:
-                        btn_states_FAV = pickle.load(f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                        btn_states_FAV = imp_mod['pickle'].load(f)
                 except FileNotFoundError:
                     btn_states_FAV = [False] * 72
         #----------------------------------------------------------------------------------
@@ -1404,60 +1410,60 @@ class P00_BOOT(tk.Frame):
                 # IMAGES BACKGROUND DEV001
                 for filename in bgDEV001_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV001_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV001_img_dir, filename))
                         bgDEV001_img_list.append(ImageTk.PhotoImage(image))
                 # IMAGES BACKGROUND UNIT01 DASH
                 for filename in bgDEV001_DASH_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV001_DASH_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV001_DASH_img_dir, filename))
                         bgDEV001_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
             elif device == device_txt[2]:
                 # IMAGES BACKGROUND UNIT02
                 for filename in bgDEV002_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV002_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV002_img_dir, filename))
                         bgDEV002_img_list.append(ImageTk.PhotoImage(image))
                 # IMAGES BACKGROUND UNIT02 DASH
                 for filename in bgDEV002_DASH_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV002_DASH_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV002_DASH_img_dir, filename))
                         bgDEV002_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
             elif device == device_txt[4]:
                 # IMAGES BACKGROUND UNIT04
                 for filename in bgDEV004_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV004_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV004_img_dir, filename))
                         bgDEV004_img_list.append(ImageTk.PhotoImage(image))
                 # IMAGES BACKGROUND UNIT04 DASH
                 for filename in bgDEV004_DASH_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV004_DASH_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV004_DASH_img_dir, filename))
                         bgDEV004_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
             elif device == device_txt[8]:
                 # IMAGES BACKGROUND UNIT08
                 for filename in bgDEV008_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV008_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV008_img_dir, filename))
                         bgDEV008_img_list.append(ImageTk.PhotoImage(image))
                 # IMAGES BACKGROUND UNIT08 DASH
                 for filename in bgDEV008_DASH_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV008_DASH_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV008_DASH_img_dir, filename))
                         bgDEV008_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
             elif device == device_txt[31]:
                 # IMAGES BACKGROUND UNIT31
                 for filename in bgDEV031_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV031_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV031_img_dir, filename))
                         bgDEV031_img_list.append(ImageTk.PhotoImage(image))
                 # IMAGES BACKGROUND UNIT31 DASH
                 for filename in bgDEV031_DASH_img_dir_srt:
                     if filename.endswith(".jpg"):
-                        image = Image.open(os.path.join(bgDEV031_DASH_img_dir, filename))
+                        image = Image.open(imp_mod['os'].path.join(bgDEV031_DASH_img_dir, filename))
                         bgDEV031_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
         #----------------------------------------------------------------------------------
@@ -1469,28 +1475,28 @@ class P00_BOOT(tk.Frame):
             #--------------------------------------------------------------------------
             for filename in ledOF_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(ledOF_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(ledOF_img_dir, filename))
                     ledOF_img_list.append(ImageTk.PhotoImage(image))
             #--------------------------------------------------------------------------
             # LED LOW
             #--------------------------------------------------------------------------
             for filename in ledLO_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(ledLO_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(ledLO_img_dir, filename))
                     ledLO_img_list.append(ImageTk.PhotoImage(image))
             #--------------------------------------------------------------------------
             # LED MID
             #--------------------------------------------------------------------------
             for filename in ledMI_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(ledMI_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(ledMI_img_dir, filename))
                     ledMI_img_list.append(ImageTk.PhotoImage(image))
             #--------------------------------------------------------------------------
             # LED FULL
             #--------------------------------------------------------------------------
             for filename in ledFU_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(ledFU_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(ledFU_img_dir, filename))
                     ledFU_img_list.append(ImageTk.PhotoImage(image))
             print ("20%")
         #----------------------------------------------------------------------------------
@@ -1502,14 +1508,14 @@ class P00_BOOT(tk.Frame):
             #------------------------------------------------------------------------------
             for filename in sledOF_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(sledOF_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(sledOF_img_dir, filename))
                     sledOF_img_list.append(ImageTk.PhotoImage(image))
             #------------------------------------------------------------------------------
             # SLED ON
             #------------------------------------------------------------------------------
             for filename in sledON_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(sledON_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(sledON_img_dir, filename))
                     sledON_img_list.append(ImageTk.PhotoImage(image))
             print ("30%")
             #------------------------------------------------------------------------------
@@ -1517,72 +1523,72 @@ class P00_BOOT(tk.Frame):
             #------------------------------------------------------------------------------
             for filename in vbOF_MAX_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbOF_MAX_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbOF_MAX_img_dir, filename))
                     vbOF_MAX_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in vbON_MAX_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbON_MAX_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbON_MAX_img_dir, filename))
                     vbON_MAX_img_list.append(ImageTk.PhotoImage(image))
 
             for filename in vbOF_OTTO_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbOF_OTTO_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbOF_OTTO_img_dir, filename))
                     vbOF_OTTO_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in vbON_OTTO_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbON_OTTO_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbON_OTTO_img_dir, filename))
                     vbON_OTTO_img_list.append(ImageTk.PhotoImage(image))
 
             for filename in vbOF_PILOT_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbOF_PILOT_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbOF_PILOT_img_dir, filename))
                     vbOF_PILOT_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in vbON_PILOT_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbON_PILOT_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbON_PILOT_img_dir, filename))
                     vbON_PILOT_img_list.append(ImageTk.PhotoImage(image))
 
             for filename in vbOF_S01_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbOF_S01_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbOF_S01_img_dir, filename))
                     vbOF_S01_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in vbON_S01_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbON_S01_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbON_S01_img_dir, filename))
                     vbON_S01_img_list.append(ImageTk.PhotoImage(image))
 
             for filename in vbOF_S02_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbOF_S02_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbOF_S02_img_dir, filename))
                     vbOF_S02_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in vbON_S02_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbON_S02_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbON_S02_img_dir, filename))
                     vbON_S02_img_list.append(ImageTk.PhotoImage(image))
 
             for filename in vbOF_S03_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbOF_S03_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbOF_S03_img_dir, filename))
                     vbOF_S03_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in vbON_S03_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbON_S03_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbON_S03_img_dir, filename))
                     vbON_S03_img_list.append(ImageTk.PhotoImage(image))
 
             for filename in vbOF_S04_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbOF_S04_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbOF_S04_img_dir, filename))
                     vbOF_S04_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in vbON_S04_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(vbON_S04_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(vbON_S04_img_dir, filename))
                     vbON_S04_img_list.append(ImageTk.PhotoImage(image))
             print ("40%")
         #----------------------------------------------------------------------------------
@@ -1597,11 +1603,11 @@ class P00_BOOT(tk.Frame):
         if REGION:
             for filename in infocenterOF_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(infocenterOF_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(infocenterOF_img_dir, filename))
                     infocenterOF_img_list.append(ImageTk.PhotoImage(image))
             for filename in infocenterON_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(infocenterON_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(infocenterON_img_dir, filename))
                     infocenterON_img_list.append(ImageTk.PhotoImage(image))
             print ("70%")
         #----------------------------------------------------------------------------------
@@ -1616,19 +1622,19 @@ class P00_BOOT(tk.Frame):
         if REGION:
             for filename in lcarsOF_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(lcarsOF_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(lcarsOF_img_dir, filename))
                     lcarsOF_img_list.append(ImageTk.PhotoImage(image))
             for filename in lcarsON_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(lcarsON_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(lcarsON_img_dir, filename))
                     lcarsON_img_list.append(ImageTk.PhotoImage(image))
             for filename in lcarsOF_R_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(lcarsOF_R_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(lcarsOF_R_img_dir, filename))
                     lcarsOF_R_img_list.append(ImageTk.PhotoImage(image))
             for filename in lcarsON_R_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(lcarsON_R_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(lcarsON_R_img_dir, filename))
                     lcarsON_R_img_list.append(ImageTk.PhotoImage(image))
             print ("90%")
         #----------------------------------------------------------------------------------
@@ -1637,12 +1643,12 @@ class P00_BOOT(tk.Frame):
         if REGION:
             for filename in rpmOF_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(rpmOF_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(rpmOF_img_dir, filename))
                     rpmOF_img_list.append(ImageTk.PhotoImage(image))
                     
             for filename in rpmON_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(rpmON_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(rpmON_img_dir, filename))
                     rpmON_img_list.append(ImageTk.PhotoImage(image))
             print ("95%")
         #----------------------------------------------------------------------------------
@@ -1652,12 +1658,12 @@ class P00_BOOT(tk.Frame):
             # IMAGES KARR
             for filename in segmentKA_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(segmentKA_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(segmentKA_img_dir, filename))
                     segmentKA_img_list.append(ImageTk.PhotoImage(image))
             # IMAGES KITT
             for filename in segmentKI_img_dir_srt:
                 if filename.endswith(".png"):
-                    image = Image.open(os.path.join(segmentKI_img_dir, filename))
+                    image = Image.open(imp_mod['os'].path.join(segmentKI_img_dir, filename))
                     segmentKI_img_list.append(ImageTk.PhotoImage(image))
             print ("100%")
         #----------------------------------------------------------------------------------
@@ -3643,11 +3649,11 @@ class P01_DASH(tk.Frame):
                     #--------------------------------------------------------------------------
                     # MP3 FOLDERS
                     #--------------------------------------------------------------------------
-                    main_mp3_fldr = os.path.join(folder,'sound', snd_fldr)
-                    yes_mp3_fldr = os.path.join(main_mp3_fldr,'yes')
-                    what_mp3_fldr = os.path.join(main_mp3_fldr,'what')
-                    states_car_mp3_fldr = os.path.join(main_mp3_fldr,'states_car')
-                    time_mp3_fldr = os.path.join(main_mp3_fldr,'time')
+                    main_mp3_fldr = imp_mod['os'].path.join(folder,'sound', snd_fldr)
+                    yes_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'yes')
+                    what_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'what')
+                    states_car_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'states_car')
+                    time_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'time')
                     try:
                         #----------------------------------------------------------------------
                         # RECOGNIZE SPEECH IN DIFFERENT LANGUAGES
@@ -3674,10 +3680,10 @@ class P01_DASH(tk.Frame):
                             #------------------------------------------------------------------
                             # PLAY RANDOM RECOGNIZED ACTIVATION WORD SOUND
                             #------------------------------------------------------------------
-                            yes_mp3_files = [f for f in os.listdir(yes_mp3_fldr) if f.endswith(".mp3")]
+                            yes_mp3_files = [f for f in imp_mod['os'].listdir(yes_mp3_fldr) if f.endswith(".mp3")]
                             if yes_mp3_files:
-                                yes_random_mp3 = random.choice(yes_mp3_files)
-                                yes_mp3_path = os.path.join(yes_mp3_fldr, yes_random_mp3)
+                                yes_random_mp3 = imp_mod['random'].choice(yes_mp3_files)
+                                yes_mp3_path = imp_mod['os'].path.join(yes_mp3_fldr, yes_random_mp3)
                                 sound = AudioSegment.from_file(yes_mp3_path, format="mp3")
                                 play(sound)
                                 vinfo = yes_random_mp3
@@ -3693,20 +3699,20 @@ class P01_DASH(tk.Frame):
                             # LISTEN FOR "STATUS" WORD
                             #------------------------------------------------------------------                    
                             if "status" or "wie ist dein status" in text.lower():
-                                states_car_mp3_files = [f for f in os.listdir(states_car_mp3_fldr) if f.endswith(".mp3")]
+                                states_car_mp3_files = [f for f in imp_mod['os'].listdir(states_car_mp3_fldr) if f.endswith(".mp3")]
                                 vtext = "Status"
-                                states_car_random_mp3 = random.choice(states_car_mp3_files)
-                                states_car_mp3_path = os.path.join(states_car_mp3_fldr, states_car_random_mp3)
+                                states_car_random_mp3 = imp_mod['random'].choice(states_car_mp3_files)
+                                states_car_mp3_path = imp_mod['os'].path.join(states_car_mp3_fldr, states_car_random_mp3)
                                 sound = AudioSegment.from_file(states_car_mp3_path, format="mp3")
                                 play(sound)
                             #------------------------------------------------------------------
                             # LISTEN FOR "TIME" WORD
                             #------------------------------------------------------------------
                             elif "wie spät ist es" or "wie spät is es" or "uhrzeit" or "sag mir wie spät es ist" in text.lower():
-                                mp3_files = [f for f in os.listdir(time_mp3_fldr) if f.endswith(".mp3")]
+                                mp3_files = [f for f in imp_mod['os'].listdir(time_mp3_fldr) if f.endswith(".mp3")]
                                 vtext = "Time:"
-                                random_mp3 = random.choice(mp3_files)
-                                mp3_path = os.path.join(time_mp3_fldr, random_mp3)
+                                random_mp3 = imp_mod['random'].choice(mp3_files)
+                                mp3_path = imp_mod['os'].path.join(time_mp3_fldr, random_mp3)
                                 sound = AudioSegment.from_file(mp3_path, format="mp3")
                                 play(sound)
                             #------------------------------------------------------------------
@@ -3714,10 +3720,10 @@ class P01_DASH(tk.Frame):
                             #------------------------------------------------------------------
                             else:
                                 vinfo = "what?"
-                                what_mp3_files = [f for f in os.listdir(what_mp3_fldr) if f.endswith(".mp3")]
+                                what_mp3_files = [f for f in imp_mod['os'].listdir(what_mp3_fldr) if f.endswith(".mp3")]
                                 if what_mp3_files:
-                                    what_random_mp3 = random.choice(what_mp3_files)
-                                    what_mp3_path = os.path.join(what_mp3_fldr, what_random_mp3)
+                                    what_random_mp3 = imp_mod['random'].choice(what_mp3_files)
+                                    what_mp3_path = imp_mod['os'].path.join(what_mp3_fldr, what_random_mp3)
                                     sound = AudioSegment.from_file(what_mp3_path, format="mp3")
                                     play(sound)
                                     vinfo = what_random_mp3
@@ -3733,7 +3739,7 @@ class P01_DASH(tk.Frame):
     # MAINLOOP DASH
     #--------------------------------------------------------------------------------------                        
     def update_page(self):
-        start_time = time.time()
+        start_time = imp_mod['time'].time()
         #----------------------------------------------------------------------------------
         # GLOBALS
         #----------------------------------------------------------------------------------
@@ -4242,9 +4248,9 @@ class P01_DASH(tk.Frame):
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------
                 if btn_states_FNKT[3] == True:
-                    DEV001VBS34 = random.randint(0, 8)
-                    DEV001VBOTTO = random.randint(0, 8)
-                    DEV001VBMAX = random.randint(0, 8)
+                    DEV001VBS34 = imp_mod['random'].randint(0, 8)
+                    DEV001VBOTTO = imp_mod['random'].randint(0, 8)
+                    DEV001VBMAX = imp_mod['random'].randint(0, 8)
                     if theme in theme_txt[1:7] or theme in theme_txt[9]: # THEME 1 to 6 or 8
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
@@ -4426,8 +4432,8 @@ class P01_DASH(tk.Frame):
                         print ("ACT",var1)
                         print ("SAVE TRIP METRIC")
                         try:                            
-                            with open(os.path.join(datadir, 'odo_trip_metric.pickle'), 'wb') as f:
-                                pickle.dump(var1, f)
+                            with open(imp_mod['os'].path.join(datadir, 'odo_trip_metric.pickle'), 'wb') as f:
+                                imp_mod['pickle'].dump(var1, f)
                         except FileNotFoundError:
                             pass
         #----------------------------------------------------------------------------------
@@ -5142,7 +5148,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
-        end_time = time.time()
+        end_time = imp_mod['time'].time()
         elapsed_time = end_time - start_time
         update_duration = (f"{elapsed_time:.4f}")
         self.after(time_digital, self.update_page)
@@ -7197,8 +7203,8 @@ class myfunctions():
                     file = 'btn_states_DEV008PB.pickle'
                 elif device == device_txt[31]:
                     file = 'btn_states_DEV031PB.pickle'
-                with open(os.path.join(datadir, file), 'wb') as f:
-                    pickle.dump(btn_states_PB, f)
+                with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
+                    imp_mod['pickle'].dump(btn_states_PB, f)
             #------------------------------------------------------------------------------
             # FUNCTION BUTTONS (LO HI AM FM CB) (SUST SYS...)
             #------------------------------------------------------------------------------        
@@ -7213,8 +7219,8 @@ class myfunctions():
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031FNKT.pickle'
                     try:
-                        with open(os.path.join(datadir, file), 'rb') as f:
-                            var = pickle.load(f)
+                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                            var = imp_mod['pickle'].load(f)
                     except:
                         var = [False] * ammount
             
@@ -7233,8 +7239,8 @@ class myfunctions():
                         file = 'btn_states_DEV002FNKT.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031FNKT.pickle'
-                    with open(os.path.join(datadir, file), 'wb') as f:
-                        pickle.dump(var, f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
+                        imp_mod['pickle'].dump(var, f)
             #------------------------------------------------------------------------------
             # POWER FUNCTION BUTTONS (POWER NORMAL PURSUIT AUTO)
             #------------------------------------------------------------------------------        
@@ -7249,14 +7255,14 @@ class myfunctions():
                 def load_btn_states_PBFNKT(self):
                     global btn_states_PBFNKT
                     try:
-                        with open(os.path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
-                            btn_states_PBFNKT = pickle.load(f)
+                        with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
+                            btn_states_PBFNKT = imp_mod['pickle'].load(f)
                     except:
                         btn_states_PBFNKT = [False] * 4
     
                 def save_btn_states_PBFNKT(self):
-                    with open(os.path.join(datadir, 'btn_states_PBFNKT.pickle'), 'wb') as f:
-                        pickle.dump(btn_states_PBFNKT, f)
+                    with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'wb') as f:
+                        imp_mod['pickle'].dump(btn_states_PBFNKT, f)
         #----------------------------------------------------------------------------------
         # HW SW FAV BUTTONS
         #----------------------------------------------------------------------------------
@@ -7277,8 +7283,8 @@ class myfunctions():
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031HW.pickle'
                     try:
-                        with open(os.path.join(datadir, file), 'rb') as f:
-                            var = pickle.load(f)
+                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                            var = imp_mod['pickle'].load(f)
                     except:
                         var = [False] * ammount
 
@@ -7297,8 +7303,8 @@ class myfunctions():
                         file = 'btn_states_DEV002HW.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031HW.pickle'
-                    with open(os.path.join(datadir, file), 'wb') as f:
-                        pickle.dump(var, f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
+                        imp_mod['pickle'].dump(var, f)
             #-------------------------------------------------------------------------------
             # SW BUTTONS
             #-------------------------------------------------------------------------------
@@ -7313,8 +7319,8 @@ class myfunctions():
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031SW.pickle'
                     try:
-                        with open(os.path.join(datadir, file), 'rb') as f:
-                            var = pickle.load(f)
+                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                            var = imp_mod['pickle'].load(f)
                     except:
                         var = [False] * ammount
 
@@ -7339,8 +7345,8 @@ class myfunctions():
                         file = 'btn_states_DEV002SW.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031SW.pickle'
-                    with open(os.path.join(datadir, file), 'wb') as f:
-                        pickle.dump(var, f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
+                        imp_mod['pickle'].dump(var, f)
             #-------------------------------------------------------------------------------
             # QOPT BUTTONS
             #-------------------------------------------------------------------------------
@@ -7355,8 +7361,8 @@ class myfunctions():
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031qopt.pickle'
                     try:
-                        with open(os.path.join(datadir, file), 'rb') as f:
-                            var = pickle.load(f)
+                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                            var = imp_mod['pickle'].load(f)
                     except:
                         var = [False] * ammount
 
@@ -7375,8 +7381,8 @@ class myfunctions():
                         file = 'btn_states_DEV002qopt.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031qopt.pickle'
-                    with open(os.path.join(datadir, file), 'wb') as f:
-                        pickle.dump(var, f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
+                        imp_mod['pickle'].dump(var, f)
             #-------------------------------------------------------------------------------
             # FAV BUTTONS
             #-------------------------------------------------------------------------------
@@ -7391,8 +7397,8 @@ class myfunctions():
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031FAV.pickle'
                     try:
-                        with open(os.path.join(datadir, file), 'rb') as f:
-                            var = pickle.load(f)
+                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
+                            var = imp_mod['pickle'].load(f)
                     except:
                         var = [False] * ammount
 
@@ -7411,8 +7417,8 @@ class myfunctions():
                         file = 'btn_states_DEV002FAV.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031FAV.pickle'
-                    with open(os.path.join(datadir, file), 'wb') as f:
-                        pickle.dump(var, f)
+                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
+                        imp_mod['pickle'].dump(var, f)
         #----------------------------------------------------------------------------------
         # LOAD SYSTEMDATA IF THE SYSTEM IS A RASPBERRY PI
         #----------------------------------------------------------------------------------
@@ -7430,7 +7436,7 @@ class myfunctions():
             sys_memused = str(psutil.virtual_memory().percent)
             sys_memmax = str(round(psutil.virtual_memory().total / (1024.0 ** 3), 2))
             sys_cpuload = str(psutil.cpu_percent())
-            res01 = os.popen('vcgencmd measure_temp').readline()
+            res01 = imp_mod['os'].popen('vcgencmd measure_temp').readline()
             sys_cputemp = res01.replace("temp=","").replace("'C\n","")
     #--------------------------------------------------------------------------------------
     # STYLING FUNCTIONS
@@ -7439,8 +7445,8 @@ class myfunctions():
         def toggle_button_device(self, device_text):
             global device
             device = device_text
-            with open(os.path.join(datadir, 'device_conf.pickle'), 'wb') as f:
-                pickle.dump(device, f)
+            with open(imp_mod['os'].path.join(datadir, 'device_conf.pickle'), 'wb') as f:
+                imp_mod['pickle'].dump(device, f)
 
         def toggle_button_style(self, style_text):
             global style
@@ -7450,14 +7456,14 @@ class myfunctions():
                 sty_clr = sty_clr_ka
             elif style == style_txt[1]:
                 sty_clr = sty_clr_ki
-            with open(os.path.join(datadir, 'style_conf.pickle'), 'wb') as f:
-                pickle.dump(style, f)
+            with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'wb') as f:
+                imp_mod['pickle'].dump(style, f)
 
         def toggle_button_theme(self, theme_text):
             global theme
             theme = theme_text
-            with open(os.path.join(datadir, 'theme_conf.pickle'), 'wb') as f:
-                pickle.dump(theme, f)
+            with open(imp_mod['os'].path.join(datadir, 'theme_conf.pickle'), 'wb') as f:
+                imp_mod['pickle'].dump(theme, f)
                 
         def toggle_button_system(self, system_text):
             global system
@@ -7471,8 +7477,8 @@ class myfunctions():
                 sys_clr = sys_clr_BU
             elif system == system_txt[3]: 
                 sys_clr = sys_clr_WH
-            with open(os.path.join(datadir, 'system_conf.pickle'), 'wb') as f:
-                pickle.dump(system, f)
+            with open(imp_mod['os'].path.join(datadir, 'system_conf.pickle'), 'wb') as f:
+                imp_mod['pickle'].dump(system, f)
     #--------------------------------------------------------------------------------------
     # SOUND FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -7489,8 +7495,8 @@ class myfunctions():
         def get_subfolders_count_and_names(self, snd_fldr):
             # Get a list of subfolders in the specified folder
             subfolders = [
-                name for name in os.listdir(snd_fldr)
-                if os.path.isdir(os.path.join(snd_fldr, name)) #and name != "time"
+                name for name in imp_mod['os'].listdir(snd_fldr)
+                if imp_mod['os'].path.isdir(imp_mod['os'].path.join(snd_fldr, name)) #and name != "time"
             ] 
             # Get the count of subfolders
             subfolders_count = len(subfolders)    
@@ -7500,7 +7506,7 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         def get_mp3files_count_and_names(self, act_mp3_files_path):
             # Get a list of subfolders in the specified folder
-            mp3files = [name for name in os.listdir(act_mp3_files_path) if os.path.isfile(os.path.join(act_mp3_files_path, name))]
+            mp3files = [name for name in imp_mod['os'].listdir(act_mp3_files_path) if imp_mod['os'].path.isfile(imp_mod['os'].path.join(act_mp3_files_path, name))]
             # Get the count of subfolders
             mp3files_count = len(mp3files)
             return mp3files_count, mp3files
@@ -7546,18 +7552,18 @@ class myfunctions():
                 read.load_playlist()
                 
             def load_playlist(self):
-                for root_folder, _, files in os.walk(snd_fldr):
+                for root_folder, _, files in imp_mod['os'].walk(snd_fldr):
                     if "time" in root_folder.lower():
                         continue
                     if "states_dev" in root_folder.lower():
                         continue
                     for file in files:
                         if file.lower().endswith(".mp3"):
-                            playlist.append(os.path.join(root_folder, file))
+                            playlist.append(imp_mod['os'].path.join(root_folder, file))
                 read.shuffle_playlist()
 
             def shuffle_playlist(self):
-                random.shuffle(playlist)
+                imp_mod['random'].shuffle(playlist)
 
             def play_next(self):
                 global current_index
@@ -7566,10 +7572,10 @@ class myfunctions():
                         current_index = 0
 
                     current_file = playlist[current_index]
-                    playing_label.config(text=os.path.basename(current_file)[:20])
+                    playing_label.config(text=imp_mod['os'].path.basename(current_file)[:20])
                     if current_index + 1 < len(playlist):
                         next_file = playlist[current_index + 1]
-                        next_label_value.config(text=os.path.basename(next_file)[:30])
+                        next_label_value.config(text=imp_mod['os'].path.basename(next_file)[:30])
                     else:
                         next_label_value.config(text="End of playlist")
 
@@ -7743,7 +7749,7 @@ class myfunctions():
                         soundfolder = "KARR3000"
                     elif style == style_txt[1]:
                         soundfolder = "KITT3000"
-                snd_fldr = os.path.join(folder,'sound', soundfolder)
+                snd_fldr = imp_mod['os'].path.join(folder,'sound', soundfolder)
             #------------------------------------------------------------------------------
             # GET AMOUNT OF SUBFOLDERS
             #------------------------------------------------------------------------------
@@ -7753,7 +7759,7 @@ class myfunctions():
             # GET AMOUNT AND NAMES OF MP3 FILES
             #------------------------------------------------------------------------------
             if REGION:
-                act_mp3_files_path = os.path.join(snd_fldr, snd_btn_txt)
+                act_mp3_files_path = imp_mod['os'].path.join(snd_fldr, snd_btn_txt)
                 mp3files_count, mp3files_list = read.get_mp3files_count_and_names(act_mp3_files_path)
         #----------------------------------------------------------------------------------
         # OPEN AND PLAY THE MP3 FILE
@@ -7763,7 +7769,7 @@ class myfunctions():
             thread_01.start()
 
         def play_mp3(self, path, file):
-            mp3_file = os.path.join(path, file)
+            mp3_file = imp_mod['os'].path.join(path, file)
             try:
                 audio = AudioSegment.from_mp3(mp3_file)
                 play(audio)
@@ -7776,8 +7782,8 @@ class myfunctions():
             thread_02.start()
 
         def play_mp3_time(self, hour, minute):
-            speech_hour = os.path.join(folder,'sound', 'time', 'clock', 'hour')
-            speech_minute = os.path.join(folder,'sound', 'time', 'clock', 'min')
+            speech_hour = imp_mod['os'].path.join(folder,'sound', 'time', 'clock', 'hour')
+            speech_minute = imp_mod['os'].path.join(folder,'sound', 'time', 'clock', 'min')
             try:
                 audio_speech_hour = AudioSegment.from_mp3(speech_hour, hour)
                 print (audio_speech_hour)
@@ -7885,8 +7891,8 @@ class myfunctions():
             # WRITE ODOMETER DATA
             #------------------------------------------------------------------------------
             def odometer_data(self, var):
-                with open(os.path.join(datadir, 'odometer.pickle'), 'wb') as f:
-                    pickle.dump(var, f)
+                with open(imp_mod['os'].path.join(datadir, 'odometer.pickle'), 'wb') as f:
+                    imp_mod['pickle'].dump(var, f)
     #--------------------------------------------------------------------------------------
     # DEV002 FUNCTIONS
     #--------------------------------------------------------------------------------------
