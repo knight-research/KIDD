@@ -2,7 +2,7 @@
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-10-29-1613"
+last_change = "2023-11-01-1321"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -5541,7 +5541,7 @@ class P03_SETUP(tk.Frame):
             btn_EXIT = tk.Button(self, bd=0, bg=sys_clr[8], fg="#FF0000", font=(fonts[1], 28))
             btn_EXIT.config(text="X")
             btn_EXIT.configure(command=read.quitDASH)
-            btn_EXIT.place(x=1195, y=21, w=50, h=50)
+            btn_EXIT.place(x=350, y=21, w=50, h=50)
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTON LABELS
         #----------------------------------------------------------------------------------
