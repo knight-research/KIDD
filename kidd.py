@@ -21,14 +21,14 @@ CAR005: KITT 3000 MA2 (2013)
 # INFO: AND = ANDROID ARD = ARDUINO RPI = RASPBERRY WIN = WINDOWS
 #------------------------------------------------------------------------------------------
 DEV000: KNIGHT 2000 VPN ROUTER
-DEV001: KNIGHT 2000 RPI SPEEDOMETER AND VOICEBOX    TWO DISPLAYS #1 1280x720 #2 800x480L
-DEV002: KNIGHT 2000 RPI TACHOMETER AND POWERBOARD   TWO DISPLAYS #1 1280x720 #2 1280x720
+DEV001: KNIGHT 2000 RPI SPEEDOMETER AND VOICEBOX    TWO DISPLAYS #1 1280x720 #2 800x480L FINAL RES = 2080x720
+DEV002: KNIGHT 2000 RPI TACHOMETER AND POWERBOARD   TWO DISPLAYS #1 1280x720 #2 1280x720 FINAL RES = 2560x720
 DEV003: KNIGHT 2000 WIN 2TV DASH MONITOR 01+02
 DEV004: KNIGHT 2000 WIN 1TV DASH MONITOR            ONE DISPLAY #1 1920x1200
 DEV005: KNIGHT 2000 RPI LOWER CONSOLE
 DEV006: KNIGHT 2000 ARD SWITCHPOD LEFT
 DEV007: KNIGHT 2000 ARD SWITCHPOD RIGHT
-DEV008: KNIGHT 2000 RPI OHC                         TWO DISPLAYS #1 400x1280 #2 400x1280
+DEV008: KNIGHT 2000 RPI OHC                         TWO DISPLAYS #1 400x1280 #2 400x1280 FINAL RES = 400x2560
 DEV009: KNIGHT 2000 ARD MIRROR LEFT
 DEV010: KNIGHT 2000 AND MIRROR CENTER
 DEV011: KNIGHT 2000 ARD MIRROR RIGHT
@@ -1031,15 +1031,15 @@ if REGION:
         # SETUP DISPLAY RESOULUTIONS AND BACKGROUND GRIDS
         #----------------------------------------------------------------------------------
         if device == device_txt[1]:
-            bggrid = [2560, 800]
+            bggrid = [2080, 720]
         elif device == device_txt[2]:
-            bggrid = [2560, 800]
+            bggrid = [2560, 720]
         elif device == device_txt[3]:
-            bggrid = [2560, 800]
+            bggrid = [2560, 720]
         elif device == device_txt[4]:
             bggrid = [1920, 1200]
         elif device == device_txt[8]:
-            bggrid = [800, 2560] #(2x 480x1280)                        
+            bggrid = [400, 2560]                      
         grid_spacing = 15
         kidd_left   =  "%s" % 0
         kidd_top    =  "%s" % 0
