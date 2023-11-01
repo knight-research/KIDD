@@ -2,7 +2,7 @@
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-11-01-1321"
+last_change = "2023-11-01-1938"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -1028,23 +1028,24 @@ if REGION:
     #--------------------------------------------------------------------------------------
     if REGION:
         #----------------------------------------------------------------------------------
-        # SETUP DISPLAY RESOULUTIONS AND BACKGROUND GRIDS
+        # SETUP DISPLAY RESOULUTIONS AND BACKGROUND GRIDS 
+        # left, width_display1, width_display2, top, height
         #----------------------------------------------------------------------------------
         if device == device_txt[1]:
-            bggrid = [2080, 720]
+            bggrid = [0, 1280, 800, 0, 768]
         elif device == device_txt[2]:
-            bggrid = [2560, 720]
+            bggrid = [0, 1280,1280, 0, 768]
         elif device == device_txt[3]:
-            bggrid = [2560, 720]
+            bggrid = [0, 1280,1280, 0, 768]
         elif device == device_txt[4]:
-            bggrid = [1920, 1200]
+            bggrid = [0, 1920, 0, 0, 1200]
         elif device == device_txt[8]:
-            bggrid = [400, 2560]                      
+            bggrid = [0, 400, 0, 0, 2560]                      
         grid_spacing = 15
-        kidd_left   =  "%s" % 0
-        kidd_top    =  "%s" % 0
-        kidd_width  =  "%s" % bggrid[0]
-        kidd_height =  "%s" % bggrid[1]
+        kidd_left   =  "%s" % bggrid[0]
+        kidd_width  =  "%s" % (bggrid[1]+bggrid[2])
+        kidd_top    =  "%s" % bggrid[3]
+        kidd_height =  "%s" % bggrid[4]
         #----------------------------------------------------------------------------------
         # SETUP STYLES
         #----------------------------------------------------------------------------------
@@ -5163,95 +5164,117 @@ class P02_QOPT(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
-            # CREATE BACKGROUND GRID OVERLAYS
+            # CREATE BACKGROUND OVERLAYS
             #------------------------------------------------------------------------------
             if REGION:
                 #--------------------------------------------------------------------------
-                # GLOBALS
-                #--------------------------------------------------------------------------            
                 # COORDINATES OF HORIZONTAL LINES
-                coordinates = [
-                    (30, 15, 1245, 15),     #TITLE TOP
-                    (30, 75, 1245, 75),     #TITLE BOTTOM
-                    (30, 90, 1245, 90),     #MAIN TOP
-                    (30, 615, 1245, 615),   #MAIN BOTTOM
-                    (30, 630, 1245, 630),   #MENU TOP
-                    (30, 720, 1245, 720),   #MENU BOTTOM
-                    (1310, 15, 2340, 15),   #RIGHT TOP
-                    (1310, 720, 2340, 720), #RIGHT BOTTOM
-                ]
-                # Define colors
-                colors_corner = [sys_clr[3], sys_clr[4]]
-                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
-                num_segments = 50                
-                #--------------------------------------------------------------------------
-                # CREATE TITLE CORNERS
-                #--------------------------------------------------------------------------
-                canvas.create_line(15, 15, 25, 15, fill=colors_corner[0], width=1)      #LT_X
-                canvas.create_line(15, 15, 15, 25, fill=colors_corner[1], width=1)      #LT_Y
-                canvas.create_line(1250, 15, 1260, 15, fill=colors_corner[0], width=1)  #RT_X
-                canvas.create_line(1260, 15, 1260, 25, fill=colors_corner[1], width=1)  #RT_Y
-                canvas.create_line(15, 75, 25, 75, fill=colors_corner[0], width=1)      #LB_X
-                canvas.create_line(15, 75, 15, 65, fill=colors_corner[1], width=1)      #LB_Y            
-                canvas.create_line(1250, 75, 1260, 75, fill=colors_corner[0], width=1)  #RB_X
-                canvas.create_line(1260, 75, 1260, 65, fill=colors_corner[1], width=1)  #RB_Y
-                #--------------------------------------------------------------------------
-                # CREATE HORIZONTAL LINES
-                #--------------------------------------------------------------------------
-                for i in range(num_segments):
-                    color_index = min(i // (num_segments // len(gradient_colors)), len(gradient_colors) - 1)
-                    color_start, color_end = gradient_colors[color_index], gradient_colors[min(color_index + 1, len(gradient_colors) - 1)]
-                    t = (i % (num_segments // len(gradient_colors))) / (num_segments // len(gradient_colors))
+                #--------------------------------------------------------------------------            
+                if REGION:
+                    xlinborder = 40
+                    frames = [
+                        [15, 75],   #0 TITLE FRAME
+                        [90, 615],  #1 MAIN FRAME
+                        [630, 720]  #2 MENU FRAME
+                    ]
+                    coordinates = []
+                    for frame_bounds in frames:
+                        coordinates.append((bggrid[0] + xlinborder, bggrid[3] + frame_bounds[0], bggrid[1] - xlinborder, bggrid[3] + frame_bounds[0]))
+                        coordinates.append((bggrid[0] + xlinborder, bggrid[3] + frame_bounds[1], bggrid[1] - xlinborder, bggrid[3] + frame_bounds[1]))
+                    # Define colors
+                    colors_corner = [sys_clr[3], sys_clr[4]]
+                    gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
+                    num_segments = 50               
+                    #--------------------------------------------------------------------------
+                    # CREATE HORIZONTAL LINES
+                    #--------------------------------------------------------------------------
+                    for i in range(num_segments):
+                        color_index = min(i // (num_segments // len(gradient_colors)), len(gradient_colors) - 1)
+                        color_start, color_end = gradient_colors[color_index], gradient_colors[min(color_index + 1, len(gradient_colors) - 1)]
+                        t = (i % (num_segments // len(gradient_colors))) / (num_segments // len(gradient_colors))
+                        r = int((1 - t) * int(color_start[1:3], 16) + t * int(color_end[1:3], 16))
+                        g = int((1 - t) * int(color_start[3:5], 16) + t * int(color_end[3:5], 16))
+                        b = int((1 - t) * int(color_start[5:7], 16) + t * int(color_end[5:7], 16))
+                        color = "#{:02x}{:02x}{:02x}".format(r, g, b)
 
-                    r = int((1 - t) * int(color_start[1:3], 16) + t * int(color_end[1:3], 16))
-                    g = int((1 - t) * int(color_start[3:5], 16) + t * int(color_end[3:5], 16))
-                    b = int((1 - t) * int(color_start[5:7], 16) + t * int(color_end[5:7], 16))
-
-                    color = "#{:02x}{:02x}{:02x}".format(r, g, b)
-
-                    for x1, y1, x2, y2 in coordinates:
-                        x1_segment = x1 + (x2 - x1) * i / num_segments
-                        y1_segment = y1 + (y2 - y1) * i / num_segments
-                        x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
-                        y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
-
-                        canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
+                        for x1, y1, x2, y2 in coordinates:
+                            x1_segment = x1 + (x2 - x1) * i / num_segments
+                            y1_segment = y1 + (y2 - y1) * i / num_segments
+                            x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
+                            y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
+                            canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
                 #--------------------------------------------------------------------------
-                # CREATE MAIN CORNERS
+                # CREATE FRAME 00 CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 90, 25, 90, fill=colors_corner[0], width=1)      #LT_X
-                canvas.create_line(15, 90, 15, 100, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 90, 1260, 90, fill=colors_corner[0], width=1)  #RT_X
-                canvas.create_line(1260, 90, 1260, 100, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 615, 25, 615, fill=colors_corner[0], width=1)    #LB_X
-                canvas.create_line(15, 605, 15, 615, fill=colors_corner[1], width=1)    #LB_Y
-                canvas.create_line(1250, 615, 1260, 615, fill=colors_corner[0], width=1)#RB_X
-                canvas.create_line(1260, 605, 1260, 615, fill=colors_corner[1], width=1)#RB_Y
+                if REGION:
+                    xcrnrborder = 15
+                    xcrnrborder_ri = xcrnrborder+5
+                    xy_width = 10
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[0][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[0][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[0][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[0][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
-                # CREATE MENU CORNERS
+                # CREATE FRAME 01 CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 630, 25, 630, fill=colors_corner[0], width=1)    #LT_X
-                canvas.create_line(15, 630, 15, 640, fill=colors_corner[1], width=1)    #LT_Y
-                canvas.create_line(1250, 630, 1260, 630, fill=colors_corner[0], width=1)#RT_X
-                canvas.create_line(1260, 630, 1260, 640, fill=colors_corner[1], width=1)#RT_Y
-                canvas.create_line(15, 720, 25, 720, fill=colors_corner[0], width=1)    #LB_X
-                canvas.create_line(15, 710, 15, 720, fill=colors_corner[1], width=1)    #LB_Y
-                canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
-                canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
+                if REGION:
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[1][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[1][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[1][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[1][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
+                #--------------------------------------------------------------------------
+                # CREATE FRAME 02 CORNERS LEFT/TOP DISPLAY
+                #--------------------------------------------------------------------------
+                if REGION:
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[2][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[2][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[2][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[2][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
-                for i in range(10):
-                    canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
-                    canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
-                    x += 118                
+                if REGION:
+                    x = 19
+                    for i in range(10):
+                        canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
+                        canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
+                        canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
+                        x += 118              
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
@@ -5271,6 +5294,7 @@ class P02_QOPT(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="QOPT")
+            canvas.create_text(20, 635, **txt_style_pagename, fill=sys_clr[9], text="MENU")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -5385,10 +5409,10 @@ class P03_SETUP(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -5502,11 +5526,11 @@ class P03_SETUP(tk.Frame):
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
+                x = 19
                 for i in range(10):
                     canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
                     canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
                     x += 118
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
@@ -5534,6 +5558,7 @@ class P03_SETUP(tk.Frame):
                 wlan0_ip = "127.0.0.1"
             canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="SETUP")
             canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=(version, last_change, SYSTEM, carno, devno, wlan0_ip))
+            canvas.create_text(20, 635, **txt_style_pagename, fill=sys_clr[9], text="MENU")
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
@@ -5949,135 +5974,187 @@ class P04_THEMES(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
             if REGION:
                 #--------------------------------------------------------------------------
-                # GLOBALS
-                #--------------------------------------------------------------------------            
                 # COORDINATES OF HORIZONTAL LINES
-                coordinates = [
-                    (30, 15, 1245, 15),     #TITLE TOP
-                    (30, 75, 1245, 75),     #TITLE BOTTOM
-                    
-                    (30, 90, 1245, 90),     #DEV TOP
-                    (30, 195, 1245, 195),   #DEV BOTTOM
-                    (30, 210, 1245, 210),   #STYLE TOP
-                    (30, 315, 1245, 315),   #STYLE BOTTOM
-                    (30, 330, 1245, 330),   #THEME TOP
-                    (30, 510, 1245, 510),   #THEME BOTTOM
-                    (30, 525, 1245, 525),   #SYSTEM TOP
-                    (30, 615, 1245, 615),   #SYSTEM BOTTOM                    
+                #--------------------------------------------------------------------------            
+                if REGION:
+                    xlinborder = 40
+                    ylin00 = 15 #TITLE
+                    ylin01 = 75 #TITLE
+                    ylin02 = 90 #DEV
+                    ylin03 =195 #DEV                    
+                    ylin04 =210 #STYLE
+                    ylin05 =315 #STYLE
+                    ylin06 =330 #THEME
+                    ylin07 =510 #THEME
+                    ylin08 =525 #SYSTEM
+                    ylin09 =615 #SYSTEM
+                    ylin10 =630 #MENU
+                    ylin11 =720 #MENU
 
-                    (30, 630, 1245, 630),   #MENU TOP
-                    (30, 720, 1245, 720),   #MENU BOTTOM
-                    (1310, 15, 2340, 15),   #RIGHT TOP
-                    (1310, 720, 2340, 720), #RIGHT BOTTOM
-                ]
-                # Define colors
-                colors_corner = [sys_clr[3], sys_clr[4]]
-                gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
-                num_segments = 50                
-                #--------------------------------------------------------------------------
-                # CREATE TITLE CORNERS
-                #--------------------------------------------------------------------------
-                canvas.create_line(15, 15, 25, 15, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 15, 15, 25, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 15, 1260, 15, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 15, 1260, 25, fill=colors_corner[1], width=1) #RT_Y
-                canvas.create_line(15, 75, 25, 75, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 75, 15, 65, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 75, 1260, 75, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 75, 1260, 65, fill=colors_corner[1], width=1) #RB_Y
-                #--------------------------------------------------------------------------
-                # CREATE HORIZONTAL LINES
-                #--------------------------------------------------------------------------
-                for i in range(num_segments):
-                    color_index = min(i // (num_segments // len(gradient_colors)), len(gradient_colors) - 1)
-                    color_start, color_end = gradient_colors[color_index], gradient_colors[min(color_index + 1, len(gradient_colors) - 1)]
-                    t = (i % (num_segments // len(gradient_colors))) / (num_segments // len(gradient_colors))
 
-                    r = int((1 - t) * int(color_start[1:3], 16) + t * int(color_end[1:3], 16))
-                    g = int((1 - t) * int(color_start[3:5], 16) + t * int(color_end[3:5], 16))
-                    b = int((1 - t) * int(color_start[5:7], 16) + t * int(color_end[5:7], 16))
+                    xlinborder = 40
+                    frames = [
+                        [ 15,  75], #0 TITLE FRAME
+                        [ 90, 195], #1 DEV FRAME
+                        [210, 315], #2 STYLE FRAME
+                        [330, 510], #3 THEME FRAME
+                        [525, 615], #4 SYSTEM FRAME
+                        [630, 720], #5 MENU FRAME
+                    ]
+                    coordinates = []
+                    for frame_bounds in frames:
+                        coordinates.append((bggrid[0] + xlinborder, bggrid[3] + frame_bounds[0], bggrid[1] - xlinborder, bggrid[3] + frame_bounds[0]))
+                        coordinates.append((bggrid[0] + xlinborder, bggrid[3] + frame_bounds[1], bggrid[1] - xlinborder, bggrid[3] + frame_bounds[1]))
+                    # Define colors
+                    colors_corner = [sys_clr[3], sys_clr[4]]
+                    gradient_colors = [sys_clr[5], sys_clr[6], sys_clr[7]]
+                    num_segments = 50               
+                    #--------------------------------------------------------------------------
+                    # CREATE HORIZONTAL LINES
+                    #--------------------------------------------------------------------------
+                    for i in range(num_segments):
+                        color_index = min(i // (num_segments // len(gradient_colors)), len(gradient_colors) - 1)
+                        color_start, color_end = gradient_colors[color_index], gradient_colors[min(color_index + 1, len(gradient_colors) - 1)]
+                        t = (i % (num_segments // len(gradient_colors))) / (num_segments // len(gradient_colors))
+                        r = int((1 - t) * int(color_start[1:3], 16) + t * int(color_end[1:3], 16))
+                        g = int((1 - t) * int(color_start[3:5], 16) + t * int(color_end[3:5], 16))
+                        b = int((1 - t) * int(color_start[5:7], 16) + t * int(color_end[5:7], 16))
+                        color = "#{:02x}{:02x}{:02x}".format(r, g, b)
 
-                    color = "#{:02x}{:02x}{:02x}".format(r, g, b)
-
-                    for x1, y1, x2, y2 in coordinates:
-                        x1_segment = x1 + (x2 - x1) * i / num_segments
-                        y1_segment = y1 + (y2 - y1) * i / num_segments
-                        x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
-                        y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
-
-                        canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
+                        for x1, y1, x2, y2 in coordinates:
+                            x1_segment = x1 + (x2 - x1) * i / num_segments
+                            y1_segment = y1 + (y2 - y1) * i / num_segments
+                            x2_segment = x1 + (x2 - x1) * (i + 1) / num_segments
+                            y2_segment = y1 + (y2 - y1) * (i + 1) / num_segments
+                            canvas.create_line(x1_segment, y1_segment, x2_segment, y2_segment, fill=color)
                 #--------------------------------------------------------------------------
-                # CREATE DEVICE CORNERS
+                # CREATE FRAME 00 CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 90, 25, 90, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 90, 15, 100, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 90, 1260, 90, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 90, 1260, 100, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 195, 25, 195, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 185, 15, 195, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 195, 1260, 195, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 185, 1260, 195, fill=colors_corner[1], width=1) #RB_Y
+                if REGION:
+                    xcrnrborder = 15
+                    xcrnrborder_ri = xcrnrborder+5
+                    xy_width = 10
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[0][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[0][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[0][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[0][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[0][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[0][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
-                # CREATE STYLE CORNERS
+                # CREATE FRAME 01 CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 210, 25, 210, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 210, 15, 220, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 210, 1260, 210, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 210, 1260, 220, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 315, 25, 315, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 305, 15, 315, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 315, 1260, 315, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 305, 1260, 315, fill=colors_corner[1], width=1) #RB_Y
+                if REGION:
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[1][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[1][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[1][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[1][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[1][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[1][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
-                # CREATE THEME CORNERS
+                # CREATE FRAME 02 CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 330, 25, 330, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 330, 15, 340, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 330, 1260, 330, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 330, 1260, 340, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 510, 25, 510, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 500, 15, 510, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 510, 1260, 510, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 500, 1260, 510, fill=colors_corner[1], width=1) #RB_Y
+                if REGION:
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[2][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[2][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[2][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[2][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
-                # CREATE SYSTEM CORNERS
+                # CREATE FRAME 03 CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 525, 25, 525, fill=colors_corner[0], width=1)     #LT_X
-                canvas.create_line(15, 525, 15, 535, fill=colors_corner[1], width=1)     #LT_Y
-                canvas.create_line(1250, 525, 1260, 525, fill=colors_corner[0], width=1) #RT_X
-                canvas.create_line(1260, 525, 1260, 535, fill=colors_corner[1], width=1) #RT_Y               
-                canvas.create_line(15, 615, 25, 615, fill=colors_corner[0], width=1)     #LB_X
-                canvas.create_line(15, 605, 15, 615, fill=colors_corner[1], width=1)     #LB_Y
-                canvas.create_line(1250, 615, 1260, 615, fill=colors_corner[0], width=1) #RB_X
-                canvas.create_line(1260, 605, 1260, 615, fill=colors_corner[1], width=1) #RB_Y
+                if REGION:
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[3][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[3][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[3][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[3][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[3][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[3][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[3][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[3][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[3][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[3][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[3][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[3][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[3][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[3][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[3][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[3][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
-                # CREATE MENU CORNERS
+                # CREATE FRAME 04 CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
-                canvas.create_line(15, 630, 25, 630, fill=colors_corner[0], width=1)    #LT_X
-                canvas.create_line(15, 630, 15, 640, fill=colors_corner[1], width=1)    #LT_Y
-                canvas.create_line(1250, 630, 1260, 630, fill=colors_corner[0], width=1)#RT_X
-                canvas.create_line(1260, 630, 1260, 640, fill=colors_corner[1], width=1)#RT_Y
-                canvas.create_line(15, 720, 25, 720, fill=colors_corner[0], width=1)    #LB_X
-                canvas.create_line(15, 710, 15, 720, fill=colors_corner[1], width=1)    #LB_Y
-                canvas.create_line(1250, 720, 1260, 720, fill=colors_corner[0], width=1)#RB_X
-                canvas.create_line(1260, 710, 1260, 720, fill=colors_corner[1], width=1)#RB_Y
+                if REGION:
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[4][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[4][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[4][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[4][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[4][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[4][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[4][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[4][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[4][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[4][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[4][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[4][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[4][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[4][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[4][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[4][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
+                #--------------------------------------------------------------------------
+                # CREATE FRAME 05 CORNERS LEFT/TOP DISPLAY
+                #--------------------------------------------------------------------------
+                if REGION:
+                    coordinates = [
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[5][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[5][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[5][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[5][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][1]-xy_width), 1, 0),  # RB_Y
+                    ]
+                    for x1, y1, x2, y2, is_vertical, is_top in coordinates:
+                        line_color = colors_corner[is_vertical]
+                        line_width = 1
+                        canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
+                x = 19
                 for i in range(10):
                     canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
                     canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
                     x += 118
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
@@ -6102,6 +6179,7 @@ class P04_THEMES(tk.Frame):
             canvas.create_text(20,215, **txt_style_pagename, fill=sys_clr[9], text="STYLE")
             canvas.create_text(20,335, **txt_style_pagename, fill=sys_clr[9], text="THEME")
             canvas.create_text(20,530, **txt_style_pagename, fill=sys_clr[9], text="SYSTEM")
+            canvas.create_text(20, 635, **txt_style_pagename, fill=sys_clr[9], text="MENU")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -6307,10 +6385,10 @@ class P07_AUDIO(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -6390,11 +6468,11 @@ class P07_AUDIO(tk.Frame):
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
+                x = 19
                 for i in range(10):
                     canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
                     canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
                     x += 118
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
@@ -6463,10 +6541,10 @@ class P08_VIDEO(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -6546,11 +6624,11 @@ class P08_VIDEO(tk.Frame):
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
+                x = 19
                 for i in range(10):
                     canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
                     canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
                     x += 118
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
@@ -6602,10 +6680,10 @@ class P09_RES(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -6685,11 +6763,11 @@ class P09_RES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
+                x = 19
                 for i in range(10):
                     canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
                     canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
                     x += 118
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
@@ -6738,10 +6816,10 @@ class P10_RES(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -6821,11 +6899,11 @@ class P10_RES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
+                x = 19
                 for i in range(10):
                     canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
                     canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
+                    canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
                     x += 118
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
@@ -6874,10 +6952,10 @@ class P11_RES(tk.Frame):
             # CREATE BACKGROUND GRID
             #------------------------------------------------------------------------------ 
             if REGION:
-                for x in range(0, bggrid[0], grid_spacing):
-                    canvas.create_line(x, 0, x, bggrid[1], fill=sys_clr[1])
-                for y in range(0, bggrid[1], grid_spacing):
-                    canvas.create_line(0, y, bggrid[0], y, fill=sys_clr[2])
+                for x in range(0, bggrid[1], grid_spacing):
+                    canvas.create_line(x, 0, x, bggrid[4], fill=sys_clr[1])
+                for y in range(0, bggrid[4], grid_spacing):
+                    canvas.create_line(0, y, bggrid[1], y, fill=sys_clr[2])
             #------------------------------------------------------------------------------
             # CREATE BACKGROUND GRID OVERLAYS
             #------------------------------------------------------------------------------
@@ -6957,12 +7035,12 @@ class P11_RES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # CREATE MENU BUTTON STATUS CORNERS (10 BUTTONS)
                 #--------------------------------------------------------------------------              
-                x = 54
+                x = 19
                 for i in range(10):
                     canvas.create_line(x, 705, x, 715, fill=colors_corner[0], width=1)             # Left line
                     canvas.create_line(x, 715, x + 102, 715, fill=colors_corner[1], width=1)       # Bottom line
-                    canvas.create_line(x + 102, 705, x + 102, 715, fill=colors_corner[0], width=1) # Right line
-                    x += 118    
+                    canvas.create_line(x + 101, 705, x + 101, 715, fill=colors_corner[0], width=1) # Right line
+                    x += 118  
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
@@ -7030,15 +7108,15 @@ class myfunctions():
                     btns_menu[i].place(x=x_pos_r1, y=675, w=btn_w, h=btn_h)
                     x_pos_r1 += +118
 
-                slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=1220, orient='horizontal', width=30, sliderlength=50, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=1080, orient='horizontal', width=20, sliderlength=100, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
                 slider.set(1)
-                slider.place(x=25, y=635)
+                slider.place(x=168, y=635)
             #------------------------------------------------------------------------------
             # SHOW MENU BUTTONS IN SLIDER
             #------------------------------------------------------------------------------        
             def show_menu_btns(self, value):
                 start_index = int(float(value))  # Convert float value to integer
-                x_pos_r1 = 55
+                x_pos_r1 = 20
                 btn_w = 100
                 btn_h = 40
                 for i in range(btn_menu_place):
