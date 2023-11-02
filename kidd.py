@@ -3,7 +3,7 @@ REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 checkinstall = False #AUTO INSTALL LIBS
 version = "V2.0.1"
-last_change = "2023-11-01-2128"
+last_change = "2023-11-02-1707"
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
