@@ -2803,7 +2803,7 @@ class P01_DASH(tk.Frame):
                     btn_units.config(image=localimage09)
         #----------------------------------------------------------------------------------
         # VOICECOMMAND LABELS AND ICONS
-        #----------------------------------------------------------------------------------       
+        #----------------------------------------------------------------------------------
         if REGION:
             global lbls_voicecmd
             if device == device_txt[1]:
@@ -2832,6 +2832,17 @@ class P01_DASH(tk.Frame):
 
                 btns_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
                 self.function_running = False
+        #----------------------------------------------------------------------------------
+        # CREATE GAUGES FUNCTION
+        #----------------------------------------------------------------------------------
+        def create_gauges(self, x_pos, y_pos, x_pos_next, width, height, ammount):
+            led = []
+            for i in range(ammount):
+                val = tk.Label(self, **btn_style_imgbtn)
+                val.place(x=x_pos, y=y_pos, width=width, height=height)
+                x_pos += x_pos_next
+                led.append(val)
+            return led
         #----------------------------------------------------------------------------------
         # DEV001 GAUGES
         #----------------------------------------------------------------------------------
@@ -3094,164 +3105,128 @@ class P01_DASH(tk.Frame):
             # DEV002G000 (INLET TEMP)
             #------------------------------------------------------------------------------
             if REGION:
-                global led_DEV002G000
-                global val_DEV002G000
-                global ammount_DEV002G000
+                global led_DEV002G000, ammount_DEV002G000
                 led_DEV002G000 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G000 = 108
-                    y_pos_DEV002G000 = 440
-                    x_pos_DEV002G000_next = +29
-                    width_DEV002G000 = 29
-                    height_DEV002G000 = 22
+                if theme in theme_txt[:3]:  # THEME 0 1 2
+                    x_pos = 108
+                    y_pos = 440
+                    x_pos_nxt = 29
+                    width = 29
+                    height = 22
                     ammount_DEV002G000 = 12
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G000 = 3
-                    y_pos_DEV002G000 = 459
-                    x_pos_DEV002G000_next = +84
-                    width_DEV002G000 = 80
-                    height_DEV002G000 = 40
+                elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    x_pos = 3
+                    y_pos = 459
+                    x_pos_nxt = 84
+                    width = 80
+                    height = 40
                     ammount_DEV002G000 = 7
-                for i in range(0, ammount_DEV002G000):
-                    val_DEV002G000 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G000.place(x=x_pos_DEV002G000, y=y_pos_DEV002G000, w=width_DEV002G000, h=height_DEV002G000)
-                    x_pos_DEV002G000 += x_pos_DEV002G000_next
-                    led_DEV002G000.append(val_DEV002G000)
+                led_DEV002G000 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G000)
             #------------------------------------------------------------------------------
             # DEV002G001 (OIL TEMP)
             #------------------------------------------------------------------------------
             if REGION:
-                global led_DEV002G001
-                global val_DEV002G001
-                global ammount_DEV002G001
+                global led_DEV002G001, val_DEV002G001, ammount_DEV002G001
                 led_DEV002G001 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G001 = 815
-                    y_pos_DEV002G001 = 440
-                    x_pos_DEV002G001_next = +29
-                    width_DEV002G001 = 29
-                    height_DEV002G001 = 22
+                if theme in theme_txt[:3]:  # THEME 0 1 2
+                    x_pos = 815
+                    y_pos = 440
+                    x_pos_nxt = +29
+                    width = 29
+                    height = 22
                     ammount_DEV002G001 = 12
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G001 = 696
-                    y_pos_DEV002G001 = 459
-                    x_pos_DEV002G001_next = +84
-                    width_DEV002G001 = 80
-                    height_DEV002G001 = 40
+                elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    x_pos = 696
+                    y_pos = 459
+                    x_pos_nxt = +84
+                    width = 80
+                    height = 40
                     ammount_DEV002G001 = 7
-                for i in range(0, ammount_DEV002G001):
-                    val_DEV002G001 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G001.place(x=x_pos_DEV002G001, y=y_pos_DEV002G001, w=width_DEV002G001, h=height_DEV002G001)
-                    x_pos_DEV002G001 += x_pos_DEV002G001_next
-                    led_DEV002G001.append(val_DEV002G001)
+                led_DEV002G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G001)
             #------------------------------------------------------------------------------
             # DEV002G002 (EGT TEMP)
             #------------------------------------------------------------------------------
             if REGION:
-                global led_DEV002G002
-                global val_DEV002G002
-                global ammount_DEV002G002
+                global led_DEV002G002, val_DEV002G002, ammount_DEV002G002
                 led_DEV002G002 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G002 = 108
-                    y_pos_DEV002G002 = 540
-                    x_pos_DEV002G002_next = +29
-                    width_DEV002G002 = 29
-                    height_DEV002G002 = 22
+                if theme in theme_txt[:3]:  # THEME 0 1 2
+                    x_pos = 108
+                    y_pos = 540
+                    x_pos_nxt = +29
+                    width = 29
+                    height = 22
                     ammount_DEV002G002 = 12
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G002 = 3
-                    y_pos_DEV002G002 = 568
-                    x_pos_DEV002G002_next = +84
-                    width_DEV002G002 = 80
-                    height_DEV002G002 = 40
+                elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    x_pos = 3
+                    y_pos = 568
+                    x_pos_nxt = +84
+                    width = 80
+                    height = 40
                     ammount_DEV002G002 = 7
-                for i in range(0, ammount_DEV002G002):
-                    val_DEV002G002 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G002.place(x=x_pos_DEV002G002, y=y_pos_DEV002G002, w=width_DEV002G002, h=height_DEV002G002)
-                    x_pos_DEV002G002 += x_pos_DEV002G002_next
-                    led_DEV002G002.append(val_DEV002G002)
+                led_DEV002G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G002)
             #------------------------------------------------------------------------------
             # DEV002G003 (OIL PREASSURE)
             #------------------------------------------------------------------------------
             if REGION:
-                global led_DEV002G003
-                global val_DEV002G003
-                global ammount_DEV002G003
-                led_DEV002G003 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G003 = 815
-                    y_pos_DEV002G003 = 540
-                    x_pos_DEV002G003_next = +29
-                    width_DEV002G003 = 29
-                    height_DEV002G003 = 22
+                global led_DEV002G003, val_DEV002G003, ammount_DEV002G003
+                led_DEV003G003 = []
+                if theme in theme_txt[:3]:  # THEME 0 1 2
+                    x_pos = 815
+                    y_pos = 540
+                    x_pos_nxt = +29
+                    width = 29
+                    height = 22
                     ammount_DEV002G003 = 12
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G003 = 696
-                    y_pos_DEV002G003 = 568
-                    x_pos_DEV002G003_next = +84
-                    width_DEV002G003 = 80
-                    height_DEV002G003 = 40
+                elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    x_pos = 696
+                    y_pos = 568
+                    x_pos_nxt = +84
+                    width = 80
+                    height = 40
                     ammount_DEV002G003 = 7
-                for i in range(0, ammount_DEV002G003):
-                    val_DEV002G003 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G003.place(x=x_pos_DEV002G003, y=y_pos_DEV002G003, w=width_DEV002G003, h=height_DEV002G003)
-                    x_pos_DEV002G003 += x_pos_DEV002G003_next
-                    led_DEV002G003.append(val_DEV002G003)
+                led_DEV002G003 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G003)
             #------------------------------------------------------------------------------
             # DEV002G004 (TANK CAPACITY)
             #------------------------------------------------------------------------------
             if REGION:
-                global led_DEV002G004
-                global val_DEV002G004
-                global ammount_DEV002G004
-                led_DEV002G004 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G004 = 108
-                    y_pos_DEV002G004 = 640
-                    x_pos_DEV002G004_next = +29
-                    width_DEV002G004 = 29
-                    height_DEV002G004 = 22
+                global led_DEV002G004, val_DEV002G004, ammount_DEV002G004
+                led_DEV004G004 = []
+                if theme in theme_txt[:3]:  # THEME 0 1 2
+                    x_pos = 108
+                    y_pos = 640
+                    x_pos_nxt = +29
+                    width = 29
+                    height = 22
                     ammount_DEV002G004 = 12
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G004 = 3
-                    y_pos_DEV002G004 = 676
-                    x_pos_DEV002G004_next = +84
-                    width_DEV002G004 = 80
-                    height_DEV002G004 = 40
+                elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    x_pos = 3
+                    y_pos = 676
+                    x_pos_nxt = +84
+                    width = 80
+                    height = 40
                     ammount_DEV002G004 = 7
-                for i in range(0, ammount_DEV002G004):
-                    val_DEV002G004 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G004.place(x=x_pos_DEV002G004, y=y_pos_DEV002G004, w=width_DEV002G004, h=height_DEV002G004)
-                    x_pos_DEV002G004 += x_pos_DEV002G004_next
-                    led_DEV002G004.append(val_DEV002G004)
+                led_DEV002G004 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G004)
             #------------------------------------------------------------------------------
             # DEV002G005 (FUEL FLOW)
             #------------------------------------------------------------------------------
             if REGION:
-                global led_DEV002G005
-                global val_DEV002G005
-                global ammount_DEV002G005
-                led_DEV002G005 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G005 = 815
-                    y_pos_DEV002G005 = 640
-                    x_pos_DEV002G005_next = +29
-                    width_DEV002G005 = 29
-                    height_DEV002G005 = 22
+                global led_DEV002G005, val_DEV002G005, ammount_DEV002G005
+                led_DEV005G005 = []
+                if theme in theme_txt[:3]:  # THEME 0 1 2
+                    x_pos = 815
+                    y_pos = 640
+                    x_pos_nxt = +29
+                    width = 29
+                    height = 22
                     ammount_DEV002G005 = 12
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G005 = 696
-                    y_pos_DEV002G005 = 676
-                    x_pos_DEV002G005_next = +84
-                    width_DEV002G005 = 80
-                    height_DEV002G005 = 40
+                elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    x_pos = 696
+                    y_pos = 676
+                    x_pos_nxt = +84
+                    width = 80
+                    height = 40
                     ammount_DEV002G005 = 7
-                for i in range(0, ammount_DEV002G005):
-                    val_DEV002G005 = tk.Label(self, **btn_style_imgbtn)
-                    val_DEV002G005.place(x=x_pos_DEV002G005, y=y_pos_DEV002G005, w=width_DEV002G005, h=height_DEV002G005)
-                    x_pos_DEV002G005 += x_pos_DEV002G005_next
-                    led_DEV002G005.append(val_DEV002G005)
+                led_DEV002G005 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G005)
             #------------------------------------------------------------------------------
             # DEV002G006 (VDC)
             #------------------------------------------------------------------------------
