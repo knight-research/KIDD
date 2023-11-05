@@ -298,9 +298,11 @@ if REGION:
         for package in required_packages:
             try:
                 imp_mod[package] = importlib.import_module(package)
-                print(f'Successfully imported {package}')
+                if debug:
+                    print(f'Successfully imported {package}')
             except ImportError:
-                print(f'Failed to import {package}')
+                if debug:
+                    print(f'Failed to import {package}')
                 pass    
         if checkinstall:
             # Function to check and install packages
@@ -1721,7 +1723,7 @@ class P01_DASH(tk.Frame):
                     localimage01 = sledON_img_list[30] #MPH
                     localimage02 = sledON_img_list[29] #KPH
                     localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledOF_img_list[9] #HI LO VHF
+                    localimage07 = ledFU_img_list[11] #HI LO VHF
                     localimage08 = sledON_img_list[33] #RPMi
                     localimage09 = sledON_img_list[34] #RPMm
                     localimage15 = ledFU_img_list[6] #SELECT BUTTONS
@@ -1738,7 +1740,7 @@ class P01_DASH(tk.Frame):
                     localimage01 = sledON_img_list[32] #MPH
                     localimage02 = sledON_img_list[31] #KPH
                     localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledOF_img_list[9] #HI LO VHF
+                    localimage07 = ledFU_img_list[11] #HI LO VHF
                     localimage08 = sledON_img_list[35] #RPMi
                     localimage09 = sledON_img_list[36] #RPMm
                     localimage15 = ledFU_img_list[6] #SELECT BUTTONS
@@ -1755,7 +1757,7 @@ class P01_DASH(tk.Frame):
                     localimage01 = sledON_img_list[32] #MPH
                     localimage02 = sledON_img_list[31] #KPH
                     localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledOF_img_list[9] #HI LO VHF
+                    localimage07 = ledFU_img_list[11] #HI LO VHF
                     localimage08 = sledON_img_list[35] #RPMi
                     localimage09 = sledON_img_list[36] #RPMm
                     localimage15 = ledFU_img_list[6] #SELECT BUTTONS
@@ -1913,7 +1915,7 @@ class P01_DASH(tk.Frame):
                     localimage01 = sledON_img_list[30] #MPH
                     localimage02 = sledON_img_list[29] #KPH
                     localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledOF_img_list[9] #HI LO VHF
+                    localimage07 = ledFU_img_list[11] #HI LO VHF
                     localimage08 = sledON_img_list[33] #RPMi
                     localimage09 = sledON_img_list[34] #RPMm
                     localimage15 = ledFU_img_list[6] #SELECT BUTTONS
@@ -1930,7 +1932,7 @@ class P01_DASH(tk.Frame):
                     localimage01 = sledON_img_list[32] #MPH
                     localimage02 = sledON_img_list[31] #KPH
                     localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledOF_img_list[9] #HI LO VHF
+                    localimage07 = ledFU_img_list[11] #HI LO VHF
                     localimage08 = sledON_img_list[35] #RPMi
                     localimage09 = sledON_img_list[36] #RPMm
                     localimage15 = ledFU_img_list[6] #SELECT BUTTONS
@@ -1947,7 +1949,7 @@ class P01_DASH(tk.Frame):
                     localimage01 = sledON_img_list[32] #MPH
                     localimage02 = sledON_img_list[31] #KPH
                     localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledOF_img_list[9] #HI LO VHF
+                    localimage07 = ledFU_img_list[11] #HI LO VHF
                     localimage08 = sledON_img_list[35] #RPMi
                     localimage09 = sledON_img_list[36] #RPMm
                     localimage15 = ledFU_img_list[6] #SELECT BUTTONS
@@ -2644,11 +2646,11 @@ class P01_DASH(tk.Frame):
                         localimageOF_FNKT = lcarsOF_img_list[7]
                 elif device == device_txt[2]:
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_FNKT = 1762
-                        x_btn_FNKT_next = 108
-                        y_btn_FNKT = 256
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
+                        x_btn_FNKT = 2205
+                        x_btn_FNKT_next = 50
+                        y_btn_FNKT = 715
+                        w_btn_FNKT = 30
+                        h_btn_FNKT = 30
                         localimageON_FNKT = localimage06
                         localimageOF_FNKT = localimage07
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
@@ -2844,545 +2846,549 @@ class P01_DASH(tk.Frame):
                 led.append(val)
             return led
         #----------------------------------------------------------------------------------
-        # DEV001 GAUGES
-        #----------------------------------------------------------------------------------
-        if device == device_txt[1]:
-            #------------------------------------------------------------------------------
-            # DEV001G000 (SPEED)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV001G000
-                global led_gauge_DEV001SPEED
-                global ammount_SPEED
-                led_DEV001G000 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_SPEED = 585
-                    y_pos_SPEED = 103
-                    x_pos_SPEED_next = +31
-                    width_SPEED = 30
-                    height_SPEED = 30
-                    ammount_SPEED = 21
-                elif theme in theme_txt[3:9]: # THEME 3 to 8
-                    x_pos_SPEED = 95
-                    y_pos_SPEED = 8
-                    x_pos_SPEED_next = +84
-                    width_SPEED = 80
-                    height_SPEED = 40
-                    ammount_SPEED = 14
-                elif theme in [theme_txt[15], theme_txt[16]]:
-                    x_pos_SPEED = 554
-                    y_pos_SPEED = 15
-                    x_pos_SPEED_next = +29
-                    width_SPEED = 25
-                    height_SPEED = 77
-                    ammount_SPEED = 20
+        # CREATE GAUGES
+        #----------------------------------------------------------------------------------        
+        if REGION:
+            #----------------------------------------------------------------------------------
+            # DEV001 GAUGES
+            #----------------------------------------------------------------------------------
+            if device == device_txt[1]:
+                #------------------------------------------------------------------------------
+                # DEV001G000 (SPEED)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV001G000
+                    global led_gauge_DEV001SPEED
+                    global ammount_SPEED
+                    led_DEV001G000 = []
+                    if theme in theme_txt[:3]: # THEME 0 1 2
+                        x_pos_SPEED = 585
+                        y_pos_SPEED = 103
+                        x_pos_SPEED_next = +31
+                        width_SPEED = 30
+                        height_SPEED = 30
+                        ammount_SPEED = 21
+                    elif theme in theme_txt[3:9]: # THEME 3 to 8
+                        x_pos_SPEED = 95
+                        y_pos_SPEED = 8
+                        x_pos_SPEED_next = +84
+                        width_SPEED = 80
+                        height_SPEED = 40
+                        ammount_SPEED = 14
+                    elif theme in [theme_txt[15], theme_txt[16]]:
+                        x_pos_SPEED = 554
+                        y_pos_SPEED = 15
+                        x_pos_SPEED_next = +29
+                        width_SPEED = 25
+                        height_SPEED = 77
+                        ammount_SPEED = 20
 
-                for i in range(0, ammount_SPEED):
-                    led_gauge_DEV001SPEED = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_DEV001SPEED.place(x=x_pos_SPEED, y=y_pos_SPEED, width=width_SPEED, height=height_SPEED)
-                    x_pos_SPEED += x_pos_SPEED_next
-                    led_DEV001G000.append(led_gauge_DEV001SPEED)                     
-            #------------------------------------------------------------------------------
-            # DEV001G004 (SIGNAL)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV001G004
-                global led_gauge_DEV001SIGNAL
-                global ammount_SIGNAL
-                led_DEV001G004 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_SIGNAL = 10
-                    y_pos_SIGNAL = 442
-                    x_pos_SIGNAL_next = +31
-                    width_SIGNAL = 30
-                    height_SIGNAL = 30
-                    ammount_SIGNAL = 16
-                elif theme in theme_txt[3:9]: # THEME 3 to 8
-                    x_pos_SIGNAL = 5
-                    y_pos_SIGNAL = 465
-                    x_pos_SIGNAL_next = +20
-                    width_SIGNAL = 20
-                    height_SIGNAL = 77
-                    ammount_SIGNAL = 20
-                elif theme in [theme_txt[15], theme_txt[16]]:
-                    x_pos_SIGNAL = 5
-                    y_pos_SIGNAL = 465
-                    x_pos_SIGNAL_next = +32
-                    width_SIGNAL = 20
-                    height_SIGNAL = 77
-                    ammount_SIGNAL = 20
+                    for i in range(0, ammount_SPEED):
+                        led_gauge_DEV001SPEED = tk.Label(self, **btn_style_imgbtn)
+                        led_gauge_DEV001SPEED.place(x=x_pos_SPEED, y=y_pos_SPEED, width=width_SPEED, height=height_SPEED)
+                        x_pos_SPEED += x_pos_SPEED_next
+                        led_DEV001G000.append(led_gauge_DEV001SPEED)                     
+                #------------------------------------------------------------------------------
+                # DEV001G004 (SIGNAL)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV001G004
+                    global led_gauge_DEV001SIGNAL
+                    global ammount_SIGNAL
+                    led_DEV001G004 = []
+                    if theme in theme_txt[:3]: # THEME 0 1 2
+                        x_pos_SIGNAL = 10
+                        y_pos_SIGNAL = 442
+                        x_pos_SIGNAL_next = +31
+                        width_SIGNAL = 30
+                        height_SIGNAL = 30
+                        ammount_SIGNAL = 16
+                    elif theme in theme_txt[3:9]: # THEME 3 to 8
+                        x_pos_SIGNAL = 5
+                        y_pos_SIGNAL = 465
+                        x_pos_SIGNAL_next = +20
+                        width_SIGNAL = 20
+                        height_SIGNAL = 77
+                        ammount_SIGNAL = 20
+                    elif theme in [theme_txt[15], theme_txt[16]]:
+                        x_pos_SIGNAL = 5
+                        y_pos_SIGNAL = 465
+                        x_pos_SIGNAL_next = +32
+                        width_SIGNAL = 20
+                        height_SIGNAL = 77
+                        ammount_SIGNAL = 20
 
-                for i in range(0, ammount_SIGNAL):
-                    led_gauge_DEV001SIGNAL = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_DEV001SIGNAL.place(x=x_pos_SIGNAL, y=y_pos_SIGNAL, width=width_SIGNAL, height=height_SIGNAL)
-                    x_pos_SIGNAL += x_pos_SIGNAL_next
-                    led_DEV001G004.append(led_gauge_DEV001SIGNAL)
-            #------------------------------------------------------------------------------
-            # DEV001G005 (TUNING)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV001G005
-                global led_gauge_DEV001TUNING
-                led_DEV001G005 = []
-                x_pos_TUNING = 5
-                if theme in theme_txt[3:9]: # THEME 3 to 8
-                    for i in range(0, 20):
-                        led_gauge_DEV001TUNING = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_DEV001TUNING.place(x=x_pos_TUNING, y=640, width=20, height=77)
-                        x_pos_TUNING += +20
-                        led_DEV001G005.append(led_gauge_DEV001TUNING)
-            #------------------------------------------------------------------------------
-            # VOICEBOX BUTTONS (PILOT S01 S02 OTTO = 8/3) / (S03 S04 S05 S06 MAX =10/6)
-            #------------------------------------------------------------------------------ 
-            if REGION:
-                global btns_DEV001VBBTN
-                global btn_DEV001VBBTN
-                btns_DEV001VBBTN = []
-                if theme in theme_txt[:3] or theme in [theme_txt[7]]: #0 1 2 oder 7
-                    x_pos_VBBTN = 1282
-                    x_pos_VBBTN2 = 1633
-                    y_pos_VBBTN_next = +130
-                    y_pos_VBBTN2_next = +130
-                    y_pos_VBBTN = 90
-                    y_pos_VBBTN2 = 90
-                    wh_btn_VBBTN = [115, 71]
-                    no_VBBRN = 8
-                else:
-                    x_pos_VBBTN = 1282
-                    x_pos_VBBTN2 = 1640
-                    y_pos_VBBTN_next = +120
-                    y_pos_VBBTN2_next = +120
-                    y_pos_VBBTN = 30
-                    y_pos_VBBTN2 = 30
-                    wh_btn_VBBTN = [100, 70]
-                    no_VBBRN = 10
-                if theme in theme_txt[:9]: #0 to 8
-                    for i in range(no_VBBRN):
-                        if i < (no_VBBRN/2):
-                            btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
-                            btn_DEV001VBBTN.place(x=x_pos_VBBTN, y=y_pos_VBBTN, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
-                            y_pos_VBBTN += y_pos_VBBTN_next
-                            btns_DEV001VBBTN.append(btn_DEV001VBBTN)
-                        else:
-                            btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
-                            btn_DEV001VBBTN.place(x=x_pos_VBBTN2, y=y_pos_VBBTN2, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
-                            y_pos_VBBTN2 += y_pos_VBBTN2_next
-                            btns_DEV001VBBTN.append(btn_DEV001VBBTN)
-                        btns_DEV001VBBTN[i].config(image=localimagelist01[i+4])
-            #------------------------------------------------------------------------------
-            # VOICEBOX STATUS BUTTONS (3)
-            #------------------------------------------------------------------------------ 
-            if REGION:
-                global btns_DEV001VBSTBTN
-                global btn_DEV001VBSTBTN
-                btns_DEV001VBSTBTN = []
-                if theme in (theme_txt[:3] or theme_txt[7]): #0 1 2 oder 7
-                    x_pos_VBSTBTN = 1400
-                    y_pos_VBSTBTN_next = +85
-                    y_pos_VBSTBTN = 380
-                    wh_btn_VBSTBTN = [235, 82]
-                    no_VBBRN = 3
-                else:
-                    x_pos_VBSTBTN = 1397
-                    y_pos_VBSTBTN_next = +85
-                    y_pos_VBSTBTN = 410
-                    wh_btn_VBSTBTN = [235, 80]
-                    no_VBBRN = 3
-                if theme in theme_txt[:9]: #0 to 8
-                    for i in range(3):
-                        btn_DEV001VBSTBTN = tk.Label(self, **btn_style_imgbtn)
-                        btn_DEV001VBSTBTN.place(x=x_pos_VBSTBTN, y=y_pos_VBSTBTN, width=wh_btn_VBSTBTN[0], height=wh_btn_VBSTBTN[1])
-                        y_pos_VBSTBTN += +(wh_btn_VBSTBTN[1] +5)
-                        btns_DEV001VBSTBTN.append(btn_DEV001VBSTBTN)
-            #------------------------------------------------------------------------------
-            # DEV001VBS34 (VOICEBOX)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV001VBS34L01
-                global led_gauge_U01VB34L01
-                global led_DEV001VBS34L02
-                global led_gauge_U01VB34L02
-                global led_DEV001VBS34L03
-                global led_gauge_U01VB34L03
-                global ammount_VB
-                global middle_index
-                
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    ammount_VB = 18
-                    middle_index = 9  # Index of the middle LED
-                elif theme in theme_txt[3:9]: # THEME 3 to 8
-                    ammount_VB = 20
-                    middle_index = 10  # Index of the middle LED
-                
-                if theme in theme_txt[0:7]: # THEME 1 to 8
-                    led_DEV001VBS34L01 = []
-                    led_DEV001VBS34L02 = []
-                    led_DEV001VBS34L03 = []
-                    y_pos_VBL01 = 10
-                    y_pos_VBL02 = 10
-                    y_pos_VBL03 = 10
-                    for i in range(0, ammount_VB):
-                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
-                        y_pos_VBL01 += +20
-                        led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                    for i in range(0, ammount_VB):
-                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
-                        y_pos_VBL02 += +20
-                        led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
-                    for i in range(0, ammount_VB):
-                        led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
-                        y_pos_VBL03 += +20
-                        led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
-                elif theme == theme_txt[8]:
-                    led_DEV001VBS34L01 = []
-                    led_DEV001VBS34L02 = []
-                    led_DEV001VBS34L03 = []
-                    y_pos_VBL01 = 10
-                    y_pos_VBL02 = 10
-                    y_pos_VBL03 = 10
-                    for i in range(0, ammount_VB):
-                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
-                        y_pos_VBL01 += +20
-                        led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                    for i in range(0, ammount_VB):
-                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
-                        y_pos_VBL02 += +20
-                        led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
-                    for i in range(0, ammount_VB):
-                        led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
-                        y_pos_VBL03 += +20
-                        led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
-                elif theme == theme_txt[7]:
-                    led_DEV001VBS34L01 = []
-                    led_DEV001VBS34L02 = []
-                    y_pos_VBL01 = 10
-                    y_pos_VBL02 = 10
-                    for i in range(0, 8):
-                        led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L01.place(x=1410, y=y_pos_VBL01, width=95, height=35)
-                        y_pos_VBL01 += +45
-                        led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                    for i in range(0, 8):
-                        led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_U01VB34L02.place(x=1530, y=y_pos_VBL02, width=95, height=35)
-                        y_pos_VBL02 += +45
-                        led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
-        #----------------------------------------------------------------------------------
-        # DEV002 GAUGES
-        #----------------------------------------------------------------------------------
-        if device == device_txt[2]:
-            #------------------------------------------------------------------------------
-            # DEV002GMASTER (RPM)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002GMASTER
-                global led_gauge_U02MASTER          
-                led_DEV002GMASTER = []
-                if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
-                    x_pos_RPM = 5
-                    y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
-                    x_pos_RPM_next = +40
-                elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                    x_pos_RPM = 5
-                    y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
-                    x_pos_RPM_next = +40
-                elif theme in [theme_txt[15], theme_txt[16]]:
-                    x_pos_RPM = 203
-                    y_pos_RPM = [15]*32
-                    x_pos_RPM_next = +28                   
-                for i in range(0, 32):
-                    led_gauge_U02MASTER = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U02MASTER.place(x=x_pos_RPM, y=y_pos_RPM[i])
-                    x_pos_RPM += x_pos_RPM_next
-                    led_DEV002GMASTER.append(led_gauge_U02MASTER)
-            #------------------------------------------------------------------------------
-            # DEV002G000 (INLET TEMP)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G000, ammount_DEV002G000
-                led_DEV002G000 = []
-                if theme in theme_txt[:3]:  # THEME 0 1 2
-                    x_pos = 108
-                    y_pos = 440
-                    x_pos_nxt = 29
-                    width = 29
-                    height = 22
-                    ammount_DEV002G000 = 12
-                elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                    x_pos = 3
-                    y_pos = 459
-                    x_pos_nxt = 84
-                    width = 80
-                    height = 40
-                    ammount_DEV002G000 = 7
-                led_DEV002G000 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G000)
-            #------------------------------------------------------------------------------
-            # DEV002G001 (OIL TEMP)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G001, val_DEV002G001, ammount_DEV002G001
-                led_DEV002G001 = []
-                if theme in theme_txt[:3]:  # THEME 0 1 2
-                    x_pos = 815
-                    y_pos = 440
-                    x_pos_nxt = +29
-                    width = 29
-                    height = 22
-                    ammount_DEV002G001 = 12
-                elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                    x_pos = 696
-                    y_pos = 459
-                    x_pos_nxt = +84
-                    width = 80
-                    height = 40
-                    ammount_DEV002G001 = 7
-                led_DEV002G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G001)
-            #------------------------------------------------------------------------------
-            # DEV002G002 (EGT TEMP)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G002, val_DEV002G002, ammount_DEV002G002
-                led_DEV002G002 = []
-                if theme in theme_txt[:3]:  # THEME 0 1 2
-                    x_pos = 108
-                    y_pos = 540
-                    x_pos_nxt = +29
-                    width = 29
-                    height = 22
-                    ammount_DEV002G002 = 12
-                elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                    x_pos = 3
-                    y_pos = 568
-                    x_pos_nxt = +84
-                    width = 80
-                    height = 40
-                    ammount_DEV002G002 = 7
-                led_DEV002G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G002)
-            #------------------------------------------------------------------------------
-            # DEV002G003 (OIL PREASSURE)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G003, val_DEV002G003, ammount_DEV002G003
-                led_DEV003G003 = []
-                if theme in theme_txt[:3]:  # THEME 0 1 2
-                    x_pos = 815
-                    y_pos = 540
-                    x_pos_nxt = +29
-                    width = 29
-                    height = 22
-                    ammount_DEV002G003 = 12
-                elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                    x_pos = 696
-                    y_pos = 568
-                    x_pos_nxt = +84
-                    width = 80
-                    height = 40
-                    ammount_DEV002G003 = 7
-                led_DEV002G003 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G003)
-            #------------------------------------------------------------------------------
-            # DEV002G004 (TANK CAPACITY)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G004, val_DEV002G004, ammount_DEV002G004
-                led_DEV004G004 = []
-                if theme in theme_txt[:3]:  # THEME 0 1 2
-                    x_pos = 108
-                    y_pos = 640
-                    x_pos_nxt = +29
-                    width = 29
-                    height = 22
-                    ammount_DEV002G004 = 12
-                elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                    x_pos = 3
-                    y_pos = 676
-                    x_pos_nxt = +84
-                    width = 80
-                    height = 40
-                    ammount_DEV002G004 = 7
-                led_DEV002G004 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G004)
-            #------------------------------------------------------------------------------
-            # DEV002G005 (FUEL FLOW)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G005, val_DEV002G005, ammount_DEV002G005
-                led_DEV005G005 = []
-                if theme in theme_txt[:3]:  # THEME 0 1 2
-                    x_pos = 815
-                    y_pos = 640
-                    x_pos_nxt = +29
-                    width = 29
-                    height = 22
-                    ammount_DEV002G005 = 12
-                elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                    x_pos = 696
-                    y_pos = 676
-                    x_pos_nxt = +84
-                    width = 80
-                    height = 40
-                    ammount_DEV002G005 = 7
-                led_DEV002G005 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G005)
-            #------------------------------------------------------------------------------
-            # DEV002G006 (VDC)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G006
-                global val_DEV002G006
-                global ammount_DEV002G006
-                led_DEV002G006 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G006 = 1365
-                    x_pos_DEV002G006_after12 = 1785
-                    y_pos_DEV002G006 = 93
-                    x_pos_DEV002G006_next = +29
-                    width_DEV002G006 = 29
-                    height_DEV002G006 = 22
-                    ammount_DEV002G006 = 24
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G006 = 1285
-                    y_pos_DEV002G006 = 71
-                    x_pos_DEV002G006_next = +84
-                    width_DEV002G006 = 80
-                    height_DEV002G006 = 40
-                    ammount_DEV002G006 = 5
-                for i in range(0, ammount_DEV002G006):
-                    val_DEV002G006 = tk.Label(self, **btn_style_imgbtn)
-                    if i < 12:
-                        val_DEV002G006.place(x=x_pos_DEV002G006, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)
-                        x_pos_DEV002G006 += x_pos_DEV002G006_next
-                    elif i > 11:
-                        val_DEV002G006.place(x=x_pos_DEV002G006_after12, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)                    
-                        x_pos_DEV002G006_after12 += x_pos_DEV002G006_next
-                    led_DEV002G006.append(val_DEV002G006)
-            #------------------------------------------------------------------------------
-            # DEV002G007 (AMP)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G007
-                global val_DEV002G007
-                global ammount_DEV002G007
-                led_DEV002G007 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G007 = 1365
-                    x_pos_DEV002G007_after12 = 1785
-                    y_pos_DEV002G007 = 203
-                    x_pos_DEV002G007_next = +29
-                    width_DEV002G007 = 29
-                    height_DEV002G007 = 22
-                    ammount_DEV002G007 = 24
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G007 = 1285
-                    y_pos_DEV002G007 = 184
-                    x_pos_DEV002G007_next = +84
-                    width_DEV002G007 = 80
-                    height_DEV002G007 = 40
-                    ammount_DEV002G007 = 5
-                for i in range(0, ammount_DEV002G007):
-                    val_DEV002G007 = tk.Label(self, **btn_style_imgbtn)
-                    if i < 12:
-                        val_DEV002G007.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)
-                        x_pos_DEV002G007 += x_pos_DEV002G007_next
-                    elif i > 11:
-                        val_DEV002G007.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)                    
-                        x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
-                    led_DEV002G007.append(val_DEV002G007)
-            #------------------------------------------------------------------------------
-            # DEV002G008 (AUX)
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002G008
-                global val_DEV002G008
-                global ammount_DEV002G008
-                led_DEV002G008 = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_DEV002G008 = 1365
-                    x_pos_DEV002G008_after12 = 1785
-                    y_pos_DEV002G008 = 313
-                    x_pos_DEV002G008_next = +29
-                    width_DEV002G008 = 29
-                    height_DEV002G008 = 22
-                    ammount_DEV002G008 = 24
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_DEV002G008 = 1285
-                    y_pos_DEV002G008 = 297
-                    x_pos_DEV002G008_next = +84
-                    width_DEV002G008 = 80
-                    height_DEV002G008 = 40
-                    ammount_DEV002G008 = 5
-                for i in range(0, ammount_DEV002G008):
-                    val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
-                    if i < 12:
-                        val_DEV002G008.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)
-                        x_pos_DEV002G008 += x_pos_DEV002G008_next
-                    elif i > 11:
-                        val_DEV002G008.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)                    
-                        x_pos_DEV002G008_after12 += x_pos_DEV002G008_next
-                    led_DEV002G008.append(val_DEV002G008)
-            #------------------------------------------------------------------------------
-            # FUNCTION POWER BUTTONS DEVICE02 (POWER AUTO NORMAL PURSUIT)
-            #------------------------------------------------------------------------------
-            if REGION:
-                read.load_btn_states_PBFNKT()
-                global ammount_PBFNKT
-                btns_PBFNKT = []
-                if theme in theme_txt[:3]: # THEME 0 1 2
-                    x_pos_PBFNKT = 2175
-                    y_pos_PBFNKT = 655
-                    width_PBFNKT = 55
-                    height_PBFNKT = 55
-                    x_pos_PBFNKT_mext = +width_PBFNKT +8
-                    ammount_PBFNKT = 4 
-                elif theme in theme_txt[3:9]: # THEME 3 to 9
-                    x_pos_PBFNKT = 1285
-                    y_pos_PBFNKT = 546
-                    width_PBFNKT = 82
-                    height_PBFNKT = 154
-                    x_pos_PBFNKT_mext = +265
-                    ammount_PBFNKT = 4               
-                for i in range(ammount_PBFNKT):
-                    btn_PBFNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_PBFNKT(i),self.master.switch_frame(P01_DASH)])
-                    btn_PBFNKT.place(x=x_pos_PBFNKT, y=y_pos_PBFNKT, width=width_PBFNKT, height=height_PBFNKT)
-                    x_pos_PBFNKT += x_pos_PBFNKT_mext
-                    btns_PBFNKT.append(btn_PBFNKT)
-
-                btn_PBFNKT_FU = [localimage18, localimage17, localimage19, localimage18]
-                btn_PBFNKT_OF = [localimage21, localimage20, localimage22, localimage21]
-                for i in range(4):
-                    if btn_states_PBFNKT[i]:
-                        btns_PBFNKT[i].config(image=btn_PBFNKT_FU[i])
+                    for i in range(0, ammount_SIGNAL):
+                        led_gauge_DEV001SIGNAL = tk.Label(self, **btn_style_imgbtn)
+                        led_gauge_DEV001SIGNAL.place(x=x_pos_SIGNAL, y=y_pos_SIGNAL, width=width_SIGNAL, height=height_SIGNAL)
+                        x_pos_SIGNAL += x_pos_SIGNAL_next
+                        led_DEV001G004.append(led_gauge_DEV001SIGNAL)
+                #------------------------------------------------------------------------------
+                # DEV001G005 (TUNING)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV001G005
+                    global led_gauge_DEV001TUNING
+                    led_DEV001G005 = []
+                    x_pos_TUNING = 5
+                    if theme in theme_txt[3:9]: # THEME 3 to 8
+                        for i in range(0, 20):
+                            led_gauge_DEV001TUNING = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_DEV001TUNING.place(x=x_pos_TUNING, y=640, width=20, height=77)
+                            x_pos_TUNING += +20
+                            led_DEV001G005.append(led_gauge_DEV001TUNING)
+                #------------------------------------------------------------------------------
+                # VOICEBOX BUTTONS (PILOT S01 S02 OTTO = 8/3) / (S03 S04 S05 S06 MAX =10/6)
+                #------------------------------------------------------------------------------ 
+                if REGION:
+                    global btns_DEV001VBBTN
+                    global btn_DEV001VBBTN
+                    btns_DEV001VBBTN = []
+                    if theme in theme_txt[:3] or theme in [theme_txt[7]]: #0 1 2 oder 7
+                        x_pos_VBBTN = 1282
+                        x_pos_VBBTN2 = 1633
+                        y_pos_VBBTN_next = +130
+                        y_pos_VBBTN2_next = +130
+                        y_pos_VBBTN = 90
+                        y_pos_VBBTN2 = 90
+                        wh_btn_VBBTN = [115, 71]
+                        no_VBBRN = 8
                     else:
-                        btns_PBFNKT[i].config(image=btn_PBFNKT_OF[i])
-            #------------------------------------------------------------------------------
-            # DEV002 INFORMATION CENTER
-            #------------------------------------------------------------------------------
-            if REGION:
-                global led_DEV002IC
-                global led_gauge_DEV002IC
-                led_DEV002IC = []
-                for i in range(0, 16):
-                    led_gauge_DEV002IC = tk.Label(self, **btn_style_imgbtn)
-                    led_DEV002IC.append(led_gauge_DEV002IC)
-                led_DEV002IC[0].place(x=2174, y=17, width=80, height=80)
-                led_DEV002IC[1].place(x=2257, y=17, width=80, height=80)
-                led_DEV002IC[2].place(x=2340, y=17, width=80, height=80)
-                led_DEV002IC[3].place(x=2174, y=100, width=80, height=80)
-                led_DEV002IC[4].place(x=2257, y=100, width=80, height=80)
-                led_DEV002IC[5].place(x=2340, y=100, width=80, height=80)
-                led_DEV002IC[6].place(x=2174, y=183, width=80, height=80)
-                led_DEV002IC[7].place(x=2257, y=183, width=80, height=80)
-                led_DEV002IC[8].place(x=2340, y=183, width=80, height=80)
-                led_DEV002IC[9].place(x=2174, y=266, width=80, height=80)
-                led_DEV002IC[10].place(x=2257, y=266, width=80, height=80)
-                led_DEV002IC[11].place(x=2340, y=266, width=80, height=80)
-                led_DEV002IC[12].place(x=2174, y=349, width=80, height=80)
-                led_DEV002IC[13].place(x=2257, y=349, width=80, height=80)
-                led_DEV002IC[14].place(x=2340, y=349, width=80, height=80)
-                led_DEV002IC[15].place(x=2174, y=432, width=80, height=80)
+                        x_pos_VBBTN = 1282
+                        x_pos_VBBTN2 = 1640
+                        y_pos_VBBTN_next = +120
+                        y_pos_VBBTN2_next = +120
+                        y_pos_VBBTN = 30
+                        y_pos_VBBTN2 = 30
+                        wh_btn_VBBTN = [100, 70]
+                        no_VBBRN = 10
+                    if theme in theme_txt[:9]: #0 to 8
+                        for i in range(no_VBBRN):
+                            if i < (no_VBBRN/2):
+                                btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
+                                btn_DEV001VBBTN.place(x=x_pos_VBBTN, y=y_pos_VBBTN, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
+                                y_pos_VBBTN += y_pos_VBBTN_next
+                                btns_DEV001VBBTN.append(btn_DEV001VBBTN)
+                            else:
+                                btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
+                                btn_DEV001VBBTN.place(x=x_pos_VBBTN2, y=y_pos_VBBTN2, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
+                                y_pos_VBBTN2 += y_pos_VBBTN2_next
+                                btns_DEV001VBBTN.append(btn_DEV001VBBTN)
+                            btns_DEV001VBBTN[i].config(image=localimagelist01[i+4])
+                #------------------------------------------------------------------------------
+                # VOICEBOX STATUS BUTTONS (3)
+                #------------------------------------------------------------------------------ 
+                if REGION:
+                    global btns_DEV001VBSTBTN
+                    global btn_DEV001VBSTBTN
+                    btns_DEV001VBSTBTN = []
+                    if theme in (theme_txt[:3] or theme_txt[7]): #0 1 2 oder 7
+                        x_pos_VBSTBTN = 1400
+                        y_pos_VBSTBTN_next = +85
+                        y_pos_VBSTBTN = 380
+                        wh_btn_VBSTBTN = [235, 82]
+                        no_VBBRN = 3
+                    else:
+                        x_pos_VBSTBTN = 1397
+                        y_pos_VBSTBTN_next = +85
+                        y_pos_VBSTBTN = 410
+                        wh_btn_VBSTBTN = [235, 80]
+                        no_VBBRN = 3
+                    if theme in theme_txt[:9]: #0 to 8
+                        for i in range(3):
+                            btn_DEV001VBSTBTN = tk.Label(self, **btn_style_imgbtn)
+                            btn_DEV001VBSTBTN.place(x=x_pos_VBSTBTN, y=y_pos_VBSTBTN, width=wh_btn_VBSTBTN[0], height=wh_btn_VBSTBTN[1])
+                            y_pos_VBSTBTN += +(wh_btn_VBSTBTN[1] +5)
+                            btns_DEV001VBSTBTN.append(btn_DEV001VBSTBTN)
+                #------------------------------------------------------------------------------
+                # DEV001VBS34 (VOICEBOX)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV001VBS34L01
+                    global led_gauge_U01VB34L01
+                    global led_DEV001VBS34L02
+                    global led_gauge_U01VB34L02
+                    global led_DEV001VBS34L03
+                    global led_gauge_U01VB34L03
+                    global ammount_VB
+                    global middle_index
+                
+                    if theme in theme_txt[:3]: # THEME 0 1 2
+                        ammount_VB = 18
+                        middle_index = 9  # Index of the middle LED
+                    elif theme in theme_txt[3:9]: # THEME 3 to 8
+                        ammount_VB = 20
+                        middle_index = 10  # Index of the middle LED
+                
+                    if theme in theme_txt[0:7]: # THEME 1 to 8
+                        led_DEV001VBS34L01 = []
+                        led_DEV001VBS34L02 = []
+                        led_DEV001VBS34L03 = []
+                        y_pos_VBL01 = 10
+                        y_pos_VBL02 = 10
+                        y_pos_VBL03 = 10
+                        for i in range(0, ammount_VB):
+                            led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
+                            y_pos_VBL01 += +20
+                            led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
+                        for i in range(0, ammount_VB):
+                            led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
+                            y_pos_VBL02 += +20
+                            led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
+                        for i in range(0, ammount_VB):
+                            led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
+                            y_pos_VBL03 += +20
+                            led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
+                    elif theme == theme_txt[8]:
+                        led_DEV001VBS34L01 = []
+                        led_DEV001VBS34L02 = []
+                        led_DEV001VBS34L03 = []
+                        y_pos_VBL01 = 10
+                        y_pos_VBL02 = 10
+                        y_pos_VBL03 = 10
+                        for i in range(0, ammount_VB):
+                            led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
+                            y_pos_VBL01 += +20
+                            led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
+                        for i in range(0, ammount_VB):
+                            led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
+                            y_pos_VBL02 += +20
+                            led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
+                        for i in range(0, ammount_VB):
+                            led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
+                            y_pos_VBL03 += +20
+                            led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
+                    elif theme == theme_txt[7]:
+                        led_DEV001VBS34L01 = []
+                        led_DEV001VBS34L02 = []
+                        y_pos_VBL01 = 10
+                        y_pos_VBL02 = 10
+                        for i in range(0, 8):
+                            led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L01.place(x=1410, y=y_pos_VBL01, width=95, height=35)
+                            y_pos_VBL01 += +45
+                            led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
+                        for i in range(0, 8):
+                            led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
+                            led_gauge_U01VB34L02.place(x=1530, y=y_pos_VBL02, width=95, height=35)
+                            y_pos_VBL02 += +45
+                            led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
+            #----------------------------------------------------------------------------------
+            # DEV002 GAUGES
+            #----------------------------------------------------------------------------------
+            if device == device_txt[2]:
+                #------------------------------------------------------------------------------
+                # DEV002GMASTER (RPM)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002GMASTER
+                    global led_gauge_U02MASTER          
+                    led_DEV002GMASTER = []
+                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                        x_pos_RPM = 5
+                        y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
+                        x_pos_RPM_next = +40
+                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        x_pos_RPM = 5
+                        y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
+                        x_pos_RPM_next = +40
+                    elif theme in [theme_txt[15], theme_txt[16]]:
+                        x_pos_RPM = 203
+                        y_pos_RPM = [15]*32
+                        x_pos_RPM_next = +28                   
+                    for i in range(0, 32):
+                        led_gauge_U02MASTER = tk.Label(self, **btn_style_imgbtn)
+                        led_gauge_U02MASTER.place(x=x_pos_RPM, y=y_pos_RPM[i])
+                        x_pos_RPM += x_pos_RPM_next
+                        led_DEV002GMASTER.append(led_gauge_U02MASTER)
+                #------------------------------------------------------------------------------
+                # DEV002G000 (INLET TEMP)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G000, ammount_DEV002G000
+                    led_DEV002G000 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 108
+                        y_pos = 440
+                        x_pos_nxt = 29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G000 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 3
+                        y_pos = 459
+                        x_pos_nxt = 84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G000 = 7
+                    led_DEV002G000 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G000)
+                #------------------------------------------------------------------------------
+                # DEV002G001 (OIL TEMP)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G001, val_DEV002G001, ammount_DEV002G001
+                    led_DEV002G001 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 815
+                        y_pos = 440
+                        x_pos_nxt = +29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G001 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 696
+                        y_pos = 459
+                        x_pos_nxt = +84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G001 = 7
+                    led_DEV002G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G001)
+                #------------------------------------------------------------------------------
+                # DEV002G002 (EGT TEMP)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G002, val_DEV002G002, ammount_DEV002G002
+                    led_DEV002G002 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 108
+                        y_pos = 540
+                        x_pos_nxt = +29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G002 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 3
+                        y_pos = 568
+                        x_pos_nxt = +84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G002 = 7
+                    led_DEV002G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G002)
+                #------------------------------------------------------------------------------
+                # DEV002G003 (OIL PREASSURE)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G003, val_DEV002G003, ammount_DEV002G003
+                    led_DEV003G003 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 815
+                        y_pos = 540
+                        x_pos_nxt = +29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G003 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 696
+                        y_pos = 568
+                        x_pos_nxt = +84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G003 = 7
+                    led_DEV002G003 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G003)
+                #------------------------------------------------------------------------------
+                # DEV002G004 (TANK CAPACITY)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G004, val_DEV002G004, ammount_DEV002G004
+                    led_DEV004G004 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 108
+                        y_pos = 640
+                        x_pos_nxt = +29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G004 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 3
+                        y_pos = 676
+                        x_pos_nxt = +84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G004 = 7
+                    led_DEV002G004 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G004)
+                #------------------------------------------------------------------------------
+                # DEV002G005 (FUEL FLOW)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G005, val_DEV002G005, ammount_DEV002G005
+                    led_DEV005G005 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 815
+                        y_pos = 640
+                        x_pos_nxt = +29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G005 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 696
+                        y_pos = 676
+                        x_pos_nxt = +84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G005 = 7
+                    led_DEV002G005 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G005)
+                #------------------------------------------------------------------------------
+                # DEV002G006 (VDC)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G006
+                    global val_DEV002G006
+                    global ammount_DEV002G006
+                    led_DEV002G006 = []
+                    if theme in theme_txt[:3]: # THEME 0 1 2
+                        x_pos_DEV002G006 = 1365
+                        x_pos_DEV002G006_after12 = 1785
+                        y_pos_DEV002G006 = 93
+                        x_pos_DEV002G006_next = +29
+                        width_DEV002G006 = 29
+                        height_DEV002G006 = 22
+                        ammount_DEV002G006 = 24
+                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                        x_pos_DEV002G006 = 1285
+                        y_pos_DEV002G006 = 71
+                        x_pos_DEV002G006_next = +84
+                        width_DEV002G006 = 80
+                        height_DEV002G006 = 40
+                        ammount_DEV002G006 = 5
+                    for i in range(0, ammount_DEV002G006):
+                        val_DEV002G006 = tk.Label(self, **btn_style_imgbtn)
+                        if i < 12:
+                            val_DEV002G006.place(x=x_pos_DEV002G006, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)
+                            x_pos_DEV002G006 += x_pos_DEV002G006_next
+                        elif i > 11:
+                            val_DEV002G006.place(x=x_pos_DEV002G006_after12, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)                    
+                            x_pos_DEV002G006_after12 += x_pos_DEV002G006_next
+                        led_DEV002G006.append(val_DEV002G006)
+                #------------------------------------------------------------------------------
+                # DEV002G007 (AMP)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G007
+                    global val_DEV002G007
+                    global ammount_DEV002G007
+                    led_DEV002G007 = []
+                    if theme in theme_txt[:3]: # THEME 0 1 2
+                        x_pos_DEV002G007 = 1365
+                        x_pos_DEV002G007_after12 = 1785
+                        y_pos_DEV002G007 = 203
+                        x_pos_DEV002G007_next = +29
+                        width_DEV002G007 = 29
+                        height_DEV002G007 = 22
+                        ammount_DEV002G007 = 24
+                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                        x_pos_DEV002G007 = 1285
+                        y_pos_DEV002G007 = 184
+                        x_pos_DEV002G007_next = +84
+                        width_DEV002G007 = 80
+                        height_DEV002G007 = 40
+                        ammount_DEV002G007 = 5
+                    for i in range(0, ammount_DEV002G007):
+                        val_DEV002G007 = tk.Label(self, **btn_style_imgbtn)
+                        if i < 12:
+                            val_DEV002G007.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)
+                            x_pos_DEV002G007 += x_pos_DEV002G007_next
+                        elif i > 11:
+                            val_DEV002G007.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)                    
+                            x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
+                        led_DEV002G007.append(val_DEV002G007)
+                #------------------------------------------------------------------------------
+                # DEV002G008 (AUX)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G008
+                    global val_DEV002G008
+                    global ammount_DEV002G008
+                    led_DEV002G008 = []
+                    if theme in theme_txt[:3]: # THEME 0 1 2
+                        x_pos_DEV002G008 = 1365
+                        x_pos_DEV002G008_after12 = 1785
+                        y_pos_DEV002G008 = 313
+                        x_pos_DEV002G008_next = +29
+                        width_DEV002G008 = 29
+                        height_DEV002G008 = 22
+                        ammount_DEV002G008 = 24
+                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                        x_pos_DEV002G008 = 1285
+                        y_pos_DEV002G008 = 297
+                        x_pos_DEV002G008_next = +84
+                        width_DEV002G008 = 80
+                        height_DEV002G008 = 40
+                        ammount_DEV002G008 = 5
+                    for i in range(0, ammount_DEV002G008):
+                        val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
+                        if i < 12:
+                            val_DEV002G008.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)
+                            x_pos_DEV002G008 += x_pos_DEV002G008_next
+                        elif i > 11:
+                            val_DEV002G008.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)                    
+                            x_pos_DEV002G008_after12 += x_pos_DEV002G008_next
+                        led_DEV002G008.append(val_DEV002G008)
+                #------------------------------------------------------------------------------
+                # FUNCTION POWER BUTTONS DEVICE02 (POWER AUTO NORMAL PURSUIT)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    read.load_btn_states_PBFNKT()
+                    global ammount_PBFNKT
+                    btns_PBFNKT = []
+                    if theme in theme_txt[:3]: # THEME 0 1 2
+                        x_pos_PBFNKT = 2175
+                        y_pos_PBFNKT = 655
+                        width_PBFNKT = 55
+                        height_PBFNKT = 55
+                        x_pos_PBFNKT_mext = +width_PBFNKT +8
+                        ammount_PBFNKT = 4 
+                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                        x_pos_PBFNKT = 1285
+                        y_pos_PBFNKT = 546
+                        width_PBFNKT = 82
+                        height_PBFNKT = 154
+                        x_pos_PBFNKT_mext = +265
+                        ammount_PBFNKT = 4               
+                    for i in range(ammount_PBFNKT):
+                        btn_PBFNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_PBFNKT(i),self.master.switch_frame(P01_DASH)])
+                        btn_PBFNKT.place(x=x_pos_PBFNKT, y=y_pos_PBFNKT, width=width_PBFNKT, height=height_PBFNKT)
+                        x_pos_PBFNKT += x_pos_PBFNKT_mext
+                        btns_PBFNKT.append(btn_PBFNKT)
+
+                    btn_PBFNKT_FU = [localimage18, localimage17, localimage19, localimage18]
+                    btn_PBFNKT_OF = [localimage21, localimage20, localimage22, localimage21]
+                    for i in range(4):
+                        if btn_states_PBFNKT[i]:
+                            btns_PBFNKT[i].config(image=btn_PBFNKT_FU[i])
+                        else:
+                            btns_PBFNKT[i].config(image=btn_PBFNKT_OF[i])
+                #------------------------------------------------------------------------------
+                # DEV002 INFORMATION CENTER
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002IC
+                    global led_gauge_DEV002IC
+                    led_DEV002IC = []
+                    for i in range(0, 16):
+                        led_gauge_DEV002IC = tk.Label(self, **btn_style_imgbtn)
+                        led_DEV002IC.append(led_gauge_DEV002IC)
+                    led_DEV002IC[0].place(x=2174, y=17, width=80, height=80)
+                    led_DEV002IC[1].place(x=2257, y=17, width=80, height=80)
+                    led_DEV002IC[2].place(x=2340, y=17, width=80, height=80)
+                    led_DEV002IC[3].place(x=2174, y=100, width=80, height=80)
+                    led_DEV002IC[4].place(x=2257, y=100, width=80, height=80)
+                    led_DEV002IC[5].place(x=2340, y=100, width=80, height=80)
+                    led_DEV002IC[6].place(x=2174, y=183, width=80, height=80)
+                    led_DEV002IC[7].place(x=2257, y=183, width=80, height=80)
+                    led_DEV002IC[8].place(x=2340, y=183, width=80, height=80)
+                    led_DEV002IC[9].place(x=2174, y=266, width=80, height=80)
+                    led_DEV002IC[10].place(x=2257, y=266, width=80, height=80)
+                    led_DEV002IC[11].place(x=2340, y=266, width=80, height=80)
+                    led_DEV002IC[12].place(x=2174, y=349, width=80, height=80)
+                    led_DEV002IC[13].place(x=2257, y=349, width=80, height=80)
+                    led_DEV002IC[14].place(x=2340, y=349, width=80, height=80)
+                    led_DEV002IC[15].place(x=2174, y=432, width=80, height=80)
         #----------------------------------------------------------------------------------
         # SYSINFO LABELS
         #----------------------------------------------------------------------------------
@@ -3440,10 +3446,10 @@ class P01_DASH(tk.Frame):
                 elif device == device_txt[2]:
                     if theme_txt[0:3].count(theme) > 0: # THEME 0 to 3
                         xywh_7SEG002 = [2, 220, 320, 100]
-                        x_txt_sysinfo = [1810, 1810, 1810, 1810, 1810]
-                        y_txt_sysinfo = [35, 60, 85, 110, 135]
-                        x_lbl_sysinfo = [1870, 1970, 1870, 1970, 1870, 1870, 2260, 2260]
-                        y_lbl_sysinfo = [32, 32, 58, 58, 84, 110, 450, 476]
+                        x_txt_sysinfo = [2175, 2175, 2175, 2175, 2175]
+                        y_txt_sysinfo = [515, 540, 565, 590, 615]
+                        x_lbl_sysinfo = [2235, 2335, 2235, 2335, 2235, 2235, 2175, 2280]
+                        y_lbl_sysinfo = [513, 513, 539, 539, 565, 591, 617, 617]
                         wh_lbl_sysinfo = [65, 24, 140, 24]
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [2, 220, 320, 100]
