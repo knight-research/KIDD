@@ -413,29 +413,8 @@ if REGION:
             # SIMULATION COUNTERS
             #------------------------------------------------------------------------------
             count_ctr_SIM_DEV001G000 = 0           
-            count_ctr_SIM_DEV002GMASTER = 0
-            count_ctr_SIM_DEV002G000 = 0
-            count_ctr_SIM_DEV002G001 = 0
-            count_ctr_SIM_DEV002G002 = 0
-            count_ctr_SIM_DEV002G003 = 0
-            count_ctr_SIM_DEV002G004 = 0
-            count_ctr_SIM_DEV002G005 = 0
-            count_ctr_SIM_DEV002G006 = 0
-            count_ctr_SIM_DEV002G007 = 0
-            count_ctr_SIM_DEV002G008 = 0
-            count_ctr_SIM_DEV002G009 = 0
-            count_SIM_DEV001G000 = True
-            count_SIM_DEV002GMASTER = True
-            count_SIM_DEV002G000 = True
-            count_SIM_DEV002G001 = True
-            count_SIM_DEV002G002 = True
-            count_SIM_DEV002G003 = True
-            count_SIM_DEV002G004 = True
-            count_SIM_DEV002G005 = True
-            count_SIM_DEV002G006 = True
-            count_SIM_DEV002G007 = True
-            count_SIM_DEV002G008 = True
-            count_SIM_DEV002G009 = True        
+            val_cnt_sim      = [0,0,0,0,0,0,0,0,0,0,0,0]
+            val_cnt_sim_updn = [True,True,True,True,True,True,True,True,True,True,True,True]      
             #------------------------------------------------------------------------------
             # SYSTEM COUNTERS
             #------------------------------------------------------------------------------        
@@ -3087,104 +3066,85 @@ class P01_DASH(tk.Frame):
                 # DEV002GMASTER (RPM)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002GMASTER
+                    global led_DEV002G000, ammount_DEV002G000
                     global led_gauge_U02MASTER          
-                    led_DEV002GMASTER = []
+                    led_DEV002G000 = []
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
                         x_pos_RPM = 5
                         y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
                         x_pos_RPM_next = +40
+                        ammount_DEV002G000 = 32
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         x_pos_RPM = 5
                         y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
                         x_pos_RPM_next = +40
+                        ammount_DEV002G000 = 32
                     elif theme in [theme_txt[15], theme_txt[16]]:
                         x_pos_RPM = 203
-                        y_pos_RPM = [15]*32
+                        y_pos_RPM = [15]*ammount_DEV002G000
                         x_pos_RPM_next = +28                   
-                    for i in range(0, 32):
+                    for i in range(0, ammount_DEV002G000):
                         led_gauge_U02MASTER = tk.Label(self, **btn_style_imgbtn)
                         led_gauge_U02MASTER.place(x=x_pos_RPM, y=y_pos_RPM[i])
                         x_pos_RPM += x_pos_RPM_next
-                        led_DEV002GMASTER.append(led_gauge_U02MASTER)
+                        led_DEV002G000.append(led_gauge_U02MASTER)
                 #------------------------------------------------------------------------------
                 # DEV002G000 (INLET TEMP)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G000, ammount_DEV002G000
-                    led_DEV002G000 = []
+                    global led_DEV002G001, ammount_DEV002G001
+                    led_DEV002G001 = []
                     if theme in theme_txt[:3]:  # THEME 0 1 2
                         x_pos = 108
                         y_pos = 440
                         x_pos_nxt = 29
                         width = 29
                         height = 22
-                        ammount_DEV002G000 = 12
+                        ammount_DEV002G001 = 12
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
                         x_pos = 3
                         y_pos = 459
                         x_pos_nxt = 84
                         width = 80
                         height = 40
-                        ammount_DEV002G000 = 7
-                    led_DEV002G000 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G000)
+                        ammount_DEV002G001 = 7
+                    led_DEV002G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G001)
                 #------------------------------------------------------------------------------
                 # DEV002G001 (OIL TEMP)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G001, val_DEV002G001, ammount_DEV002G001
-                    led_DEV002G001 = []
+                    global led_DEV002G002, val_DEV002G002, ammount_DEV002G002
+                    led_DEV002G002 = []
                     if theme in theme_txt[:3]:  # THEME 0 1 2
                         x_pos = 815
                         y_pos = 440
                         x_pos_nxt = +29
                         width = 29
                         height = 22
-                        ammount_DEV002G001 = 12
+                        ammount_DEV002G002 = 12
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
                         x_pos = 696
                         y_pos = 459
                         x_pos_nxt = +84
                         width = 80
                         height = 40
-                        ammount_DEV002G001 = 7
-                    led_DEV002G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G001)
+                        ammount_DEV002G002 = 7
+                    led_DEV002G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G002)
                 #------------------------------------------------------------------------------
                 # DEV002G002 (EGT TEMP)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G002, val_DEV002G002, ammount_DEV002G002
-                    led_DEV002G002 = []
+                    global led_DEV002G003, val_DEV002G003, ammount_DEV002G003
+                    led_DEV002G003 = []
                     if theme in theme_txt[:3]:  # THEME 0 1 2
                         x_pos = 108
                         y_pos = 540
                         x_pos_nxt = +29
                         width = 29
                         height = 22
-                        ammount_DEV002G002 = 12
-                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 3
-                        y_pos = 568
-                        x_pos_nxt = +84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G002 = 7
-                    led_DEV002G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G002)
-                #------------------------------------------------------------------------------
-                # DEV002G003 (OIL PREASSURE)
-                #------------------------------------------------------------------------------
-                if REGION:
-                    global led_DEV002G003, val_DEV002G003, ammount_DEV002G003
-                    led_DEV003G003 = []
-                    if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 815
-                        y_pos = 540
-                        x_pos_nxt = +29
-                        width = 29
-                        height = 22
                         ammount_DEV002G003 = 12
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 696
+                        x_pos = 3
                         y_pos = 568
                         x_pos_nxt = +84
                         width = 80
@@ -3192,10 +3152,31 @@ class P01_DASH(tk.Frame):
                         ammount_DEV002G003 = 7
                     led_DEV002G003 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G003)
                 #------------------------------------------------------------------------------
-                # DEV002G004 (TANK CAPACITY)
+                # DEV002G003 (OIL PREASSURE)
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002G004, val_DEV002G004, ammount_DEV002G004
+                    led_DEV003G003 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 815
+                        y_pos = 540
+                        x_pos_nxt = +29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G004 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 696
+                        y_pos = 568
+                        x_pos_nxt = +84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G004 = 7
+                    led_DEV002G004 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G004)
+                #------------------------------------------------------------------------------
+                # DEV002G004 (TANK CAPACITY)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G005, val_DEV002G005, ammount_DEV002G005
                     led_DEV004G004 = []
                     if theme in theme_txt[:3]:  # THEME 0 1 2
                         x_pos = 108
@@ -3203,30 +3184,9 @@ class P01_DASH(tk.Frame):
                         x_pos_nxt = +29
                         width = 29
                         height = 22
-                        ammount_DEV002G004 = 12
-                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 3
-                        y_pos = 676
-                        x_pos_nxt = +84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G004 = 7
-                    led_DEV002G004 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G004)
-                #------------------------------------------------------------------------------
-                # DEV002G005 (FUEL FLOW)
-                #------------------------------------------------------------------------------
-                if REGION:
-                    global led_DEV002G005, val_DEV002G005, ammount_DEV002G005
-                    led_DEV005G005 = []
-                    if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 815
-                        y_pos = 640
-                        x_pos_nxt = +29
-                        width = 29
-                        height = 22
                         ammount_DEV002G005 = 12
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 696
+                        x_pos = 3
                         y_pos = 676
                         x_pos_nxt = +84
                         width = 80
@@ -3234,39 +3194,28 @@ class P01_DASH(tk.Frame):
                         ammount_DEV002G005 = 7
                     led_DEV002G005 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G005)
                 #------------------------------------------------------------------------------
-                # DEV002G006 (VDC)
+                # DEV002G005 (FUEL FLOW)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G006
-                    global val_DEV002G006
-                    global ammount_DEV002G006
-                    led_DEV002G006 = []
-                    if theme in theme_txt[:3]: # THEME 0 1 2
-                        x_pos_DEV002G006 = 1365
-                        x_pos_DEV002G006_after12 = 1785
-                        y_pos_DEV002G006 = 93
-                        x_pos_DEV002G006_next = +29
-                        width_DEV002G006 = 29
-                        height_DEV002G006 = 22
-                        ammount_DEV002G006 = 24
-                    elif theme in theme_txt[3:9]: # THEME 3 to 9
-                        x_pos_DEV002G006 = 1285
-                        y_pos_DEV002G006 = 71
-                        x_pos_DEV002G006_next = +84
-                        width_DEV002G006 = 80
-                        height_DEV002G006 = 40
-                        ammount_DEV002G006 = 5
-                    for i in range(0, ammount_DEV002G006):
-                        val_DEV002G006 = tk.Label(self, **btn_style_imgbtn)
-                        if i < 12:
-                            val_DEV002G006.place(x=x_pos_DEV002G006, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)
-                            x_pos_DEV002G006 += x_pos_DEV002G006_next
-                        elif i > 11:
-                            val_DEV002G006.place(x=x_pos_DEV002G006_after12, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)                    
-                            x_pos_DEV002G006_after12 += x_pos_DEV002G006_next
-                        led_DEV002G006.append(val_DEV002G006)
+                    global led_DEV002G006, val_DEV002G006, ammount_DEV002G006
+                    led_DEV005G005 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 815
+                        y_pos = 640
+                        x_pos_nxt = +29
+                        width = 29
+                        height = 22
+                        ammount_DEV002G006 = 12
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 696
+                        y_pos = 676
+                        x_pos_nxt = +84
+                        width = 80
+                        height = 40
+                        ammount_DEV002G006 = 7
+                    led_DEV002G006 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G006)
                 #------------------------------------------------------------------------------
-                # DEV002G007 (AMP)
+                # DEV002G006 (VDC)
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002G007
@@ -3274,31 +3223,31 @@ class P01_DASH(tk.Frame):
                     global ammount_DEV002G007
                     led_DEV002G007 = []
                     if theme in theme_txt[:3]: # THEME 0 1 2
-                        x_pos_DEV002G007 = 1365
-                        x_pos_DEV002G007_after12 = 1785
-                        y_pos_DEV002G007 = 203
-                        x_pos_DEV002G007_next = +29
-                        width_DEV002G007 = 29
-                        height_DEV002G007 = 22
+                        x_pos_DEV002G006 = 1365
+                        x_pos_DEV002G006_after12 = 1785
+                        y_pos_DEV002G006 = 93
+                        x_pos_DEV002G006_next = +29
+                        width_DEV002G006 = 29
+                        height_DEV002G006 = 22
                         ammount_DEV002G007 = 24
                     elif theme in theme_txt[3:9]: # THEME 3 to 9
-                        x_pos_DEV002G007 = 1285
-                        y_pos_DEV002G007 = 184
-                        x_pos_DEV002G007_next = +84
-                        width_DEV002G007 = 80
-                        height_DEV002G007 = 40
+                        x_pos_DEV002G006 = 1285
+                        y_pos_DEV002G006 = 71
+                        x_pos_DEV002G006_next = +84
+                        width_DEV002G006 = 80
+                        height_DEV002G006 = 40
                         ammount_DEV002G007 = 5
                     for i in range(0, ammount_DEV002G007):
                         val_DEV002G007 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G007.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)
-                            x_pos_DEV002G007 += x_pos_DEV002G007_next
+                            val_DEV002G007.place(x=x_pos_DEV002G006, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)
+                            x_pos_DEV002G006 += x_pos_DEV002G006_next
                         elif i > 11:
-                            val_DEV002G007.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)                    
-                            x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
+                            val_DEV002G007.place(x=x_pos_DEV002G006_after12, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)                    
+                            x_pos_DEV002G006_after12 += x_pos_DEV002G006_next
                         led_DEV002G007.append(val_DEV002G007)
                 #------------------------------------------------------------------------------
-                # DEV002G008 (AUX)
+                # DEV002G007 (AMP)
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002G008
@@ -3306,29 +3255,61 @@ class P01_DASH(tk.Frame):
                     global ammount_DEV002G008
                     led_DEV002G008 = []
                     if theme in theme_txt[:3]: # THEME 0 1 2
+                        x_pos_DEV002G007 = 1365
+                        x_pos_DEV002G007_after12 = 1785
+                        y_pos_DEV002G007 = 203
+                        x_pos_DEV002G007_next = +29
+                        width_DEV002G007 = 29
+                        height_DEV002G007 = 22
+                        ammount_DEV002G008 = 24
+                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                        x_pos_DEV002G007 = 1285
+                        y_pos_DEV002G007 = 184
+                        x_pos_DEV002G007_next = +84
+                        width_DEV002G007 = 80
+                        height_DEV002G007 = 40
+                        ammount_DEV002G008 = 5
+                    for i in range(0, ammount_DEV002G008):
+                        val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
+                        if i < 12:
+                            val_DEV002G008.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)
+                            x_pos_DEV002G007 += x_pos_DEV002G007_next
+                        elif i > 11:
+                            val_DEV002G008.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)                    
+                            x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
+                        led_DEV002G008.append(val_DEV002G008)
+                #------------------------------------------------------------------------------
+                # DEV002G008 (AUX)
+                #------------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV002G009
+                    global val_DEV002G009
+                    global ammount_DEV002G009
+                    led_DEV002G009 = []
+                    if theme in theme_txt[:3]: # THEME 0 1 2
                         x_pos_DEV002G008 = 1365
                         x_pos_DEV002G008_after12 = 1785
                         y_pos_DEV002G008 = 313
                         x_pos_DEV002G008_next = +29
                         width_DEV002G008 = 29
                         height_DEV002G008 = 22
-                        ammount_DEV002G008 = 24
+                        ammount_DEV002G009 = 24
                     elif theme in theme_txt[3:9]: # THEME 3 to 9
                         x_pos_DEV002G008 = 1285
                         y_pos_DEV002G008 = 297
                         x_pos_DEV002G008_next = +84
                         width_DEV002G008 = 80
                         height_DEV002G008 = 40
-                        ammount_DEV002G008 = 5
-                    for i in range(0, ammount_DEV002G008):
-                        val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
+                        ammount_DEV002G009 = 5
+                    for i in range(0, ammount_DEV002G009):
+                        val_DEV002G009 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G008.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)
+                            val_DEV002G009.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)
                             x_pos_DEV002G008 += x_pos_DEV002G008_next
                         elif i > 11:
-                            val_DEV002G008.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)                    
+                            val_DEV002G009.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)                    
                             x_pos_DEV002G008_after12 += x_pos_DEV002G008_next
-                        led_DEV002G008.append(val_DEV002G008)
+                        led_DEV002G009.append(val_DEV002G009)
                 #------------------------------------------------------------------------------
                 # FUNCTION POWER BUTTONS DEVICE02 (POWER AUTO NORMAL PURSUIT)
                 #------------------------------------------------------------------------------
@@ -3778,29 +3759,8 @@ class P01_DASH(tk.Frame):
             global update_duration
             global firsttime
             global count_ctr_SIM_DEV001G000
-            global count_ctr_SIM_DEV002GMASTER
-            global count_ctr_SIM_DEV002G000
-            global count_ctr_SIM_DEV002G001
-            global count_ctr_SIM_DEV002G002
-            global count_ctr_SIM_DEV002G003
-            global count_ctr_SIM_DEV002G004
-            global count_ctr_SIM_DEV002G005
-            global count_ctr_SIM_DEV002G006
-            global count_ctr_SIM_DEV002G007
-            global count_ctr_SIM_DEV002G008
-            global count_ctr_SIM_DEV002G009
-            global count_SIM_DEV001G000
-            global count_SIM_DEV002GMASTER
-            global count_SIM_DEV002G000
-            global count_SIM_DEV002G001
-            global count_SIM_DEV002G002
-            global count_SIM_DEV002G003
-            global count_SIM_DEV002G004
-            global count_SIM_DEV002G005
-            global count_SIM_DEV002G006
-            global count_SIM_DEV002G007
-            global count_SIM_DEV002G008
-            global count_SIM_DEV002G009
+            global val_cnt_sim
+            global val_cnt_sim_updn
             global odo_gps_metric_old
             global odo_gps_metric
             global trip01_cnt_save
@@ -4479,194 +4439,108 @@ class P01_DASH(tk.Frame):
         # DEV002 GAUGES
         #----------------------------------------------------------------------------------
         if device == device_txt[2]:
+            #               #00  #01  #02  #03  #04  #05  #06  #07  #08  #09
+            val_min      = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
+            val_max      = [990, 160, 160, 160, 160,  57, 160, 600, 150, 100]
+            val_sim      = [ 20,  10,  14,   8,   2,   6,  10,   7,   8,   9] #HIGHER NUMBER FASTER SIMULATION
+            val_conf_min = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
             #------------------------------------------------------------------------------
-            # UPDATE DEV002GMASTER (RPM)
+            # SIMULATION
+            #------------------------------------------------------------------------------            
+            if REGION:
+                if btn_states_SW[3] == True:
+                    for i in range(10):
+                        val_cnt_sim[i] += val_sim[i] if val_cnt_sim_updn[i] else -val_sim[i]
+                        if val_cnt_sim[i] > val_max[i]:
+                            val_cnt_sim_updn[i], val_cnt_sim[i] = False, val_cnt_sim[i] -val_sim[i]
+                        elif val_cnt_sim[i] < val_min[i]:
+                            val_cnt_sim_updn[i], val_cnt_sim[i] = True, val_cnt_sim[i] +val_sim[i]
+            #------------------------------------------------------------------------------
+            # UPDATE DEV002G000 (RPM)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002GMASTER = 0
-                max_DEV002GMASTER = 990
-                conv_min_DEV002GMASTER = 0
-                conv_max_DEV002GMASTER = 32
-                cnt_DEV002GMASTER = 20 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002GMASTER += cnt_DEV002GMASTER if count_SIM_DEV002GMASTER else -cnt_DEV002GMASTER
-                    if count_ctr_SIM_DEV002GMASTER > max_DEV002GMASTER:
-                        count_SIM_DEV002GMASTER, count_ctr_SIM_DEV002GMASTER = False, count_ctr_SIM_DEV002GMASTER -cnt_DEV002GMASTER
-                    elif count_ctr_SIM_DEV002GMASTER < min_DEV002GMASTER:
-                        count_SIM_DEV002GMASTER, count_ctr_SIM_DEV002GMASTER = True, count_ctr_SIM_DEV002GMASTER +cnt_DEV002GMASTER
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002GMASTER = int(aldl_engine_speed)
+                    seven_seg_DEV002G000 = int(aldl_engine_speed)
                 else:
-                    seven_seg_DEV002GMASTER = count_ctr_SIM_DEV002GMASTER
-                val_DEV002GMASTER = seven_seg_DEV002GMASTER/conv_max_DEV002GMASTER
-                #--------------------------------------------------------------------------
-                # CONVERT VALUE FOR xx LEDS
-                #--------------------------------------------------------------------------
-                perc_DEV002GMASTER = int (val_DEV002GMASTER - min_DEV002GMASTER) * (conv_max_DEV002GMASTER - conv_min_DEV002GMASTER) / (conv_max_DEV002GMASTER - conv_min_DEV002GMASTER) + conv_min_DEV002GMASTER
-                #--------------------------------------------------------------------------
-                # DISPLAY THE LEDs
-                #--------------------------------------------------------------------------            
-                if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002GMASTER, conv_max_DEV002GMASTER):
-                        if perc_DEV002GMASTER >= i+1:
-                            led_DEV002GMASTER[i].config(image=localimage18[i])
-                        else:
-                            led_DEV002GMASTER[i].config(image=localimage19[i])
-                else:
-                    for i in range (conv_min_DEV002GMASTER, conv_max_DEV002GMASTER):
-                        led_DEV002GMASTER[i].config(image=localimage19[i])
-            #------------------------------------------------------------------------------
-            # UPDATE DEV002G000 (INLET TEMP)
-            #------------------------------------------------------------------------------
-            if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G000 = 0
-                max_DEV002G000 = 160
-                conv_min_DEV002G000 = 0
-                cnt_DEV002G000 = 10 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G000 += cnt_DEV002G000 if count_SIM_DEV002G000 else -cnt_DEV002G000
-                    if count_ctr_SIM_DEV002G000 > max_DEV002G000:
-                        count_SIM_DEV002G000, count_ctr_SIM_DEV002G000 = False, count_ctr_SIM_DEV002G000 -cnt_DEV002G000
-                    elif count_ctr_SIM_DEV002G000 < min_DEV002G000:
-                        count_SIM_DEV002G000, count_ctr_SIM_DEV002G000 = True, count_ctr_SIM_DEV002G000 +cnt_DEV002G000
-                #--------------------------------------------------------------------------
-                # VALUE VALID OR SIMULATION ON
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002G000 = int(aldl_mainfold_air_temp)
-                else:
-                    seven_seg_DEV002G000 = count_ctr_SIM_DEV002G000
+                    seven_seg_DEV002G000 = val_cnt_sim[0]
                 val_DEV002G000 = seven_seg_DEV002G000/ammount_DEV002G000
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G000 = int (val_DEV002G000 - min_DEV002G000) * (ammount_DEV002G000 - conv_min_DEV002G000) / (ammount_DEV002G000 - conv_min_DEV002G000) + conv_min_DEV002G000
+                perc_DEV002G000 = int (val_DEV002G000 - val_min[0]) * (ammount_DEV002G000 - val_conf_min[0]) / (ammount_DEV002G000 - val_conf_min[0]) + val_conf_min[0]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G000, ammount_DEV002G000):
+                    for i in range (val_conf_min[0], ammount_DEV002G000):
                         if perc_DEV002G000 >= i+1:
-                            if i<8:
-                                led_DEV002G000[i].config(image=localimage32)
-                            else:
-                                led_DEV002G000[i].config(image=localimage33)
+                            led_DEV002G000[i].config(image=localimage18[i])
                         else:
-                            if i<8:
-                                led_DEV002G000[i].config(image=localimage30)
-                            else:
-                                led_DEV002G000[i].config(image=localimage31)
+                            led_DEV002G000[i].config(image=localimage19[i])
                 else:
-                    for i in range (conv_min_DEV002G000, ammount_DEV002G000):
-                            if i<8:
-                                led_DEV002G000[i].config(image=localimage30)
-                            else:
-                                led_DEV002G000[i].config(image=localimage31)
+                    for i in range (val_conf_min[0], ammount_DEV002G000):
+                        led_DEV002G000[i].config(image=localimage19[i])
             #------------------------------------------------------------------------------
-            # UPDATE DEV002G001 (OIL TEMP)
+            # UPDATE DEV002G001 (INLET TEMP)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G001 = 0
-                max_DEV002G001 = 160
-                conv_min_DEV002G001 = 0
-                cnt_DEV002G001 = 14 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G001 += cnt_DEV002G001 if count_SIM_DEV002G001 else -cnt_DEV002G001
-                    if count_ctr_SIM_DEV002G001 > max_DEV002G001:
-                        count_SIM_DEV002G001, count_ctr_SIM_DEV002G001 = False, count_ctr_SIM_DEV002G001 -cnt_DEV002G001
-                    elif count_ctr_SIM_DEV002G001 < min_DEV002G001:
-                        count_SIM_DEV002G001, count_ctr_SIM_DEV002G001 = True, count_ctr_SIM_DEV002G001 +cnt_DEV002G001
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002G001 = int(aldl_coolant_temp)
+                    seven_seg_DEV002G001 = int(aldl_mainfold_air_temp)
                 else:
-                    seven_seg_DEV002G001 = count_ctr_SIM_DEV002G001
+                    seven_seg_DEV002G001 = val_cnt_sim[1]
                 val_DEV002G001 = seven_seg_DEV002G001/ammount_DEV002G001
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G001 = int (val_DEV002G001 - min_DEV002G001) * (ammount_DEV002G001 - conv_min_DEV002G001) / (ammount_DEV002G001 - conv_min_DEV002G001) + conv_min_DEV002G001
+                perc_DEV002G001 = int (val_DEV002G001 - val_min[1]) * (ammount_DEV002G001 - val_conf_min[1]) / (ammount_DEV002G001 - val_conf_min[1]) + val_conf_min[1]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G001, ammount_DEV002G001):
+                    for i in range (val_conf_min[1], ammount_DEV002G001):
                         if perc_DEV002G001 >= i+1:
                             if i<8:
-                                led_DEV002G001[i].config(image=localimage42)
+                                led_DEV002G001[i].config(image=localimage32)
                             else:
-                                led_DEV002G001[i].config(image=localimage43)
+                                led_DEV002G001[i].config(image=localimage33)
                         else:
                             if i<8:
-                                led_DEV002G001[i].config(image=localimage40)
+                                led_DEV002G001[i].config(image=localimage30)
                             else:
-                                led_DEV002G001[i].config(image=localimage41)
+                                led_DEV002G001[i].config(image=localimage31)
                 else:
-                    for i in range (conv_min_DEV002G001, ammount_DEV002G001):
+                    for i in range (val_conf_min[1], ammount_DEV002G001):
                             if i<8:
-                                led_DEV002G001[i].config(image=localimage40)
+                                led_DEV002G001[i].config(image=localimage30)
                             else:
-                                led_DEV002G001[i].config(image=localimage41)
+                                led_DEV002G001[i].config(image=localimage31)
             #------------------------------------------------------------------------------
-            # UPDATE DEV002G002 (EGT TEMP)
+            # UPDATE DEV002G002 (OIL TEMP)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G002 = 0
-                max_DEV002G002 = 160
-                conv_min_DEV002G002 = 0
-                cnt_DEV002G002 = 8 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G002 += cnt_DEV002G002 if count_SIM_DEV002G002 else -cnt_DEV002G002
-                    if count_ctr_SIM_DEV002G002 > max_DEV002G002:
-                        count_SIM_DEV002G002, count_ctr_SIM_DEV002G002 = False, count_ctr_SIM_DEV002G002 -cnt_DEV002G002
-                    elif count_ctr_SIM_DEV002G002 < min_DEV002G002:
-                        count_SIM_DEV002G002, count_ctr_SIM_DEV002G002 = True, count_ctr_SIM_DEV002G002 +cnt_DEV002G002
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
                     seven_seg_DEV002G002 = int(aldl_coolant_temp)
                 else:
-                    seven_seg_DEV002G002 = count_ctr_SIM_DEV002G002
+                    seven_seg_DEV002G002 = val_cnt_sim[2]
                 val_DEV002G002 = seven_seg_DEV002G002/ammount_DEV002G002
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G002 = int (val_DEV002G002 - min_DEV002G002) * (ammount_DEV002G002 - conv_min_DEV002G002) / (ammount_DEV002G002 - conv_min_DEV002G002) + conv_min_DEV002G002
+                perc_DEV002G002 = int (val_DEV002G002 - val_min[2]) * (ammount_DEV002G002 - val_conf_min[2]) / (ammount_DEV002G002 - val_conf_min[2]) + val_conf_min[2]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G002, ammount_DEV002G002):
+                    for i in range (val_conf_min[2], ammount_DEV002G002):
                         if perc_DEV002G002 >= i+1:
                             if i<8:
                                 led_DEV002G002[i].config(image=localimage42)
@@ -4678,116 +4552,69 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G002[i].config(image=localimage41)
                 else:
-                    for i in range (conv_min_DEV002G002, ammount_DEV002G002):
+                    for i in range (val_conf_min[2], ammount_DEV002G002):
                             if i<8:
                                 led_DEV002G002[i].config(image=localimage40)
                             else:
                                 led_DEV002G002[i].config(image=localimage41)
             #------------------------------------------------------------------------------
-            # UPDATE DEV002G003 (OIL PRESSURE)
+            # UPDATE DEV002G003 (EGT TEMP)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G003 = 0
-                max_DEV002G003 = 160
-                conv_min_DEV002G003 = 0
-                cnt_DEV002G003 = 2 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G003 += cnt_DEV002G003 if count_SIM_DEV002G003 else -cnt_DEV002G003
-                    if count_ctr_SIM_DEV002G003 > max_DEV002G003:
-                        count_SIM_DEV002G003, count_ctr_SIM_DEV002G003 = False, count_ctr_SIM_DEV002G003 -cnt_DEV002G003
-                    elif count_ctr_SIM_DEV002G003 < min_DEV002G003:
-                        count_SIM_DEV002G003, count_ctr_SIM_DEV002G003 = True, count_ctr_SIM_DEV002G003 +cnt_DEV002G003
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002G003 = int(aldl_barometric_pressure)
+                    seven_seg_DEV002G003 = int(aldl_coolant_temp)
                 else:
-                    seven_seg_DEV002G003 = count_ctr_SIM_DEV002G003
+                    seven_seg_DEV002G003 = val_cnt_sim[3]
                 val_DEV002G003 = seven_seg_DEV002G003/ammount_DEV002G003
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G003 = int (val_DEV002G003 - min_DEV002G003) * (ammount_DEV002G003 - conv_min_DEV002G003) / (ammount_DEV002G003 - conv_min_DEV002G003) + conv_min_DEV002G003
+                perc_DEV002G003 = int (val_DEV002G003 - val_min[3]) * (ammount_DEV002G003 - val_conf_min[3]) / (ammount_DEV002G003 - val_conf_min[3]) + val_conf_min[3]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G003, ammount_DEV002G003):
+                    for i in range (val_conf_min[3], ammount_DEV002G003):
                         if perc_DEV002G003 >= i+1:
                             if i<8:
-                                led_DEV002G003[i].config(image=localimage32)
+                                led_DEV002G003[i].config(image=localimage42)
                             else:
-                                led_DEV002G003[i].config(image=localimage33)
+                                led_DEV002G003[i].config(image=localimage43)
                         else:
                             if i<8:
-                                led_DEV002G003[i].config(image=localimage30)
+                                led_DEV002G003[i].config(image=localimage40)
                             else:
-                                led_DEV002G003[i].config(image=localimage31)
+                                led_DEV002G003[i].config(image=localimage41)
                 else:
-                    for i in range (conv_min_DEV002G003, ammount_DEV002G003):
+                    for i in range (val_conf_min[3], ammount_DEV002G003):
                             if i<8:
-                                led_DEV002G003[i].config(image=localimage30)
+                                led_DEV002G003[i].config(image=localimage40)
                             else:
-                                led_DEV002G003[i].config(image=localimage31)
+                                led_DEV002G003[i].config(image=localimage41)
             #------------------------------------------------------------------------------
-            # UPDATE DEV002G004 (TANK CAPACITY)
+            # UPDATE DEV002G004 (OIL PRESSURE)
             #------------------------------------------------------------------------------
             if REGION:
                 #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G004 = 0 #0to100 = [30, 35, 40, 45, 50, 55, 57] # if LG06V >= val  43=50%
-                max_DEV002G004 = 57
-                conv_min_DEV002G004 = 0
-                cnt_DEV002G004 = 6 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # GET NEW DATA
-                #--------------------------------------------------------------------------
-                if btn_states_HW[6] == True:  #ADS MODULE                   
-                    try:
-                        a_chan0 = AnalogIn(ads, ADS.P0) #DATA FROM ANALOG INPUT 0
-                        float_DEV002G004 = '%.0f'% (float(a_chan0.value)*max_DEV002G004/32768.0) #TANKINHALT 0-57 LITER
-                    except:
-                        float_DEV002G004 = min_DEV002G004
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G004 += cnt_DEV002G004 if count_SIM_DEV002G004 else -cnt_DEV002G004
-                    if count_ctr_SIM_DEV002G004 > max_DEV002G004:
-                        count_SIM_DEV002G004, count_ctr_SIM_DEV002G004 = False, count_ctr_SIM_DEV002G004 -cnt_DEV002G004
-                    elif count_ctr_SIM_DEV002G004 < min_DEV002G004:
-                        count_SIM_DEV002G004, count_ctr_SIM_DEV002G004 = True, count_ctr_SIM_DEV002G004 +cnt_DEV002G004
-                #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
-                if btn_states_HW[6] == True:  # ADS MODULE
-                    if btn_states_SW[3] == False:  # LIVE
-                        seven_seg_DEV002G004 = int(float_DEV002G004)
-                    else:
-                        seven_seg_DEV002G004 = count_ctr_SIM_DEV002G004
+                if btn_states_SW[3] == False:  # LIVE
+                    seven_seg_DEV002G004 = int(aldl_barometric_pressure)
                 else:
-                    if btn_states_SW[3] == False:  # LIVE
-                        seven_seg_DEV002G004 = min_DEV002G004
-                    else:
-                        seven_seg_DEV002G004 = count_ctr_SIM_DEV002G004
+                    seven_seg_DEV002G004 = val_cnt_sim[4]
                 val_DEV002G004 = seven_seg_DEV002G004/ammount_DEV002G004
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G004 = int (val_DEV002G004 - min_DEV002G004) * (ammount_DEV002G004 - conv_min_DEV002G004) / (ammount_DEV002G004 - conv_min_DEV002G004) + conv_min_DEV002G004
-                #-------------------------------------------------------------------------
+                perc_DEV002G004 = int (val_DEV002G004 - val_min[4]) * (ammount_DEV002G004 - val_conf_min[4]) / (ammount_DEV002G004 - val_conf_min[4]) + val_conf_min[4]
+                #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G004, ammount_DEV002G004):
+                    for i in range (val_conf_min[4], ammount_DEV002G004):
                         if perc_DEV002G004 >= i+1:
                             if i<8:
                                 led_DEV002G004[i].config(image=localimage32)
@@ -4799,161 +4626,122 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G004[i].config(image=localimage31)
                 else:
-                    for i in range (conv_min_DEV002G004, ammount_DEV002G004):
+                    for i in range (val_conf_min[4], ammount_DEV002G004):
                             if i<8:
                                 led_DEV002G004[i].config(image=localimage30)
                             else:
                                 led_DEV002G004[i].config(image=localimage31)
             #------------------------------------------------------------------------------
-            # UPDATE DEV002G005 (FUEL FLOW)
+            # UPDATE DEV002G005 (TANK CAPACITY)
             #------------------------------------------------------------------------------
             if REGION:
+                #0to100 = [30, 35, 40, 45, 50, 55, 57] # if LG06V >= val  43=50%
                 #--------------------------------------------------------------------------
-                # SETUP
+                # GET NEW DATA
                 #--------------------------------------------------------------------------
-                min_DEV002G005 = 0
-                max_DEV002G005 = 160
-                conv_min_DEV002G005 = 0
-                cnt_DEV002G005 = 10 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G005 += cnt_DEV002G005 if count_SIM_DEV002G005 else -cnt_DEV002G005
-                    if count_ctr_SIM_DEV002G005 > max_DEV002G005:
-                        count_SIM_DEV002G005, count_ctr_SIM_DEV002G005 = False, count_ctr_SIM_DEV002G005 -cnt_DEV002G005
-                    elif count_ctr_SIM_DEV002G005 < min_DEV002G005:
-                        count_SIM_DEV002G005, count_ctr_SIM_DEV002G005 = True, count_ctr_SIM_DEV002G005 +cnt_DEV002G005
+                if btn_states_HW[6] == True:  #ADS MODULE                   
+                    try:
+                        a_chan0 = AnalogIn(ads, ADS.P0) #DATA FROM ANALOG INPUT 0
+                        float_DEV002G005 = '%.0f'% (float(a_chan0.value)*val_max[5]/32768.0) #TANKINHALT 0-57 LITER
+                    except:
+                        float_DEV002G005 = val_min[5]
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
-                if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002G005 = int(aldl_throttle_pos)
+                if btn_states_HW[6] == True:  # ADS MODULE
+                    if btn_states_SW[3] == False:  # LIVE
+                        seven_seg_DEV002G005 = int(float_DEV002G005)
+                    else:
+                        seven_seg_DEV002G005 = val_cnt_sim[5]
                 else:
-                    seven_seg_DEV002G005 = count_ctr_SIM_DEV002G005
+                    if btn_states_SW[3] == False:  # LIVE
+                        seven_seg_DEV002G005 = val_min[5]
+                    else:
+                        seven_seg_DEV002G005 = val_cnt_sim[5]
                 val_DEV002G005 = seven_seg_DEV002G005/ammount_DEV002G005
-                #-------------------------------------------------------------------------
+                #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
-                #-------------------------------------------------------------------------
-                perc_DEV002G005 = int (val_DEV002G005 - min_DEV002G005) * (ammount_DEV002G005 - conv_min_DEV002G005) / (ammount_DEV002G005 - conv_min_DEV002G005) + conv_min_DEV002G005
+                #--------------------------------------------------------------------------
+                perc_DEV002G005 = int (val_DEV002G005 - val_min[5]) * (ammount_DEV002G005 - val_conf_min[5]) / (ammount_DEV002G005 - val_conf_min[5]) + val_conf_min[5]
                 #-------------------------------------------------------------------------
                 # DISPLAY THE LEDs
-                #-------------------------------------------------------------------------            
+                #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G005, ammount_DEV002G005):
+                    for i in range (val_conf_min[5], ammount_DEV002G005):
                         if perc_DEV002G005 >= i+1:
                             if i<8:
-                                led_DEV002G005[i].config(image=localimage42)
+                                led_DEV002G005[i].config(image=localimage32)
                             else:
-                                led_DEV002G005[i].config(image=localimage43)
+                                led_DEV002G005[i].config(image=localimage33)
                         else:
                             if i<8:
-                                led_DEV002G005[i].config(image=localimage40)
+                                led_DEV002G005[i].config(image=localimage30)
                             else:
-                                led_DEV002G005[i].config(image=localimage41)
+                                led_DEV002G005[i].config(image=localimage31)
                 else:
-                    for i in range (conv_min_DEV002G005, ammount_DEV002G005):
+                    for i in range (val_conf_min[5], ammount_DEV002G005):
                             if i<8:
-                                led_DEV002G005[i].config(image=localimage40)
+                                led_DEV002G005[i].config(image=localimage30)
                             else:
-                                led_DEV002G005[i].config(image=localimage41)
+                                led_DEV002G005[i].config(image=localimage31)
             #------------------------------------------------------------------------------
-            # UPDATE DEV002G006 (VDC)
+            # UPDATE DEV002G006 (FUEL FLOW)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G006 = 0
-                max_DEV002G006 = 600
-                conv_min_DEV002G006 = 0
-                cnt_DEV002G006 = 7 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G006 += cnt_DEV002G006 if count_SIM_DEV002G006 else -cnt_DEV002G006
-                    if count_ctr_SIM_DEV002G006 > max_DEV002G006:
-                        count_SIM_DEV002G006, count_ctr_SIM_DEV002G006 = False, count_ctr_SIM_DEV002G006 -cnt_DEV002G006
-                    elif count_ctr_SIM_DEV002G006 < min_DEV002G006:
-                        count_SIM_DEV002G006, count_ctr_SIM_DEV002G006 = True, count_ctr_SIM_DEV002G006 +cnt_DEV002G006
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002G006 = int(aldl_battery_voltage)
+                    seven_seg_DEV002G006 = int(aldl_throttle_pos)
                 else:
-                    seven_seg_DEV002G006 = count_ctr_SIM_DEV002G006
+                    seven_seg_DEV002G006 = val_cnt_sim[6]
                 val_DEV002G006 = seven_seg_DEV002G006/ammount_DEV002G006
                 #-------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #-------------------------------------------------------------------------
-                perc_DEV002G006 = int (val_DEV002G006 - min_DEV002G006) * (ammount_DEV002G006 - conv_min_DEV002G006) / (ammount_DEV002G006 - conv_min_DEV002G006) + conv_min_DEV002G006
-                #-------------------------------------------------------------------------
-                # DISPLAY THE LEDs
-                #-------------------------------------------------------------------------
-                if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G006, ammount_DEV002G006):
-                        if perc_DEV002G006 >= i+1:
-                            if i==0:
-                                led_DEV002G006[i].config(image=localimage32)
-                            elif i==1:
-                                led_DEV002G006[i].config(image=localimage44)
-                            else:
-                                led_DEV002G006[i].config(image=localimage42)
-                        else:
-                            if i==0:
-                                led_DEV002G006[i].config(image=localimage30)
-                            elif i==1:
-                                led_DEV002G006[i].config(image=localimage34)
-                            else:
-                                led_DEV002G006[i].config(image=localimage40)
-                else:
-                    for i in range (conv_min_DEV002G006, ammount_DEV002G006):
-                            if i==0:
-                                led_DEV002G006[i].config(image=localimage30)
-                            elif i==1:
-                                led_DEV002G006[i].config(image=localimage34)
-                            else:
-                                led_DEV002G006[i].config(image=localimage40)
-            #------------------------------------------------------------------------------
-            # UPDATE DEV002G007 (AMP)
-            #------------------------------------------------------------------------------
-            if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G007 = 0
-                max_DEV002G007 = 150
-                conv_min_DEV002G007 = 0
-                conv_max_DEV002G007 = 5
-                cnt_DEV002G007 = 8 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G007 += cnt_DEV002G007 if count_SIM_DEV002G007 else -cnt_DEV002G007
-                    if count_ctr_SIM_DEV002G007 > max_DEV002G007:
-                        count_SIM_DEV002G007, count_ctr_SIM_DEV002G007 = False, count_ctr_SIM_DEV002G007 -cnt_DEV002G007
-                    elif count_ctr_SIM_DEV002G007 < min_DEV002G007:
-                        count_SIM_DEV002G007, count_ctr_SIM_DEV002G007 = True, count_ctr_SIM_DEV002G007 +cnt_DEV002G007
-                #--------------------------------------------------------------------------
-                # VALUE VALID OR SIMULATION ON
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002G007 = int(aldl_fuel_pump_voltage)
-                else:
-                    seven_seg_DEV002G007 = count_ctr_SIM_DEV002G007
-                val_DEV002G007 = seven_seg_DEV002G007/conv_max_DEV002G007
-                #-------------------------------------------------------------------------
-                # CONVERT VALUE FOR xx LEDS
-                #-------------------------------------------------------------------------
-                perc_DEV002G007 = int (val_DEV002G007 - min_DEV002G007) * (conv_max_DEV002G007 - conv_min_DEV002G007) / (conv_max_DEV002G007 - conv_min_DEV002G007) + conv_min_DEV002G007
+                perc_DEV002G006 = int (val_DEV002G006 - val_min[6]) * (ammount_DEV002G006 - val_conf_min[6]) / (ammount_DEV002G006 - val_conf_min[6]) + val_conf_min[6]
                 #-------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #-------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G007, ammount_DEV002G007):
+                    for i in range (val_conf_min[6], ammount_DEV002G006):
+                        if perc_DEV002G006 >= i+1:
+                            if i<8:
+                                led_DEV002G006[i].config(image=localimage42)
+                            else:
+                                led_DEV002G006[i].config(image=localimage43)
+                        else:
+                            if i<8:
+                                led_DEV002G006[i].config(image=localimage40)
+                            else:
+                                led_DEV002G006[i].config(image=localimage41)
+                else:
+                    for i in range (val_conf_min[6], ammount_DEV002G006):
+                            if i<8:
+                                led_DEV002G006[i].config(image=localimage40)
+                            else:
+                                led_DEV002G006[i].config(image=localimage41)
+            #------------------------------------------------------------------------------
+            # UPDATE DEV002G007 (VDC)
+            #------------------------------------------------------------------------------
+            if REGION:
+                #--------------------------------------------------------------------------
+                # VALUE VALID OR SIMULATION ON
+                #--------------------------------------------------------------------------
+                if btn_states_SW[3] == False:  # LIVE
+                    seven_seg_DEV002G007 = int(aldl_battery_voltage)
+                else:
+                    seven_seg_DEV002G007 = val_cnt_sim[7]
+                val_DEV002G007 = seven_seg_DEV002G007/ammount_DEV002G007
+                #-------------------------------------------------------------------------
+                # CONVERT VALUE FOR xx LEDS
+                #-------------------------------------------------------------------------
+                perc_DEV002G007 = int (val_DEV002G007 - val_min[7]) * (ammount_DEV002G007 - val_conf_min[7]) / (ammount_DEV002G007 - val_conf_min[7]) + val_conf_min[7]
+                #-------------------------------------------------------------------------
+                # DISPLAY THE LEDs
+                #-------------------------------------------------------------------------
+                if btn_states_FNKT[3] == True:
+                    for i in range (val_conf_min[7], ammount_DEV002G007):
                         if perc_DEV002G007 >= i+1:
                             if i==0:
                                 led_DEV002G007[i].config(image=localimage32)
@@ -4969,7 +4757,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G007[i].config(image=localimage40)
                 else:
-                    for i in range (conv_min_DEV002G007, ammount_DEV002G007):
+                    for i in range (val_conf_min[7], ammount_DEV002G007):
                             if i==0:
                                 led_DEV002G007[i].config(image=localimage30)
                             elif i==1:
@@ -4977,43 +4765,26 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G007[i].config(image=localimage40)
             #------------------------------------------------------------------------------
-            # UPDATE DEV002G008 (AUX)
+            # UPDATE DEV002G008 (AMP)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # SETUP
-                #--------------------------------------------------------------------------
-                min_DEV002G008 = 0
-                max_DEV002G008 = 100
-                conv_min_DEV002G008 = 0
-                conv_max_DEV002G008 = 5
-                cnt_DEV002G008 = 9 #HIGHER NUMBER FASTER SIMULATION
-                #--------------------------------------------------------------------------
-                # SIMULATION
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    count_ctr_SIM_DEV002G008 += cnt_DEV002G008 if count_SIM_DEV002G008 else -cnt_DEV002G008
-                    if count_ctr_SIM_DEV002G008 > max_DEV002G008:
-                        count_SIM_DEV002G008, count_ctr_SIM_DEV002G008 = False, count_ctr_SIM_DEV002G008 -cnt_DEV002G008
-                    elif count_ctr_SIM_DEV002G008 < min_DEV002G008:
-                        count_SIM_DEV002G008, count_ctr_SIM_DEV002G008 = True, count_ctr_SIM_DEV002G008 +cnt_DEV002G008
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV002G008 = int(aldl_throttle_pos_v)
+                    seven_seg_DEV002G008 = int(aldl_fuel_pump_voltage)
                 else:
-                    seven_seg_DEV002G008 = count_ctr_SIM_DEV002G008
-                val_DEV002G008 = seven_seg_DEV002G008/conv_max_DEV002G008
+                    seven_seg_DEV002G008 = val_cnt_sim[8]
+                val_DEV002G008 = seven_seg_DEV002G008/ammount_DEV002G008
                 #-------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #-------------------------------------------------------------------------
-                perc_DEV002G008 = int (val_DEV002G008 - min_DEV002G008) * (conv_max_DEV002G008 - conv_min_DEV002G008) / (conv_max_DEV002G008 - conv_min_DEV002G008) + conv_min_DEV002G008
+                perc_DEV002G008 = int (val_DEV002G008 - val_min[8]) * (ammount_DEV002G008 - val_conf_min[8]) / (ammount_DEV002G008 - val_conf_min[8]) + val_conf_min[8]
                 #-------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #-------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (conv_min_DEV002G008, ammount_DEV002G008):
+                    for i in range (val_conf_min[8], ammount_DEV002G008):
                         if perc_DEV002G008 >= i+1:
                             if i==0:
                                 led_DEV002G008[i].config(image=localimage32)
@@ -5029,13 +4800,56 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G008[i].config(image=localimage40)
                 else:
-                    for i in range (conv_min_DEV002G008, ammount_DEV002G008):
+                    for i in range (val_conf_min[8], ammount_DEV002G008):
                             if i==0:
                                 led_DEV002G008[i].config(image=localimage30)
                             elif i==1:
                                 led_DEV002G008[i].config(image=localimage34)
                             else:
                                 led_DEV002G008[i].config(image=localimage40)
+            #------------------------------------------------------------------------------
+            # UPDATE DEV002G009 (AUX)
+            #------------------------------------------------------------------------------
+            if REGION:
+                #--------------------------------------------------------------------------
+                # VALUE VALID OR SIMULATION ON
+                #--------------------------------------------------------------------------
+                if btn_states_SW[3] == False:  # LIVE
+                    seven_seg_DEV002G009 = int(aldl_throttle_pos_v)
+                else:
+                    seven_seg_DEV002G009 = val_cnt_sim[9]
+                val_DEV002G009 = seven_seg_DEV002G009/ammount_DEV002G009
+                #-------------------------------------------------------------------------
+                # CONVERT VALUE FOR xx LEDS
+                #-------------------------------------------------------------------------
+                perc_DEV002G009 = int (val_DEV002G009 - val_min[9]) * (ammount_DEV002G009 - val_conf_min[9]) / (ammount_DEV002G009 - val_conf_min[9]) + val_conf_min[9]
+                #-------------------------------------------------------------------------
+                # DISPLAY THE LEDs
+                #-------------------------------------------------------------------------            
+                if btn_states_FNKT[3] == True:
+                    for i in range (val_conf_min[9], ammount_DEV002G009):
+                        if perc_DEV002G009 >= i+1:
+                            if i==0:
+                                led_DEV002G009[i].config(image=localimage32)
+                            elif i==1:
+                                led_DEV002G009[i].config(image=localimage44)
+                            else:
+                                led_DEV002G009[i].config(image=localimage42)
+                        else:
+                            if i==0:
+                                led_DEV002G009[i].config(image=localimage30)
+                            elif i==1:
+                                led_DEV002G009[i].config(image=localimage34)
+                            else:
+                                led_DEV002G009[i].config(image=localimage40)
+                else:
+                    for i in range (val_conf_min[9], ammount_DEV002G009):
+                            if i==0:
+                                led_DEV002G009[i].config(image=localimage30)
+                            elif i==1:
+                                led_DEV002G009[i].config(image=localimage34)
+                            else:
+                                led_DEV002G009[i].config(image=localimage40)
             #------------------------------------------------------------------------------
             # UPDATE DEV002 INFORMATION CENTER
             #------------------------------------------------------------------------------
@@ -5186,15 +5000,15 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[7].config(text=update_duration)
                     else:
                         DG02_values = {
-                            "pb00": seven_seg_DEV002G000,
-                            "pb01": seven_seg_DEV002G001,
-                            "pb02": seven_seg_DEV002G002,
-                            "pb03": seven_seg_DEV002G003,
-                            "pb04": seven_seg_DEV002G004,
-                            "pb05": seven_seg_DEV002G005,
-                            "pb06": seven_seg_DEV002G006,
-                            "pb07": seven_seg_DEV002G007,
-                            "pb08": seven_seg_DEV002G008
+                            "pb00": seven_seg_DEV002G001,
+                            "pb01": seven_seg_DEV002G002,
+                            "pb02": seven_seg_DEV002G003,
+                            "pb03": seven_seg_DEV002G004,
+                            "pb04": seven_seg_DEV002G005,
+                            "pb05": seven_seg_DEV002G006,
+                            "pb06": seven_seg_DEV002G007,
+                            "pb07": seven_seg_DEV002G008,
+                            "pb08": seven_seg_DEV002G009
                         }
                         # todo check the label should be progno label
                         #if btn_states_PB in DG02_values:
@@ -5207,7 +5021,7 @@ class P01_DASH(tk.Frame):
                 label_7SEG001.config(text=str(seven_seg_speed).zfill(3))                
                 label_7SEG003.config(text=str(seven_seg_speed).zfill(6))
             elif device == device_txt[2]:
-                label_7SEG001.config(text=str(seven_seg_DEV002GMASTER).zfill(3), anchor="nw")
+                label_7SEG001.config(text=str(seven_seg_DEV002G000).zfill(3), anchor="nw")
             elif device == device_txt[31]:
                 label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")                
         #----------------------------------------------------------------------------------
