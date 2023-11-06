@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
-checkinstall = False #AUTO INSTALL LIBS
 version = "V2.0.1"
-last_change = "2023-11-05-1922"
+last_change = "2023-11-06-0650"
+#--------------------------------------------------------------------------------------
+# CHECK IF INSTALLATION WAS STILL DONE
+#--------------------------------------------------------------------------------------
+if REGION:
+    import os
+    import pickle
+    folder = os.path.dirname(os.path.abspath(__file__))
+    datadir = os.path.join(folder,'data')
+    try:
+        with open(os.path.join(datadir, 'install_conf.pickle'), 'rb') as f:
+            install_done = pickle.load(f)
+    except FileNotFoundError:
+        install_done = False
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -284,36 +296,44 @@ if REGION:
     # IMPORTS
     #--------------------------------------------------------------------------------------
     if REGION:
-        import importlib
-        import subprocess
-        required_packages = [
-            'sys', 'multiprocessing', 'os', 'time', 'math', 'string', 'socket',
-            'websocket', 'websocket-client', 'python-vlc',
-            'pyserial', 'pynmea2', 'pydub', 'Pillow', 'pyaudio', 'psutil',
-            'simpleaudio', 'pickle', 'posixpath', 'random', 'serial', 'platform', 
-            'shutil', 'threading',
-            'board', 'busio'
-        ]
-        imp_mod = {}
-        for package in required_packages:
-            try:
-                imp_mod[package] = importlib.import_module(package)
-                if debug:
-                    print(f'Successfully imported {package}')
-            except ImportError:
-                if debug:
-                    print(f'Failed to import {package}')
-                pass    
-        if checkinstall:
-            # Function to check and install packages
+        #----------------------------------------------------------------------------------
+        # STANDART IMPORTS
+        #----------------------------------------------------------------------------------
+        if REGION:
+            import importlib
+            import subprocess
+            required_packages = [
+                'sys', 'multiprocessing', 'os', 'time', 'math', 'string', 'socket',
+                'websocket', 'websocket-client', 'python-vlc',
+                'pyserial', 'pynmea2', 'pydub', 'Pillow', 'pyaudio', 'psutil',
+                'simpleaudio', 'pickle', 'posixpath', 'random', 'serial', 'platform', 
+                'shutil', 'threading', 'SpeechRecognition',
+                'board', 'busio'
+            ]
+            imp_mod = {}
+            for package in required_packages:
+                try:
+                    imp_mod[package] = importlib.import_module(package)
+                    if debug:
+                        print(f'Successfully imported {package}')
+                except ImportError:
+                    if debug:
+                        print(f'Failed to import {package}')
+                    pass
+        #----------------------------------------------------------------------------------
+        # CHECK AND INSTALL IMPORTS
+        #----------------------------------------------------------------------------------            
+        if not install_done:
             def install_missing_packages(packages):
                 for package in packages:
                     try:
                         imp_mod[package] = importlib.import_module(package)
+                        install_done = True
+                        with open(os.path.join(datadir, 'install_conf.pickle'), 'wb') as f:
+                            install_done = pickle.dump(install_done, f)
                     except ImportError:
                         print(f"{package} is not installed. Installing...")
                         subprocess.call(['pip3', 'install', package])
-
             if __name__ == '__main__':
                 install_missing_packages(required_packages)
         #----------------------------------------------------------------------------------
@@ -352,14 +372,14 @@ if REGION:
         #----------------------------------------------------------------------------------
         # ON WINDOWS
         #----------------------------------------------------------------------------------
-        if REGION:               
+        if REGION:
             if SYSTEM == "win32" or SYSTEM == "win64":
                 import _fake_GPIO as GPIO
                 import serial.tools.list_ports
         #----------------------------------------------------------------------------------
         # ON LINUX
         #----------------------------------------------------------------------------------        
-        if REGION:  
+        if REGION:
             if SYSTEM == "linux":
                 #--------------------------------------------------------------------------
                 # I2C INTERFACE
@@ -382,8 +402,6 @@ if REGION:
         # PATHS AND EXTERNAL FILES
         #----------------------------------------------------------------------------------
         if REGION:
-            folder = imp_mod['os'].path.dirname(imp_mod['os'].path.abspath(__file__))
-            datadir = imp_mod['os'].path.join(folder,'data')
             soundfolder = None
             subfolders_count = None
             subfolders_list = None
@@ -2828,94 +2846,73 @@ class P01_DASH(tk.Frame):
         # CREATE GAUGES
         #----------------------------------------------------------------------------------        
         if REGION:
-            #----------------------------------------------------------------------------------
+            #------------------------------------------------------------------------------
             # DEV001 GAUGES
-            #----------------------------------------------------------------------------------
+            #------------------------------------------------------------------------------
             if device == device_txt[1]:
-                #------------------------------------------------------------------------------
+                #--------------------------------------------------------------------------
                 # DEV001G000 (SPEED)
-                #------------------------------------------------------------------------------
+                #--------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV001G000
-                    global led_gauge_DEV001SPEED
-                    global ammount_SPEED
+                    global led_DEV001G000, ammount_DEV001G000
                     led_DEV001G000 = []
-                    if theme in theme_txt[:3]: # THEME 0 1 2
-                        x_pos_SPEED = 585
-                        y_pos_SPEED = 103
-                        x_pos_SPEED_next = +31
-                        width_SPEED = 30
-                        height_SPEED = 30
-                        ammount_SPEED = 21
-                    elif theme in theme_txt[3:9]: # THEME 3 to 8
-                        x_pos_SPEED = 95
-                        y_pos_SPEED = 8
-                        x_pos_SPEED_next = +84
-                        width_SPEED = 80
-                        height_SPEED = 40
-                        ammount_SPEED = 14
-                    elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_pos_SPEED = 554
-                        y_pos_SPEED = 15
-                        x_pos_SPEED_next = +29
-                        width_SPEED = 25
-                        height_SPEED = 77
-                        ammount_SPEED = 20
-
-                    for i in range(0, ammount_SPEED):
-                        led_gauge_DEV001SPEED = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_DEV001SPEED.place(x=x_pos_SPEED, y=y_pos_SPEED, width=width_SPEED, height=height_SPEED)
-                        x_pos_SPEED += x_pos_SPEED_next
-                        led_DEV001G000.append(led_gauge_DEV001SPEED)                     
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 585
+                        y_pos = 103
+                        x_pos_nxt = 31
+                        width = 30
+                        height = 30
+                        ammount_DEV001G000 = 21
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 95
+                        y_pos = 8
+                        x_pos_nxt = 84
+                        width = 80
+                        height = 40
+                        ammount_DEV001G000 = 14
+                    led_DEV001G000 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV001G000)                     
+                #--------------------------------------------------------------------------
+                # DEV001G001 (SIGNAL)
+                #--------------------------------------------------------------------------
+                if REGION:
+                    global led_DEV001G001, ammount_DEV001G001
+                    led_DEV001G001 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 10
+                        y_pos = 442
+                        x_pos_nxt = 31
+                        width = 30
+                        height = 30
+                        ammount_DEV001G001 = 16
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 5
+                        y_pos = 465
+                        x_pos_nxt = 20
+                        width = 20
+                        height = 77
+                        ammount_DEV001G001 = 20
+                    led_DEV001G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV001G001)
                 #------------------------------------------------------------------------------
-                # DEV001G004 (SIGNAL)
+                # DEV001G002 (TUNING)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV001G004
-                    global led_gauge_DEV001SIGNAL
-                    global ammount_SIGNAL
-                    led_DEV001G004 = []
-                    if theme in theme_txt[:3]: # THEME 0 1 2
-                        x_pos_SIGNAL = 10
-                        y_pos_SIGNAL = 442
-                        x_pos_SIGNAL_next = +31
-                        width_SIGNAL = 30
-                        height_SIGNAL = 30
-                        ammount_SIGNAL = 16
-                    elif theme in theme_txt[3:9]: # THEME 3 to 8
-                        x_pos_SIGNAL = 5
-                        y_pos_SIGNAL = 465
-                        x_pos_SIGNAL_next = +20
-                        width_SIGNAL = 20
-                        height_SIGNAL = 77
-                        ammount_SIGNAL = 20
-                    elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_pos_SIGNAL = 5
-                        y_pos_SIGNAL = 465
-                        x_pos_SIGNAL_next = +32
-                        width_SIGNAL = 20
-                        height_SIGNAL = 77
-                        ammount_SIGNAL = 20
-
-                    for i in range(0, ammount_SIGNAL):
-                        led_gauge_DEV001SIGNAL = tk.Label(self, **btn_style_imgbtn)
-                        led_gauge_DEV001SIGNAL.place(x=x_pos_SIGNAL, y=y_pos_SIGNAL, width=width_SIGNAL, height=height_SIGNAL)
-                        x_pos_SIGNAL += x_pos_SIGNAL_next
-                        led_DEV001G004.append(led_gauge_DEV001SIGNAL)
-                #------------------------------------------------------------------------------
-                # DEV001G005 (TUNING)
-                #------------------------------------------------------------------------------
-                if REGION:
-                    global led_DEV001G005
-                    global led_gauge_DEV001TUNING
-                    led_DEV001G005 = []
-                    x_pos_TUNING = 5
-                    if theme in theme_txt[3:9]: # THEME 3 to 8
-                        for i in range(0, 20):
-                            led_gauge_DEV001TUNING = tk.Label(self, **btn_style_imgbtn)
-                            led_gauge_DEV001TUNING.place(x=x_pos_TUNING, y=640, width=20, height=77)
-                            x_pos_TUNING += +20
-                            led_DEV001G005.append(led_gauge_DEV001TUNING)
+                    global led_DEV001G002, ammount_DEV001G002
+                    led_DEV001G002 = []
+                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                        x_pos = 5
+                        y_pos = 640
+                        x_pos_nxt = 31
+                        width = 30
+                        height = 30
+                        ammount_DEV001G002 = 16
+                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        x_pos = 5
+                        y_pos = 640
+                        x_pos_nxt = 20
+                        width = 20
+                        height = 77
+                        ammount_DEV001G002 = 20
+                    led_DEV001G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV001G002)
                 #------------------------------------------------------------------------------
                 # VOICEBOX BUTTONS (PILOT S01 S02 OTTO = 8/3) / (S03 S04 S05 S06 MAX =10/6)
                 #------------------------------------------------------------------------------ 
@@ -4091,6 +4088,22 @@ class P01_DASH(tk.Frame):
         # DEV001 GAUGES
         #----------------------------------------------------------------------------------
         if device == device_txt[1]:
+            #               #00  #01  #02
+            val_min      = [  0,   0,   0]
+            val_max      = [310, 100, 200]
+            val_sim      = [ 5,  10,  14] #HIGHER NUMBER FASTER SIMULATION
+            val_conf_min = [  0,   0,   0]
+            #------------------------------------------------------------------------------
+            # SIMULATION
+            #------------------------------------------------------------------------------            
+            if REGION:
+                if btn_states_SW[3] == True:
+                    for i in range(3):
+                        val_cnt_sim[i] += val_sim[i] if val_cnt_sim_updn[i] else -val_sim[i]
+                        if val_cnt_sim[i] > val_max[i]:
+                            val_cnt_sim_updn[i], val_cnt_sim[i] = False, val_cnt_sim[i] -val_sim[i]
+                        elif val_cnt_sim[i] < val_min[i]:
+                            val_cnt_sim_updn[i], val_cnt_sim[i] = True, val_cnt_sim[i] +val_sim[i]
             #------------------------------------------------------------------------------
             # UPDATE GPS DATA AND WRITE SPEED DATA
             #------------------------------------------------------------------------------                      
@@ -4102,24 +4115,10 @@ class P01_DASH(tk.Frame):
                     if gps_port is not None:                    
                         read.gps_data()
                 #--------------------------------------------------------------------------
-                # SIMULATE VARIABLE
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    if count_SIM_DEV001G000:
-                        count_ctr_SIM_DEV001G000 += 5
-                        if count_ctr_SIM_DEV001G000 > 310:
-                            count_SIM_DEV001G000 = False
-                            count_ctr_SIM_DEV001G000 -= 2
-                    else:
-                        count_ctr_SIM_DEV001G000 -= 5
-                        if count_ctr_SIM_DEV001G000 < 0:
-                            count_SIM_DEV001G000 = True
-                            count_ctr_SIM_DEV001G000 += 2
-                #--------------------------------------------------------------------------
                 # WRITE SPEED VARIABLE TO 7SEG VARIABLE
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3]:
-                    seven_seg_speed = count_ctr_SIM_DEV001G000
+                    seven_seg_speed = val_cnt_sim[0]
                 elif btn_states_SW[0] and not btn_states_SW[1]:
                     seven_seg_speed = aldl_vehicle_speed_mph
                 elif not btn_states_SW[0] and not btn_states_SW[1]:
@@ -4166,7 +4165,7 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # DISPLAY THE 14 LEDs
                     #----------------------------------------------------------------------            
-                    for i in range (0, ammount_SPEED):
+                    for i in range (val_conf_min[0], ammount_DEV001G000):
                         if val_DEV001G000 >= i:
                             if i < 7:
                                 led_DEV001G000[i].config(image=localimage17)
@@ -4185,7 +4184,7 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # ALL 14 LEDs OFF FOR FASTER CYCLE TIME
                     #----------------------------------------------------------------------
-                    for i in range (0, ammount_SPEED):
+                    for i in range (val_conf_min[0], ammount_DEV001G000):
                         if i < 7:
                             led_DEV001G000[i].config(image=localimage12)
                         elif i < 8:
@@ -4193,52 +4192,61 @@ class P01_DASH(tk.Frame):
                         else:
                             led_DEV001G000[i].config(image=localimage10)
             #------------------------------------------------------------------------------
-            # UPDATE DEV001G004 (SIGNAL)
+            # UPDATE DEV001G001 (SIGNAL)
             #------------------------------------------------------------------------------
             if REGION:
-                if btn_states_FNKT[3] == True:
-                    #----------------------------------------------------------------------
-                    # CALCULATE 0-300 TO 20 LEDs
-                    #----------------------------------------------------------------------
-                    val_DEV001G004 = speed_int/10 #todo new variable
-                    #----------------------------------------------------------------------
-                    # DISPLAY THE 20 LEDs
-                    #----------------------------------------------------------------------            
-                    for i in range (0, ammount_SIGNAL):
-                        if val_DEV001G004 >= i:
-                            led_DEV001G004[i].config(image=localimage13)
-                        else:
-                            led_DEV001G004[i].config(image=localimage14)
+                #--------------------------------------------------------------------------
+                # VALUE VALID OR SIMULATION ON
+                #--------------------------------------------------------------------------
+                if btn_states_SW[3] == False:  # LIVE
+                    seven_seg_DEV001G001 = speed_int/10
                 else:
-                    #----------------------------------------------------------------------
-                    # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
-                    #----------------------------------------------------------------------
-                    for i in range (0, 20):
-                        led_DEV001G004[i].config(image=localimage14)
+                    seven_seg_DEV001G001 = val_cnt_sim[1]
+                val_DEV001G001 = seven_seg_DEV001G001/ammount_DEV001G001
+                #--------------------------------------------------------------------------
+                # CONVERT VALUE FOR xx LEDS
+                #--------------------------------------------------------------------------
+                perc_DEV001G001 = int (val_DEV001G001 - val_min[1]) * (ammount_DEV001G001 - val_conf_min[1]) / (ammount_DEV001G001 - val_conf_min[1]) + val_conf_min[1]
+                #--------------------------------------------------------------------------
+                # DISPLAY THE LEDs
+                #--------------------------------------------------------------------------            
+                if btn_states_FNKT[3] == True:
+                    for i in range (val_conf_min[1], ammount_DEV001G001):
+                        if perc_DEV001G001 >= i+1:
+                            led_DEV001G001[i].config(image=localimage13)
+                        else:
+                            led_DEV001G001[i].config(image=localimage14)
+                else:
+                    for i in range (val_conf_min[1], ammount_DEV001G001):
+                            led_DEV001G001[i].config(image=localimage14)                
             #------------------------------------------------------------------------------
-            # UPDATE DEV001G005 (TUNING)
+            # UPDATE DEV001G002 (TUNING)
             #------------------------------------------------------------------------------
             if REGION:
-                if theme in theme_txt[3:9]: # THEME 3 to 8
-                    if btn_states_FNKT[3] == True:
-                        #----------------------------------------------------------------------
-                        # CALCULATE 0-300 TO 20 LEDs
-                        #----------------------------------------------------------------------
-                        val_DEV001G005 = speed_int/15 #todo new variable
-                        #----------------------------------------------------------------------
-                        # DISPLAY THE 20 LEDs
-                        #----------------------------------------------------------------------            
-                        for i in range (0, 20):
-                            if val_DEV001G005 >= i:
-                                led_DEV001G005[i].config(image=localimage13)
-                            else:
-                                led_DEV001G005[i].config(image=localimage14)
-                    else:
-                        #----------------------------------------------------------------------
-                        # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
-                        #----------------------------------------------------------------------
-                        for i in range (0, 20):
-                            led_DEV001G005[i].config(image=localimage14)
+                #--------------------------------------------------------------------------
+                # VALUE VALID OR SIMULATION ON
+                #--------------------------------------------------------------------------
+                if btn_states_SW[3] == False:  # LIVE
+                    seven_seg_DEV001G002 = speed_int/15
+                else:
+                    seven_seg_DEV001G002 = val_cnt_sim[2]
+                val_DEV001G002 = seven_seg_DEV001G002/ammount_DEV001G002
+                #--------------------------------------------------------------------------
+                # CONVERT VALUE FOR xx LEDS
+                #--------------------------------------------------------------------------
+                perc_DEV001G002 = int (val_DEV001G002 - val_min[2]) * (ammount_DEV001G002 - val_conf_min[2]) / (ammount_DEV001G002 - val_conf_min[2]) + val_conf_min[2]
+                #--------------------------------------------------------------------------
+                # DISPLAY THE LEDs
+                #--------------------------------------------------------------------------            
+                if btn_states_FNKT[3] == True:
+                    for i in range (val_conf_min[1], ammount_DEV001G002):
+                        if perc_DEV001G002 >= i+1:
+                            led_DEV001G002[i].config(image=localimage13)
+                        else:
+                            led_DEV001G002[i].config(image=localimage14)
+                else:
+                    for i in range (val_conf_min[1], ammount_DEV001G002):
+                            led_DEV001G002[i].config(image=localimage14)
             #------------------------------------------------------------------------------
             # DEV001VBS34 (VOICEBOX)
             #------------------------------------------------------------------------------
