@@ -2514,18 +2514,20 @@ class P01_DASH(tk.Frame):
                         w_btn_pb = [105, 105, 105, 105, 105]
                         h_btn_pb = [87, 87, 87, 87, 87]
                 elif device == device_txt[2]:
-                    amount_PB = 12
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                        amount_PB = 12
                         x_btn_pb = [95, 800, 95, 800, 95, 800, 1365, 1365, 1365, 1365, 1365, 1365, 2200]
                         y_btn_pb = [380, 380, 480, 480, 580, 580, 21, 133, 246, 380, 490, 600, 600]
                         w_btn_pb = [124, 124, 124, 124, 124, 124, 124, 124, 124, 124, 124, 124, 124]
                         h_btn_pb = [47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47]
                     if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        amount_PB = 13
                         x_btn_pb = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
                         y_btn_pb = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
                         w_btn_pb = [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
                         h_btn_pb = [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
                     elif theme in [theme_txt[15], theme_txt[16]]:
+                        amount_PB = 12
                         x_btn_pb = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
                         y_btn_pb = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
                         w_btn_pb = [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
@@ -2834,9 +2836,9 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # CREATE GAUGES FUNCTION
         #----------------------------------------------------------------------------------
-        def create_gauges(self, x_pos, y_pos, x_pos_next, width, height, ammount):
+        def create_gauges(self, x_pos, y_pos, x_pos_next, width, height, quantity):
             led = []
-            for i in range(ammount):
+            for i in range(quantity):
                 val = tk.Label(self, **btn_style_imgbtn)
                 val.place(x=x_pos, y=y_pos, width=width, height=height)
                 x_pos += x_pos_next
@@ -2846,10 +2848,12 @@ class P01_DASH(tk.Frame):
         # CREATE GAUGES
         #----------------------------------------------------------------------------------        
         if REGION:
+            global quantity
             #------------------------------------------------------------------------------
             # DEV001 GAUGES
             #------------------------------------------------------------------------------
             if device == device_txt[1]:
+                quant = [0,0,0,0,0,0,0,0,0,0]
                 #--------------------------------------------------------------------------
                 # DEV001G000 (SPEED)
                 #--------------------------------------------------------------------------
@@ -2876,7 +2880,6 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if REGION:
                     global led_DEV001G001, ammount_DEV001G001
-                    led_DEV001G001 = []
                     if theme in theme_txt[:3]:  # THEME 0 1 2
                         x_pos = 10
                         y_pos = 442
@@ -2897,7 +2900,6 @@ class P01_DASH(tk.Frame):
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV001G002, ammount_DEV001G002
-                    led_DEV001G002 = []
                     if theme in theme_txt[:3]:  # THEME 0 1 2
                         x_pos = 5
                         y_pos = 640
@@ -3059,8 +3061,22 @@ class P01_DASH(tk.Frame):
             # DEV002 GAUGES
             #----------------------------------------------------------------------------------
             if device == device_txt[2]:
+                #          #0   #1   #2   #3   #4   #5   #6
+                x_pos01  = [5, 108, 815, 108, 815, 108, 815]
+                y_pos01  = [5, 440, 440, 540, 540, 640, 640]
+                x_posn01 = [5,  29,  29,  29,  29,  29,  29]
+                width01  = [5,  29,  29,  29,  29,  29,  29]
+                height01 = [5,  22,  22,  22,  22,  22,  22]
+                quant01  = [5,  12,  12,  12,  12,  12,  12]
+                x_pos02  = [5,   3, 696,   3, 696,   3, 696]
+                y_pos02  = [5, 459, 459, 568, 568, 676, 676]
+                x_posn02 = [5,  84,  84,  84,  84,  84,  84]                
+                width02  = [5,  80,  80,  80,  80,  80,  80]
+                height02 = [5,  40,  40,  40,  40,  40,  40]
+                quant02  = [5,   7,   7,   7,   7,   7,   7]                
+                quantity = [0,   0,   0,   0,   0,   0,   0]               
                 #------------------------------------------------------------------------------
-                # DEV002GMASTER (RPM)
+                # DEV002GMASTER (RPM)   #todo
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002G000, ammount_DEV002G000
@@ -3086,133 +3102,133 @@ class P01_DASH(tk.Frame):
                         x_pos_RPM += x_pos_RPM_next
                         led_DEV002G000.append(led_gauge_U02MASTER)
                 #------------------------------------------------------------------------------
-                # DEV002G000 (INLET TEMP)
+                # DEV002G001 (INLET TEMP)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G001, ammount_DEV002G001
-                    led_DEV002G001 = []
+                    global led_DEV002G001
                     if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 108
-                        y_pos = 440
-                        x_pos_nxt = 29
-                        width = 29
-                        height = 22
-                        ammount_DEV002G001 = 12
+                        x_pos = x_pos01[1]
+                        y_pos = y_pos01[1]
+                        x_pos_nxt = x_posn01[1]
+                        width = width01[1]
+                        height = height01[1]
+                        quant = quant01[1]
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 3
-                        y_pos = 459
-                        x_pos_nxt = 84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G001 = 7
-                    led_DEV002G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G001)
+                        x_pos = x_pos02[1]
+                        y_pos = y_pos02[1]
+                        x_pos_nxt = x_posn02[1]
+                        width = width02[1]
+                        height = height02[1]
+                        quant = quant02[1]
+                    quantity[1] = quant
+                    led_DEV002G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
                 #------------------------------------------------------------------------------
-                # DEV002G001 (OIL TEMP)
+                # DEV002G002 (OIL TEMP)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G002, val_DEV002G002, ammount_DEV002G002
-                    led_DEV002G002 = []
+                    global led_DEV002G002
                     if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 815
-                        y_pos = 440
-                        x_pos_nxt = +29
-                        width = 29
-                        height = 22
-                        ammount_DEV002G002 = 12
+                        x_pos = x_pos01[2]
+                        y_pos = y_pos01[2]
+                        x_pos_nxt = x_posn01[2]
+                        width = width01[2]
+                        height = height01[2]
+                        quant = quant01[2]
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 696
-                        y_pos = 459
-                        x_pos_nxt = +84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G002 = 7
-                    led_DEV002G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G002)
+                        x_pos = x_pos02[2]
+                        y_pos = y_pos02[2]
+                        x_pos_nxt = x_posn02[2]
+                        width = width02[2]
+                        height = height02[2]
+                        quant = quant02[2]
+                    quantity[2] = quant
+                    led_DEV002G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
                 #------------------------------------------------------------------------------
-                # DEV002G002 (EGT TEMP)
+                # DEV002G003 (EGT TEMP)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G003, val_DEV002G003, ammount_DEV002G003
-                    led_DEV002G003 = []
+                    global led_DEV002G003
                     if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 108
-                        y_pos = 540
-                        x_pos_nxt = +29
-                        width = 29
-                        height = 22
-                        ammount_DEV002G003 = 12
+                        x_pos = x_pos01[3]
+                        y_pos = y_pos01[3]
+                        x_pos_nxt = x_posn01[3]
+                        width = width01[3]
+                        height = height01[3]
+                        quant = quant01[3]
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 3
-                        y_pos = 568
-                        x_pos_nxt = +84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G003 = 7
-                    led_DEV002G003 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G003)
+                        x_pos = x_pos02[3]
+                        y_pos = y_pos02[3]
+                        x_pos_nxt = x_posn02[3]
+                        width = width02[3]
+                        height = height02[3]
+                        quant = quant02[3]
+                    quantity[3] = quant
+                    led_DEV002G003 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
                 #------------------------------------------------------------------------------
-                # DEV002G003 (OIL PREASSURE)
+                # DEV002G004 (OIL PREASSURE)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G004, val_DEV002G004, ammount_DEV002G004
-                    led_DEV003G003 = []
+                    global led_DEV002G004
                     if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 815
-                        y_pos = 540
-                        x_pos_nxt = +29
-                        width = 29
-                        height = 22
-                        ammount_DEV002G004 = 12
+                        x_pos = x_pos01[4]
+                        y_pos = y_pos01[4]
+                        x_pos_nxt = x_posn01[4]
+                        width = width01[4]
+                        height = height01[4]
+                        quant = quant01[4]
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 696
-                        y_pos = 568
-                        x_pos_nxt = +84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G004 = 7
-                    led_DEV002G004 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G004)
+                        x_pos = x_pos02[4]
+                        y_pos = y_pos02[4]
+                        x_pos_nxt = x_posn02[4]
+                        width = width02[4]
+                        height = height02[4]
+                        quant = quant02[4]
+                    quantity[4] = quant
+                    led_DEV002G004 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
                 #------------------------------------------------------------------------------
-                # DEV002G004 (TANK CAPACITY)
+                # DEV002G005 (TANK CAPACITY)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G005, val_DEV002G005, ammount_DEV002G005
-                    led_DEV004G004 = []
+                    global led_DEV002G005
                     if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 108
-                        y_pos = 640
-                        x_pos_nxt = +29
-                        width = 29
-                        height = 22
-                        ammount_DEV002G005 = 12
+                        x_pos = x_pos01[5]
+                        y_pos = y_pos01[5]
+                        x_pos_nxt = x_posn01[5]
+                        width = width01[5]
+                        height = height01[5]
+                        quant = quant01[5]
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 3
-                        y_pos = 676
-                        x_pos_nxt = +84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G005 = 7
-                    led_DEV002G005 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G005)
+                        x_pos = x_pos02[5]
+                        y_pos = y_pos02[5]
+                        x_pos_nxt = x_posn02[5]
+                        width = width02[5]
+                        height = height02[5]
+                        quant = quant02[5]
+                    quantity[5] = quant
+                    led_DEV002G005 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
                 #------------------------------------------------------------------------------
-                # DEV002G005 (FUEL FLOW)
+                # DEV002G006 (FUEL FLOW)
                 #------------------------------------------------------------------------------
                 if REGION:
-                    global led_DEV002G006, val_DEV002G006, ammount_DEV002G006
-                    led_DEV005G005 = []
+                    global led_DEV002G006
                     if theme in theme_txt[:3]:  # THEME 0 1 2
-                        x_pos = 815
-                        y_pos = 640
-                        x_pos_nxt = +29
-                        width = 29
-                        height = 22
-                        ammount_DEV002G006 = 12
+                        x_pos = x_pos01[6]
+                        y_pos = y_pos01[6]
+                        x_pos_nxt = x_posn01[6]
+                        width = width01[6]
+                        height = height01[6]
+                        quant = quant01[6]
                     elif theme in theme_txt[3:9]:  # THEME 3 to 9
-                        x_pos = 696
-                        y_pos = 676
-                        x_pos_nxt = +84
-                        width = 80
-                        height = 40
-                        ammount_DEV002G006 = 7
-                    led_DEV002G006 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV002G006)
+                        x_pos = x_pos02[6]
+                        y_pos = y_pos02[6]
+                        x_pos_nxt = x_posn02[6]
+                        width = width02[6]
+                        height = height02[6]
+                        quant = quant02[6]
+                    quantity[6] = quant
+                    led_DEV002G006 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
                 #------------------------------------------------------------------------------
-                # DEV002G006 (VDC)
+                # DEV002G007 (VDC)
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002G007
@@ -3220,31 +3236,31 @@ class P01_DASH(tk.Frame):
                     global ammount_DEV002G007
                     led_DEV002G007 = []
                     if theme in theme_txt[:3]: # THEME 0 1 2
-                        x_pos_DEV002G006 = 1365
-                        x_pos_DEV002G006_after12 = 1785
-                        y_pos_DEV002G006 = 93
-                        x_pos_DEV002G006_next = +29
-                        width_DEV002G006 = 29
-                        height_DEV002G006 = 22
+                        x_pos_DEV002G007 = 1365
+                        x_pos_DEV002G007_after12 = 1785
+                        y_pos_DEV002G007 = 93
+                        x_pos_DEV002G007_next = +29
+                        width_DEV002G007 = 29
+                        height_DEV002G007 = 22
                         ammount_DEV002G007 = 24
                     elif theme in theme_txt[3:9]: # THEME 3 to 9
-                        x_pos_DEV002G006 = 1285
-                        y_pos_DEV002G006 = 71
-                        x_pos_DEV002G006_next = +84
-                        width_DEV002G006 = 80
-                        height_DEV002G006 = 40
+                        x_pos_DEV002G007 = 1285
+                        y_pos_DEV002G007 = 71
+                        x_pos_DEV002G007_next = +84
+                        width_DEV002G007 = 80
+                        height_DEV002G007 = 40
                         ammount_DEV002G007 = 5
                     for i in range(0, ammount_DEV002G007):
                         val_DEV002G007 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G007.place(x=x_pos_DEV002G006, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)
-                            x_pos_DEV002G006 += x_pos_DEV002G006_next
+                            val_DEV002G007.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)
+                            x_pos_DEV002G007 += x_pos_DEV002G007_next
                         elif i > 11:
-                            val_DEV002G007.place(x=x_pos_DEV002G006_after12, y=y_pos_DEV002G006, w=width_DEV002G006, h=height_DEV002G006)                    
-                            x_pos_DEV002G006_after12 += x_pos_DEV002G006_next
+                            val_DEV002G007.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)                    
+                            x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
                         led_DEV002G007.append(val_DEV002G007)
                 #------------------------------------------------------------------------------
-                # DEV002G007 (AMP)
+                # DEV002G008 (AMP)
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002G008
@@ -3252,31 +3268,31 @@ class P01_DASH(tk.Frame):
                     global ammount_DEV002G008
                     led_DEV002G008 = []
                     if theme in theme_txt[:3]: # THEME 0 1 2
-                        x_pos_DEV002G007 = 1365
-                        x_pos_DEV002G007_after12 = 1785
-                        y_pos_DEV002G007 = 203
-                        x_pos_DEV002G007_next = +29
-                        width_DEV002G007 = 29
-                        height_DEV002G007 = 22
+                        x_pos_DEV002G008 = 1365
+                        x_pos_DEV002G008_after12 = 1785
+                        y_pos_DEV002G008 = 203
+                        x_pos_DEV002G008_next = +29
+                        width_DEV002G008 = 29
+                        height_DEV002G008 = 22
                         ammount_DEV002G008 = 24
                     elif theme in theme_txt[3:9]: # THEME 3 to 9
-                        x_pos_DEV002G007 = 1285
-                        y_pos_DEV002G007 = 184
-                        x_pos_DEV002G007_next = +84
-                        width_DEV002G007 = 80
-                        height_DEV002G007 = 40
+                        x_pos_DEV002G008 = 1285
+                        y_pos_DEV002G008 = 184
+                        x_pos_DEV002G008_next = +84
+                        width_DEV002G008 = 80
+                        height_DEV002G008 = 40
                         ammount_DEV002G008 = 5
                     for i in range(0, ammount_DEV002G008):
                         val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G008.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)
-                            x_pos_DEV002G007 += x_pos_DEV002G007_next
+                            val_DEV002G008.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)
+                            x_pos_DEV002G008 += x_pos_DEV002G008_next
                         elif i > 11:
-                            val_DEV002G008.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)                    
-                            x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
+                            val_DEV002G008.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)                    
+                            x_pos_DEV002G008_after12 += x_pos_DEV002G008_next
                         led_DEV002G008.append(val_DEV002G008)
                 #------------------------------------------------------------------------------
-                # DEV002G008 (AUX)
+                # DEV002G009 (AUX)
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002G009
@@ -3284,28 +3300,28 @@ class P01_DASH(tk.Frame):
                     global ammount_DEV002G009
                     led_DEV002G009 = []
                     if theme in theme_txt[:3]: # THEME 0 1 2
-                        x_pos_DEV002G008 = 1365
-                        x_pos_DEV002G008_after12 = 1785
-                        y_pos_DEV002G008 = 313
-                        x_pos_DEV002G008_next = +29
-                        width_DEV002G008 = 29
-                        height_DEV002G008 = 22
+                        x_pos_DEV002G009 = 1365
+                        x_pos_DEV002G009_after12 = 1785
+                        y_pos_DEV002G009 = 313
+                        x_pos_DEV002G009_next = +29
+                        width_DEV002G009 = 29
+                        height_DEV002G009 = 22
                         ammount_DEV002G009 = 24
                     elif theme in theme_txt[3:9]: # THEME 3 to 9
-                        x_pos_DEV002G008 = 1285
-                        y_pos_DEV002G008 = 297
-                        x_pos_DEV002G008_next = +84
-                        width_DEV002G008 = 80
-                        height_DEV002G008 = 40
+                        x_pos_DEV002G009 = 1285
+                        y_pos_DEV002G009 = 297
+                        x_pos_DEV002G009_next = +84
+                        width_DEV002G009 = 80
+                        height_DEV002G009 = 40
                         ammount_DEV002G009 = 5
                     for i in range(0, ammount_DEV002G009):
                         val_DEV002G009 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G009.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)
-                            x_pos_DEV002G008 += x_pos_DEV002G008_next
+                            val_DEV002G009.place(x=x_pos_DEV002G009, y=y_pos_DEV002G009, w=width_DEV002G009, h=height_DEV002G009)
+                            x_pos_DEV002G009 += x_pos_DEV002G009_next
                         elif i > 11:
-                            val_DEV002G009.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)                    
-                            x_pos_DEV002G008_after12 += x_pos_DEV002G008_next
+                            val_DEV002G009.place(x=x_pos_DEV002G009_after12, y=y_pos_DEV002G009, w=width_DEV002G009, h=height_DEV002G009)                    
+                            x_pos_DEV002G009_after12 += x_pos_DEV002G009_next
                         led_DEV002G009.append(val_DEV002G009)
                 #------------------------------------------------------------------------------
                 # FUNCTION POWER BUTTONS DEVICE02 (POWER AUTO NORMAL PURSUIT)
@@ -4502,16 +4518,16 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G001 = int(aldl_mainfold_air_temp)
                 else:
                     seven_seg_DEV002G001 = val_cnt_sim[1]
-                val_DEV002G001 = seven_seg_DEV002G001/ammount_DEV002G001
+                val_DEV002G001 = seven_seg_DEV002G001/quantity[1]
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G001 = int (val_DEV002G001 - val_min[1]) * (ammount_DEV002G001 - val_conf_min[1]) / (ammount_DEV002G001 - val_conf_min[1]) + val_conf_min[1]
+                perc_DEV002G001 = int (val_DEV002G001 - val_min[1]) * (quantity[1] - val_conf_min[1]) / (quantity[1] - val_conf_min[1]) + val_conf_min[1]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[1], ammount_DEV002G001):
+                    for i in range (val_conf_min[1], quantity[1]):
                         if perc_DEV002G001 >= i+1:
                             if i<8:
                                 led_DEV002G001[i].config(image=localimage32)
@@ -4523,7 +4539,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G001[i].config(image=localimage31)
                 else:
-                    for i in range (val_conf_min[1], ammount_DEV002G001):
+                    for i in range (val_conf_min[1], quantity[1]):
                             if i<8:
                                 led_DEV002G001[i].config(image=localimage30)
                             else:
@@ -4539,16 +4555,16 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G002 = int(aldl_coolant_temp)
                 else:
                     seven_seg_DEV002G002 = val_cnt_sim[2]
-                val_DEV002G002 = seven_seg_DEV002G002/ammount_DEV002G002
+                val_DEV002G002 = seven_seg_DEV002G002/quantity[2]
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G002 = int (val_DEV002G002 - val_min[2]) * (ammount_DEV002G002 - val_conf_min[2]) / (ammount_DEV002G002 - val_conf_min[2]) + val_conf_min[2]
+                perc_DEV002G002 = int (val_DEV002G002 - val_min[2]) * (quantity[2] - val_conf_min[2]) / (quantity[2] - val_conf_min[2]) + val_conf_min[2]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[2], ammount_DEV002G002):
+                    for i in range (val_conf_min[2], quantity[2]):
                         if perc_DEV002G002 >= i+1:
                             if i<8:
                                 led_DEV002G002[i].config(image=localimage42)
@@ -4560,7 +4576,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G002[i].config(image=localimage41)
                 else:
-                    for i in range (val_conf_min[2], ammount_DEV002G002):
+                    for i in range (val_conf_min[2], quantity[2]):
                             if i<8:
                                 led_DEV002G002[i].config(image=localimage40)
                             else:
@@ -4576,16 +4592,16 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G003 = int(aldl_coolant_temp)
                 else:
                     seven_seg_DEV002G003 = val_cnt_sim[3]
-                val_DEV002G003 = seven_seg_DEV002G003/ammount_DEV002G003
+                val_DEV002G003 = seven_seg_DEV002G003/quantity[3]
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G003 = int (val_DEV002G003 - val_min[3]) * (ammount_DEV002G003 - val_conf_min[3]) / (ammount_DEV002G003 - val_conf_min[3]) + val_conf_min[3]
+                perc_DEV002G003 = int (val_DEV002G003 - val_min[3]) * (quantity[3] - val_conf_min[3]) / (quantity[3] - val_conf_min[3]) + val_conf_min[3]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[3], ammount_DEV002G003):
+                    for i in range (val_conf_min[3], quantity[3]):
                         if perc_DEV002G003 >= i+1:
                             if i<8:
                                 led_DEV002G003[i].config(image=localimage42)
@@ -4597,7 +4613,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G003[i].config(image=localimage41)
                 else:
-                    for i in range (val_conf_min[3], ammount_DEV002G003):
+                    for i in range (val_conf_min[3], quantity[3]):
                             if i<8:
                                 led_DEV002G003[i].config(image=localimage40)
                             else:
@@ -4613,16 +4629,16 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G004 = int(aldl_barometric_pressure)
                 else:
                     seven_seg_DEV002G004 = val_cnt_sim[4]
-                val_DEV002G004 = seven_seg_DEV002G004/ammount_DEV002G004
+                val_DEV002G004 = seven_seg_DEV002G004/quantity[4]
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G004 = int (val_DEV002G004 - val_min[4]) * (ammount_DEV002G004 - val_conf_min[4]) / (ammount_DEV002G004 - val_conf_min[4]) + val_conf_min[4]
+                perc_DEV002G004 = int (val_DEV002G004 - val_min[4]) * (quantity[4] - val_conf_min[4]) / (quantity[4] - val_conf_min[4]) + val_conf_min[4]
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[4], ammount_DEV002G004):
+                    for i in range (val_conf_min[4], quantity[4]):
                         if perc_DEV002G004 >= i+1:
                             if i<8:
                                 led_DEV002G004[i].config(image=localimage32)
@@ -4634,7 +4650,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G004[i].config(image=localimage31)
                 else:
-                    for i in range (val_conf_min[4], ammount_DEV002G004):
+                    for i in range (val_conf_min[4], quantity[4]):
                             if i<8:
                                 led_DEV002G004[i].config(image=localimage30)
                             else:
@@ -4666,16 +4682,16 @@ class P01_DASH(tk.Frame):
                         seven_seg_DEV002G005 = val_min[5]
                     else:
                         seven_seg_DEV002G005 = val_cnt_sim[5]
-                val_DEV002G005 = seven_seg_DEV002G005/ammount_DEV002G005
+                val_DEV002G005 = seven_seg_DEV002G005/quantity[5]
                 #--------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #--------------------------------------------------------------------------
-                perc_DEV002G005 = int (val_DEV002G005 - val_min[5]) * (ammount_DEV002G005 - val_conf_min[5]) / (ammount_DEV002G005 - val_conf_min[5]) + val_conf_min[5]
+                perc_DEV002G005 = int (val_DEV002G005 - val_min[5]) * (quantity[5] - val_conf_min[5]) / (quantity[5] - val_conf_min[5]) + val_conf_min[5]
                 #-------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[5], ammount_DEV002G005):
+                    for i in range (val_conf_min[5], quantity[5]):
                         if perc_DEV002G005 >= i+1:
                             if i<8:
                                 led_DEV002G005[i].config(image=localimage32)
@@ -4687,7 +4703,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G005[i].config(image=localimage31)
                 else:
-                    for i in range (val_conf_min[5], ammount_DEV002G005):
+                    for i in range (val_conf_min[5], quantity[5]):
                             if i<8:
                                 led_DEV002G005[i].config(image=localimage30)
                             else:
@@ -4703,16 +4719,16 @@ class P01_DASH(tk.Frame):
                     seven_seg_DEV002G006 = int(aldl_throttle_pos)
                 else:
                     seven_seg_DEV002G006 = val_cnt_sim[6]
-                val_DEV002G006 = seven_seg_DEV002G006/ammount_DEV002G006
+                val_DEV002G006 = seven_seg_DEV002G006/quantity[6]
                 #-------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
                 #-------------------------------------------------------------------------
-                perc_DEV002G006 = int (val_DEV002G006 - val_min[6]) * (ammount_DEV002G006 - val_conf_min[6]) / (ammount_DEV002G006 - val_conf_min[6]) + val_conf_min[6]
+                perc_DEV002G006 = int (val_DEV002G006 - val_min[6]) * (quantity[6] - val_conf_min[6]) / (quantity[6] - val_conf_min[6]) + val_conf_min[6]
                 #-------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #-------------------------------------------------------------------------            
                 if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[6], ammount_DEV002G006):
+                    for i in range (val_conf_min[6], quantity[6]):
                         if perc_DEV002G006 >= i+1:
                             if i<8:
                                 led_DEV002G006[i].config(image=localimage42)
@@ -4724,7 +4740,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002G006[i].config(image=localimage41)
                 else:
-                    for i in range (val_conf_min[6], ammount_DEV002G006):
+                    for i in range (val_conf_min[6], quantity[6]):
                             if i<8:
                                 led_DEV002G006[i].config(image=localimage40)
                             else:
