@@ -3106,12 +3106,12 @@ class P01_DASH(tk.Frame):
                         x_pos_RPM += x_pos_RPM_next
                         led_DEV002G000.append(led_gauge_U02MASTER)
                 #------------------------------------------------------------------------------
-                # DEV002G001-G006 (INLET TEMP)
+                # DEV002G001-G006
                 #------------------------------------------------------------------------------
                 if REGION:
                     global led_DEV002
-                    led_DEV002 = [0,1,2,3,4,5,6,7,8,9,10]
-                    for i in range (7):
+                    led_DEV002 = [0,1,2,3,4,5,6]
+                    for i in range(len(quantity)):
                         if theme in theme_txt[:3]:  # THEME 0 1 2
                             x_pos = x_pos01[i]
                             y_pos = y_pos01[i]
@@ -4364,17 +4364,18 @@ class P01_DASH(tk.Frame):
         # DEV002 GAUGES
         #----------------------------------------------------------------------------------
         if device == device_txt[2]:
-            #               #00  #01  #02  #03  #04  #05  #06  #07  #08  #09
-            val_min      = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
-            val_max      = [990, 160, 160, 160, 160,  57, 160, 600, 150, 100]
-            val_sim      = [ 20,  10,  14,   8,   2,   6,  10,   7,   8,   9] #HIGHER NUMBER FASTER SIMULATION
-            val_conf_min = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
             #------------------------------------------------------------------------------
-            # SIMULATION
-            #------------------------------------------------------------------------------            
+            # SIMULATION AND SIM-VARIABLES
+            #------------------------------------------------------------------------------
             if REGION:
+                #               #00  #01  #02  #03  #04  #05  #06  #07  #08  #09
+                val_min      = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
+                val_max      = [990, 160, 160, 160, 160,  57, 160, 600, 150, 100]
+                val_sim      = [ 20,  10,  14,   8,   2,   6,  10,   7,   8,   9] #HIGHER NUMBER FASTER SIMULATION
+                val_conf_min = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
+
                 if btn_states_SW[3] == True:
-                    for i in range(10):
+                    for i in range(len(val_sim)):
                         val_cnt_sim[i] += val_sim[i] if val_cnt_sim_updn[i] else -val_sim[i]
                         if val_cnt_sim[i] > val_max[i]:
                             val_cnt_sim_updn[i], val_cnt_sim[i] = False, val_cnt_sim[i] -val_sim[i]
@@ -4408,6 +4409,10 @@ class P01_DASH(tk.Frame):
                 else:
                     for i in range (val_conf_min[0], ammount_DEV002G000):
                         led_DEV002G000[i].config(image=localimage19[i])
+            #------------------------------------------------------------------------------
+            # VALUE VALID OR SIMULATION ON
+            #------------------------------------------------------------------------------
+
             #------------------------------------------------------------------------------
             # UPDATE DEV002G001 (INLET TEMP)
             #------------------------------------------------------------------------------
@@ -4614,7 +4619,7 @@ class P01_DASH(tk.Frame):
             #------------------------------------------------------------------------------
             if REGION:
                 #--------------------------------------------------------------------------
-                # VALUE VALID OR SIMULATION ON
+                # VALUE LIVE OR SIMULATION
                 #--------------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
                     seven_seg_DEV002G006 = int(aldl_throttle_pos)
