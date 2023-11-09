@@ -3456,9 +3456,6 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
                         if btn_states_PB in ["pb01"]:
                             lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
-                    elif theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb03", "pb04"]:                        
-                        label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                        label_7SEG002.place(x=xywh_7SEG002[0], y=xywh_7SEG002[1], width=xywh_7SEG002[2], height=xywh_7SEG002[3])
                 elif device == device_txt[2]:
                     if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb09"]:
                         for i in range(8):
@@ -3472,9 +3469,6 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[5].place(x=x_lbl_sysinfo[5], y=y_lbl_sysinfo[5], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])                
                         lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
                         lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
-                    elif theme in theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb01", "pb02", "pb03", "pb04", "pb05", "pb06", "pb07", "pb08", "pb10", "pb11", "pb12"]:
-                        label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                        label_7SEG002.place(x=1810, y=34, width=320, height=100)
         #----------------------------------------------------------------------------------
         # GAUGE 7-SEGMENT DISPLAYS
         #----------------------------------------------------------------------------------
@@ -4391,6 +4385,8 @@ class P01_DASH(tk.Frame):
                         aldl_fuel_capacity = '%.0f'% (float(a_chan0.value)*val_max[5]/32768.0) #TANKINHALT 0-57 LITER
                     except:
                         aldl_fuel_capacity = val_min[5]
+                else:
+                    aldl_fuel_capacity = val_min[5]
             
                 seg_DEV002 = [0,1,2,3,4,5,6]
                 if btn_states_SW[3] == False:  # LIVE
@@ -4710,12 +4706,19 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[2].config(text=gps_odo_imperial_0str)
                         lbls_sysinfo[3].config(text=gps_odo_metric_0str)
                         lbls_sysinfo[4].config(text=update_duration)
-                    elif btn_states_PB == "pb03":
-                        label_7SEG002.config(text=gps_odo_imperial_0str)
-                    elif btn_states_PB == "pb04":
-                        label_7SEG002.config(text=gps_odo_metric_0str)
+                    # todo like in dev002 (siehe 5 zeilen weiter)
+                    #elif btn_states_PB == "pb03":
+                    #    label_7SEG002.config(text=gps_odo_imperial_0str)
+                    #elif btn_states_PB == "pb04":
+                    #    label_7SEG002.config(text=gps_odo_metric_0str)
                 elif device == device_txt[2]:
                     if btn_states_PB != "pb09":
+                        if theme in theme_txt[0:3]:    
+                            label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+                            label_7SEG002.place(x=2175, y=515, width=245, height=100)
+                        elif theme in theme_txt[3:9]:
+                            label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+                            label_7SEG002.place(x=1810, y=34, width=320, height=100)
                         try:
                             for i in range(12):
                                 lbls_sysinfo[i].destroy()
@@ -4748,8 +4751,8 @@ class P01_DASH(tk.Frame):
                             "pb08": seven_seg_DEV002G009
                         }
                         # todo check the label should be progno label
-                        #if btn_states_PB in DG02_values:
-                        #    label_7SEG002.config(text=str(DG02_values[btn_states_PB]).zfill(4), anchor="c")
+                        if btn_states_PB in DG02_values:
+                            label_7SEG002.config(text=str(DG02_values[btn_states_PB]).zfill(4), anchor="c")
         #----------------------------------------------------------------------------------
         # UPDATE 7 SEGMENT SPEED AND TOTAL RPM PROGNO DISPLAY
         #----------------------------------------------------------------------------------
