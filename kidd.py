@@ -3087,15 +3087,15 @@ class P01_DASH(tk.Frame):
                     global led_gauge_U02MASTER          
                     led_DEV002G000 = []
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_pos_RPM = 5
-                        y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
-                        x_pos_RPM_next = +40
-                        ammount_DEV002G000 = 32
+                        x_pos_RPM = 100
+                        y_pos_RPM = [295, 270, 247, 226, 205, 186, 168, 152, 136, 122, 109, 97, 86, 76, 67, 58, 52, 47, 42, 39, 36, 35, 35, 36, 40, 43, 48, 53, 60, 69, 79, 90, 103, 115, 130]
+                        x_pos_RPM_next = +30
+                        ammount_DEV002G000 = len(y_pos_RPM)
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         x_pos_RPM = 5
                         y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
                         x_pos_RPM_next = +40
-                        ammount_DEV002G000 = 32
+                        ammount_DEV002G000 = len(y_pos_RPM)
                     elif theme in [theme_txt[15], theme_txt[16]]:
                         x_pos_RPM = 203
                         y_pos_RPM = [15]*ammount_DEV002G000
@@ -3685,8 +3685,8 @@ class P01_DASH(tk.Frame):
                 localimage15 = ledFU_img_list[11] #SPEED FURD
                 localimage16 = ledFU_img_list[11] #SPEED FURD
                 localimage17 = ledFU_img_list[11] #SPEED FURD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
+                localimage18 = ledFU_img_list[11]
+                localimage19 = ledOF_img_list[11]
                 if theme == theme_txt[0]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
@@ -4421,15 +4421,26 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
-                if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[0], ammount_DEV002G000):
-                        if perc_DEV002[0] >= i+1:
-                            led_DEV002G000[i].config(image=localimage18[i])
-                        else:
-                            led_DEV002G000[i].config(image=localimage19[i])
+                if theme in [theme_txt[0], theme_txt[1], theme_txt[2]]:
+                    if btn_states_FNKT[3] == True:
+                        for i in range (val_conf_min[0], ammount_DEV002G000):
+                            if perc_DEV002[0] >= i+1:
+                                led_DEV002G000[i].config(image=localimage18)
+                            else:
+                                led_DEV002G000[i].config(image=localimage19)
+                    else:
+                        for i in range (val_conf_min[0], ammount_DEV002G000):
+                            led_DEV002G000[i].config(image=localimage19) 
                 else:
-                    for i in range (val_conf_min[0], ammount_DEV002G000):
-                        led_DEV002G000[i].config(image=localimage19[i])            
+                    if btn_states_FNKT[3] == True:
+                        for i in range (val_conf_min[0], ammount_DEV002G000):
+                            if perc_DEV002[0] >= i+1:
+                                led_DEV002G000[i].config(image=localimage18[i])
+                            else:
+                                led_DEV002G000[i].config(image=localimage19[i])
+                    else:
+                        for i in range (val_conf_min[0], ammount_DEV002G000):
+                            led_DEV002G000[i].config(image=localimage19[i])            
             #------------------------------------------------------------------------------
             # SHOW DEV002 GAUGES 1-6
             #------------------------------------------------------------------------------
