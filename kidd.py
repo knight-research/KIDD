@@ -1731,8 +1731,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1                    
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE                  
                 elif theme in [theme_txt[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
@@ -1750,8 +1756,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                 elif theme in [theme_txt[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
@@ -1769,8 +1781,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                 elif theme in [theme_txt[3]]:
                     localimage01 = sledON_img_list[10] #MPH
                     localimage02 = sledON_img_list[9] #KPH
@@ -1789,8 +1807,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
                 elif theme in [theme_txt[4]]:
@@ -1811,8 +1835,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[5]]:
@@ -1833,8 +1863,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[6]]:
@@ -1855,8 +1891,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[7]]:
@@ -1877,8 +1919,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
                 elif theme in [theme_txt[8]]:
@@ -1899,8 +1947,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [theme_txt[9]]:
@@ -1941,8 +1995,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                 elif theme in [theme_txt[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
@@ -1960,8 +2020,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                 elif theme in [theme_txt[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
@@ -1979,8 +2045,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                 elif theme in [theme_txt[3]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
@@ -1999,10 +2071,16 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
                 elif theme in [theme_txt[4]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
@@ -2021,8 +2099,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[5]]:
@@ -2043,8 +2127,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[82] #OHC #1
-                    localimage70 = ledOF_img_list[82] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[6]]:
@@ -2065,8 +2155,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[7]]:
@@ -2087,8 +2183,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
                 elif theme in [theme_txt[8]]:
@@ -2109,8 +2211,14 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage60 = ledFU_img_list[77] #OHC #1
-                    localimage70 = ledOF_img_list[77] #OHC #1
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [theme_txt[9]]:
@@ -2653,8 +2761,8 @@ class P01_DASH(tk.Frame):
                         x_btn = [20, 220]
                         y_btn = [50, 50]
                     if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [10, 220,  10, 220,  10, 220,  10, 220,  10, 220,   10,  220,   10,  220,   10,  220,   10,  220]
-                        y_btn = [50,  50, 260, 260, 470, 470, 680, 680, 890, 890, 1100, 1100, 1310, 1310, 1520, 1520, 1730, 1730]
+                        x_btn = [10, 220,  10, 220,  10, 220,  10, 220,  10, 220,   10,  220,   10,  220,   10,  220,   10,  220,   10,  220,   10,  220,   10,  220]
+                        y_btn = [50,  50, 260, 260, 470, 470, 680, 680, 890, 890, 1100, 1100, 1280, 1280, 1490, 1490, 1700, 1700, 1910, 1910, 2120, 2120, 2330, 2330]
                     elif theme in [theme_txt[15], theme_txt[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
@@ -2680,13 +2788,29 @@ class P01_DASH(tk.Frame):
                     btn_FNKT.append(btns_FNKT)
                     btn_FNKT[i].place(x=x_btn[i], y=y_btn[i])
                     if btn_states_FNKT[i] == True:
+                        map_img =  [localimage65,localimage65,localimage65,localimage65,localimage65,localimage65,
+                                    localimage66,localimage66,
+                                    localimage61,localimage61,
+                                    localimage61,
+                                    localimage66,
+                                    localimage61,localimage61,localimage61,localimage61,localimage61,
+                                    localimage66,localimage66,localimage66,
+                                    localimage64,localimage64,localimage64,localimage64,localimage64]                        
                         if device == device_txt[8]:
-                            btn_FNKT[i].config(image=localimage60)
+                            btn_FNKT[i].config(image=map_img[i])
                         else:
                             btn_FNKT[i].config(image=localimage06)
                     else:
+                        map_img =  [localimage75,localimage75,localimage75,localimage75,localimage75,localimage75,
+                                    localimage76,localimage76,
+                                    localimage71,localimage71,
+                                    localimage71,
+                                    localimage76,
+                                    localimage71,localimage71,localimage71,localimage71,localimage71,
+                                    localimage76,localimage76,localimage76,
+                                    localimage74,localimage74,localimage74,localimage74,localimage74]
                         if device == device_txt[8]:
-                            btn_FNKT[i].config(image=localimage70)
+                            btn_FNKT[i].config(image=map_img[i])
                         else:
                             btn_FNKT[i].config(image=localimage07)
         #----------------------------------------------------------------------------------
