@@ -1036,21 +1036,35 @@ if REGION:
         # SETUP DISPLAY RESOULUTIONS AND BACKGROUND GRIDS 
         # left, width_display1, width_display2, top, height
         #----------------------------------------------------------------------------------
-        if device == device_txt[1]:
-            bggrid = [0, 1280, 800, 0, 768]
-        elif device == device_txt[2]:
-            bggrid = [0, 1280,1280, 0, 768]
-        elif device == device_txt[3]:
-            bggrid = [0, 1280,1280, 0, 768]
-        elif device == device_txt[4]:
-            bggrid = [0, 1920, 0, 0, 1200]
-        elif device == device_txt[8]:
-            bggrid = [0, 400, 0, 0, 2560]                      
-        grid_spacing = 15
-        kidd_left   =  "%s" % bggrid[0]
-        kidd_width  =  "%s" % (bggrid[1]+bggrid[2])
-        kidd_top    =  "%s" % bggrid[3]
-        kidd_height =  "%s" % bggrid[4]
+        if REGION:
+            grid_spacing = 15
+            if device == device_txt[1]:
+                dual_disp_style = "LR"
+                bggrid = [0, 1280, 800, 0, 768, 0]
+            elif device == device_txt[2]:
+                dual_disp_style = "LR"
+                bggrid = [0, 1280,1280, 0, 768, 0]
+            elif device == device_txt[3]:
+                dual_disp_style = "LR"
+                bggrid = [0, 1280,1280, 0, 768, 0]
+            elif device == device_txt[4]:
+                dual_disp_style = "NONE"
+                bggrid = [0, 1920, 0, 0, 1200, 0]
+            elif device == device_txt[8]:
+                dual_disp_style = "UD"
+                bggrid = [0, 400, 0, 0, 2560 , 0]
+            
+            kidd_left   =  "%s" % bggrid[0]
+            kidd_top    =  "%s" % bggrid[3]
+            if dual_disp_style == "LR":
+                kidd_width  =  "%s" % (bggrid[1]+bggrid[2])
+                kidd_height =  "%s" % bggrid[4]
+            elif dual_disp_style == "UD":
+                kidd_width  =  "%s" % (bggrid[1]+bggrid[2])
+                kidd_height =  "%s" % bggrid[4]
+            elif dual_disp_style == "NONE":
+                kidd_width  =  "%s" % (bggrid[1]+bggrid[2])
+                kidd_height =  "%s" % bggrid[4]
         #----------------------------------------------------------------------------------
         # SETUP STYLES
         #----------------------------------------------------------------------------------
@@ -2858,7 +2872,7 @@ class P01_DASH(tk.Frame):
                     lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
                     lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
 
-                btns_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
+                btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
                 self.function_running = False
             elif device == device_txt[31]:
                 lbls_voicecmd = []
@@ -4502,9 +4516,9 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV002[param_index][i].config(image=img1_high if i < 8 else img2_high)
                 else:
-                    for param_index, _, img1_low, img2_low, img1_high, img2_high in parameters:
+                    for param_index, img1_low, img2_low, img1_high, img2_high in parameters:
                         for i in range(val_conf_min[param_index], quantity[param_index]):
-                            led_DEV002[param_index][i].config(image=img1_low if i < 8 else img2_low)
+                            led_DEV002[param_index][i].config(image=img1_high if i < 8 else img2_high)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G007 (VDC)
             #------------------------------------------------------------------------------
@@ -5850,11 +5864,11 @@ class P04_THEMES(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="THEMES")
+            canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="THEMEs")
             canvas.create_text(20, 95, **txt_style_pagename, fill=sys_clr[9], text="DEVICE")
             canvas.create_text(20,215, **txt_style_pagename, fill=sys_clr[9], text="STYLE")
             canvas.create_text(20,335, **txt_style_pagename, fill=sys_clr[9], text="THEME")
-            canvas.create_text(20,530, **txt_style_pagename, fill=sys_clr[9], text="SYSTEM")
+            canvas.create_text(20,530, **txt_style_pagename, fill=sys_clr[9], text="SYS")
             canvas.create_text(20, 635, **txt_style_pagename, fill=sys_clr[9], text="MENU")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
