@@ -2,7 +2,7 @@
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-11-07-2009"
+last_change = "2023-11-12-1217"
 #--------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
 #--------------------------------------------------------------------------------------
@@ -1731,6 +1731,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1                    
                 elif theme in [theme_txt[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
@@ -1748,6 +1750,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                 elif theme in [theme_txt[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
@@ -1765,6 +1769,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                 elif theme in [theme_txt[3]]:
                     localimage01 = sledON_img_list[10] #MPH
                     localimage02 = sledON_img_list[9] #KPH
@@ -1783,6 +1789,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
                 elif theme in [theme_txt[4]]:
@@ -1803,6 +1811,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[5]]:
@@ -1823,6 +1833,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[6]]:
@@ -1843,6 +1855,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[7]]:
@@ -1863,6 +1877,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
                 elif theme in [theme_txt[8]]:
@@ -1883,6 +1899,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [theme_txt[9]]:
@@ -1923,6 +1941,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                 elif theme in [theme_txt[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
@@ -1940,6 +1960,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                 elif theme in [theme_txt[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
@@ -1957,6 +1979,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                 elif theme in [theme_txt[3]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
@@ -1977,6 +2001,8 @@ class P01_DASH(tk.Frame):
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                 elif theme in [theme_txt[4]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
@@ -1995,6 +2021,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[5]]:
@@ -2015,6 +2043,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[82] #OHC #1
+                    localimage70 = ledOF_img_list[82] #OHC #1
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[6]]:
@@ -2035,6 +2065,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [theme_txt[7]]:
@@ -2055,6 +2087,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
                 elif theme in [theme_txt[8]]:
@@ -2075,6 +2109,8 @@ class P01_DASH(tk.Frame):
                     localimage20 = ledOF_img_list[65] #POWER BTNS GN
                     localimage21 = ledOF_img_list[67] #POWER BTNS RD
                     localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage60 = ledFU_img_list[77] #OHC #1
+                    localimage70 = ledOF_img_list[77] #OHC #1
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [theme_txt[9]]:
@@ -2469,13 +2505,13 @@ class P01_DASH(tk.Frame):
             elif device == device_txt[8]:
                 if theme in (theme_txt[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=2, y=42)
+                    button.place(x=0, y=0)
                 elif theme in (theme_txt[3:9]):
                     button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=21)
+                    button.place(x=0, y=0)
                 elif theme in [theme_txt[15], theme_txt[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
-                    button.place(x=10, y=10)
+                    button.place(x=0, y=0)
             elif device == device_txt[31]:
                 if theme in (theme_txt[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
@@ -2497,92 +2533,56 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             if REGION:
                 if device == device_txt[1]:
-                    amount_PB = 5
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn_pb = [575, 375, 575, 4, 1]
-                        y_btn_pb = [45, 165, 375, 375, 1]
-                        w_btn_pb = [124, 124, 124, 124, 1]
-                        h_btn_pb = [47, 47, 47, 47, 1]
+                        x_btn = [575, 375, 575, 4]
+                        y_btn = [45, 165, 375, 375]
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_pb = [94, 176, 258, 4, 4]
-                        y_btn_pb = [120, 120, 120, 400, 578]
-                        w_btn_pb = [80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40]
+                        x_btn = [94, 176, 258, 4, 4]
+                        y_btn = [120, 120, 120, 400, 578]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_pb = [200, 317, 433, 4, 4]
-                        y_btn_pb = [10, 10, 10, 400, 578]
-                        w_btn_pb = [105, 105, 105, 105, 105]
-                        h_btn_pb = [87, 87, 87, 87, 87]
+                        x_btn = [200, 317, 433, 4, 4]
+                        y_btn = [10, 10, 10, 400, 578]
                 elif device == device_txt[2]:
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        amount_PB = 12
-                        x_btn_pb = [95, 800, 95, 800, 95, 800, 1365, 1365, 1365, 1365, 1365, 1365, 2200]
-                        y_btn_pb = [380, 380, 480, 480, 580, 580, 21, 133, 246, 380, 490, 600, 600]
-                        w_btn_pb = [124, 124, 124, 124, 124, 124, 124, 124, 124, 124, 124, 124, 124]
-                        h_btn_pb = [47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47]
+                        x_btn = [95, 800, 95, 800, 95, 800, 1365, 1365, 1365, 1365, 1365, 1365, 2200]
+                        y_btn = [380, 380, 480, 480, 580, 580, 21, 133, 246, 380, 490, 600, 600]
                     if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        amount_PB = 13
-                        x_btn_pb = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
-                        y_btn_pb = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
-                        w_btn_pb = [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+                        x_btn = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
+                        y_btn = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        amount_PB = 12
-                        x_btn_pb = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
-                        y_btn_pb = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
-                        w_btn_pb = [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+                        x_btn = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
+                        y_btn = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
                 elif device == device_txt[4]:
-                    amount_PB = 5
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn_pb = [575, 375, 575, 4, 1]
-                        y_btn_pb = [45, 165, 375, 375, 1]
-                        w_btn_pb = [124, 124, 124, 124, 1]
-                        h_btn_pb = [47, 47, 47, 47, 1]
+                        x_btn = [575, 375, 575, 4]
+                        y_btn = [45, 165, 375, 375]
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_pb = [94, 176, 258, 4, 4]
-                        y_btn_pb = [120, 120, 120, 400, 578]
-                        w_btn_pb = [80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40]
+                        x_btn = [94, 176, 258, 4, 4]
+                        y_btn = [120, 120, 120, 400, 578]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_pb = [200, 317, 433, 4, 4]
-                        y_btn_pb = [10, 10, 10, 400, 578]
-                        w_btn_pb = [105, 105, 105, 105, 105]
-                        h_btn_pb = [87, 87, 87, 87, 87]
+                        x_btn = [200, 317, 433, 4, 4]
+                        y_btn = [10, 10, 10, 400, 578]
                 elif device == device_txt[8]:
-                    amount_PB = 5
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn_pb = [575, 375, 575, 4, 1]
-                        y_btn_pb = [45, 165, 375, 375, 1]
-                        w_btn_pb = [124, 124, 124, 124, 1]
-                        h_btn_pb = [47, 47, 47, 47, 1]
+                        x_btn = [137, 275]
+                        y_btn = [0, 0]
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_pb = [94, 176, 258, 4, 4]
-                        y_btn_pb = [120, 120, 120, 400, 578]
-                        w_btn_pb = [80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40]
+                        x_btn = [160, 320]
+                        y_btn = [0, 0]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_pb = [200, 317, 433, 4, 4]
-                        y_btn_pb = [10, 10, 10, 400, 578]
-                        w_btn_pb = [105, 105, 105, 105, 105]
-                        h_btn_pb = [87, 87, 87, 87, 87]
+                        x_btn = [137, 275]
+                        y_btn = [0, 0]
                 elif device == device_txt[31]:
-                    amount_PB = 5
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_pb = [94, 176, 258, 4, 4]
-                        y_btn_pb = [120, 120, 120, 400, 578]
-                        w_btn_pb = [80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40]
+                        x_btn = [94, 176, 258, 4, 4]
+                        y_btn = [120, 120, 120, 400, 578]
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_pb = [94, 176, 258, 4, 4]
-                        y_btn_pb = [120, 120, 120, 400, 578]
-                        w_btn_pb = [80, 80, 80, 80, 80]
-                        h_btn_pb = [40, 40, 40, 40, 40]
+                        x_btn = [94, 176, 258, 4, 4]
+                        y_btn = [120, 120, 120, 400, 578]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_pb = [200, 317, 433, 4, 4]
-                        y_btn_pb = [10, 10, 10, 400, 578]
-                        w_btn_pb = [105, 105, 105, 105, 105]
-                        h_btn_pb = [87, 87, 87, 87, 87]
+                        x_btn = [200, 317, 433, 4, 4]
+                        y_btn = [10, 10, 10, 400, 578]
+                quant_btn = len(x_btn)
             #--------------------------------------------------------------------------
             # BUTTONS
             #--------------------------------------------------------------------------
@@ -2591,8 +2591,8 @@ class P01_DASH(tk.Frame):
                 for pb_text in btn_PB_txt:
                     btns_PB = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [read.toggle_PB(text), self.master.switch_frame(P01_DASH)])
                     btn_PB.append(btns_PB)
-                for i in range(amount_PB):
-                    btn_PB[i].place(x=x_btn_pb[i], y=y_btn_pb[i], width=w_btn_pb[i], height=h_btn_pb[i])
+                for i in range(quant_btn):
+                    btn_PB[i].place(x=x_btn[i], y=y_btn[i])
             #--------------------------------------------------------------------------
             # STATE
             #--------------------------------------------------------------------------
@@ -2620,159 +2620,75 @@ class P01_DASH(tk.Frame):
             if REGION:
                 if device == device_txt[1]:
                     if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_FNKT = 585
-                        x_btn_FNKT_next = 50
-                        y_btn_FNKT = 663
-                        w_btn_FNKT = 30
-                        h_btn_FNKT = 30
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
+                        x_btn = [585, 635, 685, 735]
+                        y_btn = [663, 663, 663, 663]
                     elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_FNKT = 507
-                        x_btn_FNKT_next = 113
-                        y_btn_FNKT = 374
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
+                        x_btn = [507, 620, 733, 846]
+                        y_btn = [374, 374, 374, 374]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_FNKT = 10
-                        x_btn_FNKT_next = 182
-                        y_btn_FNKT = 380
-                        w_btn_FNKT = 166
-                        h_btn_FNKT = 52
-                        localimageON_FNKT = lcarsON_img_list[7]
-                        localimageOF_FNKT = lcarsOF_img_list[7]
+                        x_btn = [10, 192, 374, 556]
+                        y_btn = [380, 380, 380, 380]
                 elif device == device_txt[2]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_FNKT = 2205
-                        x_btn_FNKT_next = 50
-                        y_btn_FNKT = 715
-                        w_btn_FNKT = 30
-                        h_btn_FNKT = 30
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_FNKT = 1762
-                        x_btn_FNKT_next = 108
-                        y_btn_FNKT = 256
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
+                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                        x_btn = [2205, 2255, 2305, 2355]
+                        y_btn = [715, 715, 715, 715]
+                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        x_btn = [1762, 1870, 1978, 2086]
+                        y_btn = [256, 256, 256, 256]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_FNKT = 10
-                        x_btn_FNKT_next = 182
-                        y_btn_FNKT = 380
-                        w_btn_FNKT = 166
-                        h_btn_FNKT = 52
-                        localimageON_FNKT = lcarsON_img_list[7]
-                        localimageOF_FNKT = lcarsOF_img_list[7]
+                        x_btn = [10, 192, 374, 556]
+                        y_btn = [380, 380, 380, 380]
                 elif device == device_txt[4]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_FNKT = 585
-                        x_btn_FNKT_next = 50
-                        y_btn_FNKT = 663
-                        w_btn_FNKT = 30
-                        h_btn_FNKT = 30
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_FNKT = 507
-                        x_btn_FNKT_next = 113
-                        y_btn_FNKT = 374
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
+                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                        x_btn = [2205, 2255, 2305, 2355]
+                        y_btn = [715, 715, 715, 715]
+                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        x_btn = [1762, 1870, 1978, 2086]
+                        y_btn = [256, 256, 256, 256]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_FNKT = 10
-                        x_btn_FNKT_next = 182
-                        y_btn_FNKT = 380
-                        w_btn_FNKT = 166
-                        h_btn_FNKT = 52
-                        localimageON_FNKT = lcarsON_img_list[7]
-                        localimageOF_FNKT = lcarsOF_img_list[7]
+                        x_btn = [10, 192, 374, 556]
+                        y_btn = [380, 380, 380, 380]
                 elif device == device_txt[8]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_FNKT = 585
-                        x_btn_FNKT_next = 50
-                        y_btn_FNKT = 663
-                        w_btn_FNKT = 30
-                        h_btn_FNKT = 30
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_FNKT = 507
-                        x_btn_FNKT_next = 113
-                        y_btn_FNKT = 374
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
+                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                        x_btn = [20, 220]
+                        y_btn = [50, 50]
+                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        x_btn = [10, 220,  10, 220,  10, 220,  10, 220,  10, 220,   10,  220,   10,  220,   10,  220,   10,  220]
+                        y_btn = [50,  50, 260, 260, 470, 470, 680, 680, 890, 890, 1100, 1100, 1310, 1310, 1520, 1520, 1730, 1730]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_FNKT = 10
-                        x_btn_FNKT_next = 182
-                        y_btn_FNKT = 380
-                        w_btn_FNKT = 166
-                        h_btn_FNKT = 52
-                        localimageON_FNKT = lcarsON_img_list[7]
-                        localimageOF_FNKT = lcarsOF_img_list[7]
+                        x_btn = [10, 192, 374, 556]
+                        y_btn = [380, 380, 380, 380]
                 elif device == device_txt[31]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn_FNKT = 507
-                        x_btn_FNKT_next = 113
-                        y_btn_FNKT = 374
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn_FNKT = 507
-                        x_btn_FNKT_next = 113
-                        y_btn_FNKT = 374
-                        w_btn_FNKT = 80
-                        h_btn_FNKT = 80
-                        localimageON_FNKT = localimage06
-                        localimageOF_FNKT = localimage07
+                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                        x_btn = [2205, 2255, 2305, 2355]
+                        y_btn = [715, 715, 715, 715]
+                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        x_btn = [1762, 1870, 1978, 2086]
+                        y_btn = [256, 256, 256, 256]
                     elif theme in [theme_txt[15], theme_txt[16]]:
-                        x_btn_FNKT = 10
-                        x_btn_FNKT_next = 182
-                        y_btn_FNKT = 380
-                        w_btn_FNKT = 166
-                        h_btn_FNKT = 52
-                        localimageON_FNKT = lcarsON_img_list[7]
-                        localimageOF_FNKT = lcarsOF_img_list[7]
+                        x_btn = [10, 192, 374, 556]
+                        y_btn = [380, 380, 380, 380]
+                quant_btn = len(x_btn)
             #--------------------------------------------------------------------------
             # BUTTONS
             #--------------------------------------------------------------------------
             if REGION:
-                btns_FNKT = []
-                if device == device_txt[1]:
-                    amount_FNKT = 7
-                elif device == device_txt[2]:
-                    amount_FNKT = 4
-                elif device == device_txt[4]:
-                    amount_FNKT = 4
-                elif device == device_txt[8]:
-                    amount_FNKT = 4
-                elif device == device_txt[31]:
-                    amount_FNKT = 7
-                read.load_btn_states_FNKT(amount_FNKT)
-            #--------------------------------------------------------------------------
-            # STATE
-            #--------------------------------------------------------------------------
-            if REGION:
-                for i in range(amount_FNKT):
-                    btn_FNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
-                    btn_FNKT.place(x=x_btn_FNKT, y=y_btn_FNKT, width=w_btn_FNKT, height=h_btn_FNKT)
-                    x_btn_FNKT += x_btn_FNKT_next
-                    btns_FNKT.append(btn_FNKT)
-
+                btn_FNKT = []
+                read.load_btn_states_FNKT(quant_btn)
+                for i in range(quant_btn):
+                    btns_FNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
+                    btn_FNKT.append(btns_FNKT)
+                    btn_FNKT[i].place(x=x_btn[i], y=y_btn[i])
                     if btn_states_FNKT[i] == True:
-                        btns_FNKT[i].config(image=localimageON_FNKT)
+                        if device == device_txt[8]:
+                            btn_FNKT[i].config(image=localimage60)
+                        else:
+                            btn_FNKT[i].config(image=localimage06)
                     else:
-                        btns_FNKT[i].config(image=localimageOF_FNKT)
+                        if device == device_txt[8]:
+                            btn_FNKT[i].config(image=localimage70)
+                        else:
+                            btn_FNKT[i].config(image=localimage07)
         #----------------------------------------------------------------------------------
         # SWITCH UNITS BUTTON (IMPERIAL/METRIC)
         #----------------------------------------------------------------------------------   
@@ -6867,6 +6783,10 @@ class myfunctions():
                         file = 'btn_states_DEV001FNKT.pickle'                    
                     elif device == device_txt[2]:
                         file = 'btn_states_DEV002FNKT.pickle'
+                    elif device == device_txt[4]:
+                        file = 'btn_states_DEV004FNKT.pickle'
+                    elif device == device_txt[8]:
+                        file = 'btn_states_DEV008FNKT.pickle'
                     elif device == device_txt[31]:
                         file = 'btn_states_DEV031FNKT.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
