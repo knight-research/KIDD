@@ -2,7 +2,7 @@
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-12-25-1620"
+last_change = "2023-12-26-1241"
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
 #------------------------------------------------------------------------------------------
