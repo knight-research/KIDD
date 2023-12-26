@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import enum
+
+
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
@@ -588,13 +591,12 @@ if REGION:
             #------------------------------------------------------------------------------
             if REGION:
                 #PAGES
-                menu_btn_names = ["BOOT", "DASH", "QOPT", "SETUP", "THEMES", "C-FNkT", "K-FNKT", "AUDIO", "VIDEO", "RES", "RES", "RES", "RES", "RES"]
+                btns_menu_names = ["BOOT", "DASH", "QOPT", "SETUP", "THEMES", "C-FNkT", "K-FNKT", "AUDIO", "VIDEO", "RES", "RES", "RES", "RES", "RES"]
                 #CONFIG
                 device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
                 style_txt = ['KARR', 'KITT', '---', '---', '---']
-                system_txt = ['ORANGE', 'GREEN', 'AQUA', 'WHITE']
-                #ONLY INFO      0         1         2         3         4         5         6         7          8         9        10       11     12     13     14       15        16
-                theme_txt = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
+                btns_theme_names = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
+                btns_sys_names = ['ORANGE', 'GREEN', 'AQUA', 'WHITE']
                 btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
 
                 units_act = []
@@ -869,7 +871,7 @@ if REGION:
             with open(imp_mod['os'].path.join(datadir, 'system_conf.pickle'), 'rb') as f:
                 system = imp_mod['pickle'].load(f)
         except FileNotFoundError:
-            system = system_txt[0]
+            system = btns_sys_names[0]
         #----------------------------------------------------------------------------------
         # UPDATE LAST POWER BUTTON STATE
         #----------------------------------------------------------------------------------
@@ -1084,13 +1086,13 @@ if REGION:
         #----------------------------------------------------------------------------------
         # APPLY SYSTEM STYLES
         #----------------------------------------------------------------------------------
-        if system == system_txt[0]:
+        if system == btns_sys_names[0]:
             sys_clr = sys_clr_OR
-        elif system == system_txt[1]: 
+        elif system == btns_sys_names[1]: 
             sys_clr = sys_clr_GN
-        elif system == system_txt[2]: 
+        elif system == btns_sys_names[2]: 
             sys_clr = sys_clr_BU
-        elif system == system_txt[3]: 
+        elif system == btns_sys_names[3]: 
             sys_clr = sys_clr_WH
         #----------------------------------------------------------------------------------
         # APPLY KIDD STYLES
@@ -1264,7 +1266,7 @@ class MainApplication(tk.Tk):
 class P00_BOOT(tk.Frame):
     def __init__(self, master):
         if debug == True:
-            print (menu_btn_names[0])
+            print (btns_menu_names[0])
         #------------------------------------------------------------------------------
         # UPDATE CONFIGURATION
         #------------------------------------------------------------------------------
@@ -1712,7 +1714,7 @@ class P01_DASH(tk.Frame):
     #--------------------------------------------------------------------------------------
     if REGION:
         if debug == True:
-            print (menu_btn_names[1])
+            print (btns_menu_names[1])
         def __init__(self, master):
             tk.Frame.__init__(self, master)     
             self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
@@ -1728,7 +1730,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             if style == style_txt[0]:
-                if theme in [theme_txt[0]]:
+                if theme in [btns_theme_names[0]]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
                     localimage01 = sledON_img_list[30] #MPH
@@ -1753,7 +1755,7 @@ class P01_DASH(tk.Frame):
                     localimage74 = ledOF_img_list[81] #OHC RD
                     localimage75 = ledOF_img_list[82] #OHC WH
                     localimage76 = ledOF_img_list[83] #OHC YE                  
-                elif theme in [theme_txt[1]]:
+                elif theme in [btns_theme_names[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
                     localimage01 = sledON_img_list[32] #MPH
@@ -1778,7 +1780,7 @@ class P01_DASH(tk.Frame):
                     localimage74 = ledOF_img_list[81] #OHC RD
                     localimage75 = ledOF_img_list[82] #OHC WH
                     localimage76 = ledOF_img_list[83] #OHC YE
-                elif theme in [theme_txt[2]]:
+                elif theme in [btns_theme_names[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
                     localimage01 = sledON_img_list[32] #MPH
@@ -1803,7 +1805,7 @@ class P01_DASH(tk.Frame):
                     localimage74 = ledOF_img_list[81] #OHC RD
                     localimage75 = ledOF_img_list[82] #OHC WH
                     localimage76 = ledOF_img_list[83] #OHC YE
-                elif theme in [theme_txt[3]]:
+                elif theme in [btns_theme_names[3]]:
                     localimage01 = sledON_img_list[10] #MPH
                     localimage02 = sledON_img_list[9] #KPH
                     localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
@@ -1831,7 +1833,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
-                elif theme in [theme_txt[4]]:
+                elif theme in [btns_theme_names[4]]:
                     localimage01 = sledON_img_list[10] #MPH
                     localimage02 = sledON_img_list[9] #KPH
                     localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
@@ -1859,7 +1861,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
-                elif theme in [theme_txt[5]]:
+                elif theme in [btns_theme_names[5]]:
                     localimage01 = sledON_img_list[10] #MPH
                     localimage02 = sledON_img_list[9] #KPH
                     localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
@@ -1887,7 +1889,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
-                elif theme in [theme_txt[6]]:
+                elif theme in [btns_theme_names[6]]:
                     localimage01 = sledON_img_list[10] #MPH
                     localimage02 = sledON_img_list[9] #KPH
                     localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
@@ -1915,7 +1917,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
-                elif theme in [theme_txt[7]]:
+                elif theme in [btns_theme_names[7]]:
                     localimage01 = sledON_img_list[10] #MPH
                     localimage02 = sledON_img_list[9] #KPH
                     localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
@@ -1943,7 +1945,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
-                elif theme in [theme_txt[8]]:
+                elif theme in [btns_theme_names[8]]:
                     localimage01 = sledON_img_list[12] #MPH
                     localimage02 = sledON_img_list[11] #KPH
                     localimage03 = segmentKA_img_list[7] #GPS SPEED GAUGE
@@ -1971,28 +1973,28 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
-                elif theme in [theme_txt[9]]:
+                elif theme in [btns_theme_names[9]]:
                     pass
-                elif theme in [theme_txt[10]]:
+                elif theme in [btns_theme_names[10]]:
                     pass
-                elif theme in [theme_txt[11]]:
+                elif theme in [btns_theme_names[11]]:
                     pass
-                elif theme in [theme_txt[12]]:
+                elif theme in [btns_theme_names[12]]:
                     pass
-                elif theme in [theme_txt[13]]:
+                elif theme in [btns_theme_names[13]]:
                     pass
-                elif theme in [theme_txt[14]]:
+                elif theme in [btns_theme_names[14]]:
                     pass
-                elif theme in [theme_txt[15]]:
+                elif theme in [btns_theme_names[15]]:
                     localimage01 = lcarsON_img_list[0]
                     localimage02 = lcarsOF_img_list[0]
                     localimage03 = segmentKA_img_list[11]
-                elif theme in [theme_txt[16]]:
+                elif theme in [btns_theme_names[16]]:
                     localimage01 = lcarsON_img_list[0]
                     localimage02 = lcarsOF_img_list[0]
                     localimage03 = segmentKA_img_list[11]
             elif style == style_txt[1]:
-                if theme in [theme_txt[0]]:
+                if theme in [btns_theme_names[0]]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
                     localimage01 = sledON_img_list[30] #MPH
@@ -2017,7 +2019,7 @@ class P01_DASH(tk.Frame):
                     localimage74 = ledOF_img_list[81] #OHC RD
                     localimage75 = ledOF_img_list[82] #OHC WH
                     localimage76 = ledOF_img_list[83] #OHC YE
-                elif theme in [theme_txt[1]]:
+                elif theme in [btns_theme_names[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
                     localimage01 = sledON_img_list[32] #MPH
@@ -2042,7 +2044,7 @@ class P01_DASH(tk.Frame):
                     localimage74 = ledOF_img_list[81] #OHC RD
                     localimage75 = ledOF_img_list[82] #OHC WH
                     localimage76 = ledOF_img_list[83] #OHC YE
-                elif theme in [theme_txt[2]]:
+                elif theme in [btns_theme_names[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
                     localimage01 = sledON_img_list[32] #MPH
@@ -2067,7 +2069,7 @@ class P01_DASH(tk.Frame):
                     localimage74 = ledOF_img_list[81] #OHC RD
                     localimage75 = ledOF_img_list[82] #OHC WH
                     localimage76 = ledOF_img_list[83] #OHC YE
-                elif theme in [theme_txt[3]]:
+                elif theme in [btns_theme_names[3]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
                     localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
@@ -2095,7 +2097,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
-                elif theme in [theme_txt[4]]:
+                elif theme in [btns_theme_names[4]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
                     localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
@@ -2123,7 +2125,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
-                elif theme in [theme_txt[5]]:
+                elif theme in [btns_theme_names[5]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
                     localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
@@ -2151,7 +2153,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
-                elif theme in [theme_txt[6]]:
+                elif theme in [btns_theme_names[6]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
                     localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
@@ -2179,7 +2181,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
-                elif theme in [theme_txt[7]]:
+                elif theme in [btns_theme_names[7]]:
                     localimage01 = sledON_img_list[14] #MPH
                     localimage02 = sledON_img_list[13] #KPH
                     localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
@@ -2207,7 +2209,7 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
-                elif theme in [theme_txt[8]]:
+                elif theme in [btns_theme_names[8]]:
                     localimage01 = sledON_img_list[16] #MPH
                     localimage02 = sledON_img_list[15] #KPH
                     localimage03 = segmentKI_img_list[7] #GPS SPEED GAUGE
@@ -2235,25 +2237,25 @@ class P01_DASH(tk.Frame):
                     localimage76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
-                elif theme in [theme_txt[9]]:
+                elif theme in [btns_theme_names[9]]:
                     pass
-                elif theme in [theme_txt[10]]:
+                elif theme in [btns_theme_names[10]]:
                     pass
-                elif theme in [theme_txt[11]]:
+                elif theme in [btns_theme_names[11]]:
                     pass
-                elif theme in [theme_txt[12]]:
+                elif theme in [btns_theme_names[12]]:
                     pass
-                elif theme in [theme_txt[13]]:
+                elif theme in [btns_theme_names[13]]:
                     pass
-                elif theme in [theme_txt[14]]:
+                elif theme in [btns_theme_names[14]]:
                     pass
-                elif theme in [theme_txt[15]]:
+                elif theme in [btns_theme_names[15]]:
                     localimage01 = lcarsON_img_list[0]
                     localimage02 = lcarsOF_img_list[0]
                     localimage03 = segmentKI_img_list[11]
                     localimage06 = lcarsON_img_list[7] #HI LO VHF
                     localimage07 = lcarsOF_img_list[7] #HI LO VHF
-                elif theme in [theme_txt[16]]:
+                elif theme in [btns_theme_names[16]]:
                     localimage01 = lcarsON_img_list[0]
                     localimage02 = lcarsOF_img_list[0]
                     localimage03 = segmentKI_img_list[11]
@@ -2269,12 +2271,12 @@ class P01_DASH(tk.Frame):
                 # GET BACKGROUNDIMAGE
                 #--------------------------------------------------------------------------
                 theme_bg_image = bgDEV001_DASH_img_list
-                background_image = theme_bg_image[theme_txt.index(theme)]
+                background_image = theme_bg_image[btns_theme_names.index(theme)]
                 self.canvas.create_image(0, 0, image=background_image, anchor='nw')
                 #--------------------------------------------------------------------------
                 # BACKGROUNDIMAGE OVERLAYS
                 #--------------------------------------------------------------------------
-                if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     self.canvas.create_rectangle(4, 195, 355, 332, fill=sty_clr[3])      #MTR
                     self.canvas.create_rectangle(498, 571, 1270, 699, fill=sty_clr[3])   #TOTAL
             elif device == device_txt[2]:
@@ -2282,28 +2284,28 @@ class P01_DASH(tk.Frame):
                 # GET BACKGROUNDIMAGE
                 #--------------------------------------------------------------------------
                 theme_bg_image = bgDEV002_DASH_img_list
-                background_image = theme_bg_image[theme_txt.index(theme)]
+                background_image = theme_bg_image[btns_theme_names.index(theme)]
                 self.canvas.create_image(0, 0, image=background_image, anchor='nw')
                 #--------------------------------------------------------------------------
                 # BACKGROUNDIMAGE OVERLAYS
                 #--------------------------------------------------------------------------
-                if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     self.canvas.create_rectangle(1808, 30, 2130, 134, fill=sty_clr[3])   #PROGNO
             elif device == device_txt[31]:
                 #--------------------------------------------------------------------------
                 # GET BACKGROUNDIMAGE
                 #--------------------------------------------------------------------------
                 theme_bg_image = bgDEV031_DASH_img_list
-                background_image = theme_bg_image[theme_txt.index(theme)]
+                background_image = theme_bg_image[btns_theme_names.index(theme)]
                 self.canvas.create_image(0, 0, image=background_image, anchor='nw')
         #----------------------------------------------------------------------------------
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
             if device == device_txt[1]:
-                if theme == theme_txt[0] or theme_txt[1] or theme == theme_txt[2]:
+                if theme == btns_theme_names[0] or btns_theme_names[1] or theme == btns_theme_names[2]:
                     pass
-                if theme == theme_txt[3]:
+                if theme == btns_theme_names[3]:
                     #OVERLAY TEXTE SPEEDOMETER
                     self.canvas.create_text( 100,  65, **txt_style_S34c, text=gau_S03U01_txt[1])
                     self.canvas.create_text( 700,  65, **txt_style_S34c, text=gau_S03U01_txt[2])
@@ -2323,7 +2325,7 @@ class P01_DASH(tk.Frame):
                     self.canvas.create_text( 140,  95, **txt_style_S34c, text=gau_S03U01_txt[16])
                     self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_S03U01_txt[17])
                     self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_S03U01_txt[18])
-                elif theme == theme_txt[4]:
+                elif theme == btns_theme_names[4]:
                     #OVERLAY TEXTE SPEEDOMETER
                     self.canvas.create_text( 100,  65, **txt_style_S34c, text=gau_S04U01_txt[1])
                     self.canvas.create_text( 700,  65, **txt_style_S34c, text=gau_S04U01_txt[2])
@@ -2343,7 +2345,7 @@ class P01_DASH(tk.Frame):
                     self.canvas.create_text( 140,  95, **txt_style_S34c, text=gau_S04U01_txt[16])
                     self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_S04U01_txt[17])
                     self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_S04U01_txt[18])
-                elif theme == theme_txt[5]:
+                elif theme == btns_theme_names[5]:
                     #OVERLAY TEXTE SPEEDOMETER
                     self.canvas.create_text( 100,  65, **txt_style_S34c, text=gau_S05U01_txt[1])
                     self.canvas.create_text( 700,  65, **txt_style_S34c, text=gau_S05U01_txt[2])
@@ -2363,7 +2365,7 @@ class P01_DASH(tk.Frame):
                     self.canvas.create_text( 140,  95, **txt_style_S34c, text=gau_S05U01_txt[16])
                     self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_S05U01_txt[17])
                     self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_S05U01_txt[18])
-                elif theme == theme_txt[6]:
+                elif theme == btns_theme_names[6]:
                     #OVERLAY TEXTE SPEEDOMETER
                     self.canvas.create_text( 100,  65, **txt_style_S34c, text=gau_S06U01_txt[1])
                     self.canvas.create_text( 700,  65, **txt_style_S34c, text=gau_S06U01_txt[2])
@@ -2383,7 +2385,7 @@ class P01_DASH(tk.Frame):
                     self.canvas.create_text( 140,  95, **txt_style_S34c, text=gau_S06U01_txt[16])
                     self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_S06U01_txt[17])
                     self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_S06U01_txt[18])
-                elif theme == theme_txt[7]:
+                elif theme == btns_theme_names[7]:
                     #OVERLAY TEXTE SPEEDOMETER
                     self.canvas.create_text( 100,  65, **txt_style_S34c, text=gau_S06U01_txt[1])
                     self.canvas.create_text( 700,  65, **txt_style_S34c, text=gau_S06U01_txt[2])
@@ -2404,7 +2406,7 @@ class P01_DASH(tk.Frame):
                     self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_S06U01_txt[17])
                     self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_S06U01_txt[18])
             elif device == device_txt[2]:
-                if theme == theme_txt[3]:
+                if theme == btns_theme_names[3]:
                     #----------------------------------------------------------------------
                     # TACHOBOARD
                     #----------------------------------------------------------------------
@@ -2441,7 +2443,7 @@ class P01_DASH(tk.Frame):
                         self.canvas.create_text(2020, 225, **txt_style_S34c, text=gau_S03U02_txt[19])
                         self.canvas.create_text(2120, 225, **txt_style_S34c, text=gau_S03U02_txt[20])
                         self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S03U02_txt[21])
-                elif theme == theme_txt[4]:
+                elif theme == btns_theme_names[4]:
                     #----------------------------------------------------------------------
                     # TACHOBOARD
                     #----------------------------------------------------------------------
@@ -2478,7 +2480,7 @@ class P01_DASH(tk.Frame):
                         self.canvas.create_text(2020, 225, **txt_style_S34c, text=gau_S04U02_txt[19])
                         self.canvas.create_text(2120, 225, **txt_style_S34c, text=gau_S04U02_txt[20])
                         self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S04U02_txt[21])
-                elif theme == theme_txt[5]:
+                elif theme == btns_theme_names[5]:
                     #----------------------------------------------------------------------
                     # TACHOBOARD
                     #----------------------------------------------------------------------
@@ -2515,7 +2517,7 @@ class P01_DASH(tk.Frame):
                         self.canvas.create_text(2020, 225, **txt_style_S34c, text=gau_S05U02_txt[19])
                         self.canvas.create_text(2120, 225, **txt_style_S34c, text=gau_S05U02_txt[20])
                         self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S05U02_txt[21])
-                elif theme == theme_txt[6]:
+                elif theme == btns_theme_names[6]:
                     #----------------------------------------------------------------------
                     # TACHOBOARD
                     #----------------------------------------------------------------------
@@ -2552,7 +2554,7 @@ class P01_DASH(tk.Frame):
                         self.canvas.create_text(2020, 225, **txt_style_S34c, text=gau_S06U02_txt[19])
                         self.canvas.create_text(2120, 225, **txt_style_S34c, text=gau_S06U02_txt[20])
                         self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S06U02_txt[21])
-                elif theme == theme_txt[7]:
+                elif theme == btns_theme_names[7]:
                     #----------------------------------------------------------------------
                     # TACHOBOARD
                     #----------------------------------------------------------------------
@@ -2595,53 +2597,53 @@ class P01_DASH(tk.Frame):
         if REGION:
             button = tk.Button(self, command=lambda: self.master.switch_frame(P02_QOPT))
             if device == device_txt[1]:
-                if theme in theme_txt[:3]:
+                if theme in btns_theme_names[:3]:
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=45)
-                elif theme in (theme_txt[3:9]):
+                elif theme in (btns_theme_names[3:9]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=64)
-                elif theme in [theme_txt[15], theme_txt[16]]:
+                elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
             elif device == device_txt[2]:
-                if theme in (theme_txt[:3]):
+                if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=2, y=42)
-                elif theme in (theme_txt[3:9]):
+                elif theme in (btns_theme_names[3:9]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
-                elif theme in [theme_txt[15], theme_txt[16]]:
+                elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
             elif device == device_txt[4]:
-                if theme in (theme_txt[:3]):
+                if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=2, y=42)
-                elif theme in (theme_txt[3:9]):
+                elif theme in (btns_theme_names[3:9]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
-                elif theme in [theme_txt[15], theme_txt[16]]:
+                elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
             elif device == device_txt[8]:
-                if theme in (theme_txt[:3]):
+                if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=0, y=0)
-                elif theme in (theme_txt[3:9]):
+                elif theme in (btns_theme_names[3:9]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=0, y=0)
-                elif theme in [theme_txt[15], theme_txt[16]]:
+                elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=0, y=0)
             elif device == device_txt[31]:
-                if theme in (theme_txt[:3]):
+                if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
-                elif theme in (theme_txt[3:9]):
+                elif theme in (btns_theme_names[3:9]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
-                elif theme in [theme_txt[15], theme_txt[16]]:
+                elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
         #----------------------------------------------------------------------------------
@@ -2655,53 +2657,53 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             if REGION:
                 if device == device_txt[1]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [575, 375, 575, 4]
                         y_btn = [45, 165, 375, 375]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [94, 176, 258, 4, 4]
                         y_btn = [120, 120, 120, 400, 578]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [200, 317, 433, 4, 4]
                         y_btn = [10, 10, 10, 400, 578]
                 elif device == device_txt[2]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [95, 800, 95, 800, 95, 800, 1365, 1365, 1365, 1365, 1365, 1365, 2200]
                         y_btn = [380, 380, 480, 480, 580, 580, 21, 133, 246, 380, 490, 600, 600]
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
                         y_btn = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
                         y_btn = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
                 elif device == device_txt[4]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [575, 375, 575, 4]
                         y_btn = [45, 165, 375, 375]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [94, 176, 258, 4, 4]
                         y_btn = [120, 120, 120, 400, 578]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [200, 317, 433, 4, 4]
                         y_btn = [10, 10, 10, 400, 578]
                 elif device == device_txt[8]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [137, 275]
                         y_btn = [0, 0]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [160, 320]
                         y_btn = [0, 0]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [137, 275]
                         y_btn = [0, 0]
                 elif device == device_txt[31]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 3
                         x_btn = [94, 176, 258, 4, 4]
                         y_btn = [120, 120, 120, 400, 578]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [94, 176, 258, 4, 4]
                         y_btn = [120, 120, 120, 400, 578]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [200, 317, 433, 4, 4]
                         y_btn = [10, 10, 10, 400, 578]
                 quant_btn = len(x_btn)
@@ -2721,14 +2723,14 @@ class P01_DASH(tk.Frame):
             if REGION:
                 for i, text in enumerate(btn_PB_txt):
                     if btn_states_PB == text:
-                        if theme_txt[0:9].count(theme) > 0: # THEME 0 to 9
+                        if btns_theme_names[0:9].count(theme) > 0: # THEME 0 to 9
                             btn_PB[i].config(image=localimage15)
-                        elif theme in [theme_txt[15], theme_txt[16]]:
+                        elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                             btn_PB[i].config(image=lcarsON_img_list[3])
                     else:
-                        if theme_txt[0:9].count(theme) > 0: # THEME 0 to 9
+                        if btns_theme_names[0:9].count(theme) > 0: # THEME 0 to 9
                             btn_PB[i].config(image=localimage16)
-                        elif theme in [theme_txt[15], theme_txt[16]]:
+                        elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                             btn_PB[i].config(image=lcarsOF_img_list[3])
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTONS (LO HI VHF UHF AM FM CB) / (ATTACK SUST DELAY DEL)
@@ -2741,53 +2743,53 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             if REGION:
                 if device == device_txt[1]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 3
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 3
                         x_btn = [585, 635, 685, 735]
                         y_btn = [663, 663, 663, 663]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [507, 620, 733, 846]
                         y_btn = [374, 374, 374, 374]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
                 elif device == device_txt[2]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [2205, 2255, 2305, 2355]
                         y_btn = [715, 715, 715, 715]
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [1762, 1870, 1978, 2086]
                         y_btn = [256, 256, 256, 256]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
                 elif device == device_txt[4]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [2205, 2255, 2305, 2355]
                         y_btn = [715, 715, 715, 715]
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [1762, 1870, 1978, 2086]
                         y_btn = [256, 256, 256, 256]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
                 elif device == device_txt[8]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [20, 220]
                         y_btn = [50, 50]
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [35, 175,  35, 175,  35, 175,  35, 175,  35, 175,  35, 175,  35, 175,  35, 175,   35,  175,   35,  175,   35,  175,   35,  175]
                         y_btn = [50,  50, 170, 170, 290, 290, 410, 410, 530, 530, 650, 650, 770, 770, 890, 890, 1010, 1010, 1130, 1130, 1250, 1250, 1370, 1370]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
                 elif device == device_txt[31]:
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [2205, 2255, 2305, 2355]
                         y_btn = [715, 715, 715, 715]
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_btn = [1762, 1870, 1978, 2086]
                         y_btn = [256, 256, 256, 256]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
                 quant_btn = len(x_btn)
@@ -2834,11 +2836,11 @@ class P01_DASH(tk.Frame):
             global btn_units
             if device == device_txt[1]:
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
-                if theme_txt[0:3].count(theme) > 0: # THEME 3 to 8
+                if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1040, y=218, width=166, height=81)
-                elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1105, y=248, width=166, height=81)
-                elif theme in [theme_txt[15], theme_txt[16]]:
+                elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     btn_units.place(x=770, y=110, width=202, height=68)
                 if btn_states_SW[0] == True:
                     btn_units.config(image=localimage01)
@@ -2846,11 +2848,11 @@ class P01_DASH(tk.Frame):
                     btn_units.config(image=localimage02)
             elif device == device_txt[2]:
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
-                if theme_txt[0:3].count(theme) > 0: # THEME 0 to 2            
+                if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 2            
                     btn_units.place(x=970, y=245, width=166, height=81)
-                elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1064, y=296, width=166, height=81)
-                elif theme in [theme_txt[15], theme_txt[16]]:
+                elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     btn_units.place(x=1064, y=296, width=166, height=81)
                 if btn_states_SW[0] == True:
                     btn_units.config(image=localimage08)
@@ -2867,7 +2869,7 @@ class P01_DASH(tk.Frame):
                     label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
                     lbls_voicecmd.append(label_voicecmd)
                     
-                if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     lbls_voicecmd[0].place(x=500, y=590, height="30", width="280")   
                     lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
                     lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
@@ -2880,7 +2882,7 @@ class P01_DASH(tk.Frame):
                     label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
                     lbls_voicecmd.append(label_voicecmd)
                     
-                if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     lbls_voicecmd[0].place(x=500, y=590, height="30", width="280")   
                     lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
                     lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
@@ -2914,14 +2916,14 @@ class P01_DASH(tk.Frame):
                 if REGION:
                     global led_DEV001G000, ammount_DEV001G000
                     led_DEV001G000 = []
-                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                    if theme in btns_theme_names[:3]:  # THEME 0 1 2
                         x_pos = 585
                         y_pos = 103
                         x_pos_nxt = 31
                         width = 30
                         height = 30
                         ammount_DEV001G000 = 21
-                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    elif theme in btns_theme_names[3:9]:  # THEME 3 to 9
                         x_pos = 95
                         y_pos = 8
                         x_pos_nxt = 84
@@ -2934,14 +2936,14 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if REGION:
                     global led_DEV001G001, ammount_DEV001G001
-                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                    if theme in btns_theme_names[:3]:  # THEME 0 1 2
                         x_pos = 10
                         y_pos = 442
                         x_pos_nxt = 31
                         width = 30
                         height = 30
                         ammount_DEV001G001 = 16
-                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    elif theme in btns_theme_names[3:9]:  # THEME 3 to 9
                         x_pos = 5
                         y_pos = 465
                         x_pos_nxt = 20
@@ -2954,14 +2956,14 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if REGION:
                     global led_DEV001G002, ammount_DEV001G002
-                    if theme in theme_txt[:3]:  # THEME 0 1 2
+                    if theme in btns_theme_names[:3]:  # THEME 0 1 2
                         x_pos = 5
                         y_pos = 640
                         x_pos_nxt = 31
                         width = 30
                         height = 30
                         ammount_DEV001G002 = 16
-                    elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                    elif theme in btns_theme_names[3:9]:  # THEME 3 to 9
                         x_pos = 5
                         y_pos = 640
                         x_pos_nxt = 20
@@ -2976,7 +2978,7 @@ class P01_DASH(tk.Frame):
                     global btns_DEV001VBBTN
                     global btn_DEV001VBBTN
                     btns_DEV001VBBTN = []
-                    if theme in theme_txt[:3] or theme in [theme_txt[7]]: #0 1 2 oder 7
+                    if theme in btns_theme_names[:3] or theme in [btns_theme_names[7]]: #0 1 2 oder 7
                         x_pos_VBBTN = 1282
                         x_pos_VBBTN2 = 1633
                         y_pos_VBBTN_next = +130
@@ -2994,7 +2996,7 @@ class P01_DASH(tk.Frame):
                         y_pos_VBBTN2 = 30
                         wh_btn_VBBTN = [100, 70]
                         no_VBBRN = 10
-                    if theme in theme_txt[:9]: #0 to 8
+                    if theme in btns_theme_names[:9]: #0 to 8
                         for i in range(no_VBBRN):
                             if i < (no_VBBRN/2):
                                 btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
@@ -3014,7 +3016,7 @@ class P01_DASH(tk.Frame):
                     global btns_DEV001VBSTBTN
                     global btn_DEV001VBSTBTN
                     btns_DEV001VBSTBTN = []
-                    if theme in (theme_txt[:3] or theme_txt[7]): #0 1 2 oder 7
+                    if theme in (btns_theme_names[:3] or btns_theme_names[7]): #0 1 2 oder 7
                         x_pos_VBSTBTN = 1400
                         y_pos_VBSTBTN_next = +85
                         y_pos_VBSTBTN = 380
@@ -3026,7 +3028,7 @@ class P01_DASH(tk.Frame):
                         y_pos_VBSTBTN = 410
                         wh_btn_VBSTBTN = [235, 80]
                         no_VBBRN = 3
-                    if theme in theme_txt[:9]: #0 to 8
+                    if theme in btns_theme_names[:9]: #0 to 8
                         for i in range(3):
                             btn_DEV001VBSTBTN = tk.Label(self, **btn_style_imgbtn)
                             btn_DEV001VBSTBTN.place(x=x_pos_VBSTBTN, y=y_pos_VBSTBTN, width=wh_btn_VBSTBTN[0], height=wh_btn_VBSTBTN[1])
@@ -3045,14 +3047,14 @@ class P01_DASH(tk.Frame):
                     global ammount_VB
                     global middle_index
                 
-                    if theme in theme_txt[:3]: # THEME 0 1 2
+                    if theme in btns_theme_names[:3]: # THEME 0 1 2
                         ammount_VB = 18
                         middle_index = 9  # Index of the middle LED
-                    elif theme in theme_txt[3:9]: # THEME 3 to 8
+                    elif theme in btns_theme_names[3:9]: # THEME 3 to 8
                         ammount_VB = 20
                         middle_index = 10  # Index of the middle LED
                 
-                    if theme in theme_txt[0:7]: # THEME 1 to 8
+                    if theme in btns_theme_names[0:7]: # THEME 1 to 8
                         led_DEV001VBS34L01 = []
                         led_DEV001VBS34L02 = []
                         led_DEV001VBS34L03 = []
@@ -3074,7 +3076,7 @@ class P01_DASH(tk.Frame):
                             led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
                             y_pos_VBL03 += +20
                             led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
-                    elif theme == theme_txt[8]:
+                    elif theme == btns_theme_names[8]:
                         led_DEV001VBS34L01 = []
                         led_DEV001VBS34L02 = []
                         led_DEV001VBS34L03 = []
@@ -3096,7 +3098,7 @@ class P01_DASH(tk.Frame):
                             led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
                             y_pos_VBL03 += +20
                             led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
-                    elif theme == theme_txt[7]:
+                    elif theme == btns_theme_names[7]:
                         led_DEV001VBS34L01 = []
                         led_DEV001VBS34L02 = []
                         y_pos_VBL01 = 10
@@ -3140,17 +3142,17 @@ class P01_DASH(tk.Frame):
                     global led_DEV002G000, ammount_DEV002G000
                     global led_gauge_U02MASTER          
                     led_DEV002G000 = []
-                    if theme_txt[:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_pos_RPM = 100
                         y_pos_RPM = [295, 270, 247, 226, 205, 186, 168, 152, 136, 122, 109, 97, 86, 76, 67, 58, 52, 47, 42, 39, 36, 35, 35, 36, 40, 43, 48, 53, 60, 69, 79, 90, 103, 115, 130]
                         x_pos_RPM_next = +30
                         ammount_DEV002G000 = len(y_pos_RPM)
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         x_pos_RPM = 5
                         y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
                         x_pos_RPM_next = +40
                         ammount_DEV002G000 = len(y_pos_RPM)
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_pos_RPM = 203
                         y_pos_RPM = [15]*ammount_DEV002G000
                         x_pos_RPM_next = +28                   
@@ -3166,14 +3168,14 @@ class P01_DASH(tk.Frame):
                     global led_DEV002
                     led_DEV002 = [0,1,2,3,4,5,6]
                     for i in range(len(quantity)):
-                        if theme in theme_txt[:3]:  # THEME 0 1 2
+                        if theme in btns_theme_names[:3]:  # THEME 0 1 2
                             x_pos = x_pos01[i]
                             y_pos = y_pos01[i]
                             x_pos_nxt = x_posn01[i]
                             width = width01[i]
                             height = height01[i]
                             quant = quant01[i]
-                        elif theme in theme_txt[3:9]:  # THEME 3 to 9
+                        elif theme in btns_theme_names[3:9]:  # THEME 3 to 9
                             x_pos = x_pos02[i]
                             y_pos = y_pos02[i]
                             x_pos_nxt = x_posn02[i]
@@ -3190,7 +3192,7 @@ class P01_DASH(tk.Frame):
                     global val_DEV002G007
                     global ammount_DEV002G007
                     led_DEV002G007 = []
-                    if theme in theme_txt[:3]: # THEME 0 1 2
+                    if theme in btns_theme_names[:3]: # THEME 0 1 2
                         x_pos_DEV002G007 = 1365
                         x_pos_DEV002G007_after12 = 1785
                         y_pos_DEV002G007 = 93
@@ -3198,7 +3200,7 @@ class P01_DASH(tk.Frame):
                         width_DEV002G007 = 29
                         height_DEV002G007 = 22
                         ammount_DEV002G007 = 24
-                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    elif theme in btns_theme_names[3:9]: # THEME 3 to 9
                         x_pos_DEV002G007 = 1285
                         y_pos_DEV002G007 = 71
                         x_pos_DEV002G007_next = +84
@@ -3222,7 +3224,7 @@ class P01_DASH(tk.Frame):
                     global val_DEV002G008
                     global ammount_DEV002G008
                     led_DEV002G008 = []
-                    if theme in theme_txt[:3]: # THEME 0 1 2
+                    if theme in btns_theme_names[:3]: # THEME 0 1 2
                         x_pos_DEV002G008 = 1365
                         x_pos_DEV002G008_after12 = 1785
                         y_pos_DEV002G008 = 203
@@ -3230,7 +3232,7 @@ class P01_DASH(tk.Frame):
                         width_DEV002G008 = 29
                         height_DEV002G008 = 22
                         ammount_DEV002G008 = 24
-                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    elif theme in btns_theme_names[3:9]: # THEME 3 to 9
                         x_pos_DEV002G008 = 1285
                         y_pos_DEV002G008 = 184
                         x_pos_DEV002G008_next = +84
@@ -3254,7 +3256,7 @@ class P01_DASH(tk.Frame):
                     global val_DEV002G009
                     global ammount_DEV002G009
                     led_DEV002G009 = []
-                    if theme in theme_txt[:3]: # THEME 0 1 2
+                    if theme in btns_theme_names[:3]: # THEME 0 1 2
                         x_pos_DEV002G009 = 1365
                         x_pos_DEV002G009_after12 = 1785
                         y_pos_DEV002G009 = 313
@@ -3262,7 +3264,7 @@ class P01_DASH(tk.Frame):
                         width_DEV002G009 = 29
                         height_DEV002G009 = 22
                         ammount_DEV002G009 = 24
-                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    elif theme in btns_theme_names[3:9]: # THEME 3 to 9
                         x_pos_DEV002G009 = 1285
                         y_pos_DEV002G009 = 297
                         x_pos_DEV002G009_next = +84
@@ -3285,14 +3287,14 @@ class P01_DASH(tk.Frame):
                     read.load_btn_states_PBFNKT()
                     global ammount_PBFNKT
                     btns_PBFNKT = []
-                    if theme in theme_txt[:3]: # THEME 0 1 2
+                    if theme in btns_theme_names[:3]: # THEME 0 1 2
                         x_pos_PBFNKT = 2175
                         y_pos_PBFNKT = 655
                         width_PBFNKT = 55
                         height_PBFNKT = 55
                         x_pos_PBFNKT_mext = +width_PBFNKT +8
                         ammount_PBFNKT = 4 
-                    elif theme in theme_txt[3:9]: # THEME 3 to 9
+                    elif theme in btns_theme_names[3:9]: # THEME 3 to 9
                         x_pos_PBFNKT = 1285
                         y_pos_PBFNKT = 546
                         width_PBFNKT = 82
@@ -3349,7 +3351,7 @@ class P01_DASH(tk.Frame):
             #------------------------------------------------------------------------------
             if REGION:
                 if device == device_txt[1]:
-                    if theme_txt[0:3].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [15, 520, 320, 100]
                         y_txt_sysinfo = [500, 527, 554, 581, 608]
                         if btn_states_PB == "pb00":
@@ -3367,7 +3369,7 @@ class P01_DASH(tk.Frame):
                             x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
                             y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [2, 220, 320, 100]
                         y_txt_sysinfo = [200, 227, 254, 281, 308]
                         if btn_states_PB == "pb00":
@@ -3385,7 +3387,7 @@ class P01_DASH(tk.Frame):
                             x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
                             y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [73, 73, 110, 110, 135, 135, 320, 320]
                         y_txt_sysinfo = [100, 145, 190, 234, 278, 325, 280, 325]
@@ -3393,21 +3395,21 @@ class P01_DASH(tk.Frame):
                         y_lbl_sysinfo = [100, 100, 144, 144, 188, 232, 276, 320, 276, 320, 100, 140]
                         wh_lbl_sysinfo = [40, 70, 100]
                 elif device == device_txt[2]:
-                    if theme_txt[0:3].count(theme) > 0: # THEME 0 to 3
+                    if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 3
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [2175, 2175, 2175, 2175, 2175]
                         y_txt_sysinfo = [515, 540, 565, 590, 615]
                         x_lbl_sysinfo = [2235, 2335, 2235, 2335, 2235, 2235, 2175, 2280]
                         y_lbl_sysinfo = [513, 513, 539, 539, 565, 591, 617, 617]
                         wh_lbl_sysinfo = [65, 24, 140, 24]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [1810, 1810, 1810, 1810, 1810]
                         y_txt_sysinfo = [35, 60, 85, 110, 135]
                         x_lbl_sysinfo = [1870, 1970, 1870, 1970, 1870, 1870, 2260, 2260]
                         y_lbl_sysinfo = [32, 32, 58, 58, 84, 110, 450, 476]
                         wh_lbl_sysinfo = [65, 24, 140, 24]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [1870, 1870, 1930, 1930]
                         y_txt_sysinfo = [42, 64, 86, 108]
@@ -3415,7 +3417,7 @@ class P01_DASH(tk.Frame):
                         y_lbl_sysinfo = [42, 42, 64, 64, 86, 108, 118]
                         wh_lbl_sysinfo = [20, 60, 100, 120]
                 elif device == device_txt[31]:
-                    if theme_txt[0:3].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [15, 520, 320, 100]
                         y_txt_sysinfo = [500, 527, 554, 581, 608]
                         if btn_states_PB == "pb00":
@@ -3433,7 +3435,7 @@ class P01_DASH(tk.Frame):
                             x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
                             y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [2, 220, 320, 100]
                         y_txt_sysinfo = [200, 227, 254, 281, 308]
                         if btn_states_PB == "pb00":
@@ -3451,7 +3453,7 @@ class P01_DASH(tk.Frame):
                             x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
                             y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [73, 73, 110, 110, 135, 135, 320, 320]
                         y_txt_sysinfo = [100, 145, 190, 234, 278, 325, 280, 325]
@@ -3462,7 +3464,7 @@ class P01_DASH(tk.Frame):
             # PLACE TEXT
             #------------------------------------------------------------------------------
             if REGION:
-                if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17]: #T3-8,15,16
+                if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17]: #T3-8,15,16
                     #----------------------------------------------------------------------
                     # MTR DISPLAY
                     #----------------------------------------------------------------------
@@ -3497,7 +3499,7 @@ class P01_DASH(tk.Frame):
             if REGION:
                 global label_7SEG002
                 if device == device_txt[1] or device == device_txt[31]:
-                    if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb00", "pb01", "pb02"]:
+                    if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb00", "pb01", "pb02"]:
                         for i in range(8):
                             label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
                             lbls_sysinfo.append(label_sysinfo)
@@ -3511,7 +3513,7 @@ class P01_DASH(tk.Frame):
                         if btn_states_PB in ["pb01"]:
                             lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
                 elif device == device_txt[2]:
-                    if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17] and btn_states_PB in ["pb09"]:
+                    if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb09"]:
                         for i in range(8):
                             label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
                             lbls_sysinfo.append(label_sysinfo)
@@ -3537,10 +3539,10 @@ class P01_DASH(tk.Frame):
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
                 #--------------------------------------------------------------------------
                 if REGION: 
-                    if theme_txt[0:3].count(theme) > 0: # THEME 0 to 2
+                    if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 2
                         label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
                         label_7SEG001.place(x=582, y=160, width=370, height=147)
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         if btn_states_SW[3] == False:
                             if btn_states_SW[1] == True:
                                 label_7SEG001.config(image=localimage03, compound="center")
@@ -3550,16 +3552,16 @@ class P01_DASH(tk.Frame):
                             label_7SEG001.config(image=localimage05, compound="center")
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.place(x=609, y=116, width=496, height=212)
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
                 #--------------------------------------------------------------------------
                 # 7-SEGMENT DISPLAY 003: TOTAL / ---
                 #--------------------------------------------------------------------------
                 if REGION:
-                    if theme_txt[0:3].count(theme) > 0: # THEME 0 to 3
+                    if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 3
                         label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
                         label_7SEG003.place(x=940, y=470, width=285, height=84)
-                    elif theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                         label_7SEG003.place(x=800, y=590, width=460, height=90)
             elif device == device_txt[2]:
@@ -3567,11 +3569,11 @@ class P01_DASH(tk.Frame):
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
                 #--------------------------------------------------------------------------
                 if REGION:
-                    if theme_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.config(image=localimage04, compound="center")
                         label_7SEG001.place(x=567, y=164, width=496, height=212)
-                    elif theme in [theme_txt[15], theme_txt[16]]:
+                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
             elif device == device_txt[31]:
                 #--------------------------------------------------------------------------
@@ -3730,7 +3732,7 @@ class P01_DASH(tk.Frame):
         # UPDATE STYLES
         #----------------------------------------------------------------------------------
         if REGION:
-            if theme in [theme_txt[0], theme_txt[1], theme_txt[2]]:
+            if theme in [btns_theme_names[0], btns_theme_names[1], btns_theme_names[2]]:
                 localimage10 = ledOF_img_list[11] #SPEED OFRD
                 localimage11 = ledOF_img_list[11] #SPEED OFRD
                 localimage12 = ledOF_img_list[11] #SPEED OFRD
@@ -3741,7 +3743,7 @@ class P01_DASH(tk.Frame):
                 localimage17 = ledFU_img_list[11] #SPEED FURD
                 localimage18 = ledFU_img_list[11]
                 localimage19 = ledOF_img_list[11]
-                if theme == theme_txt[0]:
+                if theme == btns_theme_names[0]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
                     if style == style_txt[0]:
@@ -3774,7 +3776,7 @@ class P01_DASH(tk.Frame):
                         localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[46]
-                elif theme == theme_txt[1]:
+                elif theme == btns_theme_names[1]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
                     if style == style_txt[0]:
@@ -3807,7 +3809,7 @@ class P01_DASH(tk.Frame):
                         localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[46]
-                elif theme == theme_txt[2]:
+                elif theme == btns_theme_names[2]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list) #VOICEBOX
                     if style == style_txt[0]:
@@ -3840,7 +3842,7 @@ class P01_DASH(tk.Frame):
                         localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[46]
-            elif theme == theme_txt[3]:
+            elif theme == btns_theme_names[3]:
                 localimage30 = ledOF_img_list[61] #DEV002GAUGES 1GY
                 localimage31 = ledOF_img_list[61] #DEV002GAUGES 1GY
                 localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
@@ -3873,7 +3875,7 @@ class P01_DASH(tk.Frame):
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
-            elif theme == theme_txt[4]:
+            elif theme == btns_theme_names[4]:
                 localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
@@ -3906,7 +3908,7 @@ class P01_DASH(tk.Frame):
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
-            elif theme == theme_txt[5]:
+            elif theme == btns_theme_names[5]:
                 localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
@@ -3939,7 +3941,7 @@ class P01_DASH(tk.Frame):
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
-            elif theme == theme_txt[6]:
+            elif theme == btns_theme_names[6]:
                 localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
@@ -3972,7 +3974,7 @@ class P01_DASH(tk.Frame):
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
-            elif theme == theme_txt[7]:
+            elif theme == btns_theme_names[7]:
                 localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
@@ -4005,7 +4007,7 @@ class P01_DASH(tk.Frame):
                     localimage23 = sledOF_img_list[3]  #VOICEBOXOTTO OF LE
                 localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_OTTO_img_list)
-            elif theme == theme_txt[8]:
+            elif theme == btns_theme_names[8]:
                 localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
                 localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
@@ -4038,7 +4040,7 @@ class P01_DASH(tk.Frame):
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[46]
-            elif theme in [theme_txt[15], theme_txt[16]]:
+            elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                 localimage10 = lcarsOF_img_list[5]
                 localimage11 = lcarsOF_img_list[5]
                 localimage12 = lcarsOF_img_list[5]
@@ -4223,7 +4225,7 @@ class P01_DASH(tk.Frame):
                     DEV001VBS34 = imp_mod['random'].randint(0, 8)
                     DEV001VBOTTO = imp_mod['random'].randint(0, 8)
                     DEV001VBMAX = imp_mod['random'].randint(0, 8)
-                    if theme in theme_txt[1:7] or theme in theme_txt[9]: # THEME 1 to 6 or 8
+                    if theme in btns_theme_names[1:7] or theme in btns_theme_names[9]: # THEME 1 to 6 or 8
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
                             if style == style_txt[0]:
@@ -4282,7 +4284,7 @@ class P01_DASH(tk.Frame):
                                     led_DEV001VBS34L02[i].config(image=localimage22)
                                 else:
                                     led_DEV001VBS34L02[i].config(image=localimage23)
-                    elif theme == theme_txt[8]:
+                    elif theme == btns_theme_names[8]:
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
                             if style == style_txt[0]:
@@ -4333,7 +4335,7 @@ class P01_DASH(tk.Frame):
                                     led_DEV001VBS34L02[i].config(image=localimage22)
                                 else:
                                     led_DEV001VBS34L02[i].config(image=localimage23)
-                    elif theme == theme_txt[7]:
+                    elif theme == btns_theme_names[7]:
                         for i in range (0, 8):
                             if DEV001VBS34 <= i:
                                 led_DEV001VBS34L01[i].config(image=localimage20)
@@ -4347,12 +4349,12 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
                     #----------------------------------------------------------------------
-                    if theme in theme_txt[1:9]: # THEME 1 to 8
+                    if theme in btns_theme_names[1:9]: # THEME 1 to 8
                         for i in range(ammount_VB):
                             led_DEV001VBS34L01[i].config(image=localimage23)
                             led_DEV001VBS34L02[i].config(image=localimage23)
                             led_DEV001VBS34L03[i].config(image=localimage23)
-                    elif theme == theme_txt[7]:
+                    elif theme == btns_theme_names[7]:
                         for i in range(0, 8):
                             led_DEV001VBS34L01[i].config(image=localimage22)
                             led_DEV001VBS34L02[i].config(image=localimage23)
@@ -4360,7 +4362,7 @@ class P01_DASH(tk.Frame):
             # VOICEBOX STATUS BUTTONS (3)
             #------------------------------------------------------------------------------ 
             if REGION:
-                if theme in theme_txt[:9]:
+                if theme in btns_theme_names[:9]:
                     if btn_states_FNKT[3] == True:
                         #------------------------------------------------------------------
                         # DISPLAY THE 20 LEDs
@@ -4475,7 +4477,7 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------            
-                if theme in [theme_txt[0], theme_txt[1], theme_txt[2]]:
+                if theme in [btns_theme_names[0], btns_theme_names[1], btns_theme_names[2]]:
                     if btn_states_FNKT[3] == True:
                         for i in range (val_conf_min[0], ammount_DEV002G000):
                             if perc_DEV002[0] >= i+1:
@@ -4735,7 +4737,7 @@ class P01_DASH(tk.Frame):
         # UPDATE SYSINFO MTR DISPLAY
         #----------------------------------------------------------------------------------
         if REGION:
-            if theme in theme_txt[0:3] + theme_txt[3:9] + theme_txt[15:17]:
+            if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17]:
                 if device == device_txt[1] or device == device_txt[31]:
                     if btn_states_PB == "pb00":
                         if SYSTEM == "linux":
@@ -4778,10 +4780,10 @@ class P01_DASH(tk.Frame):
                     #    label_7SEG002.config(text=gps_odo_metric_0str)
                 elif device == device_txt[2]:
                     if btn_states_PB != "pb09":
-                        if theme in theme_txt[0:3]:    
+                        if theme in btns_theme_names[0:3]:    
                             label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                             label_7SEG002.place(x=2175, y=515, width=245, height=100)
-                        elif theme in theme_txt[3:9]:
+                        elif theme in btns_theme_names[3:9]:
                             label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                             label_7SEG002.place(x=1810, y=34, width=320, height=100)
                         try:
@@ -4841,7 +4843,7 @@ class P01_DASH(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P02_QOPT(tk.Frame):
     if debug == True:
-        print (menu_btn_names[2])
+        print (btns_menu_names[2])
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -4979,7 +4981,7 @@ class P02_QOPT(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         #----------------------------------------------------------------------------------
         # QOPT BUTTONS
         #----------------------------------------------------------------------------------
@@ -5002,7 +5004,7 @@ class P02_QOPT(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P03_SETUP(tk.Frame):
     if debug == True:
-        print (menu_btn_names[3])
+        print (btns_menu_names[3])
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -5033,7 +5035,7 @@ class P03_SETUP(tk.Frame):
                     xy_width = 10
                     frames = [
                         [15, 75],   #0 TITLE FRAME
-                        [90, 615],  #1 MAIN FRAME
+                        [90, 255],  #1 MAIN FRAME
                         [(bggrid[4]-138), (bggrid[4]-48)]  #2 MENU FRAME
                     ]
                     coordinates = []
@@ -5149,18 +5151,17 @@ class P03_SETUP(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if REGION:    
-                    if device == device_txt[1]: 
-                        canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
-                    elif device == device_txt[2]:
-                        canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
-                        canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
-                        canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
-                        canvas.create_line(2355, 15, 2355, 25, fill=colors_corner[1], width=1)   #RT_Y
-                        canvas.create_line(1295, 720, 1305, 720, fill=colors_corner[0], width=1) #LB_X
-                        canvas.create_line(1295, 710, 1295, 720, fill=colors_corner[1], width=1) #LB_Y
-                        canvas.create_line(2345, 720, 2355, 720, fill=colors_corner[0], width=1) #RB_X
-                        canvas.create_line(2355, 710, 2355, 720, fill=colors_corner[1], width=1) #RB_Y
+                if device == device_txt[1]: 
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
+                elif device == device_txt[2]:
+                    canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
+                    canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
+                    canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
+                    canvas.create_line(2355, 15, 2355, 25, fill=colors_corner[1], width=1)   #RT_Y
+                    canvas.create_line(1295, 720, 1305, 720, fill=colors_corner[0], width=1) #LB_X
+                    canvas.create_line(1295, 710, 1295, 720, fill=colors_corner[1], width=1) #LB_Y
+                    canvas.create_line(2345, 720, 2355, 720, fill=colors_corner[0], width=1) #RB_X
+                    canvas.create_line(2355, 710, 2355, 720, fill=colors_corner[1], width=1) #RB_Y
         #----------------------------------------------------------------------------------
         # INFO AND GRID CONFIG GLOBALS
         #----------------------------------------------------------------------------------
@@ -5375,7 +5376,7 @@ class P03_SETUP(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         #----------------------------------------------------------------------------------
         # RB BUTTON LABELS
         #----------------------------------------------------------------------------------
@@ -5619,7 +5620,7 @@ class P03_SETUP(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P04_THEMES(tk.Frame):
     if debug == True:
-        print (menu_btn_names[4])
+        print (btns_menu_names[4])
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -5773,18 +5774,18 @@ class P04_THEMES(tk.Frame):
                         line_width = 1
                         canvas.create_line(x1, y1, x2, y2, fill=line_color, width=line_width)
                 #--------------------------------------------------------------------------
-                # CREATE FRAME 05 (MENU) CORNERS LEFT/TOP DISPLAY
+                # CREATE FRAME 02 (MENU) CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
                 if REGION:
                     coordinates = [
-                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[2][0]), 0, 1),        # LT_X
-                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][0]+xy_width), 1, 1),        # LT_Y
-                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[2][0]), 0, 0),  # RT_X
-                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][0]+xy_width), 1, 0),  # RT_Y
-                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[2][1]), 0, 1),        # LB_X
-                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[2][1]-xy_width), 1, 1),        # LB_Y
-                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[2][1]), 0, 0),  # RB_X
-                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[2][1]-xy_width), 1, 0),  # RB_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][0]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[5][0]), 0, 1),        # LT_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][0]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][0]+xy_width), 1, 1),        # LT_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][0]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[5][0]), 0, 0),  # RT_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][0]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][0]+xy_width), 1, 0),  # RT_Y
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][1]), (bggrid[0]+xcrnrborder+xy_width), (bggrid[3]+frames[5][1]), 0, 1),        # LB_X
+                        ((bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][1]), (bggrid[0]+xcrnrborder), (bggrid[3]+frames[5][1]-xy_width), 1, 1),        # LB_Y
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][1]), (bggrid[1]-xcrnrborder_ri-xy_width), (bggrid[3]+frames[5][1]), 0, 0),  # RB_X
+                        ((bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][1]), (bggrid[1]-xcrnrborder_ri), (bggrid[3]+frames[5][1]-xy_width), 1, 0),  # RB_Y
                     ]
                     for x1, y1, x2, y2, is_vertical, is_top in coordinates:
                         line_color = colors_corner[is_vertical]
@@ -5793,18 +5794,17 @@ class P04_THEMES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if REGION:    
-                    if device == device_txt[1]: 
-                        canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
-                    elif device == device_txt[2]:
-                        canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
-                        canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
-                        canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
-                        canvas.create_line(2355, 15, 2355, 25, fill=colors_corner[1], width=1)   #RT_Y
-                        canvas.create_line(1295, 720, 1305, 720, fill=colors_corner[0], width=1) #LB_X
-                        canvas.create_line(1295, 710, 1295, 720, fill=colors_corner[1], width=1) #LB_Y
-                        canvas.create_line(2345, 720, 2355, 720, fill=colors_corner[0], width=1) #RB_X
-                        canvas.create_line(2355, 710, 2355, 720, fill=colors_corner[1], width=1) #RB_Y
+                if device == device_txt[1]: 
+                    canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
+                elif device == device_txt[2]:
+                    canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
+                    canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
+                    canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
+                    canvas.create_line(2355, 15, 2355, 25, fill=colors_corner[1], width=1)   #RT_Y
+                    canvas.create_line(1295, 720, 1305, 720, fill=colors_corner[0], width=1) #LB_X
+                    canvas.create_line(1295, 710, 1295, 720, fill=colors_corner[1], width=1) #LB_Y
+                    canvas.create_line(2345, 720, 2355, 720, fill=colors_corner[0], width=1) #RB_X
+                    canvas.create_line(2355, 710, 2355, 720, fill=colors_corner[1], width=1) #RB_Y
         #----------------------------------------------------------------------------------
         # STATIC TEXT
         #----------------------------------------------------------------------------------
@@ -5815,11 +5815,6 @@ class P04_THEMES(tk.Frame):
             canvas.create_text(20,335, **txt_style_pagename, fill=sys_clr[9], text="THEME")
             canvas.create_text(20,530, **txt_style_pagename, fill=sys_clr[9], text="SYS")
             canvas.create_text(20, (bggrid[4]-135), **txt_style_pagename, fill=sys_clr[9], text="MENU")
-        #----------------------------------------------------------------------------------
-        # MENU BUTTONS
-        #----------------------------------------------------------------------------------
-        if REGION:
-            read.menu()
         #----------------------------------------------------------------------------------
         # DEVICE BUTTONS
         #----------------------------------------------------------------------------------   
@@ -5873,79 +5868,31 @@ class P04_THEMES(tk.Frame):
         # THEME BUTTONS
         #----------------------------------------------------------------------------------   
         if REGION:
-            global btns_theme
-            global btn_theme
-            btns_theme = []
-            x_pos_btns1_theme = 50
-            x_pos_btns2_theme = 50
-            for i, theme_text in enumerate(theme_txt):
-                btn_theme = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=theme_text, command=lambda text=theme_text: [read.toggle_button_theme(text), self.master.switch_frame(P01_DASH)])
-                if i < 10:
-                    btn_theme.place(x=x_pos_btns1_theme, y=370, width=btn_w, height=btn_h)
-                    x_pos_btns1_theme += 119
-                else:
-                    btn_theme.place(x=x_pos_btns2_theme, y=445, width=btn_w, height=btn_h)
-                    x_pos_btns2_theme += 119
-                btns_theme.append(btn_theme)
-
-            for i, text in enumerate(theme_txt):
-                if theme == text:
-                    btns_theme[i].config(fg=sys_clr[10])
-                else:
-                    btns_theme[i].config(fg=sys_clr[11])
-
-            # ENABLE DISABLE BUTTONS
-            if REGION:
-                #btns_theme[0].config(state=tk.DISABLED)
-                #btns_theme[1].config(state=tk.DISABLED)
-                #btns_theme[2].config(state=tk.DISABLED)
-                #btns_theme[3].config(state=tk.DISABLED)
-                #btns_theme[4].config(state=tk.DISABLED)
-                #btns_theme[5].config(state=tk.DISABLED)
-                #btns_theme[6].config(state=tk.DISABLED)
-                #btns_theme[7].config(state=tk.DISABLED)
-                #btns_theme[8].config(state=tk.DISABLED)
-                btns_theme[9].config(state=tk.DISABLED)
-                btns_theme[10].config(state=tk.DISABLED)
-                btns_theme[11].config(state=tk.DISABLED)
-                btns_theme[12].config(state=tk.DISABLED)
-                btns_theme[13].config(state=tk.DISABLED)
-                btns_theme[14].config(state=tk.DISABLED)
-                btns_theme[15].config(state=tk.DISABLED)
-                btns_theme[16].config(state=tk.DISABLED)
+            read.buttons_theme()
         #----------------------------------------------------------------------------------
         # SYSTEM STYLE BUTTONS
         #----------------------------------------------------------------------------------   
         if REGION:
-            global btns_system
-            btns_system = []
-            x_pos_system = 170
-            y_pos_system = 540
-            for system_text in system_txt:
-                button_system = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=system_text, command=lambda text=system_text: [read.toggle_button_system(text), self.master.switch_frame(P04_THEMES)])
-                button_system.place(x=x_pos_system, y=y_pos_system, width=btn_w, height=btn_h)
-                x_pos_system += +119
-                btns_system.append(button_system)
-
-            for i, text in enumerate(system_txt):
-                if system == text:
-                    btns_system[i].config(fg=sys_clr[10])
-                else:
-                    btns_system[i].config(fg=sys_clr[11])
+            read.buttons_sys()
+        #----------------------------------------------------------------------------------
+        # MENU BUTTONS
+        #----------------------------------------------------------------------------------
+        if REGION:
+            read.buttons_menu()
         #----------------------------------------------------------------------------------
         # END INIT
         #----------------------------------------------------------------------------------
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (menu_btn_names[4])
+            print (btns_menu_names[4])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 05: CAR FUNCTIONS
 #------------------------------------------------------------------------------------------
 class P05_CARFUNCTIONS(tk.Frame):
     if debug == True:
-        print (menu_btn_names[5])
+        print (btns_menu_names[5])
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
@@ -5965,18 +5912,18 @@ class P05_CARFUNCTIONS(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (menu_btn_names[5])
+            print (btns_menu_names[5])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 06: KNIGHT FUNCTIONS
 #------------------------------------------------------------------------------------------
 class P06_KNIGHTFUNCTIONS(tk.Frame):
     if debug == True:
-        print (menu_btn_names[6])
+        print (btns_menu_names[6])
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
@@ -5996,7 +5943,7 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         self.update_page()
 
     def update_page(self):
@@ -6009,7 +5956,7 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
 #------------------------------------------------------------------------------------------
 class P07_AUDIO(tk.Frame):
     if debug == True:
-        print (menu_btn_names[7])
+        print (btns_menu_names[7])
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -6142,7 +6089,7 @@ class P07_AUDIO(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         #----------------------------------------------------------------------------------
         # SOUND BUTTONS
         #----------------------------------------------------------------------------------
@@ -6159,14 +6106,14 @@ class P07_AUDIO(tk.Frame):
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (menu_btn_names[7])
+            print (btns_menu_names[7])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 08: VIDEO
 #------------------------------------------------------------------------------------------
 class P08_VIDEO(tk.Frame):
     if debug == True:
-        print (menu_btn_names[8])
+        print (btns_menu_names[8])
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         #----------------------------------------------------------------------------------
@@ -6295,18 +6242,18 @@ class P08_VIDEO(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (menu_btn_names[8])
+            print (btns_menu_names[8])
         self.after(time_conf, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 09: RES
 #------------------------------------------------------------------------------------------
 class P09_RES(tk.Frame):
     if debug == True:
-        print (menu_btn_names[9])
+        print (btns_menu_names[9])
     def __init__(self, master):   
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
@@ -6432,18 +6379,18 @@ class P09_RES(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (menu_btn_names[9])
+            print (btns_menu_names[9])
         self.update_job = self.after(1000, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 10: RES
 #------------------------------------------------------------------------------------------
 class P10_RES(tk.Frame):
     if debug == True:
-        print (menu_btn_names[10])
+        print (btns_menu_names[10])
     def __init__(self, master):      
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
@@ -6569,18 +6516,18 @@ class P10_RES(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (menu_btn_names[10])
+            print (btns_menu_names[10])
         self.update_job = self.after(1000, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 11: RES
 #------------------------------------------------------------------------------------------
 class P11_RES(tk.Frame):
     if debug == True:
-        print (menu_btn_names[11])
+        print (btns_menu_names[11])
     def __init__(self, master):       
         tk.Frame.__init__(self, master)        
         #----------------------------------------------------------------------------------
@@ -6706,11 +6653,11 @@ class P11_RES(tk.Frame):
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            read.menu()
+            read.buttons_menu()
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (menu_btn_names[11])
+            print (btns_menu_names[11])
         self.update_job = self.after(1000, self.update_page)
 #------------------------------------------------------------------------------------------
 # FUNCTIONS
@@ -6732,30 +6679,132 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         if REGION:
             #------------------------------------------------------------------------------
+            # THEME BUTTONS
+            #------------------------------------------------------------------------------
+            def buttons_theme(self):
+                global btns_theme
+                global btn_theme
+                global btn_theme_place
+                btn_theme_place = len(btns_theme_names)
+                btns_theme = []
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_theme_place):
+                    btn_theme = tk.Button(text=btns_theme_names[i], bd=0, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_theme(btns_theme_names[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
+                    btns_theme.append(btn_theme)
+                    btns_theme[i].place(x=x_pos_r1, y=373, w=btn_w, h=btn_h)
+                    x_pos_r1 += +(btn_w+15)
+                for i, text in enumerate(btns_theme_names):
+                    if theme == text:
+                        btns_theme[i].config(fg=sys_clr[10])
+                    else:
+                        btns_theme[i].config(fg=sys_clr[11])
+                # ENABLE DISABLE BUTTONS
+                if REGION:
+                    #btns_theme[0].config(state=tk.DISABLED)
+                    #btns_theme[1].config(state=tk.DISABLED)
+                    #btns_theme[2].config(state=tk.DISABLED)
+                    #btns_theme[3].config(state=tk.DISABLED)
+                    #btns_theme[4].config(state=tk.DISABLED)
+                    #btns_theme[5].config(state=tk.DISABLED)
+                    #btns_theme[6].config(state=tk.DISABLED)
+                    #btns_theme[7].config(state=tk.DISABLED)
+                    #btns_theme[8].config(state=tk.DISABLED)
+                    btns_theme[9].config(state=tk.DISABLED)
+                    btns_theme[10].config(state=tk.DISABLED)
+                    btns_theme[11].config(state=tk.DISABLED)
+                    btns_theme[12].config(state=tk.DISABLED)
+                    btns_theme[13].config(state=tk.DISABLED)
+                    btns_theme[14].config(state=tk.DISABLED)
+                    btns_theme[15].config(state=tk.DISABLED)
+                    btns_theme[16].config(state=tk.DISABLED)
+                btns_theme_slider = tk.Scale(from_=0, to=btn_theme_place, command=read.buttons_theme_show, showvalue=0, length=(bggrid[1]-160), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_theme_slider.set(1)
+                btns_theme_slider.place(x=127, y=333)
+            #------------------------------------------------------------------------------
+            # SHOW THEME BUTTONS IN SLIDER
+            #------------------------------------------------------------------------------        
+            def buttons_theme_show(self, value):
+                start_index = int(float(value))  # Convert float value to integer
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_theme_place):
+                    if i < start_index or i >= start_index + 8:
+                        btns_theme[i].place_forget()  # Hide the btns_theme outside the range
+                    else:
+                        btns_theme[i].place(x=x_pos_r1, y=373, w=btn_w, h=btn_h)  # Show the btns_theme within the range
+                        x_pos_r1 += +(btn_w+15)           
+            #------------------------------------------------------------------------------
+            # SYS BUTTONS
+            #------------------------------------------------------------------------------
+            def buttons_sys(self):
+                global btns_sys
+                global btn_sys
+                global btn_sys_place
+                btn_sys_place = len(btns_sys_names)
+                btns_sys = []
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_sys_place):
+                    btn_sys = tk.Button(text=btns_sys_names[i], bd=0, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_system(btns_sys_names[i]),kidd.switch_frame(P04_THEMES)])                                                                                                                                                     
+                    btns_sys.append(btn_sys)
+                    btns_sys[i].place(x=x_pos_r1, y=568, w=btn_w, h=btn_h)
+                    x_pos_r1 += +(btn_w+15)
+                for i, text in enumerate(btns_sys_names):
+                    if system == text:
+                        btns_sys[i].config(fg=sys_clr[10])
+                    else:
+                        btns_sys[i].config(fg=sys_clr[11])
+                btns_sys_slider = tk.Scale(from_=0, to=btn_sys_place, command=read.buttons_sys_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_sys_slider.set(0)
+                btns_sys_slider.place(x=107, y=528)
+            #------------------------------------------------------------------------------
+            # SHOW SYS BUTTONS IN SLIDER
+            #------------------------------------------------------------------------------        
+            def buttons_sys_show(self, value):
+                start_index = int(float(value))  # Convert float value to integer
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_sys_place):
+                    if i < start_index or i >= start_index + 8:
+                        btns_sys[i].place_forget()  # Hide the btns_sys outside the range
+                    else:
+                        btns_sys[i].place(x=x_pos_r1, y=568, w=btn_w, h=btn_h)  # Show the btns_sys within the range
+                        x_pos_r1 += +(btn_w+15)
+            #------------------------------------------------------------------------------
             # MENU BUTTONS
             #------------------------------------------------------------------------------
-            def menu(self):
+            def buttons_menu(self):
                 global btns_menu
                 global btn_menu
                 global btn_menu_place
-                btn_menu_place = 12
+                btn_menu_place = len(btns_menu_names)
                 btns_menu = []
                 x_pos_r1 = 20
                 btn_w = 130
                 btn_h = 40
                 for i in range(btn_menu_place):
-                    btn_menu = tk.Button(text=menu_btn_names[i], bd=0, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
+                    btn_menu = tk.Button(text=btns_menu_names[i], bd=0, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
                     btn_menu.config(command=lambda i=i: kidd.switch_frame(i))
                     btns_menu.append(btn_menu)
                     btns_menu[i].place(x=x_pos_r1, y=(bggrid[4]-95), w=btn_w, h=btn_h)
                     x_pos_r1 += +(btn_w+15)
-                slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.show_menu_btns, showvalue=0, length=(bggrid[1]-140), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
-                slider.set(1)
-                slider.place(x=107, y=(bggrid[4]-137))
+                #for i, text in enumerate(btns_menu_names):
+                #    if menu == text:
+                #        btns_menu[i].config(fg=sys_clr[10])
+                #    else:
+                #        btns_menu[i].config(fg=sys_clr[11])
+                btns_menu_slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.buttons_menu_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_menu_slider.set(1)
+                btns_menu_slider.place(x=107, y=(bggrid[4]-137))
             #------------------------------------------------------------------------------
             # SHOW MENU BUTTONS IN SLIDER
             #------------------------------------------------------------------------------        
-            def show_menu_btns(self, value):
+            def buttons_menu_show(self, value):
                 start_index = int(float(value))  # Convert float value to integer
                 x_pos_r1 = 20
                 btn_w = 130
@@ -7086,7 +7135,6 @@ class myfunctions():
             device = device_text
             with open(imp_mod['os'].path.join(datadir, 'device_conf.pickle'), 'wb') as f:
                 imp_mod['pickle'].dump(device, f)
-
         def toggle_button_style(self, style_text):
             global style
             global sty_clr
@@ -7097,24 +7145,22 @@ class myfunctions():
                 sty_clr = sty_clr_ki
             with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'wb') as f:
                 imp_mod['pickle'].dump(style, f)
-
         def toggle_button_theme(self, theme_text):
             global theme
             theme = theme_text
             with open(imp_mod['os'].path.join(datadir, 'theme_conf.pickle'), 'wb') as f:
-                imp_mod['pickle'].dump(theme, f)
-                
+                imp_mod['pickle'].dump(theme, f)                
         def toggle_button_system(self, system_text):
             global system
             global sys_clr
             system = system_text
-            if system == system_txt[0]:
+            if system == btns_sys_names[0]:
                 sys_clr = sys_clr_OR
-            elif system == system_txt[1]: 
+            elif system == btns_sys_names[1]: 
                 sys_clr = sys_clr_GN
-            elif system == system_txt[2]: 
+            elif system == btns_sys_names[2]: 
                 sys_clr = sys_clr_BU
-            elif system == system_txt[3]: 
+            elif system == btns_sys_names[3]: 
                 sys_clr = sys_clr_WH
             with open(imp_mod['os'].path.join(datadir, 'system_conf.pickle'), 'wb') as f:
                 imp_mod['pickle'].dump(system, f)
