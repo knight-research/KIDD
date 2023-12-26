@@ -590,8 +590,8 @@ if REGION:
                 #PAGES
                 btns_menu_names = ["BOOT", "DASH", "QOPT", "SETUP", "THEMES", "C-FNkT", "K-FNKT", "AUDIO", "VIDEO", "RES", "RES", "RES", "RES", "RES"]
                 #CONFIG
-                device_txt = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
-                style_txt = ['KARR', 'KITT', '---', '---', '---']
+                btns_device_names = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
+                btns_style_names = ['KARR', 'KITT', '---', '---', '---']
                 btns_theme_names = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
                 btns_sys_names = ['ORANGE', 'GREEN', 'AQUA', 'WHITE']
                 btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
@@ -874,15 +874,15 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     file = 'btn_states_DEV001PB.pickle'
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     file = 'btn_states_DEV002PB.pickle'
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     file = 'btn_states_DEV004PB.pickle'
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     file = 'btn_states_DEV008PB.pickle'
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     file = 'btn_states_DEV031PB.pickle'    
                 with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                     btn_states_PB = imp_mod['pickle'].load(f)
@@ -902,15 +902,15 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     file = 'btn_states_DEV001FNKT.pickle'
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     file = 'btn_states_DEV002FNKT.pickle'
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     file = 'btn_states_DEV004FNKT.pickle'
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     file = 'btn_states_DEV008FNKT.pickle'
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     file = 'btn_states_DEV031FNKT.pickle'
                 with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                     btn_states_FNKT = imp_mod['pickle'].load(f)
@@ -921,15 +921,15 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     file = 'btn_states_DEV001HW.pickle'
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     file = 'btn_states_DEV002HW.pickle'
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     file = 'btn_states_DEV004HW.pickle'
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     file = 'btn_states_DEV008HW.pickle'
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     file = 'btn_states_DEV031HW.pickle'
                 with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                     btn_states_HW = imp_mod['pickle'].load(f)
@@ -940,15 +940,15 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     file = 'btn_states_DEV001SW.pickle'
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     file = 'btn_states_DEV002SW.pickle'
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     file = 'btn_states_DEV004SW.pickle'
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     file = 'btn_states_DEV008SW.pickle'
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     file = 'btn_states_DEV031SW.pickle'
                 with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                     btn_states_SW = imp_mod['pickle'].load(f)
@@ -964,15 +964,15 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     file = 'btn_states_DEV001qopt.pickle'
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     file = 'btn_states_DEV002qopt.pickle'
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     file = 'btn_states_DEV004qopt.pickle'
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     file = 'btn_states_DEV008qopt.pickle'
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     file = 'btn_states_DEV031qopt.pickle'
                 with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                     btn_states_qopt = imp_mod['pickle'].load(f)
@@ -983,15 +983,15 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             try:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     file = 'btn_states_DEV001FAV.pickle'
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     file = 'btn_states_DEV002FAV.pickle'
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     file = 'btn_states_DEV004FAV.pickle'
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     file = 'btn_states_DEV008FAV.pickle'
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     file = 'btn_states_DEV031FAV.pickle'
                 with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                     btn_states_FAV = imp_mod['pickle'].load(f)
@@ -1037,19 +1037,19 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             grid_spacing = 15
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 dual_disp_style = "LR"
                 bggrid = [0, 1280, 800, 0, 768, 0]
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 dual_disp_style = "LR"
                 bggrid = [0, 1280,1280, 0, 768, 0]
-            elif device == device_txt[3]:
+            elif device == btns_device_names[3]:
                 dual_disp_style = "LR"
                 bggrid = [0, 1280,1280, 0, 768, 0]
-            elif device == device_txt[4]:
+            elif device == btns_device_names[4]:
                 dual_disp_style = "NONE"
                 bggrid = [0, 1920, 0, 0, 1200, 0]
-            elif device == device_txt[8]:
+            elif device == btns_device_names[8]:
                 dual_disp_style = "UD"
                 bggrid = [0, 320, 0, 0, 1480 , 0]
             
@@ -1094,9 +1094,9 @@ if REGION:
         #----------------------------------------------------------------------------------
         # APPLY KIDD STYLES
         #----------------------------------------------------------------------------------
-        if style == style_txt[0]:
+        if style == btns_style_names[0]:
             sty_clr = sty_clr_ka
-        elif style == style_txt[1]:
+        elif style == btns_style_names[1]:
             sty_clr = sty_clr_ki
         
         btn_style_imgbtn =              {'borderwidth':0,'highlightthickness':0}
@@ -1176,7 +1176,7 @@ if REGION:
         #----------------------------------------------------------------------------------
         # RELAIS BOARDS 
         #----------------------------------------------------------------------------------
-        if SYSTEM == "linux" and btn_states_HW[0] == True and device == device_txt[2]:        
+        if SYSTEM == "linux" and btn_states_HW[0] == True and device == btns_device_names[2]:        
             # Set the configuration word to configure all pins as outputs for each board
             for i, address in enumerate(i2c_addr_dev02rb):
                 buses[i].write_word_data(address, 0x00FF, 0x00FF)
@@ -1304,15 +1304,15 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global btn_states_PB
                 try:
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001PB.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002PB.pickle'
-                    elif device == device_txt[4]:
+                    elif device == btns_device_names[4]:
                         file = 'btn_states_DEV004PB.pickle'
-                    elif device == device_txt[8]:
+                    elif device == btns_device_names[8]:
                         file = 'btn_states_DEV008PB.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031PB.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                         btn_states_PB = imp_mod['pickle'].load(f)
@@ -1334,15 +1334,15 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global btn_states_FNKT
                 try:
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001FNKT.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002FNKT.pickle'
-                    elif device == device_txt[4]:
+                    elif device == btns_device_names[4]:
                         file = 'btn_states_DEV004FNKT.pickle'
-                    elif device == device_txt[8]:
+                    elif device == btns_device_names[8]:
                         file = 'btn_states_DEV008FNKT.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031FNKT.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                         btn_states_FNKT = imp_mod['pickle'].load(f)
@@ -1354,15 +1354,15 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global btn_states_HW
                 try:
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001HW.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002HW.pickle'
-                    elif device == device_txt[4]:
+                    elif device == btns_device_names[4]:
                         file = 'btn_states_DEV004HW.pickle'
-                    elif device == device_txt[8]:
+                    elif device == btns_device_names[8]:
                         file = 'btn_states_DEV008HW.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031HW.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                         btn_states_HW = imp_mod['pickle'].load(f)
@@ -1374,15 +1374,15 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global btn_states_SW
                 try:
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001SW.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002SW.pickle'
-                    elif device == device_txt[4]:
+                    elif device == btns_device_names[4]:
                         file = 'btn_states_DEV004SW.pickle'
-                    elif device == device_txt[8]:
+                    elif device == btns_device_names[8]:
                         file = 'btn_states_DEV008SW.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031SW.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                         btn_states_SW = imp_mod['pickle'].load(f)
@@ -1399,15 +1399,15 @@ class P00_BOOT(tk.Frame):
             if REGION:
                 global btn_states_FAV
                 try:
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001FAV.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002FAV.pickle'
-                    elif device == device_txt[4]:
+                    elif device == btns_device_names[4]:
                         file = 'btn_states_DEV004FAV.pickle'
-                    elif device == device_txt[8]:
+                    elif device == btns_device_names[8]:
                         file = 'btn_states_DEV008FAV.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031FAV.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
                         btn_states_FAV = imp_mod['pickle'].load(f)
@@ -1418,7 +1418,7 @@ class P00_BOOT(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             print ("0%")
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 # IMAGES BACKGROUND DEV001
                 for filename in bgDEV001_img_dir_srt:
                     if filename.endswith(".jpg"):
@@ -1430,7 +1430,7 @@ class P00_BOOT(tk.Frame):
                         image = Image.open(imp_mod['os'].path.join(bgDEV001_DASH_img_dir, filename))
                         bgDEV001_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 # IMAGES BACKGROUND UNIT02
                 for filename in bgDEV002_img_dir_srt:
                     if filename.endswith(".jpg"):
@@ -1442,7 +1442,7 @@ class P00_BOOT(tk.Frame):
                         image = Image.open(imp_mod['os'].path.join(bgDEV002_DASH_img_dir, filename))
                         bgDEV002_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
-            elif device == device_txt[4]:
+            elif device == btns_device_names[4]:
                 # IMAGES BACKGROUND UNIT04
                 for filename in bgDEV004_img_dir_srt:
                     if filename.endswith(".jpg"):
@@ -1454,7 +1454,7 @@ class P00_BOOT(tk.Frame):
                         image = Image.open(imp_mod['os'].path.join(bgDEV004_DASH_img_dir, filename))
                         bgDEV004_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
-            elif device == device_txt[8]:
+            elif device == btns_device_names[8]:
                 # IMAGES BACKGROUND UNIT08
                 for filename in bgDEV008_img_dir_srt:
                     if filename.endswith(".jpg"):
@@ -1466,7 +1466,7 @@ class P00_BOOT(tk.Frame):
                         image = Image.open(imp_mod['os'].path.join(bgDEV008_DASH_img_dir, filename))
                         bgDEV008_DASH_img_list.append(ImageTk.PhotoImage(image))
                 print ("10%")
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 # IMAGES BACKGROUND UNIT31
                 for filename in bgDEV031_img_dir_srt:
                     if filename.endswith(".jpg"):
@@ -1686,15 +1686,15 @@ class P00_BOOT(tk.Frame):
             self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
             self.canvas.pack(fill='both', expand=True)
 
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 background_image = bgDEV001_img_list[1]
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 background_image = bgDEV002_img_list[1]
-            elif device == device_txt[4]:
+            elif device == btns_device_names[4]:
                 background_image = bgDEV004_img_list[1]
-            elif device == device_txt[8]:
+            elif device == btns_device_names[8]:
                 background_image = bgDEV008_img_list[1]    
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 background_image = bgDEV031_img_list[1]
             self.canvas.create_image(0, 0, image=background_image, anchor='nw')
 
@@ -1726,7 +1726,7 @@ class P01_DASH(tk.Frame):
         # THEME DEVICE001 AND DEVICE002
         #----------------------------------------------------------------------------------
         if REGION:
-            if style == style_txt[0]:
+            if style == btns_style_names[0]:
                 if theme in [btns_theme_names[0]]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
@@ -1990,7 +1990,7 @@ class P01_DASH(tk.Frame):
                     localimage01 = lcarsON_img_list[0]
                     localimage02 = lcarsOF_img_list[0]
                     localimage03 = segmentKA_img_list[11]
-            elif style == style_txt[1]:
+            elif style == btns_style_names[1]:
                 if theme in [btns_theme_names[0]]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
@@ -2263,7 +2263,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             global background_image
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 #--------------------------------------------------------------------------
                 # GET BACKGROUNDIMAGE
                 #--------------------------------------------------------------------------
@@ -2276,7 +2276,7 @@ class P01_DASH(tk.Frame):
                 if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     self.canvas.create_rectangle(4, 195, 355, 332, fill=sty_clr[3])      #MTR
                     self.canvas.create_rectangle(498, 571, 1270, 699, fill=sty_clr[3])   #TOTAL
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 #--------------------------------------------------------------------------
                 # GET BACKGROUNDIMAGE
                 #--------------------------------------------------------------------------
@@ -2288,7 +2288,7 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                     self.canvas.create_rectangle(1808, 30, 2130, 134, fill=sty_clr[3])   #PROGNO
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 #--------------------------------------------------------------------------
                 # GET BACKGROUNDIMAGE
                 #--------------------------------------------------------------------------
@@ -2299,7 +2299,7 @@ class P01_DASH(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 if theme == btns_theme_names[0] or btns_theme_names[1] or theme == btns_theme_names[2]:
                     pass
                 if theme == btns_theme_names[3]:
@@ -2402,7 +2402,7 @@ class P01_DASH(tk.Frame):
                     self.canvas.create_text( 140,  95, **txt_style_S34c, text=gau_S06U01_txt[16])
                     self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_S06U01_txt[17])
                     self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_S06U01_txt[18])
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 if theme == btns_theme_names[3]:
                     #----------------------------------------------------------------------
                     # TACHOBOARD
@@ -2593,7 +2593,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             button = tk.Button(self, command=lambda: self.master.switch_frame(P02_QOPT))
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 if theme in btns_theme_names[:3]:
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=45)
@@ -2603,7 +2603,7 @@ class P01_DASH(tk.Frame):
                 elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=2, y=42)
@@ -2613,7 +2613,7 @@ class P01_DASH(tk.Frame):
                 elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
-            elif device == device_txt[4]:
+            elif device == btns_device_names[4]:
                 if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=2, y=42)
@@ -2623,7 +2623,7 @@ class P01_DASH(tk.Frame):
                 elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
-            elif device == device_txt[8]:
+            elif device == btns_device_names[8]:
                 if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=0, y=0)
@@ -2633,7 +2633,7 @@ class P01_DASH(tk.Frame):
                 elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=0, y=0)
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 if theme in (btns_theme_names[:3]):
                     button.config(**btn_style_imgbtn, image=localimage15)
                     button.place(x=4, y=21)
@@ -2653,7 +2653,7 @@ class P01_DASH(tk.Frame):
             # POSITIONS
             #--------------------------------------------------------------------------
             if REGION:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [575, 375, 575, 4]
                         y_btn = [45, 165, 375, 375]
@@ -2663,7 +2663,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [200, 317, 433, 4, 4]
                         y_btn = [10, 10, 10, 400, 578]
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [95, 800, 95, 800, 95, 800, 1365, 1365, 1365, 1365, 1365, 1365, 2200]
                         y_btn = [380, 380, 480, 480, 580, 580, 21, 133, 246, 380, 490, 600, 600]
@@ -2673,7 +2673,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
                         y_btn = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [575, 375, 575, 4]
                         y_btn = [45, 165, 375, 375]
@@ -2683,7 +2683,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [200, 317, 433, 4, 4]
                         y_btn = [10, 10, 10, 400, 578]
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [137, 275]
                         y_btn = [0, 0]
@@ -2693,7 +2693,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [137, 275]
                         y_btn = [0, 0]
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 3
                         x_btn = [94, 176, 258, 4, 4]
                         y_btn = [120, 120, 120, 400, 578]
@@ -2739,7 +2739,7 @@ class P01_DASH(tk.Frame):
             # POSITIONS
             #--------------------------------------------------------------------------
             if REGION:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 3
                         x_btn = [585, 635, 685, 735]
                         y_btn = [663, 663, 663, 663]
@@ -2749,7 +2749,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [2205, 2255, 2305, 2355]
                         y_btn = [715, 715, 715, 715]
@@ -2759,7 +2759,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
-                elif device == device_txt[4]:
+                elif device == btns_device_names[4]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [2205, 2255, 2305, 2355]
                         y_btn = [715, 715, 715, 715]
@@ -2769,7 +2769,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [20, 220]
                         y_btn = [50, 50]
@@ -2779,7 +2779,7 @@ class P01_DASH(tk.Frame):
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
                         x_btn = [2205, 2255, 2305, 2355]
                         y_btn = [715, 715, 715, 715]
@@ -2809,7 +2809,7 @@ class P01_DASH(tk.Frame):
                                     localimage61,localimage61,localimage61,localimage61,localimage61,
                                     localimage66,localimage66,localimage66,
                                     localimage64,localimage64,localimage64,localimage64,localimage64]                        
-                        if device == device_txt[8]:
+                        if device == btns_device_names[8]:
                             btn_FNKT[i].config(image=map_img[i])
                         else:
                             btn_FNKT[i].config(image=localimage06)
@@ -2822,7 +2822,7 @@ class P01_DASH(tk.Frame):
                                     localimage71,localimage71,localimage71,localimage71,localimage71,
                                     localimage76,localimage76,localimage76,
                                     localimage74,localimage74,localimage74,localimage74,localimage74]
-                        if device == device_txt[8]:
+                        if device == btns_device_names[8]:
                             btn_FNKT[i].config(image=map_img[i])
                         else:
                             btn_FNKT[i].config(image=localimage07)
@@ -2831,7 +2831,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------   
         if REGION:
             global btn_units
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1040, y=218, width=166, height=81)
@@ -2843,7 +2843,7 @@ class P01_DASH(tk.Frame):
                     btn_units.config(image=localimage01)
                 else:
                     btn_units.config(image=localimage02)
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 2            
                     btn_units.place(x=970, y=245, width=166, height=81)
@@ -2860,7 +2860,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             global lbls_voicecmd
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 lbls_voicecmd = []
                 for voicecmdtext in voicecmd_txt:
                     label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
@@ -2873,7 +2873,7 @@ class P01_DASH(tk.Frame):
 
                 btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
                 self.function_running = False
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 lbls_voicecmd = []
                 for voicecmdtext in voicecmd_txt:
                     label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
@@ -2905,7 +2905,7 @@ class P01_DASH(tk.Frame):
             #------------------------------------------------------------------------------
             # DEV001 GAUGES
             #------------------------------------------------------------------------------
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 quant = [0,0,0,0,0,0,0,0,0,0]
                 #--------------------------------------------------------------------------
                 # DEV001G000 (SPEED)
@@ -3113,7 +3113,7 @@ class P01_DASH(tk.Frame):
             #------------------------------------------------------------------------------
             # DEV002 GAUGES
             #------------------------------------------------------------------------------
-            if device == device_txt[2]:
+            if device == btns_device_names[2]:
                 #--------------------------------------------------------------------------
                 # POSITIONS AND QUANTITY
                 #--------------------------------------------------------------------------
@@ -3347,7 +3347,7 @@ class P01_DASH(tk.Frame):
             # POSITIONS
             #------------------------------------------------------------------------------
             if REGION:
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [15, 520, 320, 100]
                         y_txt_sysinfo = [500, 527, 554, 581, 608]
@@ -3391,7 +3391,7 @@ class P01_DASH(tk.Frame):
                         x_lbl_sysinfo = [5, 100, 5, 100, 5, 5, 5, 5, 250, 250, 600, 600]
                         y_lbl_sysinfo = [100, 100, 144, 144, 188, 232, 276, 320, 276, 320, 100, 140]
                         wh_lbl_sysinfo = [40, 70, 100]
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 3
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [2175, 2175, 2175, 2175, 2175]
@@ -3413,7 +3413,7 @@ class P01_DASH(tk.Frame):
                         x_lbl_sysinfo = [1805, 1900, 1805, 1900, 1805, 1805, 1805]
                         y_lbl_sysinfo = [42, 42, 64, 64, 86, 108, 118]
                         wh_lbl_sysinfo = [20, 60, 100, 120]
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [15, 520, 320, 100]
                         y_txt_sysinfo = [500, 527, 554, 581, 608]
@@ -3465,22 +3465,22 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # MTR DISPLAY
                     #----------------------------------------------------------------------
-                    if (btn_states_PB in ["pb00"] and (device == device_txt[1] or device == device_txt[31])) or (btn_states_PB in ["pb09"] and device == device_txt[2]):
+                    if (btn_states_PB in ["pb00"] and (device == btns_device_names[1] or device == btns_device_names[31])) or (btn_states_PB in ["pb09"] and device == btns_device_names[2]):
                         self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="HDD:            of               GB")
                         self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="RAM:            %                 GB")
                         self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="CPU:            %           USED")
                         self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="CPU:            C           TEMP")
-                        if device == device_txt[1] or device == device_txt[31]:
+                        if device == btns_device_names[1] or device == btns_device_names[31]:
                             self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                            sec.")
                     elif btn_states_PB == "pb01":
-                        if device == device_txt[1] or device == device_txt[31]:
+                        if device == btns_device_names[1] or device == btns_device_names[31]:
                             self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="TME:")
                             self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="DTE:")
                             self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="ALT:")
                             self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="LON:")
                             self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="LAT:")
                     elif btn_states_PB == "pb02":
-                        if device == device_txt[1] or device == device_txt[31]:
+                        if device == btns_device_names[1] or device == btns_device_names[31]:
                             self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="SPD:")
                             self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="SPD:")
                             self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="TRP:")
@@ -3495,7 +3495,7 @@ class P01_DASH(tk.Frame):
             #------------------------------------------------------------------------------
             if REGION:
                 global label_7SEG002
-                if device == device_txt[1] or device == device_txt[31]:
+                if device == btns_device_names[1] or device == btns_device_names[31]:
                     if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb00", "pb01", "pb02"]:
                         for i in range(8):
                             label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
@@ -3509,7 +3509,7 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
                         if btn_states_PB in ["pb01"]:
                             lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb09"]:
                         for i in range(8):
                             label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
@@ -3531,7 +3531,7 @@ class P01_DASH(tk.Frame):
             label_7SEG001 = tk.Label(self, bg=sty_clr[3], fg=sty_clr[2])
             label_7SEG003 = tk.Label(self)
 
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 #--------------------------------------------------------------------------
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
                 #--------------------------------------------------------------------------
@@ -3561,7 +3561,7 @@ class P01_DASH(tk.Frame):
                     elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                         label_7SEG003.place(x=800, y=590, width=460, height=90)
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 #--------------------------------------------------------------------------
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
                 #--------------------------------------------------------------------------
@@ -3572,7 +3572,7 @@ class P01_DASH(tk.Frame):
                         label_7SEG001.place(x=567, y=164, width=496, height=212)
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 #--------------------------------------------------------------------------
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
                 #--------------------------------------------------------------------------
@@ -3637,10 +3637,10 @@ class P01_DASH(tk.Frame):
                         #----------------------------------------------------------------------
                         # CHECK FOR CORRECT ACTIVATION WORD #TODO NOT USED IN NEXT FUNCTION
                         #----------------------------------------------------------------------
-                        if style == style_txt[0]:
+                        if style == btns_style_names[0]:
                             activation_words = ["kid", "kit", "hey kid", "fake it", "Hacked", "Hackett", "Hey Kid", "shake it"]
                             activation_word_info = "Say: Hey KARR"
-                        elif style == style_txt[1]:
+                        elif style == btns_style_names[1]:
                             activation_words = ["hey.car", "hey car", "heycar", "hey karr", "helga"]
                             activation_word_info = "Say: Hey KITT"
                         vinfo = activation_word_info
@@ -3743,7 +3743,7 @@ class P01_DASH(tk.Frame):
                 if theme == btns_theme_names[0]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
-                    if style == style_txt[0]:
+                    if style == btns_style_names[0]:
                         localimage30 = ledOF_img_list[19] #DEV002GAUGES 1GN
                         localimage31 = ledOF_img_list[19] #DEV002GAUGES 1RD
                         localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
@@ -3758,7 +3758,7 @@ class P01_DASH(tk.Frame):
                         localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[48]
-                    elif style == style_txt[1]:
+                    elif style == btns_style_names[1]:
                         localimage30 = ledOF_img_list[19] #DEV002GAUGES 1GN
                         localimage31 = ledOF_img_list[19] #DEV002GAUGES 1RD
                         localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
@@ -3776,7 +3776,7 @@ class P01_DASH(tk.Frame):
                 elif theme == btns_theme_names[1]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
-                    if style == style_txt[0]:
+                    if style == btns_style_names[0]:
                         localimage30 = ledOF_img_list[20] #DEV002GAUGES 1GN
                         localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
                         localimage32 = ledFU_img_list[20] #DEV002GAUGES 1GN
@@ -3791,7 +3791,7 @@ class P01_DASH(tk.Frame):
                         localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[48]
-                    elif style == style_txt[1]:
+                    elif style == btns_style_names[1]:
                         localimage30 = ledOF_img_list[16] #DEV002GAUGES 1GN
                         localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
                         localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
@@ -3809,7 +3809,7 @@ class P01_DASH(tk.Frame):
                 elif theme == btns_theme_names[2]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list) #VOICEBOX
-                    if style == style_txt[0]:
+                    if style == btns_style_names[0]:
                         localimage30 = ledOF_img_list[14] #DEV002GAUGES 1GN
                         localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
                         localimage32 = ledFU_img_list[14] #DEV002GAUGES 1GN
@@ -3824,7 +3824,7 @@ class P01_DASH(tk.Frame):
                         localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                         localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                         localimage23 = ledOF_img_list[48]
-                    elif style == style_txt[1]:
+                    elif style == btns_style_names[1]:
                         localimage30 = ledOF_img_list[16] #DEV002GAUGES 1GN
                         localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
                         localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
@@ -3862,12 +3862,12 @@ class P01_DASH(tk.Frame):
                 localimage19 = rpmOF_img_list
                 localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S03_img_list) #VOICEBOX
-                if style == style_txt[0]:
+                if style == btns_style_names[0]:
                     localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
-                elif style == style_txt[1]:
+                elif style == btns_style_names[1]:
                     localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
@@ -3895,12 +3895,12 @@ class P01_DASH(tk.Frame):
                 localimage19 = rpmOF_img_list
                 localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
-                if style == style_txt[0]:
+                if style == btns_style_names[0]:
                     localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
-                elif style == style_txt[1]:
+                elif style == btns_style_names[1]:
                     localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
@@ -3928,12 +3928,12 @@ class P01_DASH(tk.Frame):
                 localimage19 = rpmOF_img_list
                 localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
-                if style == style_txt[0]:
+                if style == btns_style_names[0]:
                     localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
-                elif style == style_txt[1]:
+                elif style == btns_style_names[1]:
                     localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
@@ -3961,12 +3961,12 @@ class P01_DASH(tk.Frame):
                 localimage19 = rpmOF_img_list
                 localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
-                if style == style_txt[0]:
+                if style == btns_style_names[0]:
                     localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
-                elif style == style_txt[1]:
+                elif style == btns_style_names[1]:
                     localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
@@ -3992,12 +3992,12 @@ class P01_DASH(tk.Frame):
                 localimage17 = ledFU_img_list[58] #RD
                 localimage18 = rpmON_img_list
                 localimage19 = rpmOF_img_list
-                if style == style_txt[0]:
+                if style == btns_style_names[0]:
                     localimage20 = sledON_img_list[0] #VOICEBOXOTTO ONMAX LE
                     localimage21 = sledON_img_list[1] #VOICEBOXOTTO ONMAX RI
                     localimage22 = sledOF_img_list[0]  #VOICEBOXOTTO OF RI
                     localimage23 = sledOF_img_list[1]  #VOICEBOXOTTO OF LE
-                elif style == style_txt[1]:
+                elif style == btns_style_names[1]:
                     localimage20 = sledON_img_list[2] #VOICEBOXOTTO ONMAX LE
                     localimage21 = sledON_img_list[3] #VOICEBOXOTTO ONMAX RI
                     localimage22 = sledOF_img_list[2]  #VOICEBOXOTTO OF RI
@@ -4027,12 +4027,12 @@ class P01_DASH(tk.Frame):
                 localimage19 = rpmOF_img_list
                 localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_MAX_img_list) #VOICEBOX
-                if style == style_txt[0]:
+                if style == btns_style_names[0]:
                     localimage20 = ledFU_img_list[41] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[41] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[41] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[41] #VOICEBOX34 OF
-                elif style == style_txt[1]:
+                elif style == btns_style_names[1]:
                     localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
@@ -4051,7 +4051,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # DEV001 GAUGES
         #----------------------------------------------------------------------------------
-        if device == device_txt[1]:
+        if device == btns_device_names[1]:
             #               #00  #01  #02
             val_min      = [  0,   0,   0]
             val_max      = [310, 100, 200]
@@ -4225,7 +4225,7 @@ class P01_DASH(tk.Frame):
                     if theme in btns_theme_names[1:7] or theme in btns_theme_names[9]: # THEME 1 to 6 or 8
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
-                            if style == style_txt[0]:
+                            if style == btns_style_names[0]:
                                 #LEFT
                                 if distance_from_middle-4 >= (DEV001VBS34):
                                     led_DEV001VBS34L01[i].config(image=localimage20)
@@ -4253,7 +4253,7 @@ class P01_DASH(tk.Frame):
                                     led_DEV001VBS34L02[i].config(image=localimage22)
                                 else:
                                     led_DEV001VBS34L02[i].config(image=localimage23)
-                            elif style == style_txt[1]:
+                            elif style == btns_style_names[1]:
                                 #LEFT
                                 if distance_from_middle <= (DEV001VBS34-4):
                                     led_DEV001VBS34L01[i].config(image=localimage20)
@@ -4284,7 +4284,7 @@ class P01_DASH(tk.Frame):
                     elif theme == btns_theme_names[8]:
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
-                            if style == style_txt[0]:
+                            if style == btns_style_names[0]:
                                 #LEFT
                                 if distance_from_middle >= (DEV001VBS34-6):
                                     led_DEV001VBS34L01[i].config(image=localimage20)
@@ -4308,7 +4308,7 @@ class P01_DASH(tk.Frame):
                                     led_DEV001VBS34L02[i].config(image=localimage22)
                                 else:
                                     led_DEV001VBS34L02[i].config(image=localimage23)
-                            elif style == style_txt[1]:
+                            elif style == btns_style_names[1]:
                                 #LEFT
                                 if distance_from_middle <= (DEV001VBS34-6):
                                     led_DEV001VBS34L01[i].config(image=localimage20)
@@ -4410,7 +4410,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # DEV002 GAUGES
         #----------------------------------------------------------------------------------
-        if device == device_txt[2]:
+        if device == btns_device_names[2]:
             #------------------------------------------------------------------------------
             # SIMULATION AND VARIABLES
             #------------------------------------------------------------------------------
@@ -4674,7 +4674,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # DEV031 GAUGES
         #----------------------------------------------------------------------------------
-        if device == device_txt[31]:
+        if device == btns_device_names[31]:
             #------------------------------------------------------------------------------
             # UPDATE GPS DATA AND WRITE SPEED DATA
             #------------------------------------------------------------------------------                      
@@ -4735,7 +4735,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17]:
-                if device == device_txt[1] or device == device_txt[31]:
+                if device == btns_device_names[1] or device == btns_device_names[31]:
                     if btn_states_PB == "pb00":
                         if SYSTEM == "linux":
                             if btn_states_FNKT[2] == True:
@@ -4775,7 +4775,7 @@ class P01_DASH(tk.Frame):
                     #    label_7SEG002.config(text=gps_odo_imperial_0str)
                     #elif btn_states_PB == "pb04":
                     #    label_7SEG002.config(text=gps_odo_metric_0str)
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     if btn_states_PB != "pb09":
                         if theme in btns_theme_names[0:3]:    
                             label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
@@ -4821,12 +4821,12 @@ class P01_DASH(tk.Frame):
         # UPDATE 7 SEGMENT SPEED AND TOTAL RPM PROGNO DISPLAY
         #----------------------------------------------------------------------------------
         if REGION:
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 label_7SEG001.config(text=str(seven_seg_speed).zfill(3))                
                 label_7SEG003.config(text=str(seven_seg_speed).zfill(6))
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 label_7SEG001.config(text=str(seg_DEV002[0]).zfill(3), anchor="nw")
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")                
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
@@ -4957,9 +4957,9 @@ class P02_QOPT(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -5148,9 +5148,9 @@ class P03_SETUP(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -5238,33 +5238,33 @@ class P03_SETUP(tk.Frame):
             x_pos = x_start
             for i in range(quant_btns_HW):
                 lbls_btnhw = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     lbls_btnhw.config(text=btnhw_DEV001_txt[i])
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     lbls_btnhw.config(text=btnhw_DEV002_txt[i])
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     lbls_btnhw.config(text=btnhw_DEV031_txt[i])
                 lbls_btnhw.place(x=x_pos, y=y_l1, width=lbl_w, height=lbl_f_h)
                 x_pos += +px_to_next
             x_pos = x_start
             for i in range(quant_btns_HW):
                 lbls_btnhw_info = tk.Label(self, **lbl_style_setup_btns_small, bg=sys_clr[8], fg=sys_clr[9])
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV001[i])
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV002[i])
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV031[i])
                 lbls_btnhw_info.place(x=x_pos, y=y_l2, width=lbl_w, height=lbl_i_h)
                 x_pos += +px_to_next
             x_pos = x_start
             for i in range(quant_btns_SW):
                 lbls_btnsw = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     lbls_btnsw.config(text=lbl_btnsw_DEV001_txt[i])
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     lbls_btnsw.config(text=lbl_btnsw_DEV002_txt[i])
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     lbls_btnsw.config(text=lbl_btnsw_DEV031_txt[i])
                 lbls_btnsw.place(x=x_pos, y=y_l4, width=lbl_w, height=lbl_f_h)
                 x_pos += +px_to_next
@@ -5386,7 +5386,7 @@ class P03_SETUP(tk.Frame):
             x_pos2 = x_start_RB
             for i in range(quant_btns_RB01):
                 lbls_btnrb01 = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
-                if device == device_txt[2]:
+                if device == btns_device_names[2]:
                     lbls_btnrb01.config(text=rb01_DEV002_txt[i])
                     if i < (quant_btns_RB01/2):
                         lbls_btnrb01.place(x=x_pos, y=y_l10, width=lbl_w, height=lbl_f_h)
@@ -5402,7 +5402,7 @@ class P03_SETUP(tk.Frame):
             x_pos2 = x_start_RB
             for i in range(quant_btns_RB02):
                 lbls_btnRB02 = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
-                if device == device_txt[2]:
+                if device == btns_device_names[2]:
                     lbls_btnRB02.config(text=rb02_DEV002_txt[i])
                     if i < (quant_btns_RB02/2):
                         lbls_btnRB02.place(x=x_pos, y=y_l14, width=lbl_w, height=lbl_f_h)
@@ -5418,7 +5418,7 @@ class P03_SETUP(tk.Frame):
             x_pos2 = x_start_RB
             for i in range(quant_btns_RB03):
                 lbls_btnRB03 = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
-                if device == device_txt[2]:
+                if device == btns_device_names[2]:
                     lbls_btnRB03.config(text=rb03_DEV002_txt[i])
                     if i < (quant_btns_RB03/2):
                         lbls_btnRB03.place(x=x_pos, y=y_l18, width=lbl_w, height=lbl_f_h)
@@ -5430,7 +5430,7 @@ class P03_SETUP(tk.Frame):
         # RB BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            if device == device_txt[2]:
+            if device == btns_device_names[2]:
                 global btns_RB01
                 global btn_RB01
                 global btns_RB02
@@ -5499,15 +5499,15 @@ class P03_SETUP(tk.Frame):
             x_pos19 = x_start_RB_FAV
             x_pos21 = x_start_RB_FAV
 
-            if device == device_txt[1]:
+            if device == btns_device_names[1]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
-            elif device == device_txt[2]:
+            elif device == btns_device_names[2]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW + quant_btns_RB01 + quant_btns_RB02 + quant_btns_RB03
-            elif device == device_txt[4]:
+            elif device == btns_device_names[4]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
-            elif device == device_txt[8]:
+            elif device == btns_device_names[8]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW    
-            elif device == device_txt[31]:
+            elif device == btns_device_names[31]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
             read.load_button_states_FAV(quant_btns_FAV)
             
@@ -5583,7 +5583,7 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         # RB BUTTONS
         #----------------------------------------------------------------------------------
-        if device == device_txt[2]:
+        if device == btns_device_names[2]:
             #------------------------------------------------------------------------------
             # DEV002 BTNRB01
             #------------------------------------------------------------------------------
@@ -5648,8 +5648,8 @@ class P04_THEMES(tk.Frame):
                     xy_width = 10
                     frames = [
                         [ 15,  75], #0 TITLE FRAME
-                        [ 90, 195], #1 DEV FRAME
-                        [210, 315], #2 STYLE FRAME
+                        [ 90, 180], #1 DEV FRAME
+                        [195, 285], #2 STYLE FRAME
                         [330, 510], #3 THEME FRAME
                         [525, 615], #4 SYSTEM FRAME
                         [(bggrid[4]-138), (bggrid[4]-48)]  #5 MENU FRAME
@@ -5791,9 +5791,9 @@ class P04_THEMES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)  #PAGE RI
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -5816,51 +5816,12 @@ class P04_THEMES(tk.Frame):
         # DEVICE BUTTONS
         #----------------------------------------------------------------------------------   
         if REGION:
-            global btns_device
-            btns_device = []
-            x_pos_device = 50
-            y_pos_device = 130
-            btn_w = 100
-            btn_h = 60
-            for device_text in device_txt:
-                button_device = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=device_text, command=lambda text=device_text: [read.toggle_button_device(text),self.master.switch_frame(P00_BOOT)])
-                btns_device.append(button_device)
-            btns_device[1].place(x=x_pos_device, y=y_pos_device, width=btn_w, height=btn_h)
-            btns_device[2].place(x=x_pos_device +110, y=y_pos_device, width=btn_w, height=btn_h)
-            btns_device[4].place(x=x_pos_device +220, y=y_pos_device, width=btn_w, height=btn_h)
-            btns_device[8].place(x=x_pos_device +330, y=y_pos_device, width=btn_w, height=btn_h)
-            btns_device[31].place(x=x_pos_device +440, y=y_pos_device, width=btn_w, height=btn_h)
-            #btns_device[8].config(state=tk.DISABLED)
-
-            for i, text in enumerate(device_txt):
-                if device == text:
-                    btns_device[i].config(fg=sys_clr[10])
-                else:
-                    btns_device[i].config(fg=sys_clr[11])
+            read.buttons_device()
         #----------------------------------------------------------------------------------
         # STYLE BUTTONS
         #----------------------------------------------------------------------------------   
         if REGION:
-            global btns_style
-            btns_style = []
-            x_pos_style = 50
-            y_pos_style = 250
-            for style_text in style_txt:
-                button_style = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 24), text=style_text, command=lambda text=style_text: [read.toggle_button_style(text), self.master.switch_frame(P04_THEMES)])
-                button_style.place(x=x_pos_style, y=y_pos_style, width=btn_w, height=btn_h)
-                x_pos_style += +119
-                btns_style.append(button_style)
-            #btns_style[0].config(state=tk.DISABLED)
-            #btns_style[1].config(state=tk.DISABLED)
-            btns_style[2].config(state=tk.DISABLED)
-            btns_style[3].config(state=tk.DISABLED)
-            btns_style[4].config(state=tk.DISABLED)
-
-            for i, text in enumerate(style_txt):
-                if style == text:
-                    btns_style[i].config(fg=sys_clr[10])
-                else:
-                    btns_style[i].config(fg=sys_clr[11])
+            read.buttons_style()
         #----------------------------------------------------------------------------------
         # THEME BUTTONS
         #----------------------------------------------------------------------------------   
@@ -5894,11 +5855,11 @@ class P05_CARFUNCTIONS(tk.Frame):
         tk.Frame.__init__(self, master)
 
         # load background image
-        if device == device_txt[1]:
+        if device == btns_device_names[1]:
             background_image = bgDEV001_img_list[2]
-        elif device == device_txt[2]:
+        elif device == btns_device_names[2]:
             background_image = bgDEV002_img_list[2]
-        elif device == device_txt[31]:
+        elif device == btns_device_names[31]:
             background_image = bgDEV031_img_list[2]
             
         canvas = tk.Canvas(self, bg='black', highlightthickness=0)
@@ -5925,11 +5886,11 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
         tk.Frame.__init__(self, master)
 
         # load background image
-        if device == device_txt[1]:
+        if device == btns_device_names[1]:
             background_image = bgDEV001_img_list[3]
-        elif device == device_txt[2]:
+        elif device == btns_device_names[2]:
             background_image = bgDEV002_img_list[3]
-        elif device == device_txt[31]:
+        elif device == btns_device_names[31]:
             background_image = bgDEV031_img_list[3]
             
         canvas = tk.Canvas(self, bg='black', highlightthickness=0)
@@ -6059,9 +6020,9 @@ class P07_AUDIO(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -6216,9 +6177,9 @@ class P08_VIDEO(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -6356,9 +6317,9 @@ class P09_RES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -6493,9 +6454,9 @@ class P10_RES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -6630,9 +6591,9 @@ class P11_RES(tk.Frame):
                 #--------------------------------------------------------------------------
                 # RIGHT SCREEN CORNERS
                 #--------------------------------------------------------------------------
-                if device == device_txt[1]: 
+                if device == btns_device_names[1]: 
                     canvas.create_rectangle(1295, 15, 1750, 685, outline=sys_clr[6], width=2)
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     canvas.create_line(1295, 15, 1305, 15, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(1295, 15, 1295, 25, fill=colors_corner[1], width=1)   #LT_Y
                     canvas.create_line(2345, 15, 2355, 15, fill=colors_corner[0], width=1)   #RT_X
@@ -6676,6 +6637,134 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         if REGION:
             #------------------------------------------------------------------------------
+            # DEVICE BUTTONS
+            #------------------------------------------------------------------------------
+            def buttons_device(self):
+                global btns_device
+                global btn_device
+                global btn_device_place
+                btn_device_place = len(btns_device_names)
+                btns_device = []
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_device_place):
+                    btn_device = tk.Button(text=btns_device_names[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_device(btns_device_names[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
+                    btns_device.append(btn_device)
+                    btns_device[i].place(x=x_pos_r1, y=133, w=btn_w, h=btn_h)
+                    x_pos_r1 += +(btn_w+15)
+                for i, text in enumerate(btns_device_names):
+                    if device == text:
+                        btns_device[i].config(fg=sys_clr[10])
+                    else:
+                        btns_device[i].config(fg=sys_clr[11])
+                # ENABLE DISABLE BUTTONS
+                if REGION:
+                    btns_device[0].config(state=tk.DISABLED)
+                    #btns_device[1].config(state=tk.DISABLED)
+                    #btns_device[2].config(state=tk.DISABLED)
+                    btns_device[3].config(state=tk.DISABLED)
+                    #btns_device[4].config(state=tk.DISABLED)
+                    btns_device[5].config(state=tk.DISABLED)
+                    btns_device[6].config(state=tk.DISABLED)
+                    btns_device[7].config(state=tk.DISABLED)
+                    #btns_device[8].config(state=tk.DISABLED)
+                    btns_device[9].config(state=tk.DISABLED)
+                    btns_device[10].config(state=tk.DISABLED)
+                    btns_device[11].config(state=tk.DISABLED)
+                    btns_device[12].config(state=tk.DISABLED)
+                    btns_device[13].config(state=tk.DISABLED)
+                    btns_device[14].config(state=tk.DISABLED)
+                    btns_device[15].config(state=tk.DISABLED)
+                    btns_device[16].config(state=tk.DISABLED)
+                    btns_device[17].config(state=tk.DISABLED)
+                    btns_device[18].config(state=tk.DISABLED)
+                    btns_device[19].config(state=tk.DISABLED)
+                    btns_device[20].config(state=tk.DISABLED)
+                    btns_device[21].config(state=tk.DISABLED)
+                    btns_device[22].config(state=tk.DISABLED)
+                    btns_device[23].config(state=tk.DISABLED)
+                    btns_device[24].config(state=tk.DISABLED)
+                    btns_device[25].config(state=tk.DISABLED)
+                    btns_device[26].config(state=tk.DISABLED)
+                    btns_device[27].config(state=tk.DISABLED)
+                    btns_device[28].config(state=tk.DISABLED)
+                    btns_device[29].config(state=tk.DISABLED)
+                    btns_device[30].config(state=tk.DISABLED)
+                    #btns_device[31].config(state=tk.DISABLED)
+                    btns_device[32].config(state=tk.DISABLED)
+                    btns_device[33].config(state=tk.DISABLED)
+                    btns_device[34].config(state=tk.DISABLED)
+                    btns_device[35].config(state=tk.DISABLED)
+                    btns_device[36].config(state=tk.DISABLED)
+                    btns_device[37].config(state=tk.DISABLED)
+                    btns_device[38].config(state=tk.DISABLED)
+                    btns_device[39].config(state=tk.DISABLED)
+                    btns_device[40].config(state=tk.DISABLED)
+                btns_device_slider = tk.Scale(from_=0, to=btn_device_place, command=read.buttons_device_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_device_slider.set(1)
+                btns_device_slider.place(x=145, y=93)
+            #------------------------------------------------------------------------------
+            # SHOW DEVICE BUTTONS IN SLIDER
+            #------------------------------------------------------------------------------        
+            def buttons_device_show(self, value):
+                start_index = int(float(value))  # Convert float value to integer
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_device_place):
+                    if i < start_index or i >= start_index + 8:
+                        btns_device[i].place_forget()  # Hide the btns_device outside the range
+                    else:
+                        btns_device[i].place(x=x_pos_r1, y=133, w=btn_w, h=btn_h)  # Show the btns_device within the range
+                        x_pos_r1 += +(btn_w+15) 
+            #------------------------------------------------------------------------------
+            # STYLE BUTTONS
+            #------------------------------------------------------------------------------
+            def buttons_style(self):
+                global btns_style
+                global btn_style
+                global btn_style_place
+                btn_style_place = len(btns_style_names)
+                btns_style = []
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_style_place):
+                    btn_style = tk.Button(text=btns_style_names[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_style(btns_style_names[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
+                    btns_style.append(btn_style)
+                    btns_style[i].place(x=x_pos_r1, y=273, w=btn_w, h=btn_h)
+                    x_pos_r1 += +(btn_w+15)
+                for i, text in enumerate(btns_style_names):
+                    if style == text:
+                        btns_style[i].config(fg=sys_clr[10])
+                    else:
+                        btns_style[i].config(fg=sys_clr[11])
+                # ENABLE DISABLE BUTTONS
+                if REGION:
+                    #btns_style[0].config(state=tk.DISABLED)
+                    #btns_style[1].config(state=tk.DISABLED)
+                    btns_style[2].config(state=tk.DISABLED)
+                    btns_style[3].config(state=tk.DISABLED)
+                    btns_style[4].config(state=tk.DISABLED)
+                btns_style_slider = tk.Scale(from_=0, to=btn_style_place, command=read.buttons_style_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_style_slider.set(1)
+                btns_style_slider.place(x=145, y=233)
+            #------------------------------------------------------------------------------
+            # SHOW STYLE BUTTONS IN SLIDER
+            #------------------------------------------------------------------------------        
+            def buttons_style_show(self, value):
+                start_index = int(float(value))  # Convert float value to integer
+                x_pos_r1 = 20
+                btn_w = 130
+                btn_h = 40
+                for i in range(btn_style_place):
+                    if i < start_index or i >= start_index + 8:
+                        btns_style[i].place_forget()  # Hide the btns_style outside the range
+                    else:
+                        btns_style[i].place(x=x_pos_r1, y=273, w=btn_w, h=btn_h)  # Show the btns_style within the range
+                        x_pos_r1 += +(btn_w+15) 
+            #------------------------------------------------------------------------------
             # THEME BUTTONS
             #------------------------------------------------------------------------------
             def buttons_theme(self):
@@ -6688,7 +6777,7 @@ class myfunctions():
                 btn_w = 130
                 btn_h = 40
                 for i in range(btn_theme_place):
-                    btn_theme = tk.Button(text=btns_theme_names[i], bd=0, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_theme(btns_theme_names[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
+                    btn_theme = tk.Button(text=btns_theme_names[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_theme(btns_theme_names[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
                     btns_theme.append(btn_theme)
                     btns_theme[i].place(x=x_pos_r1, y=373, w=btn_w, h=btn_h)
                     x_pos_r1 += +(btn_w+15)
@@ -6746,7 +6835,7 @@ class myfunctions():
                 btn_w = 130
                 btn_h = 40
                 for i in range(btn_sys_place):
-                    btn_sys = tk.Button(text=btns_sys_names[i], bd=0, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_system(btns_sys_names[i]),kidd.switch_frame(P04_THEMES)])                                                                                                                                                     
+                    btn_sys = tk.Button(text=btns_sys_names[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_system(btns_sys_names[i]),kidd.switch_frame(P04_THEMES)])                                                                                                                                                     
                     btns_sys.append(btn_sys)
                     btns_sys[i].place(x=x_pos_r1, y=568, w=btn_w, h=btn_h)
                     x_pos_r1 += +(btn_w+15)
@@ -6785,7 +6874,7 @@ class myfunctions():
                 btn_w = 130
                 btn_h = 40
                 for i in range(btn_menu_place):
-                    btn_menu = tk.Button(text=btns_menu_names[i], bd=0, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
+                    btn_menu = tk.Button(text=btns_menu_names[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
                     btn_menu.config(command=lambda i=i: kidd.switch_frame(i))
                     btns_menu.append(btn_menu)
                     btns_menu[i].place(x=x_pos_r1, y=(bggrid[4]-95), w=btn_w, h=btn_h)
@@ -6876,13 +6965,13 @@ class myfunctions():
             def toggle_PB(self, pb_text):
                 global btn_states_PB
                 btn_states_PB = pb_text
-                if device == device_txt[1]:
+                if device == btns_device_names[1]:
                     file = 'btn_states_DEV001PB.pickle'                    
-                elif device == device_txt[2]:
+                elif device == btns_device_names[2]:
                     file = 'btn_states_DEV002PB.pickle'
-                elif device == device_txt[8]:
+                elif device == btns_device_names[8]:
                     file = 'btn_states_DEV008PB.pickle'
-                elif device == device_txt[31]:
+                elif device == btns_device_names[31]:
                     file = 'btn_states_DEV031PB.pickle'
                 with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
                     imp_mod['pickle'].dump(btn_states_PB, f)
@@ -6893,11 +6982,11 @@ class myfunctions():
                 def load_btn_states_FNKT(self,ammount):
                     global btn_states_FNKT
                     var = btn_states_FNKT
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001FNKT.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002FNKT.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031FNKT.pickle'
                     try:
                         with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
@@ -6914,15 +7003,15 @@ class myfunctions():
                     
                 def save_btn_states_FNKT(self):
                     var = btn_states_FNKT
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001FNKT.pickle'                    
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002FNKT.pickle'
-                    elif device == device_txt[4]:
+                    elif device == btns_device_names[4]:
                         file = 'btn_states_DEV004FNKT.pickle'
-                    elif device == device_txt[8]:
+                    elif device == btns_device_names[8]:
                         file = 'btn_states_DEV008FNKT.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031FNKT.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
                         imp_mod['pickle'].dump(var, f)
@@ -6959,13 +7048,13 @@ class myfunctions():
                 def load_button_states_HW(self,ammount):
                     global btn_states_HW
                     var = btn_states_HW
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001HW.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002HW.pickle'
-                    elif device == device_txt[8]:
+                    elif device == btns_device_names[8]:
                         file = 'btn_states_DEV008HW.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031HW.pickle'
                     try:
                         with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
@@ -6982,11 +7071,11 @@ class myfunctions():
 
                 def save_btn_states_HW(self):
                     var = btn_states_HW
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001HW.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002HW.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031HW.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
                         imp_mod['pickle'].dump(var, f)
@@ -6997,11 +7086,11 @@ class myfunctions():
                 def load_button_states_SW(self,ammount):
                     global btn_states_SW
                     var = btn_states_SW
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001SW.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002SW.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031SW.pickle'
                     try:
                         with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
@@ -7024,11 +7113,11 @@ class myfunctions():
 
                 def save_btn_states_SW(self):
                     var = btn_states_SW
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001SW.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002SW.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031SW.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
                         imp_mod['pickle'].dump(var, f)
@@ -7039,11 +7128,11 @@ class myfunctions():
                 def load_button_states_qopt(self,ammount):
                     global btn_states_qopt
                     var = btn_states_qopt
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001qopt.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002qopt.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031qopt.pickle'
                     try:
                         with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
@@ -7060,11 +7149,11 @@ class myfunctions():
 
                 def save_btn_states_qopt(self):
                     var = btn_states_qopt
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001qopt.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002qopt.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031qopt.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
                         imp_mod['pickle'].dump(var, f)
@@ -7075,11 +7164,11 @@ class myfunctions():
                 def load_button_states_FAV(self,ammount):
                     global btn_states_FAV
                     var = btn_states_FAV
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001FAV.pickle'
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002FAV.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031FAV.pickle'
                     try:
                         with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
@@ -7096,11 +7185,11 @@ class myfunctions():
 
                 def save_btn_states_FAV(self):
                     var = btn_states_FAV
-                    if device == device_txt[1]:
+                    if device == btns_device_names[1]:
                         file = 'btn_states_DEV001FAV.pickle'                    
-                    elif device == device_txt[2]:
+                    elif device == btns_device_names[2]:
                         file = 'btn_states_DEV002FAV.pickle'
-                    elif device == device_txt[31]:
+                    elif device == btns_device_names[31]:
                         file = 'btn_states_DEV031FAV.pickle'
                     with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
                         imp_mod['pickle'].dump(var, f)
@@ -7136,9 +7225,9 @@ class myfunctions():
             global style
             global sty_clr
             style = style_text
-            if style == style_txt[0]:
+            if style == btns_style_names[0]:
                 sty_clr = sty_clr_ka
-            elif style == style_txt[1]:
+            elif style == btns_style_names[1]:
                 sty_clr = sty_clr_ki
             with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'wb') as f:
                 imp_mod['pickle'].dump(style, f)
@@ -7421,15 +7510,15 @@ class myfunctions():
             # GET THE SOUNDFOLDER
             #------------------------------------------------------------------------------
             if REGION:
-                if device in [device_txt[1], device_txt[2], device_txt[4], device_txt[8]]:
-                    if style == style_txt[0]:
+                if device in [btns_device_names[1], btns_device_names[2], btns_device_names[4], btns_device_names[8]]:
+                    if style == btns_style_names[0]:
                         soundfolder = "KARR2000"
-                    elif style == style_txt[1]:
+                    elif style == btns_style_names[1]:
                         soundfolder = "KITT2000"
-                elif device in [device_txt[31]]:
-                    if style == style_txt[0]:
+                elif device in [btns_device_names[31]]:
+                    if style == btns_style_names[0]:
                         soundfolder = "KARR3000"
-                    elif style == style_txt[1]:
+                    elif style == btns_style_names[1]:
                         soundfolder = "KITT3000"
                 snd_fldr = imp_mod['os'].path.join(folder,'sound', soundfolder)
             #------------------------------------------------------------------------------
