@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-import enum
-
-
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2023-12-26-1241"
+last_change = "2023-12-26-1620"
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
 #------------------------------------------------------------------------------------------
