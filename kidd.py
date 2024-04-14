@@ -2,7 +2,7 @@
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
 version = "V2.0.1"
-last_change = "2024-03-20-0935"
+last_change = "2024-04-14-2244"
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
 #------------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ DEV010: KNIGHT 2000 AND MIRROR CENTER
 DEV011: KNIGHT 2000 ARD MIRROR RIGHT
 DEV012: KNIGHT 2000 AND RADIO
 DEV013: KNIGHT 2000 ARD HUD
-DEV015: KNIGHT 2000 ARD 16CH RELAISBOARD WIFI TASMOTA
+DEV015: KNIGHT 2000 ARD 16CH RELAISBOARD WIFI
 ---
 DEV030: KNIGHT 3000S01 HUD
 DEV031: KNIGHT 3000S01 DASH (SOUNDBOARD / VOICEORB) - TWO DISPLAYS #1 1280x720 #2 1280x720
@@ -5821,6 +5821,31 @@ class P04_THEMES(tk.Frame):
             canvas.create_text(20, frm03_YPOS+4, **txt_style_pagename, fill=sys_clr[9], text="THEME")
             canvas.create_text(20, frm04_YPOS+4, **txt_style_pagename, fill=sys_clr[9], text="SYS")
             canvas.create_text(20, frm05_YPOS+4, **txt_style_pagename, fill=sys_clr[9], text="MENU")
+        #----------------------------------------------------------------------------------
+        # INFORMATION TEXT
+        #----------------------------------------------------------------------------------
+        if REGION:
+            canvas.create_text(1320, frm00_YPOS+20, **txt_style_pagename, fill=sys_clr[9], text="DEV000: WIFI ROUTER")
+            canvas.create_text(1320, frm00_YPOS+50, **txt_style_pagename, fill=sys_clr[9], text="DEV001: SPEEDOMETER AND VOICEBOX")
+            canvas.create_text(1320, frm00_YPOS+80, **txt_style_pagename, fill=sys_clr[9], text="DEV002: TACHOMETER AND POWERBOARD")
+            canvas.create_text(1320, frm00_YPOS+110, **txt_style_pagename, fill=sys_clr[9], text="DEV003: 2TV DASH MONITORS")
+            canvas.create_text(1320, frm00_YPOS+140, **txt_style_pagename, fill=sys_clr[9], text="DEV004: 1TV DASH MONITOR")
+            canvas.create_text(1320, frm00_YPOS+170, **txt_style_pagename, fill=sys_clr[9], text="DEV005: LOWER CONSOLE")
+            canvas.create_text(1320, frm00_YPOS+200, **txt_style_pagename, fill=sys_clr[9], text="DEV006: SWITCHPOD LEFT")
+            canvas.create_text(1320, frm00_YPOS+230, **txt_style_pagename, fill=sys_clr[9], text="DEV007: SWITCHPOD RIGHT")
+            canvas.create_text(1320, frm00_YPOS+260, **txt_style_pagename, fill=sys_clr[9], text="DEV008: OHC")
+            canvas.create_text(1320, frm00_YPOS+290, **txt_style_pagename, fill=sys_clr[9], text="DEV009: MIRROR LEFT")
+            canvas.create_text(1320, frm00_YPOS+320, **txt_style_pagename, fill=sys_clr[9], text="DEV010: MIRROR CENTER")
+            canvas.create_text(1320, frm00_YPOS+350, **txt_style_pagename, fill=sys_clr[9], text="DEV011: MIRROR RIGHT")
+            canvas.create_text(1320, frm00_YPOS+380, **txt_style_pagename, fill=sys_clr[9], text="DEV012: RADIO")
+            canvas.create_text(1320, frm00_YPOS+410, **txt_style_pagename, fill=sys_clr[9], text="DEV013: HUD")
+            canvas.create_text(1320, frm00_YPOS+440, **txt_style_pagename, fill=sys_clr[9], text="DEV014: RES")
+            canvas.create_text(1320, frm00_YPOS+470, **txt_style_pagename, fill=sys_clr[9], text="DEV015: WIFI RELAIS BOARD")
+            
+            canvas.create_text(1320, frm00_YPOS+530, **txt_style_pagename, fill=sys_clr[9], text="DEV030: KNIGHT3000 HUD")
+            canvas.create_text(1320, frm00_YPOS+560, **txt_style_pagename, fill=sys_clr[9], text="DEV031: KNIGHT3000 DASH/VOICEBOX")
+            canvas.create_text(1320, frm00_YPOS+590, **txt_style_pagename, fill=sys_clr[9], text="DEV032: KNIGHT3000 RADIO")
+            canvas.create_text(1320, frm00_YPOS+620, **txt_style_pagename, fill=sys_clr[9], text="DEV033: KNIGHT3000 MIRROR")
         #----------------------------------------------------------------------------------
         # DEVICE BUTTONS
         #----------------------------------------------------------------------------------   
