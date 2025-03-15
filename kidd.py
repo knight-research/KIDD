@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
-version = "V2.0.1"
-last_change = "2024-04-24-0937"
+version = "V2.0.2"
+last_change = "2025-03-15-1928"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
@@ -2754,8 +2754,8 @@ class P01_DASH(tk.Frame):
                         x_btn = [585, 635, 685, 735]
                         y_btn = [663, 663, 663, 663]
                     elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [507, 620, 733, 846]
-                        y_btn = [374, 374, 374, 374]
+                        x_btn = [507, 620, 733, 846, 959, 1072, 1185]
+                        y_btn = [374, 374, 374, 374, 374, 374, 374]
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         x_btn = [10, 192, 374, 556]
                         y_btn = [380, 380, 380, 380]
@@ -4107,6 +4107,7 @@ class P01_DASH(tk.Frame):
                         seven_seg_speed = aldl_vehicle_speed_mph
                     else:
                         seven_seg_speed = aldl_vehicle_speed_kph
+                seven_seg_speed = aldl_vehicle_speed_kph
             #------------------------------------------------------------------------------
             # UPDATE VOICECOMMAND TEXT IN TOTAL DISPLAY
             #------------------------------------------------------------------------------
@@ -4123,11 +4124,11 @@ class P01_DASH(tk.Frame):
             # UPDATE DEV001G000 (SPEED)
             #------------------------------------------------------------------------------
             if REGION:
+                speed_int = int(seven_seg_speed)
                 if btn_states_FNKT[3] == True:
                     #----------------------------------------------------------------------
                     # CALCULATE 0-300 TO 14 LEDs
-                    #----------------------------------------------------------------------
-                    speed_int = int(seven_seg_speed)
+                    #----------------------------------------------------------------------                   
                     if speed_int > 0 and speed_int < 100:
                         val_DEV001G000 = (speed_int / 100) * 7
                     elif speed_int > 100 and speed_int <= 200:
