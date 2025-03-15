@@ -19,3 +19,6 @@ __pycache__
 .git
 .gitignore
 
+# Files #
+######################
+#/data/install_conf.pickle
