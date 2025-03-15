@@ -4107,7 +4107,6 @@ class P01_DASH(tk.Frame):
                         seven_seg_speed = aldl_vehicle_speed_mph
                     else:
                         seven_seg_speed = aldl_vehicle_speed_kph
-                seven_seg_speed = aldl_vehicle_speed_kph
             #------------------------------------------------------------------------------
             # UPDATE VOICECOMMAND TEXT IN TOTAL DISPLAY
             #------------------------------------------------------------------------------
@@ -4124,8 +4123,8 @@ class P01_DASH(tk.Frame):
             # UPDATE DEV001G000 (SPEED)
             #------------------------------------------------------------------------------
             if REGION:
-                speed_int = int(seven_seg_speed)
                 if btn_states_FNKT[3] == True:
+                    speed_int = int(seven_seg_speed)
                     #----------------------------------------------------------------------
                     # CALCULATE 0-300 TO 14 LEDs
                     #----------------------------------------------------------------------                   
@@ -4156,6 +4155,7 @@ class P01_DASH(tk.Frame):
                             else:
                                 led_DEV001G000[i].config(image=localimage10)
                 else:
+                    speed_int = 0
                     #----------------------------------------------------------------------
                     # ALL 14 LEDs OFF FOR FASTER CYCLE TIME
                     #----------------------------------------------------------------------
