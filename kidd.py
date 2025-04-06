@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
-version = "V2.0.2"
-last_change = "2025-03-15-1928"
+version = "V2.0.3"
+last_change = "2025-04-06-1346"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE

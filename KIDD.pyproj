@@ -2630,6 +2630,7 @@
     <Content Include="sound\swpdre\P21B19.mp3" />
     <Content Include="sound\swpdre\P21B20.mp3" />
     <Content Include="sound\swpdre\P21B21.mp3" />
+    <Content Include="version.txt" />
     <Content Include="VIDEO\KA2K_VOICE.mp4" />
     <Content Include="VIDEO\KI3K_VOICE.mp4" />
     <Content Include="wallpaper\BG_VB_KARR.png" />
