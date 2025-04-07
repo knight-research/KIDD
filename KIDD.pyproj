@@ -22,13 +22,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="btn_state_manager.py" />
     <Compile Include="kidd.py" />
     <Compile Include="update.py" />
     <Compile Include="_fake_GPIO.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data\" />
-    <Folder Include="data\alloff.bkup\" />
     <Folder Include="fonts\" />
     <Folder Include="images\" />
     <Folder Include="images\000_bg\" />
@@ -139,23 +139,7 @@
     <Folder Include="wallpaper\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data\alloff.bkup\button_states_U01FNKT.pickle" />
-    <Content Include="data\alloff.bkup\button_states_U01HW.pickle" />
-    <Content Include="data\alloff.bkup\button_states_U01SW.pickle" />
-    <Content Include="data\alloff.bkup\device_conf.pickle" />
-    <Content Include="data\alloff.bkup\pb_conf.pickle" />
-    <Content Include="data\alloff.bkup\style_conf.pickle" />
-    <Content Include="data\alloff.bkup\theme_conf.pickle" />
-    <Content Include="data\btn_states_DEV001FNKT.pickle" />
-    <Content Include="data\btn_states_DEV001HW.pickle" />
-    <Content Include="data\btn_states_DEV001SW.pickle" />
-    <Content Include="data\btn_states_DEV002FNKT.pickle" />
-    <Content Include="data\btn_states_DEV002HW.pickle" />
-    <Content Include="data\btn_states_DEV002SW.pickle" />
-    <Content Include="data\device_conf.pickle" />
-    <Content Include="data\pb_conf.pickle" />
-    <Content Include="data\style_conf.pickle" />
-    <Content Include="data\theme_conf.pickle" />
+    <Content Include="data\btn_states.json" />
     <Content Include="fonts\BankGothic Regular.ttf" />
     <Content Include="fonts\ccar7seg.ttf" />
     <Content Include="fonts\CheapsmanFreeOutlineRegular-VG75Z.ttf" />

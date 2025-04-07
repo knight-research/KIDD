@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
 debug = False #PRINT INFORMATIONS TO CONSOLE
-version = "V2.0.3"
+try:
+    with open("version.txt", "r") as f:
+        version = f.read().strip()
+except FileNotFoundError:
+    version = "unknown"
 last_change = "2025-04-06-1346"
 
 #------------------------------------------------------------------------------------------
@@ -9,14 +13,12 @@ last_change = "2025-04-06-1346"
 #------------------------------------------------------------------------------------------
 if REGION:
     import os
-    import pickle
+    import json
+    from btn_state_manager import ButtonStateManager
     folder = os.path.dirname(os.path.abspath(__file__))
     datadir = os.path.join(folder,'data')
-    try:
-        with open(os.path.join(datadir, 'install_conf.pickle'), 'rb') as f:
-            install_done = pickle.load(f)
-    except FileNotFoundError:
-        install_done = False
+    bsm = ButtonStateManager(folder)
+    install_done = install_done = bsm.get_install_done()
 #------------------------------------------------------------------------------------------
 # INFORMATIONS
 #------------------------------------------------------------------------------------------
@@ -274,7 +276,7 @@ DONE: button obd/aldl (variable cardata == GPS)
 DONE: enable_gps mic scanner rb01.... make it with one myfunction give variable in function command -done
 DONE: V1.3.6 switch unit in settings
 DONE: Otto button on Switchpod with Ottifantenlogo and otto knight rider theme
-DONE: PB DEV USE SEPARATE PICKLEFILE FOR EACH DEVICE
+DONE: PB DEV USE SEPARATE JSON COLUMN FOR EACH DEVICE
 DONE: GPS NOW ALSO WORKS ON WINDOWS
 DONE: SWITCH LANGUAGE (TEXTS)
 DONE: THEME COLOR SWITCHER (PREPARED ALL THEME COLORS NOW IN "BEFORE MAIN APP GLOBALS")
@@ -307,7 +309,7 @@ if REGION:
                 'sys', 'multiprocessing', 'os', 'time', 'math', 'string', 'socket',
                 'websocket', 'websocket-client', 'python-vlc',
                 'pyserial', 'pynmea2', 'pydub', 'Pillow', 'pyaudio', 'psutil',
-                'simpleaudio', 'pickle', 'posixpath', 'random', 'serial', 'platform', 
+                'simpleaudio', 'posixpath', 'random', 'serial', 'platform', 
                 'shutil', 'threading', 'SpeechRecognition',
                 'board', 'busio'
             ]
@@ -330,8 +332,7 @@ if REGION:
                     try:
                         imp_mod[package] = importlib.import_module(package)
                         install_done = True
-                        with open(os.path.join(datadir, 'install_conf.pickle'), 'wb') as f:
-                            install_done = pickle.dump(install_done, f)
+                        install_done = bsm.save('install_conf.json', install_done)
                     except ImportError:
                         print(f"{package} is not installed. Installing...")
                         subprocess.call(['pip3', 'install', package])
@@ -837,185 +838,44 @@ if REGION:
     #--------------------------------------------------------------------------------------
     if REGION:
         #----------------------------------------------------------------------------------
-        # UPDATE LAST DEVICE
+        # UPDATE LAST SYSTEM CONFIGURATIONS
         #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                with open(imp_mod['os'].path.join(datadir, 'device_conf.pickle'), 'rb') as f:
-                    device = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                device = 'DEV001'
+        with open(os.path.join(datadir, "btn_states.json")) as f:
+            main_data = json.load(f)
+        device = main_data["main_config"]["device"]
+        style = main_data["main_config"]["style"]
+        theme = main_data["main_config"]["theme"]
+        system = main_data["main_config"]["system"]
+
         #----------------------------------------------------------------------------------
-        # UPDATE LAST STYLE
+        # UPDATE LAST BUTTON STATES
         #----------------------------------------------------------------------------------
-        try:
-            with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'rb') as f:
-                style = imp_mod['pickle'].load(f)
-        except FileNotFoundError:
-            style = 'KITT'
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST THEME
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                with open(imp_mod['os'].path.join(datadir, 'theme_conf.pickle'), 'rb') as f:
-                    theme = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                theme = 'K2_S05'
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST SYSTEM STYLE
-        #----------------------------------------------------------------------------------
-        try:
-            with open(imp_mod['os'].path.join(datadir, 'system_conf.pickle'), 'rb') as f:
-                system = imp_mod['pickle'].load(f)
-        except FileNotFoundError:
-            system = btns_sys_names[0]
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST POWER BUTTON STATE
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                if device == btns_device_names[1]:
-                    file = 'btn_states_DEV001PB.pickle'
-                elif device == btns_device_names[2]:
-                    file = 'btn_states_DEV002PB.pickle'
-                elif device == btns_device_names[4]:
-                    file = 'btn_states_DEV004PB.pickle'
-                elif device == btns_device_names[8]:
-                    file = 'btn_states_DEV008PB.pickle'
-                elif device == btns_device_names[31]:
-                    file = 'btn_states_DEV031PB.pickle'    
-                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                    btn_states_PB = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                btn_states_PB = 'pb02'
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST POWER BUTTON FUNCTION STATE
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
-                    btn_states_PBFNKT = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                btn_states_PBFNKT = [False] * 20
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST FNKT
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                if device == btns_device_names[1]:
-                    file = 'btn_states_DEV001FNKT.pickle'
-                elif device == btns_device_names[2]:
-                    file = 'btn_states_DEV002FNKT.pickle'
-                elif device == btns_device_names[4]:
-                    file = 'btn_states_DEV004FNKT.pickle'
-                elif device == btns_device_names[8]:
-                    file = 'btn_states_DEV008FNKT.pickle'
-                elif device == btns_device_names[31]:
-                    file = 'btn_states_DEV031FNKT.pickle'
-                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                    btn_states_FNKT = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                btn_states_FNKT = [False] * 20
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST HW CONFIG
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                if device == btns_device_names[1]:
-                    file = 'btn_states_DEV001HW.pickle'
-                elif device == btns_device_names[2]:
-                    file = 'btn_states_DEV002HW.pickle'
-                elif device == btns_device_names[4]:
-                    file = 'btn_states_DEV004HW.pickle'
-                elif device == btns_device_names[8]:
-                    file = 'btn_states_DEV008HW.pickle'
-                elif device == btns_device_names[31]:
-                    file = 'btn_states_DEV031HW.pickle'
-                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                    btn_states_HW = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                btn_states_HW = [False] * 10
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST SW CONFIG
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                if device == btns_device_names[1]:
-                    file = 'btn_states_DEV001SW.pickle'
-                elif device == btns_device_names[2]:
-                    file = 'btn_states_DEV002SW.pickle'
-                elif device == btns_device_names[4]:
-                    file = 'btn_states_DEV004SW.pickle'
-                elif device == btns_device_names[8]:
-                    file = 'btn_states_DEV008SW.pickle'
-                elif device == btns_device_names[31]:
-                    file = 'btn_states_DEV031SW.pickle'
-                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                    btn_states_SW = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                btn_states_SW = [False] * 10
-            #LANGUAGE
-            if btn_states_SW[4]:
-                states_txt_act = states_txt_en
-            else:
-                states_txt_act = states_txt_de
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST QOPT CONFIG (QOPT PAGE)
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                if device == btns_device_names[1]:
-                    file = 'btn_states_DEV001qopt.pickle'
-                elif device == btns_device_names[2]:
-                    file = 'btn_states_DEV002qopt.pickle'
-                elif device == btns_device_names[4]:
-                    file = 'btn_states_DEV004qopt.pickle'
-                elif device == btns_device_names[8]:
-                    file = 'btn_states_DEV008qopt.pickle'
-                elif device == btns_device_names[31]:
-                    file = 'btn_states_DEV031qopt.pickle'
-                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                    btn_states_qopt = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                btn_states_qopt = [False] * 20
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST FAVORITES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                if device == btns_device_names[1]:
-                    file = 'btn_states_DEV001FAV.pickle'
-                elif device == btns_device_names[2]:
-                    file = 'btn_states_DEV002FAV.pickle'
-                elif device == btns_device_names[4]:
-                    file = 'btn_states_DEV004FAV.pickle'
-                elif device == btns_device_names[8]:
-                    file = 'btn_states_DEV008FAV.pickle'
-                elif device == btns_device_names[31]:
-                    file = 'btn_states_DEV031FAV.pickle'
-                with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                    btn_states_FAV = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                btn_states_FAV = [False] * 72
+        btns = main_data["buttons"]
+        if device in btns:
+            btn_states_PB    = btns[device]["PB"]
+            btn_states_PBFNKT  = btns[device]["PBFNKT"]
+            btn_states_FNKT  = btns[device]["FNKT"]
+            btn_states_HW    = btns[device]["HW"]
+            btn_states_SW    = btns[device]["SW"]
+            btn_states_qopt  = btns[device]["QOPT"]
+            btn_states_FAV   = btns[device]["FAV"]
+        else:
+            print(f" Unbekanntes Gerät: {device}")
+    
+        #LANGUAGE
+        if btn_states_SW[4]:
+            states_txt_act = states_txt_en
+        else:
+            states_txt_act = states_txt_de
+
         #----------------------------------------------------------------------------------
         # DEV001 UPDATE LAST GPS ODOMETER METRIC TRIP COUNTER
         #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                with open(imp_mod['os'].path.join(datadir, 'odo_trip_metric.pickle'), 'rb') as f:
-                    gps_odo_metric_cnt_old = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                pass
+        gps_odo_metric_cnt_old = bsm.get_config_value("odo_trip_metric", fallback=0.0)
         #----------------------------------------------------------------------------------
         # DEV001 UPDATE LAST GPS ODOMETER IMPERIAL TRIP COUNTER
         #----------------------------------------------------------------------------------
-        if REGION:
-            try:
-                with open(imp_mod['os'].path.join(datadir, 'odo_trip_imperial.pickle'), 'rb') as f:
-                    gps_odo_imperial_cnt_old = imp_mod['pickle'].load(f)
-            except FileNotFoundError:
-                pass
+        gps_odo_imperial_cnt_old = bsm.get_config_value("odo_trip_imperial", fallback=0.0)
         #------------------------------------------------------------------------------
         # UPDATE LAST CONFIG DEV002RB01 (DONT LOAD LAST STATE ALWAYS START WITH ALL OFF)
         #------------------------------------------------------------------------------
@@ -1274,155 +1134,31 @@ class P00_BOOT(tk.Frame):
     def __init__(self, master):
         if debug == True:
             print (btns_menu_names[0])
-        #------------------------------------------------------------------------------
-        # UPDATE CONFIGURATION
-        #------------------------------------------------------------------------------
-        if REGION:
-            #------------------------------------------------------------------------------
-            # UPDATE LAST DEVICE
-            #------------------------------------------------------------------------------
-            if REGION:
-                global device
-                try:
-                    with open(imp_mod['os'].path.join(datadir, 'device_conf.pickle'), 'rb') as f:
-                        device = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    device = 'DEV001'
-            #------------------------------------------------------------------------------
-            # UPDATE LAST STYLE
-            #------------------------------------------------------------------------------
-            if REGION:
-                global style
-                try:
-                    with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'rb') as f:
-                        style = imp_mod['pickle'].load(f)  
-                except FileNotFoundError:
-                    style = 'KARR'
-            #------------------------------------------------------------------------------
-            # UPDATE LAST THEME
-            #------------------------------------------------------------------------------
-            if REGION:
-                global theme
-                try:
-                    with open(imp_mod['os'].path.join(datadir, 'theme_conf.pickle'), 'rb') as f:
-                        theme = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    theme = 'K2_S05'
-            #------------------------------------------------------------------------------
-            # UPDATE LAST POWER BUTTON STATE
-            #------------------------------------------------------------------------------
-            if REGION:
-                global btn_states_PB
-                try:
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001PB.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002PB.pickle'
-                    elif device == btns_device_names[4]:
-                        file = 'btn_states_DEV004PB.pickle'
-                    elif device == btns_device_names[8]:
-                        file = 'btn_states_DEV008PB.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031PB.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                        btn_states_PB = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    btn_states_PB = 'pb01'
-            #------------------------------------------------------------------------------
-            # UPDATE LAST POWER BUTTON FUNCTION STATE
-            #------------------------------------------------------------------------------
-            if REGION:
-                global btn_states_PBFNKT
-                try:
-                    with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
-                        btn_states_PBFNKT = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    btn_states_PBFNKT = [False] * 20
-            #------------------------------------------------------------------------------
-            # UPDATE LAST FNKT
-            #------------------------------------------------------------------------------
-            if REGION:
-                global btn_states_FNKT
-                try:
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001FNKT.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002FNKT.pickle'
-                    elif device == btns_device_names[4]:
-                        file = 'btn_states_DEV004FNKT.pickle'
-                    elif device == btns_device_names[8]:
-                        file = 'btn_states_DEV008FNKT.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031FNKT.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                        btn_states_FNKT = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    btn_states_FNKT = [False] * 20
-            #------------------------------------------------------------------------------
-            # UPDATE LAST HW CONFIG
-            #------------------------------------------------------------------------------
-            if REGION:
-                global btn_states_HW
-                try:
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001HW.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002HW.pickle'
-                    elif device == btns_device_names[4]:
-                        file = 'btn_states_DEV004HW.pickle'
-                    elif device == btns_device_names[8]:
-                        file = 'btn_states_DEV008HW.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031HW.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                        btn_states_HW = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    btn_states_HW = [False] * 10
-            #------------------------------------------------------------------------------
-            # UPDATE LAST SW CONFIG
-            #------------------------------------------------------------------------------
-            if REGION:
-                global btn_states_SW
-                try:
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001SW.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002SW.pickle'
-                    elif device == btns_device_names[4]:
-                        file = 'btn_states_DEV004SW.pickle'
-                    elif device == btns_device_names[8]:
-                        file = 'btn_states_DEV008SW.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031SW.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                        btn_states_SW = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    btn_states_SW = [False] * 10
-                #LANGUAGE
-                if btn_states_SW[4]:
-                    states_txt_act = states_txt_en
-                else:
-                    states_txt_act = states_txt_de
-            #------------------------------------------------------------------------------
-            # UPDATE LAST FAVORITES
-            #------------------------------------------------------------------------------
-            if REGION:
-                global btn_states_FAV
-                try:
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001FAV.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002FAV.pickle'
-                    elif device == btns_device_names[4]:
-                        file = 'btn_states_DEV004FAV.pickle'
-                    elif device == btns_device_names[8]:
-                        file = 'btn_states_DEV008FAV.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031FAV.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                        btn_states_FAV = imp_mod['pickle'].load(f)
-                except FileNotFoundError:
-                    btn_states_FAV = [False] * 72
+        #----------------------------------------------------------------------------------
+        # UPDATE LAST SYSTEM CONFIGURATIONS
+        #----------------------------------------------------------------------------------
+        with open(os.path.join(datadir, "btn_states.json")) as f:
+            main_data = json.load(f)
+        device = main_data["main_config"]["device"]
+        style = main_data["main_config"]["style"]
+        theme = main_data["main_config"]["theme"]
+        system = main_data["main_config"]["system"]
+
+        #----------------------------------------------------------------------------------
+        # UPDATE LAST BUTTON STATES
+        #----------------------------------------------------------------------------------
+        btns = main_data["buttons"]
+        if device in btns:
+            btn_states_PB    = btns[device]["PB"]
+            btn_states_PBFNKT  = btns[device]["PBFNKT"]
+            btn_states_FNKT  = btns[device]["FNKT"]
+            btn_states_HW    = btns[device]["HW"]
+            btn_states_SW    = btns[device]["SW"]
+            btn_states_qopt  = btns[device]["QOPT"]
+            btn_states_FAV   = btns[device]["FAV"]
+        else:
+            print(f" Unbekanntes Gerät: {device}")
+
         #----------------------------------------------------------------------------------
         # BACKGROUND IMAGES
         #----------------------------------------------------------------------------------
@@ -2805,7 +2541,6 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             if REGION:
                 btn_FNKT = []
-                read.load_btn_states_FNKT(quant_btn)
                 for i in range(quant_btn):
                     btns_FNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
                     btn_FNKT.append(btns_FNKT)
@@ -3291,7 +3026,6 @@ class P01_DASH(tk.Frame):
                 # FUNCTION POWER BUTTONS DEVICE02 (POWER AUTO NORMAL PURSUIT)
                 #--------------------------------------------------------------------------
                 if REGION:
-                    read.load_btn_states_PBFNKT()
                     global ammount_PBFNKT
                     btns_PBFNKT = []
                     if theme in btns_theme_names[:3]: # THEME 0 1 2
@@ -4414,8 +4148,7 @@ class P01_DASH(tk.Frame):
                         print ("ACT",var1)
                         print ("SAVE TRIP METRIC")
                         try:                            
-                            with open(imp_mod['os'].path.join(datadir, 'odo_trip_metric.pickle'), 'wb') as f:
-                                imp_mod['pickle'].dump(var1, f)
+                            bsm.save(imp_mod['os'].path.join(datadir, 'odo_trip_metric.json'), var1)
                         except FileNotFoundError:
                             pass
         #----------------------------------------------------------------------------------
@@ -5290,7 +5023,6 @@ class P03_SETUP(tk.Frame):
             #--------------------------------------------------------------------------
             # HW BUTTONS
             #--------------------------------------------------------------------------
-            read.load_button_states_HW(10)
             btns_HW = []
             x_pos = x_start
             for i in range(quant_btns_HW):
@@ -5301,11 +5033,10 @@ class P03_SETUP(tk.Frame):
             #--------------------------------------------------------------------------
             # SW BUTTONS
             #--------------------------------------------------------------------------
-            read.load_button_states_SW(10)
             btns_SW = []
             x_pos = x_start
             for i in range(quant_btns_SW):
-                btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28),  command=lambda i=i: read.toggle_btn_SW(i))
+                btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28),  command=lambda i=i: [read.toggle_btn_SW(i),self.master.switch_frame(P03_SETUP)])
                 btn_SW.place(x=x_pos, y=y_l5, width=btn_w, height=btn_h)
                 x_pos += +px_to_next
                 btns_SW.append(btn_SW)
@@ -5520,7 +5251,6 @@ class P03_SETUP(tk.Frame):
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW    
             elif device == btns_device_names[31]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
-            read.load_button_states_FAV(quant_btns_FAV)
             
             for i in range(quant_btns_FAV):
                 btn_FAV = tk.Button(canvas, bg=sys_clr[8], text="F", font=(fonts[1], 20), command=lambda i=i: read.toggle_btn_FAV(i))
@@ -5568,7 +5298,7 @@ class P03_SETUP(tk.Frame):
         # HW BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            for i in range(quant_btns_HW):                     
+            for i in range(quant_btns_HW):              
                 if btn_states_HW[i]:
                     btns_HW[i].config(text=states_txt_act[1], fg=sys_clr[10])
                 else:
@@ -6685,7 +6415,7 @@ class myfunctions():
                 btn_w = 130
                 btn_h = 40
                 for i in range(btn_device_place):
-                    btn_device = tk.Button(text=btns_device_names[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_device(btns_device_names[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
+                    btn_device = tk.Button(text=btns_device_names[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_device(btns_device_names[i]),kidd.switch_frame(P00_BOOT)])                                                                                                                                                     
                     btns_device.append(btn_device)
                     btns_device[i].place(x=x_pos_r1, y=frm01_YPOS+45, w=btn_w, h=btn_h)
                     x_pos_r1 += +(btn_w+15)
@@ -6991,244 +6721,66 @@ class myfunctions():
             def btn_apply_update_label(self):
                 variable_text = "\n".join([f"{var}: {variables[var].get()}" for var in variables])
                 lbl_target_val.config(text=variable_text)
+
         #----------------------------------------------------------------------------------
-        # FUNCTION BUTTONS
+        # TOGGLE AND SAVE BUTTON STATES 2025OK
         #----------------------------------------------------------------------------------
         if REGION:
-            #------------------------------------------------------------------------------
-            # POWER BUTTONS
-            #------------------------------------------------------------------------------
             def toggle_PB(self, pb_text):
                 global btn_states_PB
                 btn_states_PB = pb_text
-                if device == btns_device_names[1]:
-                    file = 'btn_states_DEV001PB.pickle'                    
-                elif device == btns_device_names[2]:
-                    file = 'btn_states_DEV002PB.pickle'
-                elif device == btns_device_names[8]:
-                    file = 'btn_states_DEV008PB.pickle'
-                elif device == btns_device_names[31]:
-                    file = 'btn_states_DEV031PB.pickle'
-                with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
-                    imp_mod['pickle'].dump(btn_states_PB, f)
-            #------------------------------------------------------------------------------
-            # FUNCTION BUTTONS (LO HI AM FM CB) (SUST SYS...)
-            #------------------------------------------------------------------------------        
-            if REGION:
-                def load_btn_states_FNKT(self,ammount):
-                    global btn_states_FNKT
-                    var = btn_states_FNKT
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001FNKT.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002FNKT.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031FNKT.pickle'
-                    try:
-                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                            var = imp_mod['pickle'].load(f)
-                    except:
-                        var = [False] * ammount
-            
-                def toggle_button_states_FNKT(self, i):
-                    if btn_states_FNKT[i] == True:
-                        btn_states_FNKT[i] = False
-                    else:
-                        btn_states_FNKT[i] = True
-                    read.save_btn_states_FNKT()
-                    
-                def save_btn_states_FNKT(self):
-                    var = btn_states_FNKT
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001FNKT.pickle'                    
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002FNKT.pickle'
-                    elif device == btns_device_names[4]:
-                        file = 'btn_states_DEV004FNKT.pickle'
-                    elif device == btns_device_names[8]:
-                        file = 'btn_states_DEV008FNKT.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031FNKT.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
-                        imp_mod['pickle'].dump(var, f)
-            #------------------------------------------------------------------------------
-            # POWER FUNCTION BUTTONS (POWER NORMAL PURSUIT AUTO)
-            #------------------------------------------------------------------------------        
-            if REGION:
-                def toggle_button_states_PBFNKT(self, i):
-                    if btn_states_PBFNKT[i] == True:
-                        btn_states_PBFNKT[i] = False
-                    else:
-                        btn_states_PBFNKT[i] = True
-                    read.save_btn_states_PBFNKT()
-    
-                def load_btn_states_PBFNKT(self):
-                    global btn_states_PBFNKT
-                    try:
-                        with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'rb') as f:
-                            btn_states_PBFNKT = imp_mod['pickle'].load(f)
-                    except:
-                        btn_states_PBFNKT = [False] * 4
-    
-                def save_btn_states_PBFNKT(self):
-                    with open(imp_mod['os'].path.join(datadir, 'btn_states_PBFNKT.pickle'), 'wb') as f:
-                        imp_mod['pickle'].dump(btn_states_PBFNKT, f)
-        #----------------------------------------------------------------------------------
-        # HW SW FAV BUTTONS
-        #----------------------------------------------------------------------------------
-        if REGION:
-            #-------------------------------------------------------------------------------
-            # HW BUTTONS
-            #-------------------------------------------------------------------------------
-            if REGION:
-                def load_button_states_HW(self,ammount):
-                    global btn_states_HW
-                    var = btn_states_HW
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001HW.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002HW.pickle'
-                    elif device == btns_device_names[8]:
-                        file = 'btn_states_DEV008HW.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031HW.pickle'
-                    try:
-                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                            var = imp_mod['pickle'].load(f)
-                    except:
-                        var = [False] * ammount
+                bsm.set_current_button_states("PB", pb_text)
+                bsm.save()
+                
+            def toggle_button_states_FNKT(self, i):
+                if btn_states_FNKT[i] == True:
+                    btn_states_FNKT[i] = False
+                else:
+                    btn_states_FNKT[i] = True
+                bsm.set_current_button_states("FNKT", btn_states_FNKT)
+                bsm.save()
 
-                def toggle_btn_HW(self, i):
-                    if btn_states_HW[i] == True:
-                        btn_states_HW[i] = False
-                    else:
-                        btn_states_HW[i] = True
-                    read.save_btn_states_HW()
+            def toggle_button_states_PBFNKT(self, i):
+                if btn_states_PBFNKT[i] == True:
+                    btn_states_PBFNKT[i] = False
+                else:
+                    btn_states_PBFNKT[i] = True
+                bsm.set_current_button_states("PBFNKT", btn_states_PBFNKT)
+                bsm.save()
+          
+            def toggle_btn_HW(self, i):
+                if btn_states_HW[i] == True:
+                    btn_states_HW[i] = False
+                else:
+                    btn_states_HW[i] = True
+                bsm.set_current_button_states("HW", btn_states_HW)
+                bsm.save()
 
-                def save_btn_states_HW(self):
-                    var = btn_states_HW
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001HW.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002HW.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031HW.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
-                        imp_mod['pickle'].dump(var, f)
-            #-------------------------------------------------------------------------------
-            # SW BUTTONS
-            #-------------------------------------------------------------------------------
-            if REGION:
-                def load_button_states_SW(self,ammount):
-                    global btn_states_SW
-                    var = btn_states_SW
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001SW.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002SW.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031SW.pickle'
-                    try:
-                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                            var = imp_mod['pickle'].load(f)
-                    except:
-                        var = [False] * ammount
+            def toggle_btn_SW(self, i):
+                global btn_states_SW
+                if btn_states_SW[i] == True:
+                    btn_states_SW[i] = False
+                else:
+                    btn_states_SW[i] = True
+                bsm.set_current_button_states("SW", btn_states_SW)
+                bsm.save()
+                
+            def toggle_btn_qopt(self, i):
+                if btn_states_qopt[i] == True:
+                    btn_states_qopt[i] = False
+                else:
+                    btn_states_qopt[i] = True
+                bsm.set_current_button_states("QOPT", btn_states_qopt)
+                bsm.save()
 
-                def toggle_btn_SW(self, i):
-                    global states_txt_act
-                    if btn_states_SW[i] == True:
-                        btn_states_SW[i] = False
-                    else:
-                        btn_states_SW[i] = True
-                    #CHANGE LANGUAGE
-                    if btn_states_SW[4]:
-                        states_txt_act = states_txt_en
-                    else:
-                        states_txt_act = states_txt_de
-                    read.save_btn_states_SW()
+            def toggle_btn_FAV(self, i):
+                if btn_states_FAV[i] == True:
+                    btn_states_FAV[i] = False
+                else:
+                    btn_states_FAV[i] = True
+                bsm.set_current_button_states("FAV", btn_states_FAV)
+                bsm.save()
 
-                def save_btn_states_SW(self):
-                    var = btn_states_SW
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001SW.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002SW.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031SW.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
-                        imp_mod['pickle'].dump(var, f)
-            #-------------------------------------------------------------------------------
-            # QOPT BUTTONS
-            #-------------------------------------------------------------------------------
-            if REGION:
-                def load_button_states_qopt(self,ammount):
-                    global btn_states_qopt
-                    var = btn_states_qopt
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001qopt.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002qopt.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031qopt.pickle'
-                    try:
-                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                            var = imp_mod['pickle'].load(f)
-                    except:
-                        var = [False] * ammount
-
-                def toggle_btn_qopt(self, i):
-                    if btn_states_qopt[i] == True:
-                        btn_states_qopt[i] = False
-                    else:
-                        btn_states_qopt[i] = True
-                    read.save_btn_states_qopt()
-
-                def save_btn_states_qopt(self):
-                    var = btn_states_qopt
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001qopt.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002qopt.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031qopt.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
-                        imp_mod['pickle'].dump(var, f)
-            #-------------------------------------------------------------------------------
-            # FAV BUTTONS
-            #-------------------------------------------------------------------------------
-            if REGION:
-                def load_button_states_FAV(self,ammount):
-                    global btn_states_FAV
-                    var = btn_states_FAV
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001FAV.pickle'
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002FAV.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031FAV.pickle'
-                    try:
-                        with open(imp_mod['os'].path.join(datadir, file), 'rb') as f:
-                            var = imp_mod['pickle'].load(f)
-                    except:
-                        var = [False] * ammount
-
-                def toggle_btn_FAV(self, i):
-                    if btn_states_FAV[i] == True:
-                        btn_states_FAV[i] = False
-                    else:
-                        btn_states_FAV[i] = True
-                    read.save_btn_states_FAV()
-
-                def save_btn_states_FAV(self):
-                    var = btn_states_FAV
-                    if device == btns_device_names[1]:
-                        file = 'btn_states_DEV001FAV.pickle'                    
-                    elif device == btns_device_names[2]:
-                        file = 'btn_states_DEV002FAV.pickle'
-                    elif device == btns_device_names[31]:
-                        file = 'btn_states_DEV031FAV.pickle'
-                    with open(imp_mod['os'].path.join(datadir, file), 'wb') as f:
-                        imp_mod['pickle'].dump(var, f)
         #----------------------------------------------------------------------------------
         # LOAD SYSTEMDATA IF THE SYSTEM IS A RASPBERRY PI
         #----------------------------------------------------------------------------------
@@ -7251,12 +6803,12 @@ class myfunctions():
     #--------------------------------------------------------------------------------------
     # STYLING FUNCTIONS
     #--------------------------------------------------------------------------------------
-    if REGION:
+    if REGION:        
         def toggle_button_device(self, device_text):
             global device
             device = device_text
-            with open(imp_mod['os'].path.join(datadir, 'device_conf.pickle'), 'wb') as f:
-                imp_mod['pickle'].dump(device, f)
+            bsm.data["main_config"]["device"] = device
+            bsm.save()
         def toggle_button_style(self, style_text):
             global style
             global sty_clr
@@ -7265,13 +6817,13 @@ class myfunctions():
                 sty_clr = sty_clr_ka
             elif style == btns_style_names[1]:
                 sty_clr = sty_clr_ki
-            with open(imp_mod['os'].path.join(datadir, 'style_conf.pickle'), 'wb') as f:
-                imp_mod['pickle'].dump(style, f)
+            bsm.data["main_config"]["style"] = style
+            bsm.save()
         def toggle_button_theme(self, theme_text):
             global theme
             theme = theme_text
-            with open(imp_mod['os'].path.join(datadir, 'theme_conf.pickle'), 'wb') as f:
-                imp_mod['pickle'].dump(theme, f)                
+            bsm.data["main_config"]["theme"] = theme
+            bsm.save()              
         def toggle_button_system(self, system_text):
             global system
             global sys_clr
@@ -7284,8 +6836,8 @@ class myfunctions():
                 sys_clr = sys_clr_BU
             elif system == btns_sys_names[3]: 
                 sys_clr = sys_clr_WH
-            with open(imp_mod['os'].path.join(datadir, 'system_conf.pickle'), 'wb') as f:
-                imp_mod['pickle'].dump(system, f)
+            bsm.data["main_config"]["system"] = system
+            bsm.save()
     #--------------------------------------------------------------------------------------
     # SOUND FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -7698,8 +7250,7 @@ class myfunctions():
             # WRITE ODOMETER DATA
             #------------------------------------------------------------------------------
             def odometer_data(self, var):
-                with open(imp_mod['os'].path.join(datadir, 'odometer.pickle'), 'wb') as f:
-                    imp_mod['pickle'].dump(var, f)
+                bsm.save(imp_mod['os'].path.join(datadir, 'odometer.json'), var)
     #--------------------------------------------------------------------------------------
     # DEV002 FUNCTIONS
     #--------------------------------------------------------------------------------------
