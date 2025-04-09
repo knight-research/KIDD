@@ -6,7 +6,7 @@ try:
         version = f.read().strip()
 except FileNotFoundError:
     version = "unknown"
-last_change = "2025-04-06-1346"
+last_change = "2025-04-09-2118"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
@@ -3458,6 +3458,11 @@ class P01_DASH(tk.Frame):
     def update_page(self):
         start_time = imp_mod['time'].time()
         #----------------------------------------------------------------------------------
+        # Dictionary chechen if not, create
+        #----------------------------------------------------------------------------------
+        if not hasattr(self, "old_values"):
+            self.old_values = {}
+        #----------------------------------------------------------------------------------
         # GLOBALS
         #----------------------------------------------------------------------------------
         if REGION:
@@ -3857,105 +3862,104 @@ class P01_DASH(tk.Frame):
             # UPDATE DEV001G000 (SPEED)
             #------------------------------------------------------------------------------
             if REGION:
-                if btn_states_FNKT[3] == True:
+                if not hasattr(self, "old_bar_leds"):
+                    self.old_bar_leds = {}
+
+                # Geschwindigkeit (immer setzen für später)
+                speed_int = int(seven_seg_speed)
+
+                if btn_states_FNKT[3]:
                     speed_int = int(seven_seg_speed)
-                    #----------------------------------------------------------------------
-                    # CALCULATE 0-300 TO 14 LEDs
-                    #----------------------------------------------------------------------                   
-                    if speed_int > 0 and speed_int < 100:
-                        val_DEV001G000 = (speed_int / 100) * 7
-                    elif speed_int > 100 and speed_int <= 200:
-                        val_DEV001G000 = 7 + ((speed_int - 100) / 100) * 2
-                    elif speed_int > 200 and speed_int <= 300:
-                        val_DEV001G000 = 9 + ((speed_int - 200) / 100) * 5
+
+                    if speed_int < 5:
+                        val_DEV001G000 = 0
+                    elif speed_int <= 100:
+                        val_DEV001G000 = ((speed_int - 5) / (100 - 5)) * 7  # 5–100 → 0–7
+                    elif speed_int <= 119:
+                        val_DEV001G000 = 7 + ((speed_int - 100) / 19)       # 101–119 → +1 (gelb)
                     else:
-                        val_DEV001G000 = 310
-                    #----------------------------------------------------------------------
-                    # DISPLAY THE 14 LEDs
-                    #----------------------------------------------------------------------            
-                    for i in range (val_conf_min[0], ammount_DEV001G000):
-                        if val_DEV001G000 >= i:
-                            if i < 7:
-                                led_DEV001G000[i].config(image=localimage17)
-                            elif i < 8:
-                                led_DEV001G000[i].config(image=localimage16)
-                            else:
-                                led_DEV001G000[i].config(image=localimage15)
-                        else:
-                            if i < 7:
-                                led_DEV001G000[i].config(image=localimage12)
-                            elif i < 8:
-                                led_DEV001G000[i].config(image=localimage11)
-                            else:
-                                led_DEV001G000[i].config(image=localimage10)
-                else:
-                    speed_int = 0
-                    #----------------------------------------------------------------------
-                    # ALL 14 LEDs OFF FOR FASTER CYCLE TIME
-                    #----------------------------------------------------------------------
-                    for i in range (val_conf_min[0], ammount_DEV001G000):
-                        if i < 7:
-                            led_DEV001G000[i].config(image=localimage12)
-                        elif i < 8:
-                            led_DEV001G000[i].config(image=localimage11)
-                        else:
-                            led_DEV001G000[i].config(image=localimage10)
+                        val_DEV001G000 = 8 + ((min(speed_int, 310) - 120) / (310 - 120)) * 6  # 120–310 → +6 (rot)
+
+                # Richtige Farblogik beachten
+                def get_led_image(i, on):
+                    if i < 7:
+                        return localimage17 if on else localimage12  # GRÜN
+                    elif i == 7:
+                        return localimage16 if on else localimage11  # GELB
+                    else:
+                        return localimage15 if on else localimage10  # ROT
+
+                # LEDs aktualisieren (nur bei Änderung)
+                for i in range(val_conf_min[0], ammount_DEV001G000):
+                    is_on = btn_states_FNKT[3] and (val_DEV001G000 >= i)
+                    img = get_led_image(i, is_on)
+                    if self.old_bar_leds.get(i) != img:
+                        led_DEV001G000[i].config(image=img)
+                        self.old_bar_leds[i] = img
             #------------------------------------------------------------------------------
             # UPDATE DEV001G001 (SIGNAL)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # VALUE VALID OR SIMULATION ON
-                #--------------------------------------------------------------------------
+                # Initialisiere Cache bei erstem Durchlauf
+                if not hasattr(self, "old_signal_leds"):
+                    self.old_signal_leds = {}
+
+                # ----------------------------------------------------------------------
+                # Wert holen (LIVE oder SIMU)
+                # ----------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV001G001 = speed_int/10
+                    seven_seg_DEV001G001 = speed_int / 10
                 else:
                     seven_seg_DEV001G001 = val_cnt_sim[1]
-                val_DEV001G001 = seven_seg_DEV001G001/ammount_DEV001G001
-                #--------------------------------------------------------------------------
-                # CONVERT VALUE FOR xx LEDS
-                #--------------------------------------------------------------------------
-                perc_DEV001G001 = int (val_DEV001G001 - val_min[1]) * (ammount_DEV001G001 - val_conf_min[1]) / (ammount_DEV001G001 - val_conf_min[1]) + val_conf_min[1]
-                #--------------------------------------------------------------------------
-                # DISPLAY THE LEDs
-                #--------------------------------------------------------------------------            
-                if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[1], ammount_DEV001G001):
-                        if perc_DEV001G001 >= i+1:
-                            led_DEV001G001[i].config(image=localimage13)
-                        else:
-                            led_DEV001G001[i].config(image=localimage14)
-                else:
-                    for i in range (val_conf_min[1], ammount_DEV001G001):
-                            led_DEV001G001[i].config(image=localimage14)                
+
+                # Wert auf Bereich normalisieren
+                val_DEV001G001 = seven_seg_DEV001G001 / ammount_DEV001G001
+
+                # LED-Grenze berechnen
+                perc_DEV001G001 = int(val_DEV001G001 - val_min[1]) * (ammount_DEV001G001 - val_conf_min[1]) / (ammount_DEV001G001 - val_conf_min[1]) + val_conf_min[1]
+
+                # ----------------------------------------------------------------------
+                # LEDs zeichnen – aber nur bei Änderung
+                # ----------------------------------------------------------------------
+                for i in range(val_conf_min[1], ammount_DEV001G001):
+                    is_on = btn_states_FNKT[3] and (perc_DEV001G001 >= i + 1)
+                    img = localimage13 if is_on else localimage14
+
+                    if self.old_signal_leds.get(i) != img:
+                        led_DEV001G001[i].config(image=img)
+                        self.old_signal_leds[i] = img              
             #------------------------------------------------------------------------------
             # UPDATE DEV001G002 (TUNING)
             #------------------------------------------------------------------------------
             if REGION:
-                #--------------------------------------------------------------------------
-                # VALUE VALID OR SIMULATION ON
-                #--------------------------------------------------------------------------
+                # Initialisiere Cache beim ersten Aufruf
+                if not hasattr(self, "old_tuning_leds"):
+                    self.old_tuning_leds = {}
+
+                # ----------------------------------------------------------------------
+                # Wert holen (LIVE oder SIMU)
+                # ----------------------------------------------------------------------
                 if btn_states_SW[3] == False:  # LIVE
-                    seven_seg_DEV001G002 = speed_int/15
+                    seven_seg_DEV001G002 = speed_int / 15
                 else:
                     seven_seg_DEV001G002 = val_cnt_sim[2]
-                val_DEV001G002 = seven_seg_DEV001G002/ammount_DEV001G002
-                #--------------------------------------------------------------------------
-                # CONVERT VALUE FOR xx LEDS
-                #--------------------------------------------------------------------------
-                perc_DEV001G002 = int (val_DEV001G002 - val_min[2]) * (ammount_DEV001G002 - val_conf_min[2]) / (ammount_DEV001G002 - val_conf_min[2]) + val_conf_min[2]
-                #--------------------------------------------------------------------------
-                # DISPLAY THE LEDs
-                #--------------------------------------------------------------------------            
-                if btn_states_FNKT[3] == True:
-                    for i in range (val_conf_min[1], ammount_DEV001G002):
-                        if perc_DEV001G002 >= i+1:
-                            led_DEV001G002[i].config(image=localimage13)
-                        else:
-                            led_DEV001G002[i].config(image=localimage14)
-                else:
-                    for i in range (val_conf_min[1], ammount_DEV001G002):
-                            led_DEV001G002[i].config(image=localimage14)
+
+                # Wert auf Bereich normalisieren
+                val_DEV001G002 = seven_seg_DEV001G002 / ammount_DEV001G002
+
+                # LED-Grenze berechnen
+                perc_DEV001G002 = int(val_DEV001G002 - val_min[2]) * (ammount_DEV001G002 - val_conf_min[2]) / (ammount_DEV001G002 - val_conf_min[2]) + val_conf_min[2]
+
+                # ----------------------------------------------------------------------
+                # LEDs zeichnen – aber nur bei Änderung
+                # ----------------------------------------------------------------------
+                for i in range(val_conf_min[1], ammount_DEV001G002):
+                    is_on = btn_states_FNKT[3] and (perc_DEV001G002 >= i + 1)
+                    img = localimage13 if is_on else localimage14
+
+                    if self.old_tuning_leds.get(i) != img:
+                        led_DEV001G002[i].config(image=img)
+                        self.old_tuning_leds[i] = img
             #------------------------------------------------------------------------------
             # DEV001VBS34 (VOICEBOX)
             #------------------------------------------------------------------------------
@@ -4104,27 +4108,44 @@ class P01_DASH(tk.Frame):
             # VOICEBOX STATUS BUTTONS (3)
             #------------------------------------------------------------------------------ 
             if REGION:
+                # Initialisieren beim ersten Aufruf
+                if not hasattr(self, "old_vbst_images"):
+                    self.old_vbst_images = [None, None, None]
+
                 if theme in btns_theme_names[:9]:
-                    if btn_states_FNKT[3] == True:
-                        #------------------------------------------------------------------
-                        # DISPLAY THE 20 LEDs
-                        #------------------------------------------------------------------            
-                        if speed_int <= 55:
-                            btns_DEV001VBSTBTN[0].config(image=localimagelist01[14])
-                        else:
-                            btns_DEV001VBSTBTN[0].config(image=localimagelist02[14])
-                        if speed_int >= 55 and speed_int <= 100:
-                            btns_DEV001VBSTBTN[1].config(image=localimagelist01[15])
-                        else:
-                            btns_DEV001VBSTBTN[1].config(image=localimagelist02[15])
-                        if speed_int >= 100:
-                            btns_DEV001VBSTBTN[2].config(image=localimagelist01[16])
-                        else:
-                            btns_DEV001VBSTBTN[2].config(image=localimagelist02[16])
+                    if btn_states_FNKT[3]:
+                        # ----------------------------------------
+                        # LED 0 (speed ≤ 55)
+                        # ----------------------------------------
+                        img0 = localimagelist01[14] if speed_int <= 55 else localimagelist02[14]
+                        if self.old_vbst_images[0] != img0:
+                            btns_DEV001VBSTBTN[0].config(image=img0)
+                            self.old_vbst_images[0] = img0
+
+                        # ----------------------------------------
+                        # LED 1 (55 ≤ speed ≤ 100)
+                        # ----------------------------------------
+                        img1 = localimagelist01[15] if 55 <= speed_int <= 100 else localimagelist02[15]
+                        if self.old_vbst_images[1] != img1:
+                            btns_DEV001VBSTBTN[1].config(image=img1)
+                            self.old_vbst_images[1] = img1
+
+                        # ----------------------------------------
+                        # LED 2 (speed ≥ 100)
+                        # ----------------------------------------
+                        img2 = localimagelist01[16] if speed_int >= 100 else localimagelist02[16]
+                        if self.old_vbst_images[2] != img2:
+                            btns_DEV001VBSTBTN[2].config(image=img2)
+                            self.old_vbst_images[2] = img2
+
                     else:
-                        btns_DEV001VBSTBTN[0].config(image=localimagelist02[14])
-                        btns_DEV001VBSTBTN[1].config(image=localimagelist02[15])
-                        btns_DEV001VBSTBTN[2].config(image=localimagelist02[16])
+                        # Alles aus (wenn Funktion deaktiviert)
+                        for i, idx in enumerate([14, 15, 16]):
+                            img = localimagelist02[idx]
+                            if self.old_vbst_images[i] != img:
+                                btns_DEV001VBSTBTN[i].config(image=img)
+                                self.old_vbst_images[i] = img
+
             #------------------------------------------------------------------------------
             # CALCULATE AND WRITE ODOMETER DATA
             #------------------------------------------------------------------------------
@@ -4561,24 +4582,42 @@ class P01_DASH(tk.Frame):
                         # todo check the label should be progno label
                         if btn_states_PB in DG02_values:
                             label_7SEG002.config(text=str(DG02_values[btn_states_PB]).zfill(4), anchor="c")
+
         #----------------------------------------------------------------------------------
-        # UPDATE 7 SEGMENT SPEED AND TOTAL RPM PROGNO DISPLAY
-        #----------------------------------------------------------------------------------
-        if REGION:
-            if device == btns_device_names[1]:
-                label_7SEG001.config(text=str(seven_seg_speed).zfill(3))                
-                label_7SEG003.config(text=str(seven_seg_speed).zfill(6))
-            elif device == btns_device_names[2]:
-                label_7SEG001.config(text=str(seg_DEV002[0]).zfill(3), anchor="nw")
-            elif device == btns_device_names[31]:
-                label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")                
+        # UPDATE ONLY IF SOMETHING CHANGED // 7 SEGMENT SPEED AND TOTAL RPM PROGNO DISPLAY
+        #----------------------------------------------------------------------------------                
+        if device == btns_device_names[1]:
+            new_speed = seven_seg_speed
+            if self.old_values.get("speed_label") != new_speed:
+                label_7SEG001.config(text=str(new_speed).zfill(3))                
+                label_7SEG003.config(text=str(new_speed).zfill(6))
+                self.old_values["speed_label"] = new_speed
+     
+        if device == btns_device_names[31]:
+            new_speed = seven_seg_speed
+            if self.old_values.get("speed_label") != new_speed:
+                label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")
+                self.old_values["speed_label"] = new_speed
+
+        if device == btns_device_names[2]:
+            new_rpm = seg_DEV002[0]
+            if self.old_values.get("rpm_label") != new_rpm:
+                if device == btns_device_names[2]:
+                    label_7SEG001.config(text=str(new_rpm).zfill(3), anchor="nw")
+                    self.old_values["rpm_label"] = new_rpm
+
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
         end_time = imp_mod['time'].time()
         elapsed_time = end_time - start_time
         update_duration = (f"{elapsed_time:.4f}")
+        
+        duration = round(end_time - start_time, 4)
+        if duration > 0.02:  # z.B. alles über 20 ms
+            print(f"⚠️ update_page() dauert {duration}s")
         self.after(time_digital, self.update_page)
+
 #------------------------------------------------------------------------------------------
 # PAGE 02: QOPT
 #------------------------------------------------------------------------------------------

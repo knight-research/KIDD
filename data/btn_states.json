@@ -13,7 +13,7 @@
                 false,
                 false,
                 true,
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -54,7 +54,7 @@
                 false
             ],
             "HW": [
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -67,9 +67,9 @@
             ],
             "SW": [
                 false,
+                true,
                 false,
-                false,
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -183,7 +183,7 @@
             ]
         },
         "DEV002": {
-            "PB": "pb02",
+            "PB": "pb09",
             "FNKT": [
                 false,
                 false,
@@ -244,7 +244,7 @@
                 false,
                 false,
                 false,
-                false,
+                true,
                 false,
                 false,
                 false,

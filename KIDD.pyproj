@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2e6e2792-61df-4edc-ad7a-bf0047ddf2e2</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>kidd.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,7 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="btn_state_manager.py" />
-    <Compile Include="kidd.py" />
+    <Compile Include="main.py" />
     <Compile Include="update.py" />
     <Compile Include="_fake_GPIO.py" />
   </ItemGroup>
