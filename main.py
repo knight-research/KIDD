@@ -506,12 +506,10 @@ if REGION:
             gps_speed_knots = "0.0"
             gps_kph = "0.0"
             gps_mph = "0.0"
-            trip01_cnt_save = False
-            gps_odo_metric_cnt_save = None
             gps_odo_metric_cnt = 1.0
             gps_odo_imperial_cnt = 1.0
-            gps_odo_metric_cnt_old = 0.0
-            gps_odo_imperial_cnt_old = 0.0
+            odo_trip_gps_metric_old = 0.0
+            odo_trip_gps_imperial_old = 0.0
             gps_odo_metric_0str = "0.0"
             gps_odo_imperial_0str = "0.0"
             gps_time = "--:--:--" 
@@ -841,16 +839,28 @@ if REGION:
         # UPDATE LAST SYSTEM CONFIGURATIONS
         #----------------------------------------------------------------------------------
         with open(os.path.join(datadir, "btn_states.json")) as f:
-            main_data = json.load(f)
-        device = main_data["main_config"]["device"]
-        style = main_data["main_config"]["style"]
-        theme = main_data["main_config"]["theme"]
-        system = main_data["main_config"]["system"]
+            data = json.load(f)
+        device = data["main_config"]["device"]
+        style = data["main_config"]["style"]
+        theme = data["main_config"]["theme"]
+        system = data["main_config"]["system"]
+
+        #----------------------------------------------------------------------------------
+        # DEV001 UPDATE LAST ODOMETER DATA
+        #----------------------------------------------------------------------------------
+        odo_trip_gps_imperial_old = data["config"]["odo_trip_gps_imperial"]
+        odo_trip_gps_metric_old = data["config"]["odo_trip_gps_metric"]
+        odo_total_gps_imperial_old = data["config"]["odo_total_gps_imperial"]
+        odo_total_gps_metric_old = data["config"]["odo_total_gps_metric"]
+        odo_trip_aldl_imperial_old = data["config"]["odo_trip_aldl_imperial"]
+        odo_trip_aldl_metric_old = data["config"]["odo_trip_aldl_metric"]
+        odo_total_aldl_imperial_old = data["config"]["odo_total_aldl_imperial"]
+        odo_total_aldl_metric_old = data["config"]["odo_total_aldl_metric"]
 
         #----------------------------------------------------------------------------------
         # UPDATE LAST BUTTON STATES
         #----------------------------------------------------------------------------------
-        btns = main_data["buttons"]
+        btns = data["buttons"]
         if device in btns:
             btn_states_PB    = btns[device]["PB"]
             btn_states_PBFNKT  = btns[device]["PBFNKT"]
@@ -868,14 +878,6 @@ if REGION:
         else:
             states_txt_act = states_txt_de
 
-        #----------------------------------------------------------------------------------
-        # DEV001 UPDATE LAST GPS ODOMETER METRIC TRIP COUNTER
-        #----------------------------------------------------------------------------------
-        gps_odo_metric_cnt_old = bsm.get_config_value("odo_trip_metric", fallback=0.0)
-        #----------------------------------------------------------------------------------
-        # DEV001 UPDATE LAST GPS ODOMETER IMPERIAL TRIP COUNTER
-        #----------------------------------------------------------------------------------
-        gps_odo_imperial_cnt_old = bsm.get_config_value("odo_trip_imperial", fallback=0.0)
         #------------------------------------------------------------------------------
         # UPDATE LAST CONFIG DEV002RB01 (DONT LOAD LAST STATE ALWAYS START WITH ALL OFF)
         #------------------------------------------------------------------------------
@@ -1138,16 +1140,16 @@ class P00_BOOT(tk.Frame):
         # UPDATE LAST SYSTEM CONFIGURATIONS
         #----------------------------------------------------------------------------------
         with open(os.path.join(datadir, "btn_states.json")) as f:
-            main_data = json.load(f)
-        device = main_data["main_config"]["device"]
-        style = main_data["main_config"]["style"]
-        theme = main_data["main_config"]["theme"]
-        system = main_data["main_config"]["system"]
+            data = json.load(f)
+        device = data["main_config"]["device"]
+        style = data["main_config"]["style"]
+        theme = data["main_config"]["theme"]
+        system = data["main_config"]["system"]
 
         #----------------------------------------------------------------------------------
         # UPDATE LAST BUTTON STATES
         #----------------------------------------------------------------------------------
-        btns = main_data["buttons"]
+        btns = data["buttons"]
         if device in btns:
             btn_states_PB    = btns[device]["PB"]
             btn_states_PBFNKT  = btns[device]["PBFNKT"]
@@ -3110,6 +3112,16 @@ class P01_DASH(tk.Frame):
                             x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
                             y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
+                        elif btn_states_PB == "pb03":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
+                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
+                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
+                            wh_lbl_sysinfo = [180, 24, 0,0]
+                        elif btn_states_PB == "pb04":
+                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
+                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
+                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
+                            wh_lbl_sysinfo = [180, 24, 0,0]
                     elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         xywh_7SEG002 = [2, 220, 320, 100]
                         y_txt_sysinfo = [200, 227, 254, 281, 308]
@@ -3128,6 +3140,16 @@ class P01_DASH(tk.Frame):
                             x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
                             y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
                             wh_lbl_sysinfo = [180, 24, 0,0]
+                        elif btn_states_PB == "pb03":
+                            x_txt_sysinfo = [5, 5, 5, 5, 5, 300, 300, 300, 300]
+                            x_lbl_sysinfo = [130, 130, 130, 130, 130, 0, 0, 0]
+                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
+                            wh_lbl_sysinfo = [160, 24, 0,0]
+                        elif btn_states_PB == "pb04":
+                            x_txt_sysinfo = [5, 5, 5, 5, 5, 300, 300, 300, 300]
+                            x_lbl_sysinfo = [130, 130, 130, 130, 130, 0, 0, 0]
+                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
+                            wh_lbl_sysinfo = [160, 24, 0,0]
                     elif theme in [btns_theme_names[15], btns_theme_names[16]]:
                         xywh_7SEG002 = [2, 220, 320, 100]
                         x_txt_sysinfo = [73, 73, 110, 110, 135, 135, 320, 320]
@@ -3234,13 +3256,35 @@ class P01_DASH(tk.Frame):
                             self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="KPH")
                             self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
                             self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
+                    elif btn_states_PB == "pb03":
+                        if device == btns_device_names[1] or device == btns_device_names[31]:
+                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_GI:")
+                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_GM:")
+                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_GI:")
+                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_GM:")
+                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                                       sec.")
+                            self.canvas.create_text(x_txt_sysinfo[5], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
+                            self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
+                            self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
+                            self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
+                    elif btn_states_PB == "pb04":
+                        if device == btns_device_names[1] or device == btns_device_names[31]:
+                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_AI:")
+                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_AM:")
+                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_AI:")
+                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_AM:")
+                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                                       sec.")
+                            self.canvas.create_text(x_txt_sysinfo[5], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
+                            self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
+                            self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
+                            self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
             #------------------------------------------------------------------------------
             # PLACE LABEL
             #------------------------------------------------------------------------------
             if REGION:
                 global label_7SEG002
                 if device == btns_device_names[1] or device == btns_device_names[31]:
-                    if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb00", "pb01", "pb02"]:
+                    if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb00", "pb01", "pb02", "pb03", "pb04"]:
                         for i in range(8):
                             label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
                             lbls_sysinfo.append(label_sysinfo)
@@ -3473,7 +3517,6 @@ class P01_DASH(tk.Frame):
             global val_cnt_sim_updn
             global odo_gps_metric_old
             global odo_gps_metric
-            global trip01_cnt_save
         #----------------------------------------------------------------------------------
         # UPDATE STYLES
         #----------------------------------------------------------------------------------
@@ -4145,33 +4188,6 @@ class P01_DASH(tk.Frame):
                             if self.old_vbst_images[i] != img:
                                 btns_DEV001VBSTBTN[i].config(image=img)
                                 self.old_vbst_images[i] = img
-
-            #------------------------------------------------------------------------------
-            # CALCULATE AND WRITE ODOMETER DATA
-            #------------------------------------------------------------------------------
-            if REGION:
-                #--------------------------------------------------------------------------
-                # SAVE/COPY TRIP COUNTER METRIC GPS
-                #--------------------------------------------------------------------------
-                if trip01_cnt_save == False:
-                    trip01_cnt_save = True
-                    gps_odo_metric_cnt_save = gps_odo_metric_cnt_old
-
-                #--------------------------------------------------------------------------
-                # TRIP COUNTER METRIC GPS
-                #--------------------------------------------------------------------------
-                if btn_states_FNKT[6] == True:
-                    var1 = "{:.2f}".format(gps_odo_metric_cnt / 10000)
-                    if gps_odo_metric_cnt_save != var1:
-                        gps_odo_metric_cnt_save = var1
-                        print ("OLD",gps_odo_metric_cnt_old)
-                        print ("SAVE",gps_odo_metric_cnt_save)
-                        print ("ACT",var1)
-                        print ("SAVE TRIP METRIC")
-                        try:                            
-                            bsm.save(imp_mod['os'].path.join(datadir, 'odo_trip_metric.json'), var1)
-                        except FileNotFoundError:
-                            pass
         #----------------------------------------------------------------------------------
         # DEV002 GAUGES
         #----------------------------------------------------------------------------------
@@ -4535,11 +4551,18 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[2].config(text=gps_odo_imperial_0str)
                         lbls_sysinfo[3].config(text=gps_odo_metric_0str)
                         lbls_sysinfo[4].config(text=update_duration)
-                    # todo like in dev002 (siehe 5 zeilen weiter)
-                    #elif btn_states_PB == "pb03":
-                    #    label_7SEG002.config(text=gps_odo_imperial_0str)
-                    #elif btn_states_PB == "pb04":
-                    #    label_7SEG002.config(text=gps_odo_metric_0str)
+                    elif btn_states_PB == "pb03":
+                        lbls_sysinfo[0].config(text=odo_trip_gps_imperial_old)
+                        lbls_sysinfo[1].config(text=odo_trip_gps_metric_old)
+                        lbls_sysinfo[2].config(text=odo_total_gps_imperial_old)
+                        lbls_sysinfo[3].config(text=odo_total_gps_metric_old)
+                        lbls_sysinfo[4].config(text=update_duration)
+                    elif btn_states_PB == "pb04":
+                        lbls_sysinfo[0].config(text=odo_trip_aldl_imperial_old)
+                        lbls_sysinfo[1].config(text=odo_trip_aldl_metric_old)
+                        lbls_sysinfo[2].config(text=odo_total_aldl_imperial_old)
+                        lbls_sysinfo[3].config(text=odo_total_aldl_metric_old)
+                        lbls_sysinfo[4].config(text=update_duration)
                 elif device == btns_device_names[2]:
                     if btn_states_PB != "pb09":
                         if theme in btns_theme_names[0:3]:    
@@ -4582,7 +4605,6 @@ class P01_DASH(tk.Frame):
                         # todo check the label should be progno label
                         if btn_states_PB in DG02_values:
                             label_7SEG002.config(text=str(DG02_values[btn_states_PB]).zfill(4), anchor="c")
-
         #----------------------------------------------------------------------------------
         # UPDATE ONLY IF SOMETHING CHANGED // 7 SEGMENT SPEED AND TOTAL RPM PROGNO DISPLAY
         #----------------------------------------------------------------------------------                
@@ -4605,7 +4627,6 @@ class P01_DASH(tk.Frame):
                 if device == btns_device_names[2]:
                     label_7SEG001.config(text=str(new_rpm).zfill(3), anchor="nw")
                     self.old_values["rpm_label"] = new_rpm
-
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
@@ -4617,7 +4638,6 @@ class P01_DASH(tk.Frame):
         if duration > 0.02:  # z.B. alles über 20 ms
             print(f"⚠️ update_page() dauert {duration}s")
         self.after(time_digital, self.update_page)
-
 #------------------------------------------------------------------------------------------
 # PAGE 02: QOPT
 #------------------------------------------------------------------------------------------
@@ -6760,7 +6780,6 @@ class myfunctions():
             def btn_apply_update_label(self):
                 variable_text = "\n".join([f"{var}: {variables[var].get()}" for var in variables])
                 lbl_target_val.config(text=variable_text)
-
         #----------------------------------------------------------------------------------
         # TOGGLE AND SAVE BUTTON STATES 2025OK
         #----------------------------------------------------------------------------------
@@ -6819,7 +6838,6 @@ class myfunctions():
                     btn_states_FAV[i] = True
                 bsm.set_current_button_states("FAV", btn_states_FAV)
                 bsm.save()
-
         #----------------------------------------------------------------------------------
         # LOAD SYSTEMDATA IF THE SYSTEM IS A RASPBERRY PI
         #----------------------------------------------------------------------------------
@@ -7219,8 +7237,8 @@ class myfunctions():
                         global gps_mph
                         global gps_odo_metric_cnt
                         global gps_odo_imperial_cnt
-                        global gps_odo_metric_cnt_old
-                        global gps_odo_imperial_cnt_old
+                        global odo_trip_gps_metric_old
+                        global odo_trip_gps_imperial_old
                         global gps_odo_metric_0str
                         global gps_odo_imperial_0str
                         global gps_time
@@ -7254,8 +7272,8 @@ class myfunctions():
                                 gps_mph = "{:.1f}".format(parsed_data.spd_over_grnd * 1.15078)                  #0.2
                                 gps_odo_metric_cnt += parsed_data.spd_over_grnd / 1000.0 * 3600.0
                                 gps_odo_imperial_cnt += parsed_data.spd_over_grnd / 1000.0 * 3600.0 * 0.621371192
-                                gps_odo_metric_0str = "{:.2f}".format((gps_odo_metric_cnt / 10000)+gps_odo_metric_cnt_old)       #000.00
-                                gps_odo_imperial_0str = "{:.2f}".format((gps_odo_imperial_cnt / 10000)+gps_odo_imperial_cnt_old) #000.00
+                                gps_odo_metric_0str = "{:.2f}".format((gps_odo_metric_cnt / 10000)+odo_trip_gps_metric_old)       #000.00
+                                gps_odo_imperial_0str = "{:.2f}".format((gps_odo_imperial_cnt / 10000)+odo_trip_gps_imperial_old) #000.00
                         
                         if gps_data.startswith('$GPGGA'):
                             gps_time = parsed_data.timestamp.strftime("%H:%M:%S")                               #00:00:00
@@ -7285,11 +7303,13 @@ class myfunctions():
                     except:
                         print("no GPS data")
                         pass
-            #------------------------------------------------------------------------------
-            # WRITE ODOMETER DATA
-            #------------------------------------------------------------------------------
-            def odometer_data(self, var):
-                bsm.save(imp_mod['os'].path.join(datadir, 'odometer.json'), var)
+                    #--------------------------------------------------------------------------
+                    # WRITE CHANGED DATA TO FILE
+                    #--------------------------------------------------------------------------
+                    if odo_trip_gps_metric_old != gps_odo_metric_cnt:
+                        bsm.set_config_value("odo_trip_gps_metric", gps_odo_metric_cnt)
+                        bsm.save()
+                        odo_trip_gps_metric_old = gps_odo_metric_cnt
     #--------------------------------------------------------------------------------------
     # DEV002 FUNCTIONS
     #--------------------------------------------------------------------------------------
