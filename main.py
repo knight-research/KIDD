@@ -6,7 +6,7 @@ try:
         version = f.read().strip()
 except FileNotFoundError:
     version = "unknown"
-last_change = "2025-04-09-2118"
+last_change = "2025-04-10-1556"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
@@ -503,9 +503,6 @@ if REGION:
             prev_timestamp = None
             gps_port = None           
             gps_date = "0000-00-00"
-            gps_speed_knots = "0.0"
-            gps_kph = "0.0"
-            gps_mph = "0.0"
             gps_odo_metric_cnt = 1.0
             gps_odo_imperial_cnt = 1.0
             odo_trip_gps_metric_old = 0.0
@@ -519,12 +516,8 @@ if REGION:
             gps_lon_dir = "E"
             gps_altitude = "000"
             gps_altitude_units = "M"
-            gps_kph_float = "000"
-            gps_mph_float = "000"
-            gps_kph_int = 0
-            gps_mph_int = 0
-            gps_kph_0str = "000"
-            gps_mph_0str = "000"
+            gps_kph_0 = "000"
+            gps_mph_0 = "000"
         #----------------------------------------------------------------------------------
         # ODOMETER COUNTER
         #----------------------------------------------------------------------------------
@@ -3515,8 +3508,6 @@ class P01_DASH(tk.Frame):
             global count_ctr_SIM_DEV001G000
             global val_cnt_sim
             global val_cnt_sim_updn
-            global odo_gps_metric_old
-            global odo_gps_metric
         #----------------------------------------------------------------------------------
         # UPDATE STYLES
         #----------------------------------------------------------------------------------
@@ -3867,7 +3858,7 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # GET NEW GPS DATA
                 #--------------------------------------------------------------------------
-                if btn_states_HW[0] == True:  #SW0 = GPS MODUL
+                if btn_states_HW[0] == True:  #HW0 = GPS MODUL
                     if gps_port is not None:                    
                         read.gps_data()
                 #--------------------------------------------------------------------------
@@ -3881,9 +3872,9 @@ class P01_DASH(tk.Frame):
                     seven_seg_speed = aldl_vehicle_speed_kph
                 elif btn_states_HW[0] and btn_states_SW[1]:
                     if btn_states_SW[0]:
-                        seven_seg_speed = gps_mph_0str
+                        seven_seg_speed = gps_mph_0
                     else:
-                        seven_seg_speed = gps_kph_0str
+                        seven_seg_speed = gps_kph_0
                 else:
                     if btn_states_SW[0]:
                         seven_seg_speed = aldl_vehicle_speed_mph
@@ -4491,9 +4482,9 @@ class P01_DASH(tk.Frame):
                     seven_seg_speed = aldl_vehicle_speed_kph
                 elif btn_states_HW[0] and btn_states_SW[1]:
                     if btn_states_SW[0]:
-                        seven_seg_speed = gps_mph_0str
+                        seven_seg_speed = gps_mph_0
                     else:
-                        seven_seg_speed = gps_kph_0str
+                        seven_seg_speed = gps_kph_0
                 else:
                     if btn_states_SW[0]:
                         seven_seg_speed = aldl_vehicle_speed_mph
@@ -4546,8 +4537,8 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[6].config(text=gps_lon_dir)
                         lbls_sysinfo[7].config(text=gps_lat_dir)                           
                     elif btn_states_PB == "pb02":
-                        lbls_sysinfo[0].config(text=gps_mph)
-                        lbls_sysinfo[1].config(text=gps_kph)
+                        lbls_sysinfo[0].config(text=gps_mph_0)
+                        lbls_sysinfo[1].config(text=gps_kph_0)
                         lbls_sysinfo[2].config(text=gps_odo_imperial_0str)
                         lbls_sysinfo[3].config(text=gps_odo_metric_0str)
                         lbls_sysinfo[4].config(text=update_duration)
@@ -7225,91 +7216,87 @@ class myfunctions():
             #------------------------------------------------------------------------------
             # GPS MODULE
             #------------------------------------------------------------------------------
-            if REGION:
-                def gps_data(self):
-                    #----------------------------------------------------------------------
-                    # GLOBALS
-                    #----------------------------------------------------------------------
-                    if REGION:
-                        global gps_date
-                        global gps_speed_knots
-                        global gps_kph
-                        global gps_mph
-                        global gps_odo_metric_cnt
-                        global gps_odo_imperial_cnt
-                        global odo_trip_gps_metric_old
-                        global odo_trip_gps_imperial_old
-                        global gps_odo_metric_0str
-                        global gps_odo_imperial_0str
-                        global gps_time
-                        global gps_lat_str
-                        global gps_lat_dir
-                        global gps_long_str
-                        global gps_lon_dir
-                        global gps_altitude
-                        global gps_altitude_units
-                        global gps_kph_float
-                        global gps_mph_float
-                        global gps_kph_int
-                        global gps_mph_int
-                        global gps_kph_0str
-                        global gps_mph_0str
-                        global time_zone_offset
-                    #----------------------------------------------------------------------
-                    # READ DATA FROM MODULE
-                    #----------------------------------------------------------------------
-                    try:
-                        gps_data = gps_serial.readline().decode('ascii', errors='replace')
-                        parsed_data = pynmea2.parse(gps_data)        
-                        #----------------------------------------------------------------------
-                        # WRITE GPS DATA TO VARIABLES
-                        #----------------------------------------------------------------------
-                        if gps_data.startswith('$GPRMC'):
-                            gps_date = parsed_data.datestamp                                                    #2023-07-20
-                            if parsed_data.spd_over_grnd is not None:
-                                gps_speed_knots = parsed_data.spd_over_grnd                                     #0.182 knots
-                                gps_kph = "{:.1f}".format(parsed_data.spd_over_grnd * 1.852)                    #0.4
-                                gps_mph = "{:.1f}".format(parsed_data.spd_over_grnd * 1.15078)                  #0.2
-                                gps_odo_metric_cnt += parsed_data.spd_over_grnd / 1000.0 * 3600.0
-                                gps_odo_imperial_cnt += parsed_data.spd_over_grnd / 1000.0 * 3600.0 * 0.621371192
-                                gps_odo_metric_0str = "{:.2f}".format((gps_odo_metric_cnt / 10000)+odo_trip_gps_metric_old)       #000.00
-                                gps_odo_imperial_0str = "{:.2f}".format((gps_odo_imperial_cnt / 10000)+odo_trip_gps_imperial_old) #000.00
-                        
-                        if gps_data.startswith('$GPGGA'):
-                            gps_time = parsed_data.timestamp.strftime("%H:%M:%S")                               #00:00:00
-                            gps_lat_str = "{:.5f}".format(parsed_data.latitude)                                 #47.75843
-                            gps_lat_dir = parsed_data.lat_dir                                                   #N
-                            gps_long_str = "{:.5f}".format(parsed_data.longitude)                               #9.73225
-                            gps_lon_dir = parsed_data.lon_dir                                                   #E
-                            if parsed_data.altitude is not None:
-                                gps_altitude = "{:.1f}".format(parsed_data.altitude)                            #665.7 above sealevel
-                                gps_altitude_units = parsed_data.altitude_units                                 #M
-                        #----------------------------------------------------------------------
-                        # CONVERTED TO FLOAT
-                        #----------------------------------------------------------------------
-                        gps_kph_float = float(gps_kph)
-                        gps_mph_float = float(gps_mph)
-                        #----------------------------------------------------------------------
-                        # CONVERTED FLOAT TO INT
-                        #----------------------------------------------------------------------
-                        gps_kph_int = round(gps_kph_float)
-                        gps_mph_int = round(gps_mph_float)
-                        #----------------------------------------------------------------------
-                        # CONVERTED INT TO STRING TO SHOW LEADING ZEROS
-                        #----------------------------------------------------------------------
-                        gps_kph_0str = "{:0>3d}".format(gps_kph_int)
-                        gps_mph_0str = "{:0>3d}".format(gps_mph_int)
-                        
-                    except:
-                        print("no GPS data")
-                        pass
-                    #--------------------------------------------------------------------------
-                    # WRITE CHANGED DATA TO FILE
-                    #--------------------------------------------------------------------------
-                    if odo_trip_gps_metric_old != gps_odo_metric_cnt:
-                        bsm.set_config_value("odo_trip_gps_metric", gps_odo_metric_cnt)
-                        bsm.save()
-                        odo_trip_gps_metric_old = gps_odo_metric_cnt
+            def gps_data(self):
+                global gps_date, gps_odo_metric_cnt, gps_odo_imperial_cnt
+                global odo_trip_gps_metric_old, odo_trip_gps_imperial_old
+                global odo_total_gps_metric_old, odo_total_gps_imperial_old
+                global gps_odo_metric_0str, gps_odo_imperial_0str
+                global gps_time, gps_lat_str, gps_lat_dir, gps_long_str, gps_lon_dir
+                global gps_altitude, gps_altitude_units
+                global gps_kph_0, gps_mph_0, time_zone_offset
+                global reset_trip
+
+                # Lade alte Werte aus Datei
+                with open(os.path.join(datadir, "btn_states.json")) as f:
+                    data = json.load(f)
+                odo_trip_gps_imperial_old = data["config"]["odo_trip_gps_imperial"]
+                odo_trip_gps_metric_old = data["config"]["odo_trip_gps_metric"]
+                odo_total_gps_imperial_old = data["config"]["odo_total_gps_imperial"]
+                odo_total_gps_metric_old = data["config"]["odo_total_gps_metric"]
+
+                try:
+                    gps_raw = gps_serial.readline().decode('ascii', errors='replace')
+                    parsed = pynmea2.parse(gps_raw)
+
+                    if gps_raw.startswith('$GPRMC'):
+                        gps_date = parsed.datestamp
+                        if parsed.spd_over_grnd:
+                            knots = parsed.spd_over_grnd
+                            gps_kph_0 = f"{round(knots * 1.852):03d}"
+                            gps_mph_0 = f"{round(knots * 1.15078):03d}"
+
+                            gps_odo_metric_cnt += knots / 1000.0 * 3600.0
+                            gps_odo_imperial_cnt += knots / 1000.0 * 3600.0 * 0.621371192
+
+                            gps_odo_metric_0str = f"{(gps_odo_metric_cnt / 10000) + odo_trip_gps_metric_old:.2f}"
+                            gps_odo_imperial_0str = f"{(gps_odo_imperial_cnt / 10000) + odo_trip_gps_imperial_old:.2f}"
+
+                    elif gps_raw.startswith('$GPGGA'):
+                        gps_time = parsed.timestamp.strftime("%H:%M:%S")
+                        gps_lat_str = f"{parsed.latitude:.5f}"
+                        gps_lat_dir = parsed.lat_dir
+                        gps_long_str = f"{parsed.longitude:.5f}"
+                        gps_lon_dir = parsed.lon_dir
+                        if parsed.altitude is not None:
+                            gps_altitude = f"{parsed.altitude:.1f}"
+                            gps_altitude_units = parsed.altitude_units
+
+                except Exception as e:
+                    print("no GPS data:", e)
+
+                save_needed = False
+
+                # Trip zurücksetzen falls gewünscht
+                if reset_trip:
+                    bsm.set_config_value("odo_trip_gps_metric", 0.0)
+                    bsm.set_config_value("odo_trip_gps_imperial", 0.0)
+                    reset_trip = False
+                    save_needed = True
+                else:
+                    # Final neue Werte berechnen
+                    odo_trip_gps_metric_new = round((gps_odo_metric_cnt / 10000) + odo_trip_gps_metric_old, 1)
+                    odo_trip_gps_imperial_new = round((gps_odo_imperial_cnt / 10000) + odo_trip_gps_imperial_old, 1)
+                    odo_total_gps_metric_new = round((gps_odo_metric_cnt / 10000) + odo_total_gps_metric_old, 1)
+                    odo_total_gps_imperial_new = round((gps_odo_imperial_cnt / 10000) + odo_total_gps_imperial_old, 1)
+
+                    if odo_trip_gps_metric_new != odo_trip_gps_metric_old:
+                        bsm.set_config_value("odo_trip_gps_metric", odo_trip_gps_metric_new)
+                        save_needed = True
+
+                    if odo_trip_gps_imperial_new != odo_trip_gps_imperial_old:
+                        bsm.set_config_value("odo_trip_gps_imperial", odo_trip_gps_imperial_new)
+                        save_needed = True
+
+                    if odo_total_gps_metric_new != odo_total_gps_metric_old:
+                        bsm.set_config_value("odo_total_gps_metric", odo_total_gps_metric_new)
+                        save_needed = True
+
+                    if odo_total_gps_imperial_new != odo_total_gps_imperial_old:
+                        bsm.set_config_value("odo_total_gps_imperial", odo_total_gps_imperial_new)
+                        save_needed = True
+
+                if save_needed:
+                    bsm.save()
     #--------------------------------------------------------------------------------------
     # DEV002 FUNCTIONS
     #--------------------------------------------------------------------------------------
