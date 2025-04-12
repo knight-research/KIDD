@@ -6,13 +6,15 @@ try:
         version = f.read().strip()
 except FileNotFoundError:
     version = "unknown"
-last_change = "2025-04-10-1556"
+last_change = "2025-04-12-1608"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
 #------------------------------------------------------------------------------------------
 if REGION:
     import os
+    lbls_sysinfo = []  # globale Liste für sysinfo-Labels todo an richtige stelle bringen
+
     import json
     from btn_state_manager import ButtonStateManager
     folder = os.path.dirname(os.path.abspath(__file__))
@@ -335,7 +337,8 @@ if REGION:
                         install_done = bsm.save('install_conf.json', install_done)
                     except ImportError:
                         print(f"{package} is not installed. Installing...")
-                        subprocess.call(['pip3', 'install', package])
+                        subprocess.call(['pip3', 'install', package, '--break-system-packages'])
+
             if __name__ == '__main__':
                 install_missing_packages(required_packages)
         #----------------------------------------------------------------------------------
@@ -351,6 +354,7 @@ if REGION:
             from tkinter import filedialog
             from tkinter import ttk
             from threading import Thread
+            import pynmea2
         #----------------------------------------------------------------------------------
         # CHECK SYSTEM
         #----------------------------------------------------------------------------------
@@ -500,6 +504,7 @@ if REGION:
         # GPS VARIABLES
         #----------------------------------------------------------------------------------   
         if REGION:
+            reset_trip = False
             prev_timestamp = None
             gps_port = None           
             gps_date = "0000-00-00"
@@ -576,82 +581,84 @@ if REGION:
         # TEXT LISTS
         #----------------------------------------------------------------------------------
         if REGION:
-            #------------------------------------------------------------------------------
-            # ALL DEVICES
-            #------------------------------------------------------------------------------
-            if REGION:
-                #PAGES
-                btns_menu_names = ["BOOT", "DASH", "QOPT", "SETUP", "THEMES", "C-FNkT", "K-FNKT", "AUDIO", "VIDEO", "RES", "RES", "RES", "RES", "RES"]
-                #CONFIG
-                btns_device_names = ['DEV000', 'DEV001', 'DEV002', 'DEV003', 'DEV004', 'DEV005', 'DEV006', 'DEV007', 'DEV008', 'DEV009', 'DEV010', 'DEV011', 'DEV012', 'DEV013', 'DEV014', 'DEV015', 'DEV016', 'DEV017', 'DEV018', 'DEV019', 'DEV020', 'DEV021', 'DEV022', 'DEV023', 'DEV024', 'DEV025', 'DEV026', 'DEV027', 'DEV028', 'DEV029', 'DEV030', 'DEV031', 'DEV032', 'DEV033', 'DEV034', 'DEV035', 'DEV036', 'DEV037', 'DEV038', 'DEV039', 'DEV040']
-                btns_style_names = ['KARR', 'KITT', '---', '---', '---']
-                btns_theme_names = ['PILOT', 'K2_S01', 'K2_S02', 'K2_S03', 'K2_S04', 'K2_S05', 'K2_S06', 'K2_OTTO', 'K2_MAX', 'K3_S01', 'K3_S02', 'GMA', 'GMD', 'DMC', 'BTTF', 'LCARS1', 'LCARS2']
-                btns_sys_names = ['ORANGE', 'GREEN', 'AQUA', 'WHITE']
-                btn_PB_txt = ['pb00', 'pb01', 'pb02', 'pb03', 'pb04', 'pb05', 'pb06', 'pb07', 'pb08', 'pb09', 'pb10', 'pb11', 'pb12']
+            #with open(os.path.join(datadir, "full_textlists.json"), "r", encoding="utf-8") as f:
+            with open(os.path.join(datadir, "full_textlists.json")) as f:
+                textdata = json.load(f)
+            # -----------------------------------------------------
+            # ALLE GERÄTE (global gültig)
+            # -----------------------------------------------------
+            btns_menu_names   = textdata["ALL_DEVICES"]["PAGES"]
+            btns_device_names = textdata["ALL_DEVICES"]["CONFIG"]["devices"]
+            btns_style_names  = textdata["ALL_DEVICES"]["CONFIG"]["styles"]
+            btns_theme_names  = textdata["ALL_DEVICES"]["CONFIG"]["themes"]
+            btns_sys_names    = textdata["ALL_DEVICES"]["CONFIG"]["systems"]
+            btn_PB_txt        = textdata["ALL_DEVICES"]["PB_NAMES"]
 
-                units_act = []
-                units_eu = ["KPH", "KPHg", "KM", "°C", "BAR", "LTR", "LPH"]
-                units_us = ["MPH", "MPHg", "MLS", "°F", "PSI", "GALS", "GPH"]
-                
-                states_txt_act = []
-                states_txt_de = ["AUS", "EIN", "OBEN", "UNTEN", "HOCH", "RUNTER", "LINKS", "RECHTS"]
-                states_txt_en = ["OFF", "ON", "HIGH", "LOW", "UP", "DOWN", "LEFT", "RIGHT"]
-                
-                sysinfo01_txt = ["HDD_USED", "HDD_MAX", "RAM_USED", "RAM_MAX", "CPU_USED", "CPU_TEMP", "UPDATE_DURATION"]
-                sysinfo02_txt = ["GPS_TIME", "GPS_DATE","ALT","GPS_LAT", "GPS_LONG", "GPS_MPH", "GPS_KPH"]
-                voicecmd_txt = ["SYSTEM", "TEXT", "INFO"]
-            #------------------------------------------------------------------------------
-            # DEV001
-            #------------------------------------------------------------------------------
-            if REGION:
-                #SETUP BUTTONS AND LABELS
-                btnhw_DEV001_txt = ["GPS", "MICRO", "---", "---", "---", "---", "---", "---", "---", "---"]
-                lbl_btnsw_DEV001_txt = ["EU/US", "ALDL/GPS", "AUDIO", "SIMU", "LANG", "---", "---", "---", "---", "---"]
-                btnsw_DEV001_txt_0 = ["EU", "ALDL","HDMI1", "LIVE", "DEU", "---", "---", "---", "---", "---"]
-                btnsw_DEV001_txt_1 = ["US", "GPS", "HDMI2", "SIMU", "ENG", "---", "---", "---", "---", "---"]
-                btnsw_DEV001_txt_3 = ["--", "---", "AV   ", "----", "---", "---", "---", "---", "---", "---"]
-                #GAUGES
-                msg_center_S01_txt = ["CALIBRATE", "PRESEN", "TBI", "MILES", "TRIP", "RANGE", "FUEL"]
-                gau_S01U01_txt = ["0", "200", "INLET TEMP", "FREE TURBINE", "MASS FLOW LBS", "E.G.T. F", "FUEL FLOW GPH", "MAIN OIL PRESS", "COMPRESSOR TEMP F", "HYD SYST STRESS PSI", "VOLTS DC", "CAPACITY STATUS", "PROPAGATION DELAY HRS", "ACCESS"]
-                gau_S02U01_txt = ["0", "200", "INLET TEMP", "FREE TURBINE", "MASS FLOW LBS", "E.G.T. F", "FUEL FLOW GPH", "MAIN OIL PRESS", "COMPRESSOR TEMP F", "HYD SYST STRESS PSI", "VOLTS DC", "CAPACITY STATUS", "PROPAGATION DELAY HRS", "ACCESS"]
-                gau_S03U01_txt = ["SPD", "0", "100", "200", "300", "MILES", "SIGNAL", "TUNING", "LO", "HI", "VHF", "UHF", "AM", "FM", "CB", "SEARCH", "MI", "TRIP", "RANGE"]
-                gau_S04U01_txt = ["SPD", "0", "100", "200", "300", "MILES", "SIGNAL", "TUNING", "LO", "HI", "VHF", "UHF", "AM", "FM", "CB", "SEARCH", "MI", "TRIP", "RANGE"]
-                gau_S05U01_txt = ["SPD", "0", "100", "200", "300", "INFO 1", "0-200", "0-300", "- - -", "VOICE", "SYS", "GAUGE", "- - -", "- - -", "SAVE", "INFO 2", "SYS", "GPS", "TRIP"]
-                gau_S06U01_txt = ["SPD", "0", "100", "200", "300", "INFO 1", "0-200", "0-300", "- - -", "VOICE", "SYS", "GAUGE", "- - -", "- - -", "SAVE", "INFO 2", "SYS", "GPS", "TRIP"]
-            #------------------------------------------------------------------------------
-            # DEV002
-            #------------------------------------------------------------------------------
-            if REGION:
-                #SETUP BUTTONS AND LABELS
-                btnhw_DEV002_txt = ["RB01", "RB02", "RB03", "RB04", "RB05", "SCANNER", "AI01", "DI01", "DI02", "---"]
-                lbl_btnsw_DEV002_txt = ["EU/US", "---", "AUDIO", "SIMU", "LANG", "---", "---", "---", "---", "---"]
-                btnsw_DEV002_txt_0 = ["EU", "---","HDMI1", "LIVE", "DEU", "---", "---", "---", "---", "---"]
-                btnsw_DEV002_txt_1 = ["US", "---", "HDMI2", "SIMU", "ENG", "---", "---", "---", "---", "---"]
-                btnsw_DEV002_txt_3 = ["--", "---", "AV   ", "----", "---", "---", "---", "---", "---", "---"]
-                #GAUGES
-                gau_S01U02_txt = []
-                gau_S02U02_txt = []
-                gau_S03U02_txt = ["0", "2000", "4000", "9000", "INLET", "OIL", "EGT", "OIL", "FUEL", "FUEL FLOW", "VDC", "AMP", "AUX POWER", "POWER", "NORMAL", "AUTO", "PURSUIT", "ATTACK", "SUST", "DELAY", "DEL", "PROGRAM NO."]
-                gau_S04U02_txt = ["0", "2000", "4000", "9000", "INLET", "OIL", "EGT", "OIL", "FUEL", "FUEL FLOW", "VDC", "AMP", "AUX POWER", "POWER", "NORMAL", "AUTO", "PURSUIT", "ATTACK", "SUST", "DELAY", "DEL", "PROGRAM NO."]
-                gau_S05U02_txt = ["0", "2000", "4000", "9000", "- - -", "- - -", "- - -", "- - -", "FUEL", "- - -", "VDC", "- - -", "- - -", "- - -", "- - -", "- - -", "- - -", "- - -", "- - -", "SYS", "GAUGE", "PROGRAM NO."]
-                gau_S06U02_txt = ["0", "2000", "4000", "9000", "- - -", "- - -", "- - -", "- - -", "FUEL", "- - -", "VDC", "- - -", "- - -", "- - -", "- - -", "- - -", "- - -", "- - -", "- - -", "SYS", "GAUGE", "PROGRAM NO."]            
-                #IN AND OUTPUTS
-                ib01_DEV002_txt = ["TURN LEFT", "TURN RIGHT", "IGNITION", "BREAK"]
-                ib02_DEV002_txt = ["PARK", "2ND BATT.", "OIL PRESS.", "ENGINE RUN"]
-                ib03_DEV002_txt = ["SECURITY", "DOOR OPEN", "HIGH BEAM", "SES"]
-                rb01_DEV002_txt = ["SHUTDOWN", "SHOW", "---", "---", "---", "---", "---", "---", "F FOG", "R FOG", "LOW", "HIGH", "LH SIDE", "RH SIDE", "LH TURN", "RH SIDE"]
-                rb02_DEV002_txt = ["IGN", "START", "2ND", "HORN", "---", "---", "---", "---", "RADIO", "SCANNER", "---", "---", "WND LH UP", "WND LH DN", "WND RH UP", "WND RH DN"]
-                rb03_DEV002_txt = ["CRUISE", "CRUISE SET", "CRUISE +", "LOCK", "UNLOCK", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]
-            #------------------------------------------------------------------------------
-            # DEV031
-            #------------------------------------------------------------------------------
-            if REGION:
-                #SETUP BUTTONS AND LABELS
-                btnhw_DEV031_txt = ["GPS", "MICRO", "---", "---", "---", "SCANNER", "---", "---", "---", "---"]
-                lbl_btnsw_DEV031_txt = ["EU/US", "OBD/GPS", "AUDIO", "SIMU", "LANG", "---", "---", "---", "---", "---"]
-                btnsw_DEV031_txt_0 = ["EU", "OBD","HDMI1", "LIVE", "DEU", "---", "---", "---", "---", "---"]
-                btnsw_DEV031_txt_1 = ["US", "GPS", "HDMI2", "SIMU", "ENG", "---", "---", "---", "---", "---"]
-                btnsw_DEV031_txt_3 = ["--", "---", "AV", "----", "---", "---", "---", "---", "---", "---"]
+            units_eu = textdata["ALL_DEVICES"]["UNITS"]["eu"]
+            units_us = textdata["ALL_DEVICES"]["UNITS"]["us"]
+
+            states_txt_de = textdata["ALL_DEVICES"]["STATES"]["de"]
+            states_txt_en = textdata["ALL_DEVICES"]["STATES"]["en"]
+            states_txt_act = states_txt_de  # Default
+
+            sysinfo01_txt = textdata["ALL_DEVICES"]["SYSINFO_KEYS"]["group01"]
+            sysinfo02_txt = textdata["ALL_DEVICES"]["SYSINFO_KEYS"]["group02"]
+
+            voicecmd_txt = textdata["ALL_DEVICES"]["VOICECMDS"]
+
+            # -----------------------------------------------------
+            # ALLE GERÄTE LADEN
+            # -----------------------------------------------------
+            DEV001 = textdata["DEVICES"].get("DEV001", {})
+            DEV002 = textdata["DEVICES"].get("DEV002", {})
+            DEV031 = textdata["DEVICES"].get("DEV031", {})
+
+            # === DEV001 ===
+            btnhw_DEV001_txt      = DEV001.get("BTN_HW", [])
+            lbl_btnsw_DEV001_txt  = DEV001.get("LBL_SW", [])
+            btnsw_DEV001_txt_0    = DEV001.get("BTN_SW_0", [])
+            btnsw_DEV001_txt_1    = DEV001.get("BTN_SW_1", [])
+            btnsw_DEV001_txt_3    = DEV001.get("BTN_SW_3", [])
+            msg_center_S01_txt    = DEV001.get("MSG_CENTER_S01", [])
+
+            gau001 = DEV001.get("GAUGES", {})
+            gau_S01U01_txt = gau001.get("S01U01", [])
+            gau_S02U01_txt = gau001.get("S02U01", [])
+            gau_S03U01_txt = gau001.get("S03U01", [])
+            gau_S04U01_txt = gau001.get("S04U01", [])
+            gau_S05U01_txt = gau001.get("S05U01", [])
+            gau_S06U01_txt = gau001.get("S06U01", [])
+
+            # === DEV002 ===
+            btnhw_DEV002_txt      = DEV002.get("BTN_HW", [])
+            lbl_btnsw_DEV002_txt  = DEV002.get("LBL_SW", [])
+            btnsw_DEV002_txt_0    = DEV002.get("BTN_SW_0", [])
+            btnsw_DEV002_txt_1    = DEV002.get("BTN_SW_1", [])
+            btnsw_DEV002_txt_3    = DEV002.get("BTN_SW_3", [])
+
+            gau002 = DEV002.get("GAUGES", {})
+            gau_S01U02_txt = gau002.get("S01U02", [])
+            gau_S02U02_txt = gau002.get("S02U02", [])
+            gau_S03U02_txt = gau002.get("S03U02", [])
+            gau_S04U02_txt = gau002.get("S04U02", [])
+            gau_S05U02_txt = gau002.get("S05U02", [])
+            gau_S06U02_txt = gau002.get("S06U02", [])
+
+            inputs002 = DEV002.get("INPUTS", {})
+            ib01_DEV002_txt = inputs002.get("IB01", [])
+            ib02_DEV002_txt = inputs002.get("IB02", [])
+            ib03_DEV002_txt = inputs002.get("IB03", [])
+            rb01_DEV002_txt = inputs002.get("RB01", [])
+            rb02_DEV002_txt = inputs002.get("RB02", [])
+            rb03_DEV002_txt = inputs002.get("RB03", [])
+
+            # === DEV031 ===
+            btnhw_DEV031_txt      = DEV031.get("BTN_HW", [])
+            lbl_btnsw_DEV031_txt  = DEV031.get("LBL_SW", [])
+            btnsw_DEV031_txt_0    = DEV031.get("BTN_SW_0", [])
+            btnsw_DEV031_txt_1    = DEV031.get("BTN_SW_1", [])
+            btnsw_DEV031_txt_3    = DEV031.get("BTN_SW_3", [])
+
             #------------------------------------------------------------------------------
             # LANGUAGE LISTS
             #------------------------------------------------------------------------------
@@ -1463,6 +1470,16 @@ class P01_DASH(tk.Frame):
     #--------------------------------------------------------------------------------------
     def create_widgets(self):
         read.load_soundfolder()
+        #----------------------------------------------------------------------------------
+        # UPDATE TEXT POSITIONS
+        #----------------------------------------------------------------------------------
+        with open(os.path.join(datadir, "pb_positions.json")) as f:
+            self.pb_positions = json.load(f)
+        #----------------------------------------------------------------------------------
+        # UPDATE TEXTS
+        #----------------------------------------------------------------------------------
+        with open(os.path.join(datadir, "sysinfo_texts.json")) as f:
+            self.pb_texts = json.load(f)
         #----------------------------------------------------------------------------------
         # THEME DEVICE001 AND DEVICE002
         #----------------------------------------------------------------------------------
@@ -2446,12 +2463,19 @@ class P01_DASH(tk.Frame):
                         y_btn = [10, 10, 10, 400, 578]
                 quant_btn = len(x_btn)
             #--------------------------------------------------------------------------
-            # BUTTONS
+            # PB BUTTONS (YELLOW POWER)
             #--------------------------------------------------------------------------
             if REGION:
                 btn_PB = []                   
                 for pb_text in btn_PB_txt:
-                    btns_PB = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [read.toggle_PB(text), self.master.switch_frame(P01_DASH)])
+                    btns_PB = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [
+                        read.toggle_PB(text),
+                        read.update_pb_buttons(localimage15, localimage16),
+                    self.refresh_background_image(),
+                    self.update_pb_positions(),
+                    self.update_pb_ui_elements(),
+                    self.update_pb_labels()
+                    ])
                     btn_PB.append(btns_PB)
                 for i in range(quant_btn):
                     btn_PB[i].place(x=x_btn[i], y=y_btn[i])
@@ -3081,228 +3105,30 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             global lbls_sysinfo
-            lbls_sysinfo = []
-            #------------------------------------------------------------------------------
-            # POSITIONS
-            #------------------------------------------------------------------------------
-            if REGION:
-                if device == btns_device_names[1]:
-                    if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
-                        xywh_7SEG002 = [15, 520, 320, 100]
-                        y_txt_sysinfo = [500, 527, 554, 581, 608]
-                        if btn_states_PB == "pb00":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15]
-                            x_lbl_sysinfo = [80, 180, 80, 180, 80, 80, 80]
-                            y_lbl_sysinfo = [498, 498, 525, 525, 552, 579, 606]
-                            wh_lbl_sysinfo = [65, 24, 140, 24]
-                        elif btn_states_PB == "pb01":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 330, 330, 330]
-                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 550, 580, 605]
-                            wh_lbl_sysinfo = [180, 24, 24, 24]
-                        elif btn_states_PB == "pb02":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
-                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
-                            wh_lbl_sysinfo = [180, 24, 0,0]
-                        elif btn_states_PB == "pb03":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
-                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
-                            wh_lbl_sysinfo = [180, 24, 0,0]
-                        elif btn_states_PB == "pb04":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
-                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
-                            wh_lbl_sysinfo = [180, 24, 0,0]
-                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        xywh_7SEG002 = [2, 220, 320, 100]
-                        y_txt_sysinfo = [200, 227, 254, 281, 308]
-                        if btn_states_PB == "pb00":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5]
-                            x_lbl_sysinfo = [65, 160, 65, 160, 65, 65, 65, 65, 0]
-                            y_lbl_sysinfo = [198, 198, 225, 225, 252, 279, 306, 0, 0]
-                            wh_lbl_sysinfo = [65, 24, 140, 24]
-                        elif btn_states_PB == "pb01":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 330, 330, 330]
-                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 254, 281, 308]
-                            wh_lbl_sysinfo = [180, 24, 24, 24]
-                        elif btn_states_PB == "pb02":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5, 300, 300, 300, 300]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
-                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
-                            wh_lbl_sysinfo = [180, 24, 0,0]
-                        elif btn_states_PB == "pb03":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5, 300, 300, 300, 300]
-                            x_lbl_sysinfo = [130, 130, 130, 130, 130, 0, 0, 0]
-                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
-                            wh_lbl_sysinfo = [160, 24, 0,0]
-                        elif btn_states_PB == "pb04":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5, 300, 300, 300, 300]
-                            x_lbl_sysinfo = [130, 130, 130, 130, 130, 0, 0, 0]
-                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
-                            wh_lbl_sysinfo = [160, 24, 0,0]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        xywh_7SEG002 = [2, 220, 320, 100]
-                        x_txt_sysinfo = [73, 73, 110, 110, 135, 135, 320, 320]
-                        y_txt_sysinfo = [100, 145, 190, 234, 278, 325, 280, 325]
-                        x_lbl_sysinfo = [5, 100, 5, 100, 5, 5, 5, 5, 250, 250, 600, 600]
-                        y_lbl_sysinfo = [100, 100, 144, 144, 188, 232, 276, 320, 276, 320, 100, 140]
-                        wh_lbl_sysinfo = [40, 70, 100]
-                elif device == btns_device_names[2]:
-                    if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 3
-                        xywh_7SEG002 = [2, 220, 320, 100]
-                        x_txt_sysinfo = [2175, 2175, 2175, 2175, 2175]
-                        y_txt_sysinfo = [515, 540, 565, 590, 615]
-                        x_lbl_sysinfo = [2235, 2335, 2235, 2335, 2235, 2235, 2175, 2280]
-                        y_lbl_sysinfo = [513, 513, 539, 539, 565, 591, 617, 617]
-                        wh_lbl_sysinfo = [65, 24, 140, 24]
-                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        xywh_7SEG002 = [2, 220, 320, 100]
-                        x_txt_sysinfo = [1810, 1810, 1810, 1810, 1810]
-                        y_txt_sysinfo = [35, 60, 85, 110, 135]
-                        x_lbl_sysinfo = [1870, 1970, 1870, 1970, 1870, 1870, 2260, 2260]
-                        y_lbl_sysinfo = [32, 32, 58, 58, 84, 110, 450, 476]
-                        wh_lbl_sysinfo = [65, 24, 140, 24]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        xywh_7SEG002 = [2, 220, 320, 100]
-                        x_txt_sysinfo = [1870, 1870, 1930, 1930]
-                        y_txt_sysinfo = [42, 64, 86, 108]
-                        x_lbl_sysinfo = [1805, 1900, 1805, 1900, 1805, 1805, 1805]
-                        y_lbl_sysinfo = [42, 42, 64, 64, 86, 108, 118]
-                        wh_lbl_sysinfo = [20, 60, 100, 120]
-                elif device == btns_device_names[31]:
-                    if btns_theme_names[0:3].count(theme) > 0: # THEME 3 to 8
-                        xywh_7SEG002 = [15, 520, 320, 100]
-                        y_txt_sysinfo = [500, 527, 554, 581, 608]
-                        if btn_states_PB == "pb00":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15]
-                            x_lbl_sysinfo = [80, 180, 80, 180, 80, 80, 80]
-                            y_lbl_sysinfo = [498, 498, 525, 525, 552, 579, 606]
-                            wh_lbl_sysinfo = [65, 24, 140, 24]
-                        elif btn_states_PB == "pb01":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 330, 330, 330]
-                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 550, 580, 605]
-                            wh_lbl_sysinfo = [180, 24, 24, 24]
-                        elif btn_states_PB == "pb02":
-                            x_txt_sysinfo = [15, 15, 15, 15, 15, 310, 310, 310, 310]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
-                            y_lbl_sysinfo = [495, 523, 550, 577, 605, 0, 0, 0]
-                            wh_lbl_sysinfo = [180, 24, 0,0]
-                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        xywh_7SEG002 = [2, 220, 320, 100]
-                        y_txt_sysinfo = [200, 227, 254, 281, 308]
-                        if btn_states_PB == "pb00":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5]
-                            x_lbl_sysinfo = [65, 160, 65, 160, 65, 65, 65, 65, 0]
-                            y_lbl_sysinfo = [198, 198, 225, 225, 252, 279, 306, 0, 0]
-                            wh_lbl_sysinfo = [65, 24, 140, 24]
-                        elif btn_states_PB == "pb01":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 330, 330, 330]
-                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 254, 281, 308]
-                            wh_lbl_sysinfo = [180, 24, 24, 24]
-                        elif btn_states_PB == "pb02":
-                            x_txt_sysinfo = [5, 5, 5, 5, 5, 300, 300, 300, 300]
-                            x_lbl_sysinfo = [100, 100, 100, 100, 100, 0, 0, 0]
-                            y_lbl_sysinfo = [200, 227, 254, 281, 308, 0, 0, 0]
-                            wh_lbl_sysinfo = [180, 24, 0,0]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        xywh_7SEG002 = [2, 220, 320, 100]
-                        x_txt_sysinfo = [73, 73, 110, 110, 135, 135, 320, 320]
-                        y_txt_sysinfo = [100, 145, 190, 234, 278, 325, 280, 325]
-                        x_lbl_sysinfo = [5, 100, 5, 100, 5, 5, 5, 5, 250, 250, 600, 600]
-                        y_lbl_sysinfo = [100, 100, 144, 144, 188, 232, 276, 320, 276, 320, 100, 140]
-                        wh_lbl_sysinfo = [40, 70, 100]
-            #------------------------------------------------------------------------------
-            # PLACE TEXT
-            #------------------------------------------------------------------------------
-            if REGION:
-                if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17]: #T3-8,15,16
-                    #----------------------------------------------------------------------
-                    # MTR DISPLAY
-                    #----------------------------------------------------------------------
-                    if (btn_states_PB in ["pb00"] and (device == btns_device_names[1] or device == btns_device_names[31])) or (btn_states_PB in ["pb09"] and device == btns_device_names[2]):
-                        self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="HDD:            of               GB")
-                        self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="RAM:            %                 GB")
-                        self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="CPU:            %           USED")
-                        self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="CPU:            C           TEMP")
-                        if device == btns_device_names[1] or device == btns_device_names[31]:
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                            sec.")
-                    elif btn_states_PB == "pb01":
-                        if device == btns_device_names[1] or device == btns_device_names[31]:
-                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="TME:")
-                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="DTE:")
-                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="ALT:")
-                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="LON:")
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="LAT:")
-                    elif btn_states_PB == "pb02":
-                        if device == btns_device_names[1] or device == btns_device_names[31]:
-                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="SPD:")
-                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="SPD:")
-                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="TRP:")
-                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="TRP:")
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                                       sec.")
-                            self.canvas.create_text(x_txt_sysinfo[5], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="MPH")
-                            self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="KPH")
-                            self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
-                            self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
-                    elif btn_states_PB == "pb03":
-                        if device == btns_device_names[1] or device == btns_device_names[31]:
-                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_GI:")
-                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_GM:")
-                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_GI:")
-                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_GM:")
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                                       sec.")
-                            self.canvas.create_text(x_txt_sysinfo[5], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
-                            self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
-                            self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
-                            self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
-                    elif btn_states_PB == "pb04":
-                        if device == btns_device_names[1] or device == btns_device_names[31]:
-                            self.canvas.create_text(x_txt_sysinfo[0], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_AI:")
-                            self.canvas.create_text(x_txt_sysinfo[1], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="TRIP_AM:")
-                            self.canvas.create_text(x_txt_sysinfo[2], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_AI:")
-                            self.canvas.create_text(x_txt_sysinfo[3], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="TOT_AM:")
-                            self.canvas.create_text(x_txt_sysinfo[4], y_txt_sysinfo[4], **txt_style_sysinfo, fill=sty_clr[2], text="SYS:                                       sec.")
-                            self.canvas.create_text(x_txt_sysinfo[5], y_txt_sysinfo[0], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
-                            self.canvas.create_text(x_txt_sysinfo[6], y_txt_sysinfo[1], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
-                            self.canvas.create_text(x_txt_sysinfo[7], y_txt_sysinfo[2], **txt_style_sysinfo, fill=sty_clr[2], text="MLS")
-                            self.canvas.create_text(x_txt_sysinfo[8], y_txt_sysinfo[3], **txt_style_sysinfo, fill=sty_clr[2], text="KM")
+            
+            self.update_pb_positions()
+            self.update_pb_ui_elements()
+            self.update_pb_labels()
             #------------------------------------------------------------------------------
             # PLACE LABEL
             #------------------------------------------------------------------------------
-            if REGION:
-                global label_7SEG002
-                if device == btns_device_names[1] or device == btns_device_names[31]:
-                    if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb00", "pb01", "pb02", "pb03", "pb04"]:
-                        for i in range(8):
-                            label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
-                            lbls_sysinfo.append(label_sysinfo)
-                        lbls_sysinfo[0].place(x=x_lbl_sysinfo[0], y=y_lbl_sysinfo[0], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])   
-                        lbls_sysinfo[1].place(x=x_lbl_sysinfo[1], y=y_lbl_sysinfo[1], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[2].place(x=x_lbl_sysinfo[2], y=y_lbl_sysinfo[2], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[3].place(x=x_lbl_sysinfo[3], y=y_lbl_sysinfo[3], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[4].place(x=x_lbl_sysinfo[4], y=y_lbl_sysinfo[4], w=wh_lbl_sysinfo[0], h=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[5].place(x=x_lbl_sysinfo[5], y=y_lbl_sysinfo[5], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])                
-                        lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
-                        if btn_states_PB in ["pb01"]:
-                            lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], w=wh_lbl_sysinfo[2], h=wh_lbl_sysinfo[3])
-                elif device == btns_device_names[2]:
-                    if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17] and btn_states_PB in ["pb09"]:
-                        for i in range(8):
-                            label_sysinfo = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
-                            lbls_sysinfo.append(label_sysinfo)
-                        lbls_sysinfo[0].place(x=x_lbl_sysinfo[0], y=y_lbl_sysinfo[0], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])   
-                        lbls_sysinfo[1].place(x=x_lbl_sysinfo[1], y=y_lbl_sysinfo[1], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[2].place(x=x_lbl_sysinfo[2], y=y_lbl_sysinfo[2], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[3].place(x=x_lbl_sysinfo[3], y=y_lbl_sysinfo[3], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[4].place(x=x_lbl_sysinfo[4], y=y_lbl_sysinfo[4], width=wh_lbl_sysinfo[0], height=wh_lbl_sysinfo[1])
-                        lbls_sysinfo[5].place(x=x_lbl_sysinfo[5], y=y_lbl_sysinfo[5], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])                
-                        lbls_sysinfo[6].place(x=x_lbl_sysinfo[6], y=y_lbl_sysinfo[6], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
-                        lbls_sysinfo[7].place(x=x_lbl_sysinfo[7], y=y_lbl_sysinfo[7], width=wh_lbl_sysinfo[2], height=wh_lbl_sysinfo[3])
+            for i, label in enumerate(lbls_sysinfo):
+                if i < len(self.x_lbl_sysinfo) and i < len(self.y_lbl_sysinfo):
+                    if i < 5:
+                        label.place(
+                            x=self.x_lbl_sysinfo[i],
+                            y=self.y_lbl_sysinfo[i],
+                            width=self.wh_lbl_sysinfo[0],
+                            height=self.wh_lbl_sysinfo[1]
+                        )
+                    else:
+                        label.place(
+                            x=self.x_lbl_sysinfo[i],
+                            y=self.y_lbl_sysinfo[i],
+                            width=self.wh_lbl_sysinfo[2],
+                            height=self.wh_lbl_sysinfo[3]
+                        )
+
         #----------------------------------------------------------------------------------
         # GAUGE 7-SEGMENT DISPLAYS
         #----------------------------------------------------------------------------------
@@ -3368,6 +3194,123 @@ class P01_DASH(tk.Frame):
         # END INIT PAGE
         #----------------------------------------------------------------------------------
         self.update_page()
+    def update_pb_ui_elements(self):
+        self.canvas.delete("pb_overlay")
+
+        lang = "eng" if btn_states_SW[4] else "deu"
+        pb = btn_states_PB
+
+        if pb not in self.pb_texts or lang not in self.pb_texts[pb]:
+            return
+
+        if not hasattr(self, "x_txt_sysinfo") or not hasattr(self, "y_txt_sysinfo"):
+            print("⚠️ x/y_txt_sysinfo nicht gesetzt.")
+            return
+
+        for i, entry in enumerate(self.pb_texts[pb][lang]):
+            try:
+                x = self.x_txt_sysinfo[i]
+                y = self.y_txt_sysinfo[i]
+
+                # Basis-Stil aus dem Code übernehmen
+                style = dict(txt_style_sysinfo)  # z. B. {"font": ..., "anchor": ...}
+                # Falls JSON etwas vorgibt, überschreiben
+                if "font" in entry:
+                    style["font"] = tuple(entry["font"])
+                if "anchor" in entry:
+                    style["anchor"] = entry["anchor"]
+
+                fill_color = entry.get("fill", sty_clr[2])  # Standardfarbe sty_clr[2]
+
+                self.canvas.create_text(
+                    x, y,
+                    text=entry["text"],
+                    fill=fill_color,
+                    tags="pb_overlay",
+                    **style
+                )
+
+            except IndexError:
+                print(f"⚠️ Kein Positionseintrag für Textzeile {i} ({entry['text']})")
+    def update_pb_positions(self):
+        pb = btn_states_PB
+        dev_key = device
+        try:
+            theme_index = btns_theme_names.index(theme)
+            theme_key = f"THEME{theme_index}"
+        except ValueError:
+            print(f"⚠️ Theme {theme} nicht in btns_theme_names")
+            return
+
+        try:
+            pos_data = self.pb_positions[pb][dev_key][theme_key]
+            self.x_txt_sysinfo = pos_data.get("x_txt_sysinfo", [])
+            self.y_txt_sysinfo = pos_data.get("y_txt_sysinfo", [])
+            self.x_lbl_sysinfo = pos_data.get("x_lbl_sysinfo", [])
+            self.y_lbl_sysinfo = pos_data.get("y_lbl_sysinfo", [])
+            self.wh_lbl_sysinfo = pos_data.get("wh_lbl_sysinfo", [])
+            print(f"✅ Positionsdaten geladen für {pb} / {dev_key} / {theme_key}")
+        except KeyError:
+            print(f"❌ Fehlende Positionsdaten für {pb} / {dev_key} / {theme_key}")
+            self.x_txt_sysinfo = []
+            self.y_txt_sysinfo = []
+            self.x_lbl_sysinfo = []
+            self.y_lbl_sysinfo = []
+            self.wh_lbl_sysinfo = []
+    def refresh_background_image(self):
+        try:
+            theme_index = btns_theme_names.index(theme)
+        except ValueError:
+            print(f"⚠️ Theme '{theme}' nicht in btns_theme_names gefunden")
+            return
+
+        # Hintergrundbild je Device auswählen
+        if device == btns_device_names[1]:
+            self.background_image = bgDEV001_DASH_img_list[theme_index]
+        elif device == btns_device_names[2]:
+            self.background_image = bgDEV002_DASH_img_list[theme_index]
+        elif device == btns_device_names[31]:
+            self.background_image = bgDEV031_DASH_img_list[theme_index]
+        else:
+            print(f"⚠️ Kein Hintergrundbild für Device {device}")
+            return
+
+            # Canvas leeren und neu zeichnen
+            self.canvas.delete("all")
+            self.canvas.create_image(0, 0, image=self.background_image, anchor="nw", tags="bg")
+    def update_pb_labels(self):
+        global lbls_sysinfo
+
+        # Alte Labels entfernen
+        for lbl in lbls_sysinfo:
+            lbl.destroy()
+        lbls_sysinfo.clear()
+
+        # Prüfen, ob Positionen vorhanden sind
+        if not hasattr(self, "x_lbl_sysinfo") or not hasattr(self, "y_lbl_sysinfo") or not hasattr(self, "wh_lbl_sysinfo"):
+            print("⚠️ Positionen für Labels nicht gesetzt.")
+            return
+
+        # Anzahl = kleinste gültige Länge der Listen
+        anzahl = min(len(self.x_lbl_sysinfo), len(self.y_lbl_sysinfo))
+
+        for i in range(anzahl):
+            x = self.x_lbl_sysinfo[i]
+            y = self.y_lbl_sysinfo[i]
+
+            # Nur echte Koordinaten > 0 verwenden
+            if x > 0 and y > 0:
+                lbl = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
+
+                # Größe je nach Index wählen
+                if i < 5:
+                    w, h = self.wh_lbl_sysinfo[0], self.wh_lbl_sysinfo[1]
+                else:
+                    w = self.wh_lbl_sysinfo[2] if len(self.wh_lbl_sysinfo) > 2 else self.wh_lbl_sysinfo[0]
+                    h = self.wh_lbl_sysinfo[3] if len(self.wh_lbl_sysinfo) > 3 else self.wh_lbl_sysinfo[1]
+
+                lbl.place(x=x, y=y, width=w, height=h)
+                lbls_sysinfo.append(lbl)
     #--------------------------------------------------------------------------------------
     # THREAD LISTEN_FOR_ACTIVATION_WORD #todo move to myfunctions
     #--------------------------------------------------------------------------------------
@@ -4505,6 +4448,13 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # UPDATE SYSINFO MTR DISPLAY
         #----------------------------------------------------------------------------------
+        # Initialisiere 8 Labels für sysinfo global und leer
+        global lbls_sysinfo
+
+        # Labels noch nicht platzieren – das macht update_pb_labels später
+        for lbl in lbls_sysinfo:
+            lbl.place_forget()  # sorgt dafür, dass sie nicht wild erscheinen
+        self.update_pb_labels()
         if REGION:
             if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17]:
                 if device == btns_device_names[1] or device == btns_device_names[31]:
@@ -4624,10 +4574,6 @@ class P01_DASH(tk.Frame):
         end_time = imp_mod['time'].time()
         elapsed_time = end_time - start_time
         update_duration = (f"{elapsed_time:.4f}")
-        
-        duration = round(end_time - start_time, 4)
-        if duration > 0.02:  # z.B. alles über 20 ms
-            print(f"⚠️ update_page() dauert {duration}s")
         self.after(time_digital, self.update_page)
 #------------------------------------------------------------------------------------------
 # PAGE 02: QOPT
@@ -6452,6 +6398,12 @@ class myfunctions():
         # NAV AND INPUT BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
+            def update_pb_buttons(self, var1, var2):
+                for i, text in enumerate(btn_PB_txt):
+                    if btn_states_PB == text:
+                        btn_PB[i].config(image=var1)
+                    else:
+                        btn_PB[i].config(image=var2)
             #------------------------------------------------------------------------------
             # DEVICE BUTTONS
             #------------------------------------------------------------------------------

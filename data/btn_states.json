@@ -2,13 +2,13 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "K2_S05",
+        "theme": "K2_S04",
         "system": "WHITE",
         "installdone": true
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb03",
+            "PB": "pb04",
             "FNKT": [
                 false,
                 false,
@@ -69,8 +69,8 @@
                 false,
                 true,
                 false,
-                false,
-                false,
+                true,
+                true,
                 false,
                 false,
                 false,
@@ -183,12 +183,12 @@
             ]
         },
         "DEV002": {
-            "PB": "pb09",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,
                 true,
-                false,
+                true,
                 false,
                 false,
                 false,
