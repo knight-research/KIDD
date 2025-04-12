@@ -309,8 +309,7 @@ if REGION:
         # TEXT LISTS
         #----------------------------------------------------------------------------------
         if REGION:
-            #with open(os.path.join(datadir, "full_textlists.json"), "r", encoding="utf-8") as f:
-            with open(os.path.join(datadir, "full_textlists.json")) as f:
+            with open(os.path.join(datadir, "full_textlists.json"), encoding="utf-8") as f:
                 textdata = json.load(f)
             # -----------------------------------------------------
             # ALLE GERÄTE (global gültig)
@@ -566,7 +565,7 @@ if REGION:
         #----------------------------------------------------------------------------------
         # UPDATE LAST SYSTEM CONFIGURATIONS
         #----------------------------------------------------------------------------------
-        with open(os.path.join(datadir, "btn_states.json")) as f:
+        with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
             data = json.load(f)
         device = data["main_config"]["device"]
         style = data["main_config"]["style"]
@@ -867,7 +866,7 @@ class P00_BOOT(tk.Frame):
         #----------------------------------------------------------------------------------
         # UPDATE LAST SYSTEM CONFIGURATIONS
         #----------------------------------------------------------------------------------
-        with open(os.path.join(datadir, "btn_states.json")) as f:
+        with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
             data = json.load(f)
         device = data["main_config"]["device"]
         style = data["main_config"]["style"]
@@ -1201,12 +1200,12 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # UPDATE TEXT POSITIONS
         #----------------------------------------------------------------------------------
-        with open(os.path.join(datadir, "pb_positions.json")) as f:
+        with open(os.path.join(datadir, "pb_positions.json"), encoding="utf-8") as f:
             self.pb_positions = json.load(f)
         #----------------------------------------------------------------------------------
         # UPDATE TEXTS
         #----------------------------------------------------------------------------------
-        with open(os.path.join(datadir, "sysinfo_texts.json")) as f:
+        with open(os.path.join(datadir, "sysinfo_texts.json"), encoding="utf-8") as f:
             self.pb_texts = json.load(f)
         #----------------------------------------------------------------------------------
         # THEME DEVICE001 AND DEVICE002
@@ -4178,10 +4177,6 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # Initialisiere 8 Labels für sysinfo global und leer
         global lbls_sysinfo
-
-        # Labels noch nicht platzieren – das macht update_pb_labels später
-        for lbl in lbls_sysinfo:
-            lbl.place_forget()  # sorgt dafür, dass sie nicht wild erscheinen
         self.update_pb_labels()
         if REGION:
             if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17]:
@@ -6907,7 +6902,7 @@ class myfunctions():
                 global reset_trip
 
                 # Lade alte Werte aus Datei
-                with open(os.path.join(datadir, "btn_states.json")) as f:
+                with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
                     data = json.load(f)
                 odo_trip_gps_imperial_old = data["config"]["odo_trip_gps_imperial"]
                 odo_trip_gps_metric_old = data["config"]["odo_trip_gps_metric"]

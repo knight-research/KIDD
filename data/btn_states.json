@@ -2,7 +2,7 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "K2_S04",
+        "theme": "K2_S05",
         "system": "WHITE",
         "installdone": true
     },
@@ -245,7 +245,7 @@
                 false,
                 false,
                 true,
-                false,
+                true,
                 false,
                 false,
                 false,
