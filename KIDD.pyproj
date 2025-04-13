@@ -140,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="data\btn_states.json" />
+    <Content Include="data\full_textlists.json" />
+    <Content Include="data\positions.json" />
+    <Content Include="data\sysinfo_texts.json" />
     <Content Include="fonts\BankGothic Regular.ttf" />
     <Content Include="fonts\ccar7seg.ttf" />
     <Content Include="fonts\CheapsmanFreeOutlineRegular-VG75Z.ttf" />
@@ -1294,6 +1297,7 @@
     <Content Include="images\sys_new\w_engine-temperature-warning.png" />
     <Content Include="images\sys_new\w_low-fuel-level.png" />
     <Content Include="images\sys_new\w_oil-pressure.png" />
+    <Content Include="info.txt" />
     <Content Include="SOUND\BTTF\BEEP.mp3" />
     <Content Include="SOUND\BTTF\CAR_STARTUP.mp3" />
     <Content Include="SOUND\BTTF\CAR_START_AUTOCRUISE.mp3" />
@@ -2614,6 +2618,7 @@
     <Content Include="sound\swpdre\P21B19.mp3" />
     <Content Include="sound\swpdre\P21B20.mp3" />
     <Content Include="sound\swpdre\P21B21.mp3" />
+    <Content Include="todo.txt" />
     <Content Include="version.txt" />
     <Content Include="VIDEO\KA2K_VOICE.mp4" />
     <Content Include="VIDEO\KI3K_VOICE.mp4" />

@@ -128,11 +128,21 @@ def run_gui():
             zip_url = release_info.get("zipball_url")
             local_version = read_local_version(base_path)
 
-            status_label.config(text=f"Lokal: {local_version or 'keine'} | Neu: {remote_version}")
+            status_label.config(text=f"Lokal: {local_version or 'keine'} | Server: {remote_version}")
 
-            if local_version == remote_version:
-                messagebox.showinfo("Info", "Keine Aktualisierung notwendig.")
-                return
+            def version_tuple(v):
+                return tuple(map(int, v.lstrip("v").split(".")))
+
+            if local_version:
+                try:
+                    if version_tuple(remote_version) <= version_tuple(local_version):
+                        messagebox.showinfo("Info", "Keine Aktualisierung notwendig.")
+                        start_button.config(state="disabled")
+                        return
+                except Exception as e:
+                    messagebox.showerror("Versionsvergleich fehlgeschlagen", f"Fehler beim Vergleich der Versionen:\n{e}")
+                    start_button.config(state="disabled")
+                    return
 
             if not messagebox.askyesno("Update", f"Neue Version {remote_version} installieren?"):
                 return

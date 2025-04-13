@@ -1040,8 +1040,8 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # UPDATE TEXT POSITIONS
         #----------------------------------------------------------------------------------
-        with open(os.path.join(datadir, "pb_positions.json"), encoding="utf-8") as f:
-            self.pb_positions = json.load(f)
+        with open(os.path.join(datadir, "positions.json"), encoding="utf-8") as f:
+            self.positions = json.load(f)
         #----------------------------------------------------------------------------------
         # UPDATE TEXTS
         #----------------------------------------------------------------------------------
@@ -1969,7 +1969,7 @@ class P01_DASH(tk.Frame):
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
         #----------------------------------------------------------------------------------
-        # POWER BUTTONS DASH (YELLOW POWER)
+        # POWER BUTTONS DASH (YELLOW)
         #----------------------------------------------------------------------------------   
         if REGION:
             global btn_PB
@@ -1984,16 +1984,16 @@ class P01_DASH(tk.Frame):
                         read.toggle_PB(text),
                         read.update_pb_buttons(localimage15, localimage16),
                     self.refresh_background_image(),
-                    self.update_pb_positions(),
+                    self.update_positions(),
                     self.update_pb_ui_elements(),
-                    self.update_pb_labels()
+                    self.update_labels()
                     ])
                     btn_PB.append(btns_PB)
                 try:
                     theme_index = btns_theme_names.index(theme)
                     theme_key = f"THEME{theme_index}"
 
-                    pb_btn_data = self.pb_positions["PB_BUTTONS"][device][theme_key]
+                    pb_btn_data = self.positions["PB_BUTTONS"][device][theme_key]
                     x_btn = pb_btn_data.get("x", [])
                     y_btn = pb_btn_data.get("y", [])
                     quant_btn = min(len(x_btn), len(y_btn), len(btn_PB))
@@ -2024,7 +2024,7 @@ class P01_DASH(tk.Frame):
             global btns_FNKT
             global btn_FNKT
             #--------------------------------------------------------------------------
-            # POSITIONS
+            # POSITIONS todo export to json
             #--------------------------------------------------------------------------
             if REGION:
                 if device == btns_device_names[1]:
@@ -2632,9 +2632,9 @@ class P01_DASH(tk.Frame):
         if REGION:
             global lbls_sysinfo
             
-            self.update_pb_positions()
+            self.update_positions()
             self.update_pb_ui_elements()
-            self.update_pb_labels()
+            self.update_labels()
             #------------------------------------------------------------------------------
             # PLACE LABEL
             #------------------------------------------------------------------------------
@@ -2757,7 +2757,7 @@ class P01_DASH(tk.Frame):
 
             except IndexError:
                 print(f"⚠️ Kein Positionseintrag für Textzeile {i} ({entry['text']})")
-    def update_pb_positions(self):
+    def update_positions(self):
         pb = btn_states_PB
         dev_key = device
         try:
@@ -2768,7 +2768,7 @@ class P01_DASH(tk.Frame):
             return
 
         try:
-            pos_data = self.pb_positions[pb][dev_key][theme_key]
+            pos_data = self.positions[pb][dev_key][theme_key]
             self.x_txt_sysinfo = pos_data.get("x_txt_sysinfo", [])
             self.y_txt_sysinfo = pos_data.get("y_txt_sysinfo", [])
             self.x_lbl_sysinfo = pos_data.get("x_lbl_sysinfo", [])
@@ -2803,7 +2803,7 @@ class P01_DASH(tk.Frame):
             # Canvas leeren und neu zeichnen
             self.canvas.delete("all")
             self.canvas.create_image(0, 0, image=self.background_image, anchor="nw", tags="bg")
-    def update_pb_labels(self):
+    def update_labels(self):
         global lbls_sysinfo
 
         # Alte Labels entfernen
@@ -3975,7 +3975,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # Initialisiere 8 Labels für sysinfo global und leer
         global lbls_sysinfo
-        self.update_pb_labels()
+        self.update_labels()
         if REGION:
             if theme in btns_theme_names[0:3] + btns_theme_names[3:9] + btns_theme_names[15:17]:
                 if device == btns_device_names[1] or device == btns_device_names[31]:
