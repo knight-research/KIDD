@@ -860,7 +860,7 @@ class P00_BOOT(tk.Frame):
             4,  # led (OF, LO, MI, FU)
             2,  # sled
             14, # voiceboxes
-            8   # misc (segment, lcars, rpm)
+            14   # misc (segment, lcars, rpm)
         ])
         super().__init__(master)
         global device, style, theme, system
