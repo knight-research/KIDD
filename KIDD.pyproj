@@ -140,7 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="data\btn_states.json" />
-    <Content Include="data\full_textlists.json" />
+    <Content Include="data\textlist.json" />
     <Content Include="data\positions.json" />
     <Content Include="data\sysinfo_texts.json" />
     <Content Include="fonts\BankGothic Regular.ttf" />

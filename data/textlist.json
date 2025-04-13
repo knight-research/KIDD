@@ -1,0 +1,86 @@
+{
+  "ALL_DEVICES": {
+    "PAGES": ["BOOT","DASH","QOPT","SETUP","THEMES","C-FNkT","K-FNKT","AUDIO","VIDEO","RES","RES","RES","RES","RES"],
+    "CONFIG": {
+      "devices": ["DEV000","DEV001","DEV002","DEV003","DEV004","DEV005","DEV006","DEV007","DEV008","DEV009","DEV010",
+        "DEV011","DEV012","DEV013","DEV014","DEV015","DEV016","DEV017","DEV018","DEV019","DEV020","DEV021","DEV022",
+        "DEV023","DEV024","DEV025","DEV026","DEV027","DEV028","DEV029","DEV030","DEV031","DEV032","DEV033","DEV034",
+        "DEV035","DEV036","DEV037","DEV038","DEV039","DEV040"],
+      "styles": ["KARR","KITT","---","---","---"],
+      "themes": ["PILOT","K2_S01","K2_S02","K2_S03","K2_S04","K2_S05","K2_S06","K2_OTTO","K2_MAX",
+        "K3_S01","K3_S02","GMA","GMD","DMC","BTTF","LCARS1","LCARS2"],
+      "systems": ["ORANGE","GREEN","AQUA","WHITE"]
+    },
+    "PB_NAMES": ["pb00","pb01","pb02","pb03","pb04","pb05","pb06","pb07","pb08","pb09","pb10","pb11","pb12"],
+    "UNITS": {
+      "eu": ["KPH","KPHg","KM","°C","BAR","LTR","LPH"],
+      "us": ["MPH","MPHg","MLS","°F","PSI","GALS","GPH"]
+    },
+    "STATES": {
+      "de": ["AUS","EIN","OBEN","UNTEN","HOCH","RUNTER","LINKS","RECHTS"],
+      "en": ["OFF","ON","HIGH","LOW","UP","DOWN","LEFT","RIGHT"]
+    },
+    "SYSINFO_KEYS": {
+      "group01": ["HDD_USED","HDD_MAX","RAM_USED","RAM_MAX","CPU_USED","CPU_TEMP","UPDATE_DURATION"],
+      "group02": ["GPS_TIME","GPS_DATE","ALT","GPS_LAT","GPS_LONG","GPS_MPH","GPS_KPH"]
+    },
+    "VOICECMDS": ["SYSTEM","TEXT","INFO"]
+  },
+  "DEVICES": {
+    "DEV001": {
+      "BTN_HW": ["GPS","MICRO","---","---","---","---","---","---","---","---"],
+      "LBL_SW": ["EU/US","ALDL/GPS","AUDIO","SIMU","LANG","---","---","---","---","---"],
+      "BTN_SW_0": ["EU","ALDL","HDMI1","LIVE","DEU","---","---","---","---","---"],
+      "BTN_SW_1": ["US","GPS","HDMI2","SIMU","ENG","---","---","---","---","---"],
+      "BTN_SW_3": ["--","---","AV   ","----","---","---","---","---","---","---"],
+      "MSG_CENTER_S01": ["CALIBRATE","PRESEN","TBI","MILES","TRIP","RANGE","FUEL"],
+      "GAUGES": {
+        "S01": ["0","200","INLET TEMP","FREE TURBINE","MASS FLOW LBS","E.G.T. F","FUEL FLOW GPH","MAIN OIL PRESS",
+        "COMPRESSOR TEMP F","HYD SYST STRESS PSI","VOLTS DC","CAPACITY STATUS","PROPAGATION DELAY HRS","ACCESS"],
+        "S02": ["0","200","INLET TEMP","FREE TURBINE","MASS FLOW LBS","E.G.T. F","FUEL FLOW GPH","MAIN OIL PRESS",
+        "COMPRESSOR TEMP F","HYD SYST STRESS PSI","VOLTS DC","CAPACITY STATUS","PROPAGATION DELAY HRS","ACCESS"],
+        "S03": ["SPD","0","100","200","300","MILES","SIGNAL","TUNING","LO","HI","VHF","UHF","AM","FM","CB","SEARCH","MI","TRIP","RANGE"],
+        "S04": ["SPD","0","100","200","300","MILES","SIGNAL","TUNING","LO","HI","VHF","UHF","AM","FM","CB","SEARCH","MI","TRIP","RANGE"],
+        "S05": ["SPD","0","100","200","300","INFO 1","0-200","0-300","- - -","VOICE","SYS","GAUGE","- - -","- - -","SAVE","INFO 2","SYS","GPS","TRIP"],
+        "S06": ["SPD","0","100","200","300","INFO 1","0-200","0-300","- - -","VOICE","SYS","GAUGE","- - -","- - -","SAVE","INFO 2","SYS","GPS","TRIP"]
+      }
+    },
+    "DEV002": {
+      "BTN_HW": ["RB01","RB02","RB03","RB04","RB05","SCANNER","AI01","DI01","DI02","---"],
+      "LBL_SW": ["EU/US","---","AUDIO","SIMU","LANG","---","---","---","---","---"],
+      "BTN_SW_0": ["EU","---","HDMI1","LIVE","DEU","---","---","---","---","---"],
+      "BTN_SW_1": ["US","---","HDMI2","SIMU","ENG","---","---","---","---","---"],
+      "BTN_SW_3": ["--","---","AV   ","----","---","---","---","---","---","---"],
+      "GAUGES": {
+        "S01": [],
+        "S02": [],
+        "S03": ["0","2000","4000","9000","INLET","OIL","EGT","OIL","FUEL","FUEL FLOW","VDC","AMP","AUX POWER",
+        "POWER","NORMAL","AUTO","PURSUIT","ATTACK","SUST","DELAY","DEL","PROGRAM NO."],
+        "S04": ["0","2000","4000","9000","INLET","OIL","EGT","OIL","FUEL","FUEL FLOW","VDC","AMP","AUX POWER",
+        "POWER","NORMAL","AUTO","PURSUIT","ATTACK","SUST","DELAY","DEL","PROGRAM NO."],
+        "S05": ["0","2000","4000","9000","- - -","- - -","- - -","- - -","FUEL","- - -","VDC","- - -","- - -",
+        "- - -","- - -","- - -","- - -","- - -","- - -","SYS","GAUGE","PROGRAM NO."],
+        "S06": ["0","2000","4000","9000","- - -","- - -","- - -","- - -","FUEL","- - -","VDC","- - -","- - -",
+        "- - -","- - -","- - -","- - -","- - -","- - -","SYS","GAUGE","PROGRAM NO."]
+      },
+      "INPUTS": {
+        "IB01": ["TURN LEFT","TURN RIGHT","IGNITION","BREAK"],
+        "IB02": ["PARK","2ND BATT.","OIL PRESS.","ENGINE RUN"],
+        "IB03": ["SECURITY","DOOR OPEN","HIGH BEAM","SES"],
+        "RB01": ["SHUTDOWN","SHOW","---","---","---","---","---","---",
+          "F FOG","R FOG","LOW","HIGH","LH SIDE","RH SIDE","LH TURN","RH SIDE"],
+        "RB02": ["IGN","START","2ND","HORN","---","---","---","---",
+          "RADIO","SCANNER","---","---","WND LH UP","WND LH DN","WND RH UP","WND RH DN"],
+        "RB03": ["CRUISE","CRUISE SET","CRUISE +","LOCK","UNLOCK","---","---",
+          "---","---","---","---","---","---","---","---","---"]
+      }
+    },
+    "DEV031": {
+      "BTN_HW": ["GPS","MICRO","---","---","---","SCANNER","---","---","---","---"],
+      "LBL_SW": ["EU/US","OBD/GPS","AUDIO","SIMU","LANG","---","---","---","---","---"],
+      "BTN_SW_0": ["EU","OBD","HDMI1","LIVE","DEU","---","---","---","---","---"],
+      "BTN_SW_1": ["US","GPS","HDMI2","SIMU","ENG","---","---","---","---","---"],
+      "BTN_SW_3": ["--","---","AV","---","---","---","---","---","---","---"]
+    }
+  }
+}

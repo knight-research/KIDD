@@ -3,12 +3,13 @@
         "device": "DEV001",
         "style": "KITT",
         "theme": "K2_S05",
-        "system": "GREEN",
+        "system": "WHITE",
+        "timezone": "+1",
         "installdone": true
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb00",
+            "PB": "pb03",
             "FNKT": [
                 false,
                 false,
@@ -70,7 +71,7 @@
                 true,
                 false,
                 true,
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -183,7 +184,7 @@
             ]
         },
         "DEV002": {
-            "PB": "pb09",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,

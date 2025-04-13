@@ -13,9 +13,6 @@ last_change = "2025-04-13-0908"
 #------------------------------------------------------------------------------------------
 if REGION:
     import os
-    lbls_sysinfo = []  # globale Liste für sysinfo-Labels todo an richtige stelle bringen
-
-    import json
     from btn_state_manager import ButtonStateManager
     folder = os.path.dirname(os.path.abspath(__file__))
     datadir = os.path.join(folder,'data')
@@ -34,7 +31,6 @@ if REGION:
         #----------------------------------------------------------------------------------
         if REGION:
             import importlib
-            import subprocess
             required_packages = [
                 'sys', 'multiprocessing', 'os', 'time', 'math', 'string', 'socket',
                 'websocket', 'websocket-client', 'python-vlc',
@@ -58,6 +54,7 @@ if REGION:
         #----------------------------------------------------------------------------------            
         if not install_done:
             def install_missing_packages(packages):
+                import subprocess
                 for package in packages:
                     try:
                         imp_mod[package] = importlib.import_module(package)
@@ -73,6 +70,7 @@ if REGION:
         # SYSTEM INDEPENDENT
         #----------------------------------------------------------------------------------
         if REGION:
+            import json
             from datetime import timedelta
             from PIL import ImageTk, Image
             from pydub import AudioSegment
@@ -147,6 +145,7 @@ if REGION:
         # CONFIGURATION VARIABLES
         #----------------------------------------------------------------------------------    
         if REGION:
+            lbls_sysinfo = []
             #------------------------------------------------------------------------------
             # GET ACTUAL CAR AND DEVICE ID
             #------------------------------------------------------------------------------
@@ -309,7 +308,7 @@ if REGION:
         # TEXT LISTS
         #----------------------------------------------------------------------------------
         if REGION:
-            with open(os.path.join(datadir, "full_textlists.json"), encoding="utf-8") as f:
+            with open(os.path.join(datadir, "textlist.json"), encoding="utf-8") as f:
                 textdata = json.load(f)
             # -----------------------------------------------------
             # ALLE GERÄTE (global gültig)
@@ -326,7 +325,6 @@ if REGION:
 
             states_txt_de = textdata["ALL_DEVICES"]["STATES"]["de"]
             states_txt_en = textdata["ALL_DEVICES"]["STATES"]["en"]
-            states_txt_act = states_txt_de  # Default
 
             sysinfo01_txt = textdata["ALL_DEVICES"]["SYSINFO_KEYS"]["group01"]
             sysinfo02_txt = textdata["ALL_DEVICES"]["SYSINFO_KEYS"]["group02"]
@@ -349,12 +347,12 @@ if REGION:
             msg_center_S01_txt    = DEV001.get("MSG_CENTER_S01", [])
 
             gau001 = DEV001.get("GAUGES", {})
-            gau_S01U01_txt = gau001.get("S01U01", [])
-            gau_S02U01_txt = gau001.get("S02U01", [])
-            gau_S03U01_txt = gau001.get("S03U01", [])
-            gau_S04U01_txt = gau001.get("S04U01", [])
-            gau_S05U01_txt = gau001.get("S05U01", [])
-            gau_S06U01_txt = gau001.get("S06U01", [])
+            gau_S01U01_txt = gau001.get("S01", [])
+            gau_S02U01_txt = gau001.get("S02", [])
+            gau_S03U01_txt = gau001.get("S03", [])
+            gau_S04U01_txt = gau001.get("S04", [])
+            gau_S05U01_txt = gau001.get("S05", [])
+            gau_S06U01_txt = gau001.get("S06", [])
 
             # === DEV002 ===
             btnhw_DEV002_txt      = DEV002.get("BTN_HW", [])
@@ -364,12 +362,12 @@ if REGION:
             btnsw_DEV002_txt_3    = DEV002.get("BTN_SW_3", [])
 
             gau002 = DEV002.get("GAUGES", {})
-            gau_S01U02_txt = gau002.get("S01U02", [])
-            gau_S02U02_txt = gau002.get("S02U02", [])
-            gau_S03U02_txt = gau002.get("S03U02", [])
-            gau_S04U02_txt = gau002.get("S04U02", [])
-            gau_S05U02_txt = gau002.get("S05U02", [])
-            gau_S06U02_txt = gau002.get("S06U02", [])
+            gau_S01U02_txt = gau002.get("S01", [])
+            gau_S02U02_txt = gau002.get("S02", [])
+            gau_S03U02_txt = gau002.get("S03", [])
+            gau_S04U02_txt = gau002.get("S04", [])
+            gau_S05U02_txt = gau002.get("S05", [])
+            gau_S06U02_txt = gau002.get("S06", [])
 
             inputs002 = DEV002.get("INPUTS", {})
             ib01_DEV002_txt = inputs002.get("IB01", [])
@@ -599,12 +597,6 @@ if REGION:
         else:
             print(f" Unbekanntes Gerät: {device}")
     
-        #LANGUAGE
-        if btn_states_SW[4]:
-            states_txt_act = states_txt_en
-        else:
-            states_txt_act = states_txt_de
-
         #------------------------------------------------------------------------------
         # UPDATE LAST CONFIG DEV002RB01 (DONT LOAD LAST STATE ALWAYS START WITH ALL OFF)
         #------------------------------------------------------------------------------
@@ -909,6 +901,12 @@ class P00_BOOT(tk.Frame):
             btn_states_FAV   = btn_states["FAV"]
         else:
             print(f"Unbekanntes Gerät: {device}")
+        #LANGUAGE
+        global states_txt_act
+        if btn_states_SW[4]:
+            states_txt_act = states_txt_en
+        else:
+            states_txt_act = states_txt_de
 
     def load_images_from_folder(self, path, suffix=".jpg"):
         images = [ImageTk.PhotoImage(Image.open(os.path.join(path, f)))
@@ -997,7 +995,6 @@ class P00_BOOT(tk.Frame):
 
         for varname, path in misc_dirs.items():
             globals()[varname] = self.load_images_from_folder(path, ".png")
-
         
     def create_canvas(self):
         self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
@@ -1043,7 +1040,7 @@ class P01_DASH(tk.Frame):
         with open(os.path.join(datadir, "positions.json"), encoding="utf-8") as f:
             self.positions = json.load(f)
         #----------------------------------------------------------------------------------
-        # UPDATE TEXTS
+        # UPDATE SYSINFO TEXTS
         #----------------------------------------------------------------------------------
         with open(os.path.join(datadir, "sysinfo_texts.json"), encoding="utf-8") as f:
             self.pb_texts = json.load(f)
@@ -1917,7 +1914,7 @@ class P01_DASH(tk.Frame):
         # POWER BUTTON (SWITCH FRAME)
         #----------------------------------------------------------------------------------
         if REGION:
-            button = tk.Button(self, command=lambda: self.master.switch_frame(P02_QOPT))
+            button = tk.Button(self, command=lambda: self.master.switch_frame(P03_SETUP))
             if device == btns_device_names[1]:
                 if theme in btns_theme_names[:3]:
                     button.config(**btn_style_imgbtn, image=localimage15)
@@ -2628,10 +2625,9 @@ class P01_DASH(tk.Frame):
                     led_DEV002IC[15].place(x=2174, y=432, width=80, height=80)
         #----------------------------------------------------------------------------------
         # SYSINFO LABELS
-        #----------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------        
         if REGION:
             global lbls_sysinfo
-            
             self.update_positions()
             self.update_pb_ui_elements()
             self.update_labels()
