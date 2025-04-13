@@ -6,7 +6,7 @@ try:
         version = f.read().strip()
 except FileNotFoundError:
     version = "unknown"
-last_change = "2025-04-13-1900"
+last_change = "2025-04-13-2023"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
@@ -1911,7 +1911,7 @@ class P01_DASH(tk.Frame):
                         self.canvas.create_text(2120, 225, **txt_style_S34c, text=gau_S06U02_txt[20])
                         self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S06U02_txt[21])
         #----------------------------------------------------------------------------------
-        # POWER BUTTON (SWITCH FRAME)
+        # POWER BUTTON (SWITCH FRAME TO SETUP)
         #----------------------------------------------------------------------------------
         if REGION:
             button = tk.Button(self, command=lambda: self.master.switch_frame(P03_SETUP))
@@ -2694,7 +2694,10 @@ class P01_DASH(tk.Frame):
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
                 #--------------------------------------------------------------------------
                 if REGION:
-                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
+                    if btns_theme_names[0:3].count(theme) > 0: # THEME 0 to 2
+                        label_7SEG001.config(font=(fonts[2], 125), anchor="c")
+                        label_7SEG001.place(x=625, y=150, width=220, height=185)
+                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.config(image=localimage04, compound="center")
                         label_7SEG001.place(x=567, y=164, width=496, height=212)
