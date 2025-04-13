@@ -6,7 +6,7 @@ try:
         version = f.read().strip()
 except FileNotFoundError:
     version = "unknown"
-last_change = "2025-04-13-0908"
+last_change = "2025-04-13-1900"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
