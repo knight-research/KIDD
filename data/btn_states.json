@@ -2,14 +2,14 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "K2_S05",
+        "theme": "K2_S01",
         "system": "WHITE",
         "timezone": "+1",
         "installdone": true
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb03",
+            "PB": "pb01",
             "FNKT": [
                 false,
                 false,
