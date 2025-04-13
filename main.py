@@ -6,7 +6,7 @@ try:
         version = f.read().strip()
 except FileNotFoundError:
     version = "unknown"
-last_change = "2025-04-12-1608"
+last_change = "2025-04-13-0908"
 
 #------------------------------------------------------------------------------------------
 # CHECK IF INSTALLATION WAS STILL DONE
@@ -860,12 +860,36 @@ class MainApplication(tk.Tk):
 # PAGE 00: BOOT
 #------------------------------------------------------------------------------------------
 class P00_BOOT(tk.Frame):
+    _loaded_count = 0
+    _total_count = 0  # wird dynamisch gezählt
     def __init__(self, master):
-        if debug == True:
-            print (btns_menu_names[0])
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST SYSTEM CONFIGURATIONS
-        #----------------------------------------------------------------------------------
+        P00_BOOT._total_count = sum([
+            2,  # background (normal + dash)
+            4,  # led (OF, LO, MI, FU)
+            2,  # sled
+            14, # voiceboxes
+            8   # misc (segment, lcars, rpm)
+        ])
+        super().__init__(master)
+        global device, style, theme, system
+        global btn_states_PB, btn_states_PBFNKT, btn_states_FNKT, btn_states_HW, btn_states_SW, btn_states_qopt, btn_states_FAV
+        global bgDEV001_img_list, bgDEV002_img_list, bgDEV004_img_list, bgDEV008_img_list, bgDEV031_img_list
+        global bgDEV001_DASH_img_list, bgDEV002_DASH_img_list, bgDEV004_DASH_img_list, bgDEV008_DASH_img_list, bgDEV031_DASH_img_list
+        global segmentKA_img_list, segmentKI_img_list
+        global lcarsON_img_list, lcarsOF_img_list, lcarsON_R_img_list, lcarsOF_R_img_list
+        global rpmON_img_list, rpmOF_img_list
+
+        self.load_config()
+        self.load_background_images()
+        self.load_led_images()
+        self.load_sled_images()
+        self.load_voicebox_images()
+        self.load_misc_images()
+
+        self.create_canvas()
+        master.after(100, lambda: master.switch_frame(P01_DASH))
+
+    def load_config(self):
         with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
             data = json.load(f)
         device = data["main_config"]["device"]
@@ -873,310 +897,126 @@ class P00_BOOT(tk.Frame):
         theme = data["main_config"]["theme"]
         system = data["main_config"]["system"]
 
-        #----------------------------------------------------------------------------------
-        # UPDATE LAST BUTTON STATES
-        #----------------------------------------------------------------------------------
         btns = data["buttons"]
         if device in btns:
-            btn_states_PB    = btns[device]["PB"]
-            btn_states_PBFNKT  = btns[device]["PBFNKT"]
-            btn_states_FNKT  = btns[device]["FNKT"]
-            btn_states_HW    = btns[device]["HW"]
-            btn_states_SW    = btns[device]["SW"]
-            btn_states_qopt  = btns[device]["QOPT"]
-            btn_states_FAV   = btns[device]["FAV"]
+            btn_states = btns[device]
+            btn_states_PB    = btn_states["PB"]
+            btn_states_PBFNKT  = btn_states["PBFNKT"]
+            btn_states_FNKT  = btn_states["FNKT"]
+            btn_states_HW    = btn_states["HW"]
+            btn_states_SW    = btn_states["SW"]
+            btn_states_qopt  = btn_states["QOPT"]
+            btn_states_FAV   = btn_states["FAV"]
         else:
-            print(f" Unbekanntes Gerät: {device}")
+            print(f"Unbekanntes Gerät: {device}")
 
-        #----------------------------------------------------------------------------------
-        # BACKGROUND IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            print ("0%")
-            if device == btns_device_names[1]:
-                # IMAGES BACKGROUND DEV001
-                for filename in bgDEV001_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV001_img_dir, filename))
-                        bgDEV001_img_list.append(ImageTk.PhotoImage(image))
-                # IMAGES BACKGROUND UNIT01 DASH
-                for filename in bgDEV001_DASH_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV001_DASH_img_dir, filename))
-                        bgDEV001_DASH_img_list.append(ImageTk.PhotoImage(image))
-                print ("10%")
-            elif device == btns_device_names[2]:
-                # IMAGES BACKGROUND UNIT02
-                for filename in bgDEV002_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV002_img_dir, filename))
-                        bgDEV002_img_list.append(ImageTk.PhotoImage(image))
-                # IMAGES BACKGROUND UNIT02 DASH
-                for filename in bgDEV002_DASH_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV002_DASH_img_dir, filename))
-                        bgDEV002_DASH_img_list.append(ImageTk.PhotoImage(image))
-                print ("10%")
-            elif device == btns_device_names[4]:
-                # IMAGES BACKGROUND UNIT04
-                for filename in bgDEV004_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV004_img_dir, filename))
-                        bgDEV004_img_list.append(ImageTk.PhotoImage(image))
-                # IMAGES BACKGROUND UNIT04 DASH
-                for filename in bgDEV004_DASH_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV004_DASH_img_dir, filename))
-                        bgDEV004_DASH_img_list.append(ImageTk.PhotoImage(image))
-                print ("10%")
-            elif device == btns_device_names[8]:
-                # IMAGES BACKGROUND UNIT08
-                for filename in bgDEV008_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV008_img_dir, filename))
-                        bgDEV008_img_list.append(ImageTk.PhotoImage(image))
-                # IMAGES BACKGROUND UNIT08 DASH
-                for filename in bgDEV008_DASH_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV008_DASH_img_dir, filename))
-                        bgDEV008_DASH_img_list.append(ImageTk.PhotoImage(image))
-                print ("10%")
-            elif device == btns_device_names[31]:
-                # IMAGES BACKGROUND UNIT31
-                for filename in bgDEV031_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV031_img_dir, filename))
-                        bgDEV031_img_list.append(ImageTk.PhotoImage(image))
-                # IMAGES BACKGROUND UNIT31 DASH
-                for filename in bgDEV031_DASH_img_dir_srt:
-                    if filename.endswith(".jpg"):
-                        image = Image.open(imp_mod['os'].path.join(bgDEV031_DASH_img_dir, filename))
-                        bgDEV031_DASH_img_list.append(ImageTk.PhotoImage(image))
-                print ("10%")
-        #----------------------------------------------------------------------------------
-        # LED IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            #--------------------------------------------------------------------------
-            # LED OFF
-            #--------------------------------------------------------------------------
-            for filename in ledOF_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(ledOF_img_dir, filename))
-                    ledOF_img_list.append(ImageTk.PhotoImage(image))
-            #--------------------------------------------------------------------------
-            # LED LOW
-            #--------------------------------------------------------------------------
-            for filename in ledLO_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(ledLO_img_dir, filename))
-                    ledLO_img_list.append(ImageTk.PhotoImage(image))
-            #--------------------------------------------------------------------------
-            # LED MID
-            #--------------------------------------------------------------------------
-            for filename in ledMI_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(ledMI_img_dir, filename))
-                    ledMI_img_list.append(ImageTk.PhotoImage(image))
-            #--------------------------------------------------------------------------
-            # LED FULL
-            #--------------------------------------------------------------------------
-            for filename in ledFU_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(ledFU_img_dir, filename))
-                    ledFU_img_list.append(ImageTk.PhotoImage(image))
-            print ("20%")
-        #----------------------------------------------------------------------------------
-        # SLED IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            #------------------------------------------------------------------------------
-            # SLED OFF
-            #------------------------------------------------------------------------------
-            for filename in sledOF_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(sledOF_img_dir, filename))
-                    sledOF_img_list.append(ImageTk.PhotoImage(image))
-            #------------------------------------------------------------------------------
-            # SLED ON
-            #------------------------------------------------------------------------------
-            for filename in sledON_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(sledON_img_dir, filename))
-                    sledON_img_list.append(ImageTk.PhotoImage(image))
-            print ("30%")
-            #------------------------------------------------------------------------------
-            # LED VOICEBOXES
-            #------------------------------------------------------------------------------
-            for filename in vbOF_MAX_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbOF_MAX_img_dir, filename))
-                    vbOF_MAX_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in vbON_MAX_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbON_MAX_img_dir, filename))
-                    vbON_MAX_img_list.append(ImageTk.PhotoImage(image))
+    def load_images_from_folder(self, path, suffix=".jpg"):
+        images = [ImageTk.PhotoImage(Image.open(os.path.join(path, f)))
+                  for f in sorted(os.listdir(path), key=str.lower) if f.endswith(suffix)]
+        P00_BOOT._loaded_count += 1
+        percent = int((P00_BOOT._loaded_count / P00_BOOT._total_count) * 100)
+        print(f"{percent}% geladen... ({os.path.basename(path)})")
+        return images
 
-            for filename in vbOF_OTTO_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbOF_OTTO_img_dir, filename))
-                    vbOF_OTTO_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in vbON_OTTO_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbON_OTTO_img_dir, filename))
-                    vbON_OTTO_img_list.append(ImageTk.PhotoImage(image))
+    def load_background_images(self):
+        path_map = {
+            "DEV001": (bgDEV001_img_dir, "bgDEV001_img_list"),
+            "DEV002": (bgDEV002_img_dir, "bgDEV002_img_list"),
+            "DEV004": (bgDEV004_img_dir, "bgDEV004_img_list"),
+            "DEV008": (bgDEV008_img_dir, "bgDEV008_img_list"),
+            "DEV031": (bgDEV031_img_dir, "bgDEV031_img_list")
+        }
+        dash_map = {
+            "DEV001": (bgDEV001_DASH_img_dir, "bgDEV001_DASH_img_list"),
+            "DEV002": (bgDEV002_DASH_img_dir, "bgDEV002_DASH_img_list"),
+            "DEV004": (bgDEV004_DASH_img_dir, "bgDEV004_DASH_img_list"),
+            "DEV008": (bgDEV008_DASH_img_dir, "bgDEV008_DASH_img_list"),
+            "DEV031": (bgDEV031_DASH_img_dir, "bgDEV031_DASH_img_list")
+        }
+        if device in path_map:
+            path, varname = path_map[device]
+            globals()[varname] = self.load_images_from_folder(path)
+        if device in dash_map:
+            path, varname = dash_map[device]
+            globals()[varname] = self.load_images_from_folder(path)
 
-            for filename in vbOF_PILOT_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbOF_PILOT_img_dir, filename))
-                    vbOF_PILOT_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in vbON_PILOT_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbON_PILOT_img_dir, filename))
-                    vbON_PILOT_img_list.append(ImageTk.PhotoImage(image))
+    def load_led_images(self):
+        led_dirs = {
+            "ledOF_img_list": ledOF_img_dir,
+            "ledLO_img_list": ledLO_img_dir,
+            "ledMI_img_list": ledMI_img_dir,
+            "ledFU_img_list": ledFU_img_dir
+        }
+        for varname, path in led_dirs.items():
+            globals()[varname] = self.load_images_from_folder(path, ".png")
 
-            for filename in vbOF_S01_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbOF_S01_img_dir, filename))
-                    vbOF_S01_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in vbON_S01_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbON_S01_img_dir, filename))
-                    vbON_S01_img_list.append(ImageTk.PhotoImage(image))
+    def load_sled_images(self):
+        sled_dirs = {
+            "sledOF_img_list": sledOF_img_dir,
+            "sledON_img_list": sledON_img_dir
+        }
+        for varname, path in sled_dirs.items():
+            globals()[varname] = self.load_images_from_folder(path, ".png")
 
-            for filename in vbOF_S02_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbOF_S02_img_dir, filename))
-                    vbOF_S02_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in vbON_S02_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbON_S02_img_dir, filename))
-                    vbON_S02_img_list.append(ImageTk.PhotoImage(image))
+    def load_voicebox_images(self):
+        voicebox_dirs = {
+            "vbOF_MAX_img_list": vbOF_MAX_img_dir,
+            "vbON_MAX_img_list": vbON_MAX_img_dir,
+            "vbOF_OTTO_img_list": vbOF_OTTO_img_dir,
+            "vbON_OTTO_img_list": vbON_OTTO_img_dir,
+            "vbOF_PILOT_img_list": vbOF_PILOT_img_dir,
+            "vbON_PILOT_img_list": vbON_PILOT_img_dir,
+            "vbOF_S01_img_list": vbOF_S01_img_dir,
+            "vbON_S01_img_list": vbON_S01_img_dir,
+            "vbOF_S02_img_list": vbOF_S02_img_dir,
+            "vbON_S02_img_list": vbON_S02_img_dir,
+            "vbOF_S03_img_list": vbOF_S03_img_dir,
+            "vbON_S03_img_list": vbON_S03_img_dir,
+            "vbOF_S04_img_list": vbOF_S04_img_dir,
+            "vbON_S04_img_list": vbON_S04_img_dir
+        }
+        for varname, path in voicebox_dirs.items():
+            globals()[varname] = self.load_images_from_folder(path, ".png")
+                
+    def load_misc_images(self):
+        misc_dirs = {
+            "segmentKA_img_list": segmentKA_img_dir,
+            "segmentKI_img_list": segmentKI_img_dir,
+            "lcarsOF_img_list": lcarsOF_img_dir,
+            "lcarsON_img_list": lcarsON_img_dir,
+            "lcarsOF_R_img_list": lcarsOF_R_img_dir,
+            "lcarsON_R_img_list": lcarsON_R_img_dir,
+            "rpmOF_img_list": rpmOF_img_dir,
+            "rpmON_img_list": rpmON_img_dir,
+            "bttf_img_list": bttf_img_dir,
+            "infocenterOF_img_list": infocenterOF_img_dir,
+            "infocenterON_img_list": infocenterON_img_dir,
+            "knight_img_list": knight_img_dir,
+            "sysnew_img_list": sysnew_img_dir
+        }
 
-            for filename in vbOF_S03_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbOF_S03_img_dir, filename))
-                    vbOF_S03_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in vbON_S03_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbON_S03_img_dir, filename))
-                    vbON_S03_img_list.append(ImageTk.PhotoImage(image))
+        for varname, path in misc_dirs.items():
+            globals()[varname] = self.load_images_from_folder(path, ".png")
 
-            for filename in vbOF_S04_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbOF_S04_img_dir, filename))
-                    vbOF_S04_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in vbON_S04_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(vbON_S04_img_dir, filename))
-                    vbON_S04_img_list.append(ImageTk.PhotoImage(image))
-            print ("40%")
-        #----------------------------------------------------------------------------------
-        # BTTF IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            #todo
-            print ("60%")
-        #----------------------------------------------------------------------------------
-        # INFORMATION CENTER IMAGES
-        #----------------------------------------------------------------------------------        
-        if REGION:
-            for filename in infocenterOF_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(infocenterOF_img_dir, filename))
-                    infocenterOF_img_list.append(ImageTk.PhotoImage(image))
-            for filename in infocenterON_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(infocenterON_img_dir, filename))
-                    infocenterON_img_list.append(ImageTk.PhotoImage(image))
-            print ("70%")
-        #----------------------------------------------------------------------------------
-        # KNIGHT IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            #todo
-            print ("80%")
-        #----------------------------------------------------------------------------------
-        # LCARS IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            for filename in lcarsOF_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(lcarsOF_img_dir, filename))
-                    lcarsOF_img_list.append(ImageTk.PhotoImage(image))
-            for filename in lcarsON_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(lcarsON_img_dir, filename))
-                    lcarsON_img_list.append(ImageTk.PhotoImage(image))
-            for filename in lcarsOF_R_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(lcarsOF_R_img_dir, filename))
-                    lcarsOF_R_img_list.append(ImageTk.PhotoImage(image))
-            for filename in lcarsON_R_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(lcarsON_R_img_dir, filename))
-                    lcarsON_R_img_list.append(ImageTk.PhotoImage(image))
-            print ("90%")
-        #----------------------------------------------------------------------------------
-        # RPM S34 IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            for filename in rpmOF_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(rpmOF_img_dir, filename))
-                    rpmOF_img_list.append(ImageTk.PhotoImage(image))
-                    
-            for filename in rpmON_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(rpmON_img_dir, filename))
-                    rpmON_img_list.append(ImageTk.PhotoImage(image))
-            print ("95%")
-        #----------------------------------------------------------------------------------
-        # 7 SEGMENT IMAGES
-        #----------------------------------------------------------------------------------
-        if REGION:
-            # IMAGES KARR
-            for filename in segmentKA_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(segmentKA_img_dir, filename))
-                    segmentKA_img_list.append(ImageTk.PhotoImage(image))
-            # IMAGES KITT
-            for filename in segmentKI_img_dir_srt:
-                if filename.endswith(".png"):
-                    image = Image.open(imp_mod['os'].path.join(segmentKI_img_dir, filename))
-                    segmentKI_img_list.append(ImageTk.PhotoImage(image))
-            print ("100%")
-        #----------------------------------------------------------------------------------
-        # CREATE CANVAS
-        #----------------------------------------------------------------------------------
-        if REGION:
-            tk.Frame.__init__(self, master)
-            self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
-            self.canvas.pack(fill='both', expand=True)
+        
+    def create_canvas(self):
+        self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
+        self.canvas.pack(fill='both', expand=True)
 
-            if device == btns_device_names[1]:
-                background_image = bgDEV001_img_list[1]
-            elif device == btns_device_names[2]:
-                background_image = bgDEV002_img_list[1]
-            elif device == btns_device_names[4]:
-                background_image = bgDEV004_img_list[1]
-            elif device == btns_device_names[8]:
-                background_image = bgDEV008_img_list[1]    
-            elif device == btns_device_names[31]:
-                background_image = bgDEV031_img_list[1]
-            self.canvas.create_image(0, 0, image=background_image, anchor='nw')
+        bg_map = {
+            "DEV001": bgDEV001_img_list,
+            "DEV002": bgDEV002_img_list,
+            "DEV004": bgDEV004_img_list,
+            "DEV008": bgDEV008_img_list,
+            "DEV031": bgDEV031_img_list
+        }
+        background_image = bg_map.get(device, [None, None])[1]
 
-            btn_menu_dash = tk.Button(self, bd=0, bg=sys_clr[8], fg=sty_clr[0])
-            btn_menu_dash.configure(text="DASH", command=lambda: self.master.switch_frame(P01_DASH))
-            btn_menu_dash.place(x=215, y=20)
-        self.master.after(100, lambda: self.master.switch_frame(P01_DASH))
+        self.canvas.create_image(0, 0, image=background_image, anchor='nw')
+
+        btn_menu_dash = tk.Button(self, bd=0, bg=sys_clr[8], fg=sty_clr[0], text="DASH",
+                                   command=lambda: self.master.switch_frame(P01_DASH))
+        btn_menu_dash.place(x=215, y=20)
 #------------------------------------------------------------------------------------------
 # PAGE 01: DASHBOARD
 #------------------------------------------------------------------------------------------
@@ -2129,71 +1969,16 @@ class P01_DASH(tk.Frame):
                     button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
                     button.place(x=10, y=10)
         #----------------------------------------------------------------------------------
-        # POWER BUTTONS DASH
+        # POWER BUTTONS DASH (YELLOW POWER)
         #----------------------------------------------------------------------------------   
         if REGION:
             global btn_PB
             global btn_PB_txt
             #--------------------------------------------------------------------------
-            # POSITIONS
+            # BUTTONS
             #--------------------------------------------------------------------------
             if REGION:
-                if device == btns_device_names[1]:
-                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [575, 375, 575, 4]
-                        y_btn = [45, 165, 375, 375]
-                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [94, 176, 258, 4, 4]
-                        y_btn = [120, 120, 120, 400, 578]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        x_btn = [200, 317, 433, 4, 4]
-                        y_btn = [10, 10, 10, 400, 578]
-                elif device == btns_device_names[2]:
-                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [95, 800, 95, 800, 95, 800, 1365, 1365, 1365, 1365, 1365, 1365, 2200]
-                        y_btn = [380, 380, 480, 480, 580, 580, 21, 133, 246, 380, 490, 600, 600]
-                    if btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
-                        y_btn = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        x_btn = [3, 696, 3, 696, 3, 696, 1285, 1285, 1285, 1285, 1550, 1815, 2080]
-                        y_btn = [409, 409, 517, 517, 625, 625, 21, 133, 246, 399, 399, 399, 399]
-                elif device == btns_device_names[4]:
-                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [575, 375, 575, 4]
-                        y_btn = [45, 165, 375, 375]
-                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [94, 176, 258, 4, 4]
-                        y_btn = [120, 120, 120, 400, 578]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        x_btn = [200, 317, 433, 4, 4]
-                        y_btn = [10, 10, 10, 400, 578]
-                elif device == btns_device_names[8]:
-                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [190, 350]
-                        y_btn = [0, 0]
-                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [190, 350]
-                        y_btn = [0, 0]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        x_btn = [137, 275]
-                        y_btn = [0, 0]
-                elif device == btns_device_names[31]:
-                    if btns_theme_names[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn = [94, 176, 258, 4, 4]
-                        y_btn = [120, 120, 120, 400, 578]
-                    elif btns_theme_names[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [94, 176, 258, 4, 4]
-                        y_btn = [120, 120, 120, 400, 578]
-                    elif theme in [btns_theme_names[15], btns_theme_names[16]]:
-                        x_btn = [200, 317, 433, 4, 4]
-                        y_btn = [10, 10, 10, 400, 578]
-                quant_btn = len(x_btn)
-            #--------------------------------------------------------------------------
-            # PB BUTTONS (YELLOW POWER)
-            #--------------------------------------------------------------------------
-            if REGION:
-                btn_PB = []                   
+                btn_PB = []
                 for pb_text in btn_PB_txt:
                     btns_PB = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [
                         read.toggle_PB(text),
@@ -2204,8 +1989,19 @@ class P01_DASH(tk.Frame):
                     self.update_pb_labels()
                     ])
                     btn_PB.append(btns_PB)
-                for i in range(quant_btn):
-                    btn_PB[i].place(x=x_btn[i], y=y_btn[i])
+                try:
+                    theme_index = btns_theme_names.index(theme)
+                    theme_key = f"THEME{theme_index}"
+
+                    pb_btn_data = self.pb_positions["PB_BUTTONS"][device][theme_key]
+                    x_btn = pb_btn_data.get("x", [])
+                    y_btn = pb_btn_data.get("y", [])
+                    quant_btn = min(len(x_btn), len(y_btn), len(btn_PB))
+
+                    for i in range(quant_btn):
+                        btn_PB[i].place(x=x_btn[i], y=y_btn[i])
+                except (KeyError, ValueError) as e:
+                    print(f"⚠️ Keine PB-Button-Positionen für {device} / {theme_key}: {e}")
             #--------------------------------------------------------------------------
             # STATE
             #--------------------------------------------------------------------------
@@ -2291,6 +2087,9 @@ class P01_DASH(tk.Frame):
                     btns_FNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
                     btn_FNKT.append(btns_FNKT)
                     btn_FNKT[i].place(x=x_btn[i], y=y_btn[i])
+            #--------------------------------------------------------------------------
+            # STATE
+            #--------------------------------------------------------------------------  
                     if btn_states_FNKT[i] == True:
                         map_img =  [localimage64,localimage64,localimage64,localimage64,localimage64,localimage64,
                                     localimage66,localimage66,
@@ -2855,7 +2654,6 @@ class P01_DASH(tk.Frame):
                             width=self.wh_lbl_sysinfo[2],
                             height=self.wh_lbl_sysinfo[3]
                         )
-
         #----------------------------------------------------------------------------------
         # GAUGE 7-SEGMENT DISPLAYS
         #----------------------------------------------------------------------------------
@@ -4278,12 +4076,6 @@ class P01_DASH(tk.Frame):
                 label_7SEG001.config(text=str(new_speed).zfill(3))                
                 label_7SEG003.config(text=str(new_speed).zfill(6))
                 self.old_values["speed_label"] = new_speed
-     
-        if device == btns_device_names[31]:
-            new_speed = seven_seg_speed
-            if self.old_values.get("speed_label") != new_speed:
-                label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")
-                self.old_values["speed_label"] = new_speed
 
         if device == btns_device_names[2]:
             new_rpm = seg_DEV002[0]
@@ -4291,6 +4083,12 @@ class P01_DASH(tk.Frame):
                 if device == btns_device_names[2]:
                     label_7SEG001.config(text=str(new_rpm).zfill(3), anchor="nw")
                     self.old_values["rpm_label"] = new_rpm
+     
+        if device == btns_device_names[31]:
+            new_speed = seven_seg_speed
+            if self.old_values.get("speed_label") != new_speed:
+                label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")
+                self.old_values["speed_label"] = new_speed
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
