@@ -11,7 +11,8 @@
         "K3_S01","K3_S02","GMA","GMD","DMC","BTTF","LCARS1","LCARS2"],
       "systems": ["ORANGE","GREEN","AQUA","WHITE"]
     },
-    "PB_NAMES": ["pb00","pb01","pb02","pb03","pb04","pb05","pb06","pb07","pb08","pb09","pb10","pb11","pb12"],
+    "PB_B_NAMES": ["pb00","pb01","pb02","pb03","pb04","pb05","pb06","pb07","pb08","pb09","pb10","pb11","pb12"],
+    "FNKT_B_NAMES": ["pb00","pb01","pb02","pb03","pb04","pb05","pb06","pb07","pb08","pb09","pb10","pb11","pb12"],
     "UNITS": {
       "eu": ["KPH","KPHg","KM","°C","BAR","LTR","LPH"],
       "us": ["MPH","MPHg","MLS","°F","PSI","GALS","GPH"]
