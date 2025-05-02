@@ -4,8 +4,7 @@
         "style": "KITT",
         "theme": "K2_S05",
         "system": "AQUA",
-        "timezone": "+1",
-        "installdone": true
+        "timezone": "+1"
     },
     "buttons": {
         "DEV001": {

@@ -1,131 +1,56 @@
 #!/usr/bin/env python3
-REGION = True #I AM ONLY HERE TO SHOW AND HIDE CODE
-debug = False #PRINT INFORMATIONS TO CONSOLE
-try:
-    with open("version.txt", "r") as f:
-        version = f.read().strip()
-except FileNotFoundError:
-    version = "unknown"
-last_change = "2025-05-01-1923"
-
 #------------------------------------------------------------------------------------------
-# CHECK IF INSTALLATION WAS STILL DONE
+# SERVICE
 #------------------------------------------------------------------------------------------
-if REGION:
-    import os
-    from btn_state_manager import ButtonStateManager
-    folder = os.path.dirname(os.path.abspath(__file__))
-    datadir = os.path.join(folder,'data')
-    bsm = ButtonStateManager(folder)
-    install_done = install_done = bsm.get_install_done()
+REGION = True # I AM ONLY HERE TO SHOW AND HIDE CODE
+debug = False # PRINT INFORMATIONS TO CONSOLE
 #------------------------------------------------------------------------------------------
 # BEFORE MAINAPP
 #------------------------------------------------------------------------------------------
 if REGION:
-    #--------------------------------------------------------------------------------------
-    # IMPORTS
-    #--------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------
+    # VERSION
+    #------------------------------------------------------------------------------------------
     if REGION:
-        #----------------------------------------------------------------------------------
-        # STANDART IMPORTS
-        #----------------------------------------------------------------------------------
-        if REGION:
-            import importlib
-            required_packages = [
-                'sys', 'multiprocessing', 'os', 'time', 'math', 'string', 'socket',
-                'websocket', 'websocket-client', 'python-vlc',
-                'pyserial', 'pynmea2', 'pydub', 'Pillow', 'pyaudio', 'psutil',
-                'simpleaudio', 'posixpath', 'random', 'serial', 'platform', 
-                'shutil', 'threading', 'SpeechRecognition',
-                'board', 'busio'
-            ]
-            imp_mod = {}
-            for package in required_packages:
-                try:
-                    imp_mod[package] = importlib.import_module(package)
-                    if debug:
-                        print(f'Successfully imported {package}')
-                except ImportError:
-                    if debug:
-                        print(f'Failed to import {package}')
-                    pass
-        #----------------------------------------------------------------------------------
-        # CHECK AND INSTALL IMPORTS
-        #----------------------------------------------------------------------------------            
-        if not install_done:
-            def install_missing_packages(packages):
-                import subprocess
-                for package in packages:
-                    try:
-                        imp_mod[package] = importlib.import_module(package)
-                        install_done = True
-                        install_done = bsm.save('install_conf.json', install_done)
-                    except ImportError:
-                        print(f"{package} is not installed. Installing...")
-                        subprocess.call(['pip3', 'install', package, '--break-system-packages'])
-
-            if __name__ == '__main__':
-                install_missing_packages(required_packages)
-        #----------------------------------------------------------------------------------
-        # SYSTEM INDEPENDENT
-        #----------------------------------------------------------------------------------
-        if REGION:
-            import json
-            from datetime import timedelta
-            from PIL import ImageTk, Image
-            from pydub import AudioSegment
-            from pydub.playback import _play_with_simpleaudio as play  # Import the non-blocking play function
-            import speech_recognition as sr
-            import tkinter as tk
-            from tkinter import filedialog
-            from tkinter import ttk
-            from threading import Thread
-            import pynmea2
-        #----------------------------------------------------------------------------------
-        # CHECK SYSTEM
-        #----------------------------------------------------------------------------------
-        if REGION:
-            SYSTEM = imp_mod['sys'].platform
-            SYSTEMPI = "NOPI"
-            #------------------------------------------------------------------------------
-            # CHECK IF ITS A RASPBERRY PI
-            #------------------------------------------------------------------------------
-            if SYSTEM == "linux":
-                try:
-                    with open('/sys/firmware/devicetree/base/model', 'r') as f:
-                        model = f.read().strip()
-                    print (model)
-                    if 'Raspberry Pi' in model:
-                        SYSTEMPI = "PI"
-                    else:
-                        SYSTEMPI = "NOPI"
-                except FileNotFoundError:
-                    SYSTEMPI = "NOPI"
-        #----------------------------------------------------------------------------------
-        # ON WINDOWS
-        #----------------------------------------------------------------------------------
-        if REGION:
-            if SYSTEM == "win32" or SYSTEM == "win64":
-                import _fake_GPIO as GPIO
-                import serial.tools.list_ports
-        #----------------------------------------------------------------------------------
-        # ON LINUX
-        #----------------------------------------------------------------------------------        
-        if REGION:
-            if SYSTEM == "linux":
-                #--------------------------------------------------------------------------
-                # I2C INTERFACE
-                #--------------------------------------------------------------------------
-                from smbus2 import SMBus
-                import serial.tools.list_ports
-        #----------------------------------------------------------------------------------
-        # ON RASPBERRY PI
-        #----------------------------------------------------------------------------------
-        if REGION:
-            if SYSTEMPI == "PI":
-                import RPi.GPIO as GPIO
-                import adafruit_ads1x15.ads1115 as ADS
-                from adafruit_ads1x15.analog_in import AnalogIn
+        try:
+            with open("version.txt", "r") as f:
+                lines = f.readlines()
+                version = lines[0].strip() if len(lines) > 0 else "unknown"
+                last_change = lines[1].strip() if len(lines) > 1 else "unknown"
+        except FileNotFoundError:
+            version = "unknown"
+            last_change = "unknown"
+    #------------------------------------------------------------------------------------------
+    # IMPORTS
+    #------------------------------------------------------------------------------------------
+    if REGION:
+        from import_all import *
+        sys_win = False
+        sys_linux = False
+        sys_pi = False
+        if sys.platform == "win32" or sys.platform == "win64":
+            sys_win = True
+            from import_win import *
+        elif sys.platform == "linux":
+            sys_linux = True
+            from import_linux import *
+            try:
+                with open('/sys/firmware/devicetree/base/model', 'r') as f:
+                    model = f.read().strip()
+                if 'Raspberry Pi' in model:
+                    sys_pi = True
+                    from import_pi import *
+            except FileNotFoundError:
+                pass
+    #------------------------------------------------------------------------------------------
+    # DATA FOLDERS
+    #------------------------------------------------------------------------------------------
+    folder = os.path.dirname(os.path.abspath(__file__))
+    datadir = os.path.join(folder,'data')
+    #------------------------------------------------------------------------------------------
+    # BUTTONSTATEMANEAGER
+    #------------------------------------------------------------------------------------------
+    bsm = ButtonStateManager(folder)
     #--------------------------------------------------------------------------------------
     # GLOBAL VARIABLES
     #--------------------------------------------------------------------------------------
@@ -151,8 +76,8 @@ if REGION:
             #------------------------------------------------------------------------------
             carno = "carxxx"
             devno = "devxxx"
-            if SYSTEM == "linux":
-                hostname = imp_mod['socket'].gethostname()            
+            if sys_linux:
+                hostname = socket.gethostname()            
                 parts = hostname.split("dev")
                 carno = parts[0]
                 devno = "dev" + parts[1]
@@ -398,164 +323,164 @@ if REGION:
             #------------------------------------------------------------------------------
             # 000_bg
             #------------------------------------------------------------------------------
-            bgDEV001_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV001')
-            bgDEV001_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV001_img_dir), key=str.lower)
+            bgDEV001_img_dir = os.path.join(folder,'images', '000_bg', 'DEV001')
+            bgDEV001_img_dir_srt = sorted(os.listdir(bgDEV001_img_dir), key=str.lower)
             bgDEV001_img_list = []
-            bgDEV001_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV001', 'DASH')
-            bgDEV001_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV001_DASH_img_dir), key=str.lower)
+            bgDEV001_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV001', 'DASH')
+            bgDEV001_DASH_img_dir_srt = sorted(os.listdir(bgDEV001_DASH_img_dir), key=str.lower)
             bgDEV001_DASH_img_list = []
-            bgDEV002_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV002')
-            bgDEV002_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV002_img_dir), key=str.lower)
+            bgDEV002_img_dir = os.path.join(folder,'images', '000_bg', 'DEV002')
+            bgDEV002_img_dir_srt = sorted(os.listdir(bgDEV002_img_dir), key=str.lower)
             bgDEV002_img_list = []
-            bgDEV002_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV002', 'DASH')
-            bgDEV002_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV002_DASH_img_dir), key=str.lower)
+            bgDEV002_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV002', 'DASH')
+            bgDEV002_DASH_img_dir_srt = sorted(os.listdir(bgDEV002_DASH_img_dir), key=str.lower)
             bgDEV002_DASH_img_list = []
-            bgDEV004_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV004')
-            bgDEV004_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV004_img_dir), key=str.lower)
+            bgDEV004_img_dir = os.path.join(folder,'images', '000_bg', 'DEV004')
+            bgDEV004_img_dir_srt = sorted(os.listdir(bgDEV004_img_dir), key=str.lower)
             bgDEV004_img_list = []
-            bgDEV004_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV004', 'DASH')
-            bgDEV004_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV004_DASH_img_dir), key=str.lower)
+            bgDEV004_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV004', 'DASH')
+            bgDEV004_DASH_img_dir_srt = sorted(os.listdir(bgDEV004_DASH_img_dir), key=str.lower)
             bgDEV004_DASH_img_list = []
-            bgDEV008_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV008')
-            bgDEV008_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV008_img_dir), key=str.lower)
+            bgDEV008_img_dir = os.path.join(folder,'images', '000_bg', 'DEV008')
+            bgDEV008_img_dir_srt = sorted(os.listdir(bgDEV008_img_dir), key=str.lower)
             bgDEV008_img_list = []
-            bgDEV008_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV008', 'DASH')
-            bgDEV008_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV008_DASH_img_dir), key=str.lower)
+            bgDEV008_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV008', 'DASH')
+            bgDEV008_DASH_img_dir_srt = sorted(os.listdir(bgDEV008_DASH_img_dir), key=str.lower)
             bgDEV008_DASH_img_list = []
-            bgDEV031_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV031')
-            bgDEV031_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV031_img_dir), key=str.lower)
+            bgDEV031_img_dir = os.path.join(folder,'images', '000_bg', 'DEV031')
+            bgDEV031_img_dir_srt = sorted(os.listdir(bgDEV031_img_dir), key=str.lower)
             bgDEV031_img_list = []
-            bgDEV031_DASH_img_dir = imp_mod['os'].path.join(folder,'images', '000_bg', 'DEV031', 'DASH')
-            bgDEV031_DASH_img_dir_srt = sorted(imp_mod['os'].listdir(bgDEV031_DASH_img_dir), key=str.lower)
+            bgDEV031_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV031', 'DASH')
+            bgDEV031_DASH_img_dir_srt = sorted(os.listdir(bgDEV031_DASH_img_dir), key=str.lower)
             bgDEV031_DASH_img_list = []
             #------------------------------------------------------------------------------
             # 001_led
             #------------------------------------------------------------------------------
-            ledOF_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '000_OFF')
-            ledOF_img_dir_srt = sorted(imp_mod['os'].listdir(ledOF_img_dir), key=str.lower)
+            ledOF_img_dir = os.path.join(folder,'images', '001_led', '000_OFF')
+            ledOF_img_dir_srt = sorted(os.listdir(ledOF_img_dir), key=str.lower)
             ledOF_img_list = []
-            ledLO_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '001_LOW')
-            ledLO_img_dir_srt = sorted(imp_mod['os'].listdir(ledLO_img_dir), key=str.lower)
+            ledLO_img_dir = os.path.join(folder,'images', '001_led', '001_LOW')
+            ledLO_img_dir_srt = sorted(os.listdir(ledLO_img_dir), key=str.lower)
             ledLO_img_list = []
-            ledMI_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '002_MID')
-            ledMI_img_dir_srt = sorted(imp_mod['os'].listdir(ledMI_img_dir), key=str.lower)
+            ledMI_img_dir = os.path.join(folder,'images', '001_led', '002_MID')
+            ledMI_img_dir_srt = sorted(os.listdir(ledMI_img_dir), key=str.lower)
             ledMI_img_list = []
-            ledFU_img_dir = imp_mod['os'].path.join(folder,'images', '001_led', '003_FUL')
-            ledFU_img_dir_srt = sorted(imp_mod['os'].listdir(ledFU_img_dir), key=str.lower)
+            ledFU_img_dir = os.path.join(folder,'images', '001_led', '003_FUL')
+            ledFU_img_dir_srt = sorted(os.listdir(ledFU_img_dir), key=str.lower)
             ledFU_img_list = []
             #------------------------------------------------------------------------------
             # 002_sled
             #------------------------------------------------------------------------------
-            sledOF_img_dir = imp_mod['os'].path.join(folder,'images', '002_sled', 'OFF')
-            sledOF_img_dir_srt = sorted(imp_mod['os'].listdir(sledOF_img_dir), key=str.lower)
+            sledOF_img_dir = os.path.join(folder,'images', '002_sled', 'OFF')
+            sledOF_img_dir_srt = sorted(os.listdir(sledOF_img_dir), key=str.lower)
             sledOF_img_list = []
-            sledON_img_dir = imp_mod['os'].path.join(folder,'images', '002_sled', 'ON')
-            sledON_img_dir_srt = sorted(imp_mod['os'].listdir(sledON_img_dir), key=str.lower)
+            sledON_img_dir = os.path.join(folder,'images', '002_sled', 'ON')
+            sledON_img_dir_srt = sorted(os.listdir(sledON_img_dir), key=str.lower)
             sledON_img_list = []
             #------------------------------------------------------------------------------
             # 003_vb
             #------------------------------------------------------------------------------
-            vbOF_MAX_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'MAX','OFF')
-            vbOF_MAX_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_MAX_img_dir), key=str.lower)
+            vbOF_MAX_img_dir = os.path.join(folder,'images', '003_vb', 'MAX','OFF')
+            vbOF_MAX_img_dir_srt = sorted(os.listdir(vbOF_MAX_img_dir), key=str.lower)
             vbOF_MAX_img_list = []
-            vbON_MAX_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'MAX', 'ON')
-            vbON_MAX_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_MAX_img_dir), key=str.lower)
+            vbON_MAX_img_dir = os.path.join(folder,'images', '003_vb', 'MAX', 'ON')
+            vbON_MAX_img_dir_srt = sorted(os.listdir(vbON_MAX_img_dir), key=str.lower)
             vbON_MAX_img_list = []
-            vbOF_OTTO_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'OTTO','OFF')
-            vbOF_OTTO_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_OTTO_img_dir), key=str.lower)
+            vbOF_OTTO_img_dir = os.path.join(folder,'images', '003_vb', 'OTTO','OFF')
+            vbOF_OTTO_img_dir_srt = sorted(os.listdir(vbOF_OTTO_img_dir), key=str.lower)
             vbOF_OTTO_img_list = []
-            vbON_OTTO_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'OTTO', 'ON')
-            vbON_OTTO_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_OTTO_img_dir), key=str.lower)
+            vbON_OTTO_img_dir = os.path.join(folder,'images', '003_vb', 'OTTO', 'ON')
+            vbON_OTTO_img_dir_srt = sorted(os.listdir(vbON_OTTO_img_dir), key=str.lower)
             vbON_OTTO_img_list = []
-            vbOF_PILOT_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'PILOT','OFF')
-            vbOF_PILOT_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_PILOT_img_dir), key=str.lower)
+            vbOF_PILOT_img_dir = os.path.join(folder,'images', '003_vb', 'PILOT','OFF')
+            vbOF_PILOT_img_dir_srt = sorted(os.listdir(vbOF_PILOT_img_dir), key=str.lower)
             vbOF_PILOT_img_list = []
-            vbON_PILOT_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'PILOT', 'ON')
-            vbON_PILOT_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_PILOT_img_dir), key=str.lower)
+            vbON_PILOT_img_dir = os.path.join(folder,'images', '003_vb', 'PILOT', 'ON')
+            vbON_PILOT_img_dir_srt = sorted(os.listdir(vbON_PILOT_img_dir), key=str.lower)
             vbON_PILOT_img_list = []
-            vbOF_S01_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S01','OFF')
-            vbOF_S01_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S01_img_dir), key=str.lower)
+            vbOF_S01_img_dir = os.path.join(folder,'images', '003_vb', 'S01','OFF')
+            vbOF_S01_img_dir_srt = sorted(os.listdir(vbOF_S01_img_dir), key=str.lower)
             vbOF_S01_img_list = []
-            vbON_S01_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S01', 'ON')
-            vbON_S01_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S01_img_dir), key=str.lower)
+            vbON_S01_img_dir = os.path.join(folder,'images', '003_vb', 'S01', 'ON')
+            vbON_S01_img_dir_srt = sorted(os.listdir(vbON_S01_img_dir), key=str.lower)
             vbON_S01_img_list = []
-            vbOF_S02_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S02','OFF')
-            vbOF_S02_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S02_img_dir), key=str.lower)
+            vbOF_S02_img_dir = os.path.join(folder,'images', '003_vb', 'S02','OFF')
+            vbOF_S02_img_dir_srt = sorted(os.listdir(vbOF_S02_img_dir), key=str.lower)
             vbOF_S02_img_list = []
-            vbON_S02_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S02', 'ON')
-            vbON_S02_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S02_img_dir), key=str.lower)
+            vbON_S02_img_dir = os.path.join(folder,'images', '003_vb', 'S02', 'ON')
+            vbON_S02_img_dir_srt = sorted(os.listdir(vbON_S02_img_dir), key=str.lower)
             vbON_S02_img_list = []
-            vbOF_S03_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S03','OFF')
-            vbOF_S03_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S03_img_dir), key=str.lower)
+            vbOF_S03_img_dir = os.path.join(folder,'images', '003_vb', 'S03','OFF')
+            vbOF_S03_img_dir_srt = sorted(os.listdir(vbOF_S03_img_dir), key=str.lower)
             vbOF_S03_img_list = []
-            vbON_S03_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S03', 'ON')
-            vbON_S03_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S03_img_dir), key=str.lower)
+            vbON_S03_img_dir = os.path.join(folder,'images', '003_vb', 'S03', 'ON')
+            vbON_S03_img_dir_srt = sorted(os.listdir(vbON_S03_img_dir), key=str.lower)
             vbON_S03_img_list = []
-            vbOF_S04_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S04','OFF')
-            vbOF_S04_img_dir_srt = sorted(imp_mod['os'].listdir(vbOF_S04_img_dir), key=str.lower)
+            vbOF_S04_img_dir = os.path.join(folder,'images', '003_vb', 'S04','OFF')
+            vbOF_S04_img_dir_srt = sorted(os.listdir(vbOF_S04_img_dir), key=str.lower)
             vbOF_S04_img_list = []
-            vbON_S04_img_dir = imp_mod['os'].path.join(folder,'images', '003_vb', 'S04', 'ON')
-            vbON_S04_img_dir_srt = sorted(imp_mod['os'].listdir(vbON_S04_img_dir), key=str.lower)
+            vbON_S04_img_dir = os.path.join(folder,'images', '003_vb', 'S04', 'ON')
+            vbON_S04_img_dir_srt = sorted(os.listdir(vbON_S04_img_dir), key=str.lower)
             vbON_S04_img_list = []
             #------------------------------------------------------------------------------
             # bttf
             #------------------------------------------------------------------------------
-            bttf_img_dir = imp_mod['os'].path.join(folder,'images', 'bttf')
-            bttf_img_dir_srt = sorted(imp_mod['os'].listdir(bttf_img_dir), key=str.lower)
+            bttf_img_dir = os.path.join(folder,'images', 'bttf')
+            bttf_img_dir_srt = sorted(os.listdir(bttf_img_dir), key=str.lower)
             bttf_img_list = []
             #------------------------------------------------------------------------------
             # infocenter
             #------------------------------------------------------------------------------
-            infocenterOF_img_dir = imp_mod['os'].path.join(folder,'images', 'infocenter', 'OFF')
-            infocenterOF_img_dir_srt = sorted(imp_mod['os'].listdir(infocenterOF_img_dir), key=str.lower)
+            infocenterOF_img_dir = os.path.join(folder,'images', 'infocenter', 'OFF')
+            infocenterOF_img_dir_srt = sorted(os.listdir(infocenterOF_img_dir), key=str.lower)
             infocenterOF_img_list = []
-            infocenterON_img_dir = imp_mod['os'].path.join(folder,'images', 'infocenter', 'ON')
-            infocenterON_img_dir_srt = sorted(imp_mod['os'].listdir(infocenterON_img_dir), key=str.lower)
+            infocenterON_img_dir = os.path.join(folder,'images', 'infocenter', 'ON')
+            infocenterON_img_dir_srt = sorted(os.listdir(infocenterON_img_dir), key=str.lower)
             infocenterON_img_list = []
             #------------------------------------------------------------------------------
             # knight
             #------------------------------------------------------------------------------
-            knight_img_dir = imp_mod['os'].path.join(folder,'images', 'knight')
-            knight_img_dir_srt = sorted(imp_mod['os'].listdir(knight_img_dir), key=str.lower)
+            knight_img_dir = os.path.join(folder,'images', 'knight')
+            knight_img_dir_srt = sorted(os.listdir(knight_img_dir), key=str.lower)
             knight_img_list = []
             #------------------------------------------------------------------------------
             # lcars
             #------------------------------------------------------------------------------
-            lcarsOF_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'OFF')
-            lcarsOF_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsOF_img_dir), key=str.lower)
+            lcarsOF_img_dir = os.path.join(folder,'images', 'lcars', 'OFF')
+            lcarsOF_img_dir_srt = sorted(os.listdir(lcarsOF_img_dir), key=str.lower)
             lcarsOF_img_list = []
-            lcarsON_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'ON')
-            lcarsON_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsON_img_dir), key=str.lower)
+            lcarsON_img_dir = os.path.join(folder,'images', 'lcars', 'ON')
+            lcarsON_img_dir_srt = sorted(os.listdir(lcarsON_img_dir), key=str.lower)
             lcarsON_img_list = []
-            lcarsOF_R_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'OFF_R')
-            lcarsOF_R_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsOF_R_img_dir), key=str.lower)
+            lcarsOF_R_img_dir = os.path.join(folder,'images', 'lcars', 'OFF_R')
+            lcarsOF_R_img_dir_srt = sorted(os.listdir(lcarsOF_R_img_dir), key=str.lower)
             lcarsOF_R_img_list = []
-            lcarsON_R_img_dir = imp_mod['os'].path.join(folder,'images', 'lcars', 'ON_R')
-            lcarsON_R_img_dir_srt = sorted(imp_mod['os'].listdir(lcarsON_R_img_dir), key=str.lower)
+            lcarsON_R_img_dir = os.path.join(folder,'images', 'lcars', 'ON_R')
+            lcarsON_R_img_dir_srt = sorted(os.listdir(lcarsON_R_img_dir), key=str.lower)
             lcarsON_R_img_list = []
             #------------------------------------------------------------------------------
             # rpm
             #------------------------------------------------------------------------------
-            rpmOF_img_dir = imp_mod['os'].path.join(folder,'images', 'rpm', 'OFF')
-            rpmOF_img_dir_srt = sorted(imp_mod['os'].listdir(rpmOF_img_dir), key=str.lower)
+            rpmOF_img_dir = os.path.join(folder,'images', 'rpm', 'OFF')
+            rpmOF_img_dir_srt = sorted(os.listdir(rpmOF_img_dir), key=str.lower)
             rpmOF_img_list = []
-            rpmON_img_dir = imp_mod['os'].path.join(folder,'images', 'rpm', 'ON')
-            rpmON_img_dir_srt = sorted(imp_mod['os'].listdir(rpmON_img_dir), key=str.lower)
+            rpmON_img_dir = os.path.join(folder,'images', 'rpm', 'ON')
+            rpmON_img_dir_srt = sorted(os.listdir(rpmON_img_dir), key=str.lower)
             rpmON_img_list = []
             #------------------------------------------------------------------------------
             # segment
             #------------------------------------------------------------------------------
-            segmentKA_img_dir = imp_mod['os'].path.join(folder,'images', 'segment', 'KA')
-            segmentKA_img_dir_srt = sorted(imp_mod['os'].listdir(segmentKA_img_dir), key=str.lower)
+            segmentKA_img_dir = os.path.join(folder,'images', 'segment', 'KA')
+            segmentKA_img_dir_srt = sorted(os.listdir(segmentKA_img_dir), key=str.lower)
             segmentKA_img_list = []
-            segmentKI_img_dir = imp_mod['os'].path.join(folder,'images', 'segment', 'KI')
-            segmentKI_img_dir_srt = sorted(imp_mod['os'].listdir(segmentKI_img_dir), key=str.lower)
+            segmentKI_img_dir = os.path.join(folder,'images', 'segment', 'KI')
+            segmentKI_img_dir_srt = sorted(os.listdir(segmentKI_img_dir), key=str.lower)
             segmentKI_img_list = []
             #------------------------------------------------------------------------------
             # sysnew
             #------------------------------------------------------------------------------
-            sysnew_img_dir = imp_mod['os'].path.join(folder,'images', 'sys_new')
-            sysnew_img_dir_srt = sorted(imp_mod['os'].listdir(sysnew_img_dir), key=str.lower)
+            sysnew_img_dir = os.path.join(folder,'images', 'sys_new')
+            sysnew_img_dir_srt = sorted(os.listdir(sysnew_img_dir), key=str.lower)
             sysnew_img_list = []
     #--------------------------------------------------------------------------------------
     # UPDATE LAST CONFIGURATIONS
@@ -759,7 +684,7 @@ if REGION:
         # INIT RELAIS BOARDS 
         #----------------------------------------------------------------------------------        
         i2c_addr_dev02rb = [i2cRB01, i2cRB02, i2cRB03]
-        if SYSTEM == "linux" and SYSTEMPI == "PI":
+        if sys_pi:
             buses = [SMBus(1) for _ in i2c_addr_dev02rb]
         #----------------------------------------------------------------------------------
         # INIT DIGITAL INPUT BOARDS 
@@ -768,7 +693,7 @@ if REGION:
         #----------------------------------------------------------------------------------
         # RELAIS BOARDS 
         #----------------------------------------------------------------------------------
-        if SYSTEM == "linux" and btn_states_HW[0] == True and device == DEVICE_B_txt[2]:        
+        if sys_linux and btn_states_HW[0] == True and device == DEVICE_B_txt[2]:        
             # Set the configuration word to configure all pins as outputs for each board
             for i, address in enumerate(i2c_addr_dev02rb):
                 buses[i].write_word_data(address, 0x00FF, 0x00FF)
@@ -779,7 +704,7 @@ if REGION:
         #----------------------------------------------------------------------------------
         # I2C ANALOG INPUT
         #----------------------------------------------------------------------------------
-        if SYSTEM == "linux" and btn_states_HW[6] == True:
+        if sys_linux and btn_states_HW[6] == True:
             try:
                 i2c_dev02ai01 = busio.I2C(board.SCL, board.SDA)
                 ads = ADS.ADS1115(i2c_dev02ai01, address=i2cAI01)
@@ -788,7 +713,7 @@ if REGION:
         #----------------------------------------------------------------------------------
         # I2C DIGITAL INPUT 01 POS 0x58
         #----------------------------------------------------------------------------------
-        if SYSTEM == "linux" and btn_states_HW[7] == True:
+        if sys_linux and btn_states_HW[7] == True:
             try:
                 i2c_dev02di01 = board.I2C()
                 aw001 = adafruit_aw9523.AW9523(i2c_dev02di01, address=i2cDI01)
@@ -797,7 +722,7 @@ if REGION:
         #----------------------------------------------------------------------------------
         # I2C DIGITAL INPUT 02 NEG 
         #----------------------------------------------------------------------------------
-        if SYSTEM == "linux" and btn_states_HW[8] == True:
+        if sys_linux and btn_states_HW[8] == True:
             try:
                 i2c_dev02di02 = board.I2C()
                 aw002 = adafruit_aw9523.AW9523(i2c_dev02di02, address=i2cDI02)
@@ -817,11 +742,11 @@ class MainApplication(tk.Tk):
         self.title(version)
         self.geometry(kidd_width+"x"+kidd_height+"+"+kidd_left+"+"+kidd_top)
 
-        if (SYSTEM == "win32") or (SYSTEM == "win64"):
+        if sys_win:
             self.resizable(0, 0)
             self.current_frame = None
             self.switch_frame(P00_BOOT)
-        elif SYSTEM == "linux":
+        elif sys_linux:
             self.overrideredirect(True)
             self.configure(relief="flat")
             self.configure(highlightthickness=0)  
@@ -2805,6 +2730,11 @@ class P01_DASH(tk.Frame):
             self.canvas.create_image(0, 0, image=self.background_image, anchor="nw", tags="bg")
     def update_labels(self):
         global lbls_sysinfo
+        current_pb = btn_states_PB
+        # Prüfen, ob sich PB geändert hat
+        if hasattr(self, "last_pb_state") and self.last_pb_state == current_pb:
+            return  # Kein Update noetig
+        self.last_pb_state = current_pb
 
         # Alte Labels entfernen
         for lbl in lbls_sysinfo:
@@ -2871,11 +2801,11 @@ class P01_DASH(tk.Frame):
                     #--------------------------------------------------------------------------
                     # MP3 FOLDERS
                     #--------------------------------------------------------------------------
-                    main_mp3_fldr = imp_mod['os'].path.join(folder,'sound', snd_fldr)
-                    yes_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'yes')
-                    what_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'what')
-                    states_car_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'states_car')
-                    time_mp3_fldr = imp_mod['os'].path.join(main_mp3_fldr,'time')
+                    main_mp3_fldr = os.path.join(folder,'sound', snd_fldr)
+                    yes_mp3_fldr = os.path.join(main_mp3_fldr,'yes')
+                    what_mp3_fldr = os.path.join(main_mp3_fldr,'what')
+                    states_car_mp3_fldr = os.path.join(main_mp3_fldr,'states_car')
+                    time_mp3_fldr = os.path.join(main_mp3_fldr,'time')
                     try:
                         #----------------------------------------------------------------------
                         # RECOGNIZE SPEECH IN DIFFERENT LANGUAGES
@@ -2902,10 +2832,10 @@ class P01_DASH(tk.Frame):
                             #------------------------------------------------------------------
                             # PLAY RANDOM RECOGNIZED ACTIVATION WORD SOUND
                             #------------------------------------------------------------------
-                            yes_mp3_files = [f for f in imp_mod['os'].listdir(yes_mp3_fldr) if f.endswith(".mp3")]
+                            yes_mp3_files = [f for f in os.listdir(yes_mp3_fldr) if f.endswith(".mp3")]
                             if yes_mp3_files:
-                                yes_random_mp3 = imp_mod['random'].choice(yes_mp3_files)
-                                yes_mp3_path = imp_mod['os'].path.join(yes_mp3_fldr, yes_random_mp3)
+                                yes_random_mp3 = random.choice(yes_mp3_files)
+                                yes_mp3_path = os.path.join(yes_mp3_fldr, yes_random_mp3)
                                 sound = AudioSegment.from_file(yes_mp3_path, format="mp3")
                                 play(sound)
                                 vinfo = yes_random_mp3
@@ -2921,20 +2851,20 @@ class P01_DASH(tk.Frame):
                             # LISTEN FOR "STATUS" WORD
                             #------------------------------------------------------------------                    
                             if "status" or "wie ist dein status" in text.lower():
-                                states_car_mp3_files = [f for f in imp_mod['os'].listdir(states_car_mp3_fldr) if f.endswith(".mp3")]
+                                states_car_mp3_files = [f for f in os.listdir(states_car_mp3_fldr) if f.endswith(".mp3")]
                                 vtext = "Status"
-                                states_car_random_mp3 = imp_mod['random'].choice(states_car_mp3_files)
-                                states_car_mp3_path = imp_mod['os'].path.join(states_car_mp3_fldr, states_car_random_mp3)
+                                states_car_random_mp3 = random.choice(states_car_mp3_files)
+                                states_car_mp3_path = os.path.join(states_car_mp3_fldr, states_car_random_mp3)
                                 sound = AudioSegment.from_file(states_car_mp3_path, format="mp3")
                                 play(sound)
                             #------------------------------------------------------------------
                             # LISTEN FOR "TIME" WORD
                             #------------------------------------------------------------------
                             elif "wie spät ist es" or "wie spät is es" or "uhrzeit" or "sag mir wie spät es ist" in text.lower():
-                                mp3_files = [f for f in imp_mod['os'].listdir(time_mp3_fldr) if f.endswith(".mp3")]
+                                mp3_files = [f for f in os.listdir(time_mp3_fldr) if f.endswith(".mp3")]
                                 vtext = "Time:"
-                                random_mp3 = imp_mod['random'].choice(mp3_files)
-                                mp3_path = imp_mod['os'].path.join(time_mp3_fldr, random_mp3)
+                                random_mp3 = random.choice(mp3_files)
+                                mp3_path = os.path.join(time_mp3_fldr, random_mp3)
                                 sound = AudioSegment.from_file(mp3_path, format="mp3")
                                 play(sound)
                             #------------------------------------------------------------------
@@ -2942,10 +2872,10 @@ class P01_DASH(tk.Frame):
                             #------------------------------------------------------------------
                             else:
                                 vinfo = "what?"
-                                what_mp3_files = [f for f in imp_mod['os'].listdir(what_mp3_fldr) if f.endswith(".mp3")]
+                                what_mp3_files = [f for f in os.listdir(what_mp3_fldr) if f.endswith(".mp3")]
                                 if what_mp3_files:
-                                    what_random_mp3 = imp_mod['random'].choice(what_mp3_files)
-                                    what_mp3_path = imp_mod['os'].path.join(what_mp3_fldr, what_random_mp3)
+                                    what_random_mp3 = random.choice(what_mp3_files)
+                                    what_mp3_path = os.path.join(what_mp3_fldr, what_random_mp3)
                                     sound = AudioSegment.from_file(what_mp3_path, format="mp3")
                                     play(sound)
                                     vinfo = what_random_mp3
@@ -2961,7 +2891,7 @@ class P01_DASH(tk.Frame):
     # MAINLOOP DASH
     #--------------------------------------------------------------------------------------                        
     def update_page(self):
-        start_time = imp_mod['time'].time()
+        start_time = time.time()
         #----------------------------------------------------------------------------------
         # Dictionary chechen if not, create
         #----------------------------------------------------------------------------------
@@ -3470,9 +3400,9 @@ class P01_DASH(tk.Frame):
                 # DISPLAY THE LEDs
                 #--------------------------------------------------------------------------
                 if btn_states_FNKT[3] == True:
-                    DEV001VBS34 = imp_mod['random'].randint(0, 8)
-                    DEV001VBOTTO = imp_mod['random'].randint(0, 8)
-                    DEV001VBMAX = imp_mod['random'].randint(0, 8)
+                    DEV001VBS34 = random.randint(0, 8)
+                    DEV001VBOTTO = random.randint(0, 8)
+                    DEV001VBMAX = random.randint(0, 8)
                     if theme in THEME_B_txt[1:7] or theme in THEME_B_txt[9]: # THEME 1 to 6 or 8
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
@@ -3980,7 +3910,7 @@ class P01_DASH(tk.Frame):
             if theme in THEME_B_txt[0:3] + THEME_B_txt[3:9] + THEME_B_txt[15:17]:
                 if device == DEVICE_B_txt[1] or device == DEVICE_B_txt[31]:
                     if btn_states_PB == "pb00":
-                        if SYSTEM == "linux":
+                        if sys_linux:
                             if btn_states_FNKT[2] == True:
                                 read.get_system_data()
                             lbls_sysinfo[0].config(text=sys_diskused)
@@ -4043,7 +3973,7 @@ class P01_DASH(tk.Frame):
                             label_7SEG002.destroy()
                         except:
                             pass
-                        if SYSTEM == "linux" and btn_states_FNKT[2]:
+                        if sys_linux and btn_states_FNKT[2]:
                             read.get_system_data()
                             sys_info = [sys_diskused, sys_diskmax, sys_memused, sys_memmax, sys_cputemp, sys_cpuload, update_duration]
                         else:
@@ -4092,7 +4022,7 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
-        end_time = imp_mod['time'].time()
+        end_time = time.time()
         elapsed_time = end_time - start_time
         update_duration = (f"{elapsed_time:.4f}")
         self.after(time_digital, self.update_page)
@@ -4469,14 +4399,14 @@ class P03_SETUP(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if REGION:
-            if SYSTEM == "linux" and SYSTEMPI == "PI":
+            if sys_linux and sys_pi == "PI":
                 ip_address = subprocess.check_output(["ip", "address", "show", "wlan0"]).decode("utf-8")
                 ip_line = [line.strip() for line in ip_address.split("\n") if "inet " in line][0]
                 wlan0_ip = ip_line.split()[1]
             else:
                 wlan0_ip = "127.0.0.1"
             canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="SETUP")
-            canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=(version, last_change, SYSTEM, carno, devno, wlan0_ip))
+            canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=(version, last_change, sys.platform, carno, devno, wlan0_ip))
             canvas.create_text(20, (bggrid[4]-135), **txt_style_pagename, fill=sys_clr[9], text="MENU")
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
@@ -5912,7 +5842,7 @@ class myfunctions():
         # QUIT THE PROGRAM
         #----------------------------------------------------------------------------------
         def quitDASH(self):
-            if SYSTEM == "linux" and SYSTEMPI == "PI":
+            if sys_linux and sys_pi:
                 GPIO.cleanup()
             kidd.destroy()
         #----------------------------------------------------------------------------------
@@ -6319,7 +6249,7 @@ class myfunctions():
             sys_memused = str(psutil.virtual_memory().percent)
             sys_memmax = str(round(psutil.virtual_memory().total / (1024.0 ** 3), 2))
             sys_cpuload = str(psutil.cpu_percent())
-            res01 = imp_mod['os'].popen('vcgencmd measure_temp').readline()
+            res01 = os.popen('vcgencmd measure_temp').readline()
             sys_cputemp = res01.replace("temp=","").replace("'C\n","")
     #--------------------------------------------------------------------------------------
     # STYLING FUNCTIONS
@@ -6375,8 +6305,8 @@ class myfunctions():
         def get_subfolders_count_and_names(self, snd_fldr):
             # Get a list of subfolders in the specified folder
             subfolders = [
-                name for name in imp_mod['os'].listdir(snd_fldr)
-                if imp_mod['os'].path.isdir(imp_mod['os'].path.join(snd_fldr, name)) #and name != "time"
+                name for name in os.listdir(snd_fldr)
+                if os.path.isdir(os.path.join(snd_fldr, name)) #and name != "time"
             ] 
             # Get the count of subfolders
             subfolders_count = len(subfolders)    
@@ -6386,7 +6316,7 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         def get_mp3files_count_and_names(self, act_mp3_files_path):
             # Get a list of subfolders in the specified folder
-            mp3files = [name for name in imp_mod['os'].listdir(act_mp3_files_path) if imp_mod['os'].path.isfile(imp_mod['os'].path.join(act_mp3_files_path, name))]
+            mp3files = [name for name in os.listdir(act_mp3_files_path) if os.path.isfile(os.path.join(act_mp3_files_path, name))]
             # Get the count of subfolders
             mp3files_count = len(mp3files)
             return mp3files_count, mp3files
@@ -6412,7 +6342,7 @@ class myfunctions():
                 current_index = 0
                 start_time = 0
                 next_callback = None
-                p = imp_mod['pyaudio'].PyAudio()
+                p = pyaudio.PyAudio()
 
                 playing_label = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="unknown filename.mp3")
                 playing_label.place(x=300, y=48)
@@ -6432,18 +6362,18 @@ class myfunctions():
                 read.load_playlist()
                 
             def load_playlist(self):
-                for root_folder, _, files in imp_mod['os'].walk(snd_fldr):
+                for root_folder, _, files in os.walk(snd_fldr):
                     if "time" in root_folder.lower():
                         continue
                     if "states_dev" in root_folder.lower():
                         continue
                     for file in files:
                         if file.lower().endswith(".mp3"):
-                            playlist.append(imp_mod['os'].path.join(root_folder, file))
+                            playlist.append(os.path.join(root_folder, file))
                 read.shuffle_playlist()
 
             def shuffle_playlist(self):
-                imp_mod['random'].shuffle(playlist)
+                random.shuffle(playlist)
 
             def play_next(self):
                 global current_index
@@ -6452,14 +6382,14 @@ class myfunctions():
                         current_index = 0
 
                     current_file = playlist[current_index]
-                    playing_label.config(text=imp_mod['os'].path.basename(current_file)[:20])
+                    playing_label.config(text=os.path.basename(current_file)[:20])
                     if current_index + 1 < len(playlist):
                         next_file = playlist[current_index + 1]
-                        next_label_value.config(text=imp_mod['os'].path.basename(next_file)[:30])
+                        next_label_value.config(text=os.path.basename(next_file)[:30])
                     else:
                         next_label_value.config(text="End of playlist")
 
-                    thread = imp_mod['threading'].Thread(target=read.play_audio, args=(current_file,))
+                    thread = threading.Thread(target=read.play_audio, args=(current_file,))
                     thread.start()
 
             def play_audio(self, current_file):
@@ -6483,13 +6413,13 @@ class myfunctions():
                 stream.close()
 
                 current_index += 1
-                start_time = imp_mod['time'].time()  # Record the time when the track started
+                start_time = time.time()  # Record the time when the track started
 
                 self.next_callback = kidd.after(30000, self.play_next)  # Wait 20 seconds before playing the next track
 
             def update_time_to_next(self):
                 if playing:
-                    elapsed_time = imp_mod['time'].time() - start_time
+                    elapsed_time = time.time() - start_time
                     remaining_time = max(30 - elapsed_time, 0)
                     time_label_value.config(text=f"{remaining_time:.1f}")
                     kidd.after(200, self.update_time_to_next)
@@ -6504,7 +6434,7 @@ class myfunctions():
                         self.after_cancel(next_callback)  # Cancel the scheduled callback
                     current_index = 0  # Reset current_index to start from the beginning
                     read.shuffle_playlist()  # Shuffle the playlist
-                    start_time = imp_mod['time'].time()  # Reset the start time
+                    start_time = time.time()  # Reset the start time
                     read.play_next()
                     read.update_time_to_next()  # Start updating time to next MP3 f
 
@@ -6629,7 +6559,7 @@ class myfunctions():
                         soundfolder = "KARR3000"
                     elif style == STYLE_B_txt[1]:
                         soundfolder = "KITT3000"
-                snd_fldr = imp_mod['os'].path.join(folder,'sound', soundfolder)
+                snd_fldr = os.path.join(folder,'sound', soundfolder)
             #------------------------------------------------------------------------------
             # GET AMOUNT OF SUBFOLDERS
             #------------------------------------------------------------------------------
@@ -6639,17 +6569,17 @@ class myfunctions():
             # GET AMOUNT AND NAMES OF MP3 FILES
             #------------------------------------------------------------------------------
             if REGION:
-                act_mp3_files_path = imp_mod['os'].path.join(snd_fldr, snd_btn_txt)
+                act_mp3_files_path = os.path.join(snd_fldr, snd_btn_txt)
                 mp3files_count, mp3files_list = read.get_mp3files_count_and_names(act_mp3_files_path)
         #----------------------------------------------------------------------------------
         # OPEN AND PLAY THE MP3 FILE
         #----------------------------------------------------------------------------------
         def play_mp3_thread(self, path, file):
-            thread_01 = imp_mod['threading'].Thread(target=read.play_mp3(path, file))
+            thread_01 = threading.Thread(target=read.play_mp3(path, file))
             thread_01.start()
 
         def play_mp3(self, path, file):
-            mp3_file = imp_mod['os'].path.join(path, file)
+            mp3_file = os.path.join(path, file)
             try:
                 audio = AudioSegment.from_mp3(mp3_file)
                 play(audio)
@@ -6658,12 +6588,12 @@ class myfunctions():
                 pass
 
         def play_mp3_time_thread(self, hour, minute):
-            thread_02 = imp_mod['threading'].Thread(target=read.play_mp3_time(hour, minute))
+            thread_02 = threading.Thread(target=read.play_mp3_time(hour, minute))
             thread_02.start()
 
         def play_mp3_time(self, hour, minute):
-            speech_hour = imp_mod['os'].path.join(folder,'sound', 'time', 'clock', 'hour')
-            speech_minute = imp_mod['os'].path.join(folder,'sound', 'time', 'clock', 'min')
+            speech_hour = os.path.join(folder,'sound', 'time', 'clock', 'hour')
+            speech_minute = os.path.join(folder,'sound', 'time', 'clock', 'min')
             try:
                 audio_speech_hour = AudioSegment.from_mp3(speech_hour, hour)
                 print (audio_speech_hour)
