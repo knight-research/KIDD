@@ -27,27 +27,28 @@ GITHUB_REPO = "knight-research/KIDD"
 BACKUP_PREFIX = "kidd.old"
 VERSION_FILE = "version.txt"
 
-
 def get_latest_release_info():
     url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
     response = requests.get(url)
     response.raise_for_status()
     return response.json()
 
-
 def read_local_version(base_path):
     version_path = os.path.join(base_path, VERSION_FILE)
     if os.path.exists(version_path):
         with open(version_path, "r") as f:
-            return f.read().strip()
-    return None
+            lines = f.readlines()
+            version = lines[0].strip() if len(lines) > 0 else None
+            last_change = lines[1].strip() if len(lines) > 1 else None
+            return version, last_change
+    return None, None
 
-
-def write_local_version(base_path, version):
+def write_local_version(base_path, version, last_change=None):
     version_path = os.path.join(base_path, VERSION_FILE)
     with open(version_path, "w") as f:
-        f.write(version)
-
+        f.write(version + "\n")
+        if last_change:
+            f.write(last_change + "\n")
 
 def backup_existing_files(base_path):
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -61,7 +62,6 @@ def backup_existing_files(base_path):
         src = os.path.join(base_path, item)
         dst = os.path.join(backup_path, item)
         shutil.move(src, dst)
-
 
 def download_with_progress(url, progress_callback=None, status_callback=None):
     response = requests.get(url, stream=True)
@@ -80,7 +80,6 @@ def download_with_progress(url, progress_callback=None, status_callback=None):
 
     return b"".join(chunks)
 
-
 def extract_zip_to_base(zip_bytes, base_path):
     with zipfile.ZipFile(io.BytesIO(zip_bytes)) as z:
         top_level_folder = z.namelist()[0].split("/")[0]
@@ -94,7 +93,6 @@ def extract_zip_to_base(zip_bytes, base_path):
             os.makedirs(os.path.dirname(target_path), exist_ok=True)
             with z.open(member) as source, open(target_path, "wb") as target:
                 shutil.copyfileobj(source, target)
-
 
 def run_gui():
     base_path = os.path.dirname(os.path.abspath(__file__))
@@ -126,9 +124,9 @@ def run_gui():
             release_info = get_latest_release_info()
             remote_version = release_info.get("tag_name")
             zip_url = release_info.get("zipball_url")
-            local_version = read_local_version(base_path)
+            local_version, local_change = read_local_version(base_path)
 
-            status_label.config(text=f"Lokal: {local_version or 'keine'} | Server: {remote_version}")
+            status_label.config(text=f"Lokal: {local_version or 'keine'} ({local_change or '---'}) | Server: {remote_version}")
 
             def version_tuple(v):
                 return tuple(map(int, v.lstrip("v").split(".")))
@@ -156,7 +154,9 @@ def run_gui():
             status_label.config(text="Dateien entpacken...")
             extract_zip_to_base(zip_data, base_path)
 
-            write_local_version(base_path, remote_version)
+            now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            write_local_version(base_path, remote_version, now_str)
+
             status_label.config(text="Update abgeschlossen.")
             messagebox.showinfo("Fertig", "Update erfolgreich installiert.")
         except Exception as e:
@@ -168,7 +168,6 @@ def run_gui():
     threading.Thread(target=do_update).start()
 
     root.mainloop()
-
 
 if __name__ == "__main__":
     run_gui()
