@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -26,6 +27,9 @@ from tkinter import messagebox, ttk
 GITHUB_REPO = "knight-research/KIDD"
 BACKUP_PREFIX = "kidd.old"
 VERSION_FILE = "version.txt"
+
+# Checkbox-Zustand global
+include_sound = None  # wird in run_gui() gesetzt
 
 def get_latest_release_info():
     url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
@@ -89,17 +93,21 @@ def extract_zip_to_base(zip_bytes, base_path):
             member_path = os.path.relpath(member.filename, top_level_folder)
             if member_path.startswith(".."):  # Sicherheitscheck
                 continue
+            if not include_sound.get() and member_path.startswith("sound/"):
+                continue
             target_path = os.path.join(base_path, member_path)
             os.makedirs(os.path.dirname(target_path), exist_ok=True)
             with z.open(member) as source, open(target_path, "wb") as target:
                 shutil.copyfileobj(source, target)
 
 def run_gui():
+    global include_sound
     base_path = os.path.dirname(os.path.abspath(__file__))
 
     root = tk.Tk()
+    include_sound = tk.BooleanVar(value=False)
     root.title("KIDD Updater")
-    root.geometry("400x200")
+    root.geometry("400x240")
 
     status_label = tk.Label(root, text="Initialisiere...", anchor="w")
     status_label.pack(fill="x", padx=10, pady=5)
@@ -110,6 +118,9 @@ def run_gui():
     byte_label = tk.Label(root, text="", anchor="w")
     byte_label.pack(fill="x", padx=10)
 
+    sound_check = tk.Checkbutton(root, text="Sound-Ordner aktualisieren", variable=include_sound)
+    sound_check.pack(pady=5)
+
     def update_progress(percent):
         progress["value"] = percent
         root.update_idletasks()
@@ -118,7 +129,7 @@ def run_gui():
         byte_label.config(text=text)
         root.update_idletasks()
 
-    def do_update():
+    def do_update(force=False):
         try:
             status_label.config(text="Suche nach Updates...")
             release_info = get_latest_release_info()
@@ -133,7 +144,7 @@ def run_gui():
 
             if local_version:
                 try:
-                    if version_tuple(remote_version) <= version_tuple(local_version):
+                    if version_tuple(remote_version) <= version_tuple(local_version) and not force:
                         messagebox.showinfo("Info", "Keine Aktualisierung notwendig.")
                         start_button.config(state="disabled")
                         return
@@ -163,7 +174,9 @@ def run_gui():
             messagebox.showerror("Fehler", str(e))
 
     start_button = tk.Button(root, text="Update jetzt starten", command=lambda: threading.Thread(target=do_update).start())
-    start_button.pack(pady=10)
+    force_button = tk.Button(root, text="Update erzwingen", command=lambda: threading.Thread(target=lambda: do_update(force=True)).start())
+    start_button.pack(pady=5)
+    force_button.pack(pady=5)
 
     threading.Thread(target=do_update).start()
 
