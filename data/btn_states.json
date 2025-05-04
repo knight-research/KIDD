@@ -8,7 +8,7 @@
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb02",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,
@@ -183,7 +183,7 @@
             ]
         },
         "DEV002": {
-            "PB": "pb00",
+            "PB": "pb09",
             "FNKT": [
                 false,
                 false,
@@ -229,7 +229,7 @@
                 false
             ],
             "HW": [
-                true,
+                false,
                 false,
                 false,
                 false,

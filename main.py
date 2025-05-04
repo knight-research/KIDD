@@ -53,6 +53,10 @@ if REGION:
     # BUTTONSTATEMANEAGER
     #------------------------------------------------------------------------------------------
     bsm = ButtonStateManager(folder)
+    #------------------------------------------------------------------------------------------
+    # INIT SOUND
+    #------------------------------------------------------------------------------------------
+    pygame.mixer.init()
     #--------------------------------------------------------------------------------------
     # GLOBAL VARIABLES
     #--------------------------------------------------------------------------------------
@@ -5267,13 +5271,6 @@ class P07_AUDIO(tk.Frame):
         # SOUND BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            #------------------------------------------------------------------------------
-            # RANDOM START STOP STATUS BUTTONS / LABELS
-            #------------------------------------------------------------------------------
-            read.snd_random_btns()
-            #------------------------------------------------------------------------------
-            # SUBFOLDER AND FILE BUTTONS
-            #------------------------------------------------------------------------------
             read.snd_menu_btns()
             read.snd_mp3_btns()
         self.update_page()
@@ -6323,133 +6320,6 @@ class myfunctions():
             mp3files_count = len(mp3files)
             return mp3files_count, mp3files
         #----------------------------------------------------------------------------------
-        # CREATE THE RANDOM SOUND BUTTONS
-        #----------------------------------------------------------------------------------
-        if REGION:
-            def snd_random_btns(self):
-                global playing
-                global playlist
-                global current_index
-                global start_time
-                global next_callback
-                global playing_label
-                global next_label_value
-                global time_label_value
-                global p
-                global start_button
-                global stop_button
-                
-                playing = False
-                playlist = []
-                current_index = 0
-                start_time = 0
-                next_callback = None
-                p = pyaudio.PyAudio()
-
-                playing_label = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="unknown filename.mp3")
-                playing_label.place(x=300, y=48)
-
-                next_label_value = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="unknown filename.mp3")
-                next_label_value.place(x=700, y=48)
-
-                time_label_value = tk.Label(**lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1], text="88.88")
-                time_label_value.place(x=1180, y=20)
-            
-                start_button = tk.Button(bg=sys_clr[8], fg=sty_clr[0], font=(fonts[1], 24) ,text="START", command=read.start_playing)
-                start_button.place(x=128, y=21, width=80, height=50)
-
-                stop_button = tk.Button(bg=sys_clr[8], fg=sty_clr[0], font=(fonts[1], 24), text="STOP", command=read.stop_playing)
-                stop_button.place(x=210, y=21, width=80, height=50)
-
-                read.load_playlist()
-                
-            def load_playlist(self):
-                for root_folder, _, files in os.walk(snd_fldr):
-                    if "time" in root_folder.lower():
-                        continue
-                    if "states_dev" in root_folder.lower():
-                        continue
-                    for file in files:
-                        if file.lower().endswith(".mp3"):
-                            playlist.append(os.path.join(root_folder, file))
-                read.shuffle_playlist()
-
-            def shuffle_playlist(self):
-                random.shuffle(playlist)
-
-            def play_next(self):
-                global current_index
-                if playing:
-                    if current_index >= len(playlist):
-                        current_index = 0
-
-                    current_file = playlist[current_index]
-                    playing_label.config(text=os.path.basename(current_file)[:20])
-                    if current_index + 1 < len(playlist):
-                        next_file = playlist[current_index + 1]
-                        next_label_value.config(text=os.path.basename(next_file)[:30])
-                    else:
-                        next_label_value.config(text="End of playlist")
-
-                    thread = threading.Thread(target=read.play_audio, args=(current_file,))
-                    thread.start()
-
-            def play_audio(self, current_file):
-                global current_index
-                global start_time
-                audio = AudioSegment.from_mp3(current_file)
-                raw_audio = audio.raw_data
-
-                stream = p.open(format=p.get_format_from_width(audio.sample_width),
-                                     channels=audio.channels,
-                                     rate=audio.frame_rate,
-                                     output=True)
-
-                stream.start_stream()
-                chunk_size = 1024
-                for i in range(0, len(raw_audio), chunk_size):
-                    if not playing:
-                        break
-                    stream.write(raw_audio[i:i+chunk_size])
-                stream.stop_stream()
-                stream.close()
-
-                current_index += 1
-                start_time = time.time()  # Record the time when the track started
-
-                self.next_callback = kidd.after(30000, self.play_next)  # Wait 20 seconds before playing the next track
-
-            def update_time_to_next(self):
-                if playing:
-                    elapsed_time = time.time() - start_time
-                    remaining_time = max(30 - elapsed_time, 0)
-                    time_label_value.config(text=f"{remaining_time:.1f}")
-                    kidd.after(200, self.update_time_to_next)
-
-            def start_playing(self):
-                global playing
-                if not playing:
-                    playing = True
-                    start_button.config(state=tk.DISABLED)
-                    stop_button.config(state=tk.NORMAL)
-                    if next_callback is not None:
-                        self.after_cancel(next_callback)  # Cancel the scheduled callback
-                    current_index = 0  # Reset current_index to start from the beginning
-                    read.shuffle_playlist()  # Shuffle the playlist
-                    start_time = time.time()  # Reset the start time
-                    read.play_next()
-                    read.update_time_to_next()  # Start updating time to next MP3 f
-
-            def stop_playing(self):
-                global playing
-                if playing:
-                    playing = False
-                    start_button.config(state=tk.NORMAL)
-                    stop_button.config(state=tk.DISABLED)
-                    time_label_value.config(text="")  # Clear the time label
-                    if next_callback is not None:
-                        self.after_cancel(next_callback)  # Cancel the scheduled callback                    
-        #----------------------------------------------------------------------------------
         # CREATE THE SOUND MENU BUTTONS
         #----------------------------------------------------------------------------------
         def snd_menu_btns(self):
@@ -6497,7 +6367,7 @@ class myfunctions():
 
             for i in range(snd_mp3_btn_place):
                 snd_mp3_btn = tk.Button(bg="#000044", fg=sty_clr[0], font=("lcars", 16), text=mp3files_list[i], wraplength=100)
-                snd_mp3_btn.config(command=lambda i=i: read.play_mp3_thread(act_mp3_files_path, mp3files_list[i]))
+                snd_mp3_btn.config(command=lambda i=i: read.play_mp3(act_mp3_files_path, mp3files_list[i]))
                 snd_mp3_btns.append(snd_mp3_btn)
 
             for i, btn in enumerate(snd_mp3_btns):
@@ -6515,10 +6385,10 @@ class myfunctions():
             if snd_mp3_btn_place > num_rows * row_length:
                 # Add a vertical slider when there are more buttons than can be displayed
                 slider_snd_mp3_btns = tk.Scale(from_=0, to=snd_mp3_btn_place - row_length, command=read.show_snd_mp3_btns,
-                                               showvalue=0, length=500, orient='vertical', sliderlength=50,
+                                               showvalue=0, length=400, orient='vertical', sliderlength=50,
                                                troughcolor="#000000", highlightbackground=sys_clr[6], bg='#00ffff')
                 slider_snd_mp3_btns.set(0)
-                slider_snd_mp3_btns.place(x=1300, y=200)  # Adjust the x and y positions accordingly
+                slider_snd_mp3_btns.place(x=1220, y=200)  # Adjust the x and y positions accordingly
         def show_snd_mp3_btns(self, value):
             start_index_mp3 = int(float(value))  # Convert float value to integer
             num_rows = 4  # Number of rows to display
@@ -6541,12 +6411,7 @@ class myfunctions():
         # GET THE ACTUAL SOUNDFOLDER WITH SUBFOLDER AND KIND OF SOUND WITH INCLUDING FILES
         #----------------------------------------------------------------------------------
         def load_soundfolder(self):
-            global snd_fldr
-            global subfolders_count
-            global subfolders_list
-            global mp3files_count
-            global mp3files_list
-            global act_mp3_files_path
+            global snd_fldr, subfolders_count, subfolders_list, mp3files_count, mp3files_list, act_mp3_files_path
             #------------------------------------------------------------------------------
             # GET THE SOUNDFOLDER
             #------------------------------------------------------------------------------
@@ -6576,36 +6441,13 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         # OPEN AND PLAY THE MP3 FILE
         #----------------------------------------------------------------------------------
-        def play_mp3_thread(self, path, file):
-            thread_01 = threading.Thread(target=read.play_mp3(path, file))
-            thread_01.start()
-
         def play_mp3(self, path, file):
-            mp3_file = os.path.join(path, file)
+            full_path = os.path.join(path, file)
             try:
-                audio = AudioSegment.from_mp3(mp3_file)
-                play(audio)
-            except:
-                print ("NO FILE AVAILABLE")
-                pass
-
-        def play_mp3_time_thread(self, hour, minute):
-            thread_02 = threading.Thread(target=read.play_mp3_time(hour, minute))
-            thread_02.start()
-
-        def play_mp3_time(self, hour, minute):
-            speech_hour = os.path.join(folder,'sound', 'time', 'clock', 'hour')
-            speech_minute = os.path.join(folder,'sound', 'time', 'clock', 'min')
-            try:
-                audio_speech_hour = AudioSegment.from_mp3(speech_hour, hour)
-                print (audio_speech_hour)
-                play(audio_speech_hour)
-                audio_speech_minute = AudioSegment.from_mp3(speech_minute, minute)
-                print (audio_speech_minute)
-                play(audio_speech_minute)
-            except:
-                print ("NO FILE AVAILABLE")
-                pass
+                pygame.mixer.music.load(full_path)
+                pygame.mixer.music.play()
+            except Exception as e:
+                print(f"Fehler beim Abspielen von {full_path}: {e}")
         #----------------------------------------------------------------------------------
         # VOICECOMMAND LISTEN FOR ACTIVATION WORD #todo import from above
         #----------------------------------------------------------------------------------
