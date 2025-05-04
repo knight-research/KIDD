@@ -513,7 +513,6 @@ if REGION:
         odo_trip_aldl_metric_old = data["config"]["odo_trip_aldl_metric"]
         odo_total_aldl_imperial_old = data["config"]["odo_total_aldl_imperial"]
         odo_total_aldl_metric_old = data["config"]["odo_total_aldl_metric"]
-
         #----------------------------------------------------------------------------------
         # UPDATE LAST BUTTON STATES
         #----------------------------------------------------------------------------------
@@ -6480,7 +6479,8 @@ class myfunctions():
                 odo_trip_gps_metric_old = data["config"]["odo_trip_gps_metric"]
                 odo_total_gps_imperial_old = data["config"]["odo_total_gps_imperial"]
                 odo_total_gps_metric_old = data["config"]["odo_total_gps_metric"]
-
+                
+                last_gps_time = time.time()
                 try:
                     gps_raw = gps_serial.readline().decode('ascii', errors='replace')
                     parsed = pynmea2.parse(gps_raw)
@@ -6489,17 +6489,48 @@ class myfunctions():
                         gps_date = parsed.datestamp
                         if parsed.spd_over_grnd:
                             knots = parsed.spd_over_grnd
-                            gps_kph_0 = f"{round(knots * 1.852):03d}"
+                            gps_speed_kmh = knots * 1.852
+                            gps_kph_0 = f"{round(gps_speed_kmh):03d}"
                             gps_mph_0 = f"{round(knots * 1.15078):03d}"
 
-                            gps_odo_metric_cnt += knots / 1000.0 * 3600.0
-                            gps_odo_imperial_cnt += knots / 1000.0 * 3600.0 * 0.621371192
+                            # Zeitdifferenz zur letzten Messung
+                            current_time = time.time()
+                            delta_time = current_time - last_gps_time
+                            last_gps_time = current_time
 
-                            gps_odo_metric_0str = f"{(gps_odo_metric_cnt / 10000) + odo_trip_gps_metric_old:.2f}"
-                            gps_odo_imperial_0str = f"{(gps_odo_imperial_cnt / 10000) + odo_trip_gps_imperial_old:.2f}"
+                            # Filter: unrealistische Zeit oder Geschwindigkeit < 2.0 km/h → keine Zählung
+                            if delta_time <= 0 or delta_time > 2.0 or gps_speed_kmh < 2.0:
+                                distance_km = 0.0
+                            else:
+                                distance_km = gps_speed_kmh * (delta_time / 3600.0)
+
+                            gps_odo_metric_cnt += distance_km * 10000  # intern in "Zehntausendstel km"
+                            gps_odo_imperial_cnt += distance_km * 10000 * 0.621371192
+
+                            gps_odo_metric_0str = f"{(gps_odo_metric_cnt / 10000 + odo_trip_gps_metric_old):.2f}"
+                            gps_odo_imperial_0str = f"{(gps_odo_imperial_cnt / 10000 + odo_trip_gps_imperial_old):.2f}"
+
+                            odo_trip_gps_metric_new = round((gps_odo_metric_cnt / 10000 + odo_trip_gps_metric_old), 2)
+                            odo_trip_gps_imperial_new = round((gps_odo_imperial_cnt / 10000 + odo_trip_gps_imperial_old), 2)
+
+                            if odo_trip_gps_metric_new != odo_trip_gps_metric_old:
+                                bsm.set_config_value("odo_trip_gps_metric", odo_trip_gps_metric_new)
+                                save_needed = True
+
+                            if odo_trip_gps_imperial_new != odo_trip_gps_imperial_old:
+                                bsm.set_config_value("odo_trip_gps_imperial", odo_trip_gps_imperial_new)
+                                save_needed = True
 
                     elif gps_raw.startswith('$GPGGA'):
-                        gps_time = parsed.timestamp.strftime("%H:%M:%S")
+                        gps_time_raw = parsed.timestamp
+
+                        from datetime import datetime, timedelta
+                        if 'time_zone_offset' in globals():
+                            gps_time_adjusted = datetime.combine(datetime.today(), gps_time_raw) + timedelta(hours=int(time_zone_offset))
+                        else:
+                            gps_time_adjusted = datetime.combine(datetime.today(), gps_time_raw)
+
+                        gps_time = gps_time_adjusted.strftime("%H:%M:%S")
                         gps_lat_str = f"{parsed.latitude:.5f}"
                         gps_lat_dir = parsed.lat_dir
                         gps_long_str = f"{parsed.longitude:.5f}"

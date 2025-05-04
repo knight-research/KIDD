@@ -67,9 +67,9 @@ class ButtonStateManager:
         self.save()
         
     def get_config_value(self, key, fallback=None):
-        return self.data.get("configs", {}).get(key, fallback)
+        return self.data.get("config", {}).get(key, fallback)
 
     def set_config_value(self, key, value):
-        if "configs" not in self.data:
-            self.data["configs"] = {}
-        self.data["configs"][key] = value
+        if "config" not in self.data:
+            self.data["config"] = {}
+        self.data["config"][key] = value

@@ -1,18 +1,18 @@
 {
     "pb00": {
       "deu": [
-        {"text": "HDD:            of               GB", "x": 500, "y": 100},
-        {"text": "RAM:            %                 GB", "x": 500, "y": 150},
-        {"text": "CPU:            %           USED",     "x": 500, "y": 200},
-        {"text": "CPU:            C           TEMP",     "x": 500, "y": 250},
-        {"text": "SYS:                            sec.", "x": 500, "y": 300}
+        {"text": "HDD:              of                GB", "x": 500, "y": 100},
+        {"text": "RAM:              %                  GB", "x": 500, "y": 150},
+        {"text": "CPU:              %            USED",     "x": 500, "y": 200},
+        {"text": "CPU:              C            TEMP",     "x": 500, "y": 250},
+        {"text": "SYS:                               sec.", "x": 500, "y": 300}
       ],
       "eng": [
-        {"text": "HDD:            of               GB", "x": 500, "y": 100},
-        {"text": "RAM:            %                 GB", "x": 500, "y": 150},
-        {"text": "CPU:            %           USED",     "x": 500, "y": 200},
-        {"text": "CPU:            C           TEMP",     "x": 500, "y": 250},
-        {"text": "SYS:                            sec.", "x": 500, "y": 300}
+        {"text": "HDD:              of                GB", "x": 500, "y": 100},
+        {"text": "RAM:              %                  GB", "x": 500, "y": 150},
+        {"text": "CPU:              %            USED",     "x": 500, "y": 200},
+        {"text": "CPU:              C            TEMP",     "x": 500, "y": 250},
+        {"text": "SYS:                               sec.", "x": 500, "y": 300}
       ]
     },
     "pb01": {

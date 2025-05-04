@@ -4,11 +4,11 @@
         "style": "KITT",
         "theme": "K2_S05",
         "system": "AQUA",
-        "timezone": "+1"
+        "timezone": "+2"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb00",
+            "PB": "pb02",
             "FNKT": [
                 false,
                 false,
@@ -69,7 +69,7 @@
                 false,
                 true,
                 false,
-                true,
+                false,
                 true,
                 false,
                 false,
@@ -896,8 +896,8 @@
     "config": {
         "odo_trip_gps_imperial": 0.0,
         "odo_trip_gps_metric": 0.0,
-        "odo_total_gps_imperial": 118151.0,
-        "odo_total_gps_metric": 190146.0,
+        "odo_total_gps_imperial": 0.0,
+        "odo_total_gps_metric": 0.0,
         "odo_trip_aldl_imperial": 0.0,
         "odo_trip_aldl_metric": 0.0,
         "odo_total_aldl_imperial": 118151.0,
