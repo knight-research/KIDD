@@ -134,12 +134,12 @@ sp09     +12V IGNITION              COLOR           PAGE                        
 #------------------------------------------------------------------------------------------
 rb01[0]  SHUTDOWN SYSTEM            COLOR           PAGE            INTERNAL
 rb01[1]  SHOWMODE                   COLOR           PAGE            INTERNAL
-rb01[2]  AMP                        RED             PAGE            INTERNAL
+rb01[2]                             COLOR           PAGE            INTERNAL
 rb01[3]                             COLOR           PAGE            INTERNAL
 rb01[4]                             COLOR           PAGE            INTERNAL
 rb01[5]                             COLOR           PAGE            INTERNAL
 rb01[6]                             COLOR           PAGE            INTERNAL
-rb01[7]                             COLOR           PAGE            INTERNAL
+rb01[7]  AMP                        RED             PAGE            INTERNAL    F2
 rb01[8]  FRONT FOG LIGHT            RED             PAGE            X1PIN01     F1
 rb01[9]  REAR FOG LIGHT             RED             PAGE            X1PIN02     F1
 rb01[10] HEADLIGHTS                 RED             PAGE            X1PIN03     F1
