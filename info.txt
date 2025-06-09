@@ -140,14 +140,14 @@ rb01[4]                             COLOR           PAGE            INTERNAL
 rb01[5]                             COLOR           PAGE            INTERNAL
 rb01[6]                             COLOR           PAGE            INTERNAL
 rb01[7]                             COLOR           PAGE            INTERNAL
-rb01[8]  FRONT FOG LIGHT            RED             PAGE            X1PIN01     WIRING OK
-rb01[9]  REAR FOG LIGHT             RED             PAGE            X1PIN02     WIRING OK
-rb01[10] HEADLIGHTS                 RED             PAGE            X1PIN03     WIRING OK
-rb01[11] HIGH BEAM                  RED             PAGE            X1PIN04     WIRING OK
-rb01[12] LH SIDEMARKER              RED             PAGE            X1PIN05     WIRING OK
-rb01[13] RH SIDEMARKER              RED             PAGE            X1PIN06     WIRING OK
-rb01[14] LH TURNSIGNAL              RED             PAGE            X1PIN07     WIRING OK
-rb01[15] RH TURNSIGNAL              RED             PAGE            X1PIN08     WIRING OK
+rb01[8]  FRONT FOG LIGHT            RED             PAGE            X1PIN01     F1
+rb01[9]  REAR FOG LIGHT             RED             PAGE            X1PIN02     F1
+rb01[10] HEADLIGHTS                 RED             PAGE            X1PIN03     F1
+rb01[11] HIGH BEAM                  RED             PAGE            X1PIN04     F1
+rb01[12] LH SIDEMARKER              RED             PAGE            X1PIN05     F1
+rb01[13] RH SIDEMARKER              RED             PAGE            X1PIN06     F1
+rb01[14] LH TURNSIGNAL              RED             PAGE            X1PIN07     F1
+rb01[15] RH TURNSIGNAL              RED             PAGE            X1PIN08     F1
 #------------------------------------------------------------------------------------------
 # RELAIS MODULE 02 / 1x16 REL / MID / 0x21
 #------------------------------------------------------------------------------------------
