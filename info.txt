@@ -130,7 +130,7 @@ sp09     +12V IGNITION              COLOR           PAGE                        
   \ 14 15 16 17 18 19 20 21 22 23 24 25  /
    -------------------------------------
 #------------------------------------------------------------------------------------------
-# RELAIS MODULE 01 / 1x16 REL / DWN / I2C 0x20 A0 OFF A1 ON A2 ON
+# RELAIS MODULE 01 / 1x16 REL / DWN / I2C 0x20 A0 ON A1 ON A2 ON
 #------------------------------------------------------------------------------------------
 rb01[0]  SHUTDOWN SYSTEM            COLOR           PAGE            INTERNAL
 rb01[1]  SHOWMODE                   COLOR           PAGE            INTERNAL
@@ -149,7 +149,7 @@ rb01[13] RH SIDEMARKER              RED             PAGE            X1PIN06     
 rb01[14] LH TURNSIGNAL              RED             PAGE            X1PIN07     F1
 rb01[15] RH TURNSIGNAL              RED             PAGE            X1PIN08     F1
 #------------------------------------------------------------------------------------------
-# RELAIS MODULE 02 / 1x16 REL / MID / 0x21
+# RELAIS MODULE 02 / 1x16 REL / MID / I2C 0x20 A0 ON A1 OFF A2 ON
 #------------------------------------------------------------------------------------------
 rb02[0]  IGNITION                   RED             PAGE            X1PIN09     WIRING OK
 rb02[1]  START ENGINE               RED             PAGE            X1PIN10     WIRING OK
@@ -170,7 +170,7 @@ rb02[15] WNDOW LH DN                RED             8A-120-0        X1PIN24     
                                                                     X1PIN25     RESERVE
                                                                     GND         RESERVE
 #------------------------------------------------------------------------------------------
-# RELAIS MODULE 03 / 1x16 REL / UP / 0x22
+# RELAIS MODULE 03 / 1x16 REL / UP / I2C 0x20 A0 ON A1 OFF A2 OFF
 #------------------------------------------------------------------------------------------
 rb03[0]  CRUISE OFF/ON              GRY             8A-034-0        X2PIN01     WIRING OK
 rb03[1]  CRUISE SET                 DK/BLU          8A-034-0        X2PIN02     WIRING OK
