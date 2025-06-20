@@ -130,7 +130,7 @@ sp09     +12V IGNITION              COLOR           PAGE                        
   \ 14 15 16 17 18 19 20 21 22 23 24 25  /
    -------------------------------------
 #------------------------------------------------------------------------------------------
-# RELAIS MODULE 01 / 1x16 REL / DWN / I2C 0x20 A0 ON A1 ON A2 ON
+# RELAIS MODULE 01 / 1x16 REL / DWN / I2C 0x20 A0 ON A1 ON A2 ON 
 #------------------------------------------------------------------------------------------
 rb01[0]  SHUTDOWN SYSTEM            COLOR           PAGE            INTERNAL
 rb01[1]  SHOWMODE                   COLOR           PAGE            INTERNAL
