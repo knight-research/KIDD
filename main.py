@@ -703,8 +703,8 @@ if REGION:
             global relay_states_1to8, relay_states_9to16
             relay_states_1to8[board_index] = 0xFF
             relay_states_9to16[board_index] = 0xFF
-            lo = relay_states_9to16[board_index]
-            hi = relay_states_1to8[board_index]
+            hi = relay_states_9to16[board_index]
+            lo = relay_states_1to8[board_index]
             bus.write_word_data(address, lo, hi)
 
         relay_states_1to8 = [0xFF for _ in i2c_addr_dev02rb]
@@ -6609,8 +6609,8 @@ class myfunctions():
             else:
                 relay_states_9to16[board_num] ^= (1 << (relay_index - 8))
 
-            lo = relay_states_9to16[board_num]
-            hi = relay_states_1to8[board_num]
+            hi = relay_states_9to16[board_num]
+            lo = relay_states_1to8[board_num]
 
             try:
                 buses[board_num].write_word_data(i2c_addr_dev02rb[board_num], lo, hi)
