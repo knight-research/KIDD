@@ -149,7 +149,7 @@ rb01[13] RH SIDEMARKER              RED             PAGE            X1PIN06     
 rb01[14] LH TURNSIGNAL              RED             PAGE            X1PIN07     F1
 rb01[15] RH TURNSIGNAL              RED             PAGE            X1PIN08     F1
 #------------------------------------------------------------------------------------------
-# RELAIS MODULE 02 / 1x16 REL / MID / I2C 0x20 A0 ON A1 OFF A2 ON
+# RELAIS MODULE 02 / 1x16 REL / MID / I2C 0x21 A0 ON A1 OFF A2 ON
 #------------------------------------------------------------------------------------------
 rb02[0]  IGNITION                   RED             PAGE            X1PIN09     WIRING OK
 rb02[1]  START ENGINE               RED             PAGE            X1PIN10     WIRING OK
@@ -170,7 +170,7 @@ rb02[15] WNDOW LH DN                RED             8A-120-0        X1PIN24     
                                                                     X1PIN25     RESERVE
                                                                     GND         RESERVE
 #------------------------------------------------------------------------------------------
-# RELAIS MODULE 03 / 1x16 REL / UP / I2C 0x20 A0 ON A1 OFF A2 OFF
+# RELAIS MODULE 03 / 1x16 REL / UP / I2C 0x22 A0 ON A1 OFF A2 OFF
 #------------------------------------------------------------------------------------------
 rb03[0]  CRUISE OFF/ON              GRY             8A-034-0        X2PIN01     WIRING OK
 rb03[1]  CRUISE SET                 DK/BLU          8A-034-0        X2PIN02     WIRING OK

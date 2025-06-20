@@ -1,6 +1,6 @@
 {
     "main_config": {
-        "device": "DEV001",
+        "device": "DEV002",
         "style": "KITT",
         "theme": "K2_S05",
         "system": "AQUA",
@@ -229,7 +229,7 @@
                 false
             ],
             "HW": [
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -244,7 +244,7 @@
                 false,
                 false,
                 false,
-                true,
+                false,
                 true,
                 false,
                 false,

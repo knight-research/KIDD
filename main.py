@@ -675,9 +675,9 @@ if REGION:
         #----------------------------------------------------------------------------------
         # I2C ADRESSES DEV002:
         #----------------------------------------------------------------------------------
-        i2cRB01 = 0x22 #DO POSIBBLE 20-27
+        i2cRB01 = 0x20 #DO POSIBBLE 20-27
         i2cRB02 = 0x21 #DO POSIBBLE 20-27
-        i2cRB03 = 0x20 #DO POSIBBLE 20-27
+        i2cRB03 = 0x22 #DO POSIBBLE 20-27
         
         i2cDI01 = 0x64 #DI POSIBBLE 64-78
         i2cDI02 = 0x65 #DI POSIBBLE 64-78
@@ -691,6 +691,7 @@ if REGION:
         i2c_addr_dev02rb = [i2cRB01, i2cRB02, i2cRB03]
         if sys_pi:
             buses = [SMBus(1) for _ in i2c_addr_dev02rb]
+
         #----------------------------------------------------------------------------------
         # INIT DIGITAL INPUT BOARDS 
         #----------------------------------------------------------------------------------                
@@ -698,15 +699,24 @@ if REGION:
         #----------------------------------------------------------------------------------
         # RELAIS BOARDS 
         #----------------------------------------------------------------------------------
-        if sys_linux and btn_states_HW[0] == True and device == DEVICE_B_txt[2]:        
-            # Set the configuration word to configure all pins as outputs for each board
-            for i, address in enumerate(i2c_addr_dev02rb):
-                buses[i].write_word_data(address, 0x00FF, 0x00FF)
+        def init_pcf8575(bus, address, board_index):
+            global relay_states_1to8, relay_states_9to16
+            relay_states_1to8[board_index] = 0xFF
+            relay_states_9to16[board_index] = 0xFF
+            lo = relay_states_9to16[board_index]
+            hi = relay_states_1to8[board_index]
+            bus.write_word_data(address, lo, hi)
 
-            # Initialize relay states for each board (all off, since all bits are HIGH)
-            relay_states_1to8 = [0x00FF for _ in i2c_addr_dev02rb]  # Byte for relays 1-8 for each board
-            relay_states_9to16 = [0x00FF for _ in i2c_addr_dev02rb]  # Byte for relays 9-16 for each board
-        #----------------------------------------------------------------------------------
+        relay_states_1to8 = [0xFF for _ in i2c_addr_dev02rb]
+        relay_states_9to16 = [0xFF for _ in i2c_addr_dev02rb]
+
+
+        if sys_linux and btn_states_HW[0] == True and device == DEVICE_B_txt[2]:
+            for i, addr in enumerate(i2c_addr_dev02rb):
+                if btn_states_HW[i]:
+                    init_pcf8575(buses[i], addr, i)
+
+#----------------------------------------------------------------------------------
         # I2C ANALOG INPUT
         #----------------------------------------------------------------------------------
         if sys_linux and btn_states_HW[6] == True:
@@ -4782,7 +4792,14 @@ class P03_SETUP(tk.Frame):
             #------------------------------------------------------------------------------
             if REGION:
                 for i in range(quant_btns_RB01):
-                    if btn_states_DEV002RB01[i]:
+                    board = i // 16
+                    bit = i % 16
+                    if bit < 8:
+                        state = not (relay_states_1to8[board] & (1 << bit))
+                    else:
+                        state = not (relay_states_9to16[board] & (1 << (bit - 8)))
+
+                    if state:
                         btns_RB01[i].config(text=states_txt_act[1], fg=sys_clr[10])
                     else:
                         btns_RB01[i].config(text=states_txt_act[0], fg=sys_clr[11])
@@ -6581,18 +6598,26 @@ class myfunctions():
     if REGION:
         #----------------------------------------------------------------------------------
         # DEV002 I2C RELAIS BOARDS
-        #----------------------------------------------------------------------------------        
+        #----------------------------------------------------------------------------------
         def toggle_relay(self, relay_num):
-            global relay_states_1to8, relay_states_9to16
-            board_num = relay_num // 16  # Determine the board number based on the relay number
-            relay_num_on_board = relay_num % 16  # Determine the relay number on the board
-            if relay_num_on_board < 8:
-                relay_states_1to8[board_num] ^= (1 << relay_num_on_board)
+            global relay_states_1to8, relay_states_9to16, btns_RB01, buses
+            board_num = relay_num // 16
+            relay_index = relay_num % 16
+
+            if relay_index < 8:
+                relay_states_1to8[board_num] ^= (1 << relay_index)
             else:
-                relay_states_9to16[board_num] ^= (1 << (relay_num_on_board - 8))
-            
-            # Write to the output registers for all relays for the specific board
-            buses[board_num].write_word_data(i2c_addr_dev02rb[board_num], relay_states_1to8[board_num], relay_states_9to16[board_num])
+                relay_states_9to16[board_num] ^= (1 << (relay_index - 8))
+
+            lo = relay_states_9to16[board_num]
+            hi = relay_states_1to8[board_num]
+
+            try:
+                buses[board_num].write_word_data(i2c_addr_dev02rb[board_num], lo, hi)
+            except Exception as e:
+                print("Relaisbefehl uebersprungen – Board nicht erreichbar oder nicht definiert:", e)
+
+
 #------------------------------------------------------------------------------------------
 # END PROGRAM
 #------------------------------------------------------------------------------------------
