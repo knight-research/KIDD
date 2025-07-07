@@ -42,8 +42,8 @@
         "COMPRESSOR TEMP F","HYD SYST STRESS PSI","VOLTS DC","CAPACITY STATUS","PROPAGATION DELAY HRS","ACCESS"],
         "S03": ["SPD","0","100","200","300","MILES","SIGNAL","TUNING","LO","HI","VHF","UHF","AM","FM","CB","SEARCH","MI","TRIP","RANGE"],
         "S04": ["SPD","0","100","200","300","MILES","SIGNAL","TUNING","LO","HI","VHF","UHF","AM","FM","CB","SEARCH","MI","TRIP","RANGE"],
-        "S05": ["SPD","0","100","200","300","INFO 1","0-200","0-300","- - -","VOICE","SYS","GAUGE","- - -","- - -","SAVE","INFO 2","SYS","GPS","TRIP"],
-        "S06": ["SPD","0","100","200","300","INFO 1","0-200","0-300","- - -","VOICE","SYS","GAUGE","- - -","- - -","SAVE","INFO 2","SYS","GPS","TRIP"]
+        "S05": ["SPD","0","100","200","300","INFO 1","0-200","0-300","- - -","VOICE","SYS","GAUGE","- - -","- - -","SCAN","INFO 2","SYS","GPS","TRIP"],
+        "S06": ["SPD","0","100","200","300","INFO 1","0-200","0-300","- - -","VOICE","SYS","GAUGE","- - -","- - -","SCAN","INFO 2","SYS","GPS","TRIP"]
       }
     },
     "DEV002": {
@@ -68,11 +68,11 @@
         "IB01": ["TURN LEFT","TURN RIGHT","IGNITION","BREAK"],
         "IB02": ["PARK","2ND BATT.","OIL PRESS.","ENGINE RUN"],
         "IB03": ["SECURITY","DOOR OPEN","HIGH BEAM","SES"],
-        "RB01": ["SHUTDOWN","SHOW","---","---","---","---","---","---",
-          "F FOG","R FOG","LOW","HIGH","LH SIDE","RH SIDE","LH TURN","RH SIDE"],
-        "RB02": ["IGN","START","2ND","HORN","---","---","---","---",
-          "RADIO","SCANNER","---","---","WND LH UP","WND LH DN","WND RH UP","WND RH DN"],
-        "RB03": ["CRUISE","CRUISE SET","CRUISE +","LOCK","UNLOCK","---","---",
+        "RB01": ["SCANNER","SHOW","AMP","FOG-PMP","WND LH UP","WND LH DN","WND RH UP","WND RH DN",
+          "F FOG","R FOG","LOW","HIGH","LH SIDE","RH SIDE","LH TURN","RH TURN"],
+        "RB02": ["IGN","START","2ND","HORN","RADIO","---","---","TRUNK",
+          "---","---","---","---","---","---","LOCK","UNLOCK"],
+        "RB03": ["---","---","---","---","---","---","---",
           "---","---","---","---","---","---","---","---","---"]
       }
     },

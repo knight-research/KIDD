@@ -13,6 +13,7 @@ DONE: GPS NOW ALSO WORKS ON WINDOWS
 DONE: SWITCH LANGUAGE (TEXTS)
 DONE: THEME COLOR SWITCHER (PREPARED ALL THEME COLORS NOW IN "BEFORE MAIN APP GLOBALS")
 
+TODO: Scammer sound in Main Tachometer screen ON/OFF
 TODO: OBD2 CONNECTION FOR DEV031
 TODO: Switchpod communication with sending labels texts (S34) from here
 TODO: Connect the Favoritebuttons with the spare buttons on qopt page (max 20 buttons)

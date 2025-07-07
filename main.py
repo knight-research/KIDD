@@ -675,15 +675,15 @@ if REGION:
         #----------------------------------------------------------------------------------
         # I2C ADRESSES DEV002:
         #----------------------------------------------------------------------------------
-        i2cRB01 = 0x20 #DO POSIBBLE 20-27
-        i2cRB02 = 0x21 #DO POSIBBLE 20-27
-        i2cRB03 = 0x22 #DO POSIBBLE 20-27
+        i2cRB01 = 0x20 #DO POSIBBLE I2C: 20-27
+        i2cRB02 = 0x21 #DO POSIBBLE I2C: 20-27
+        i2cRB03 = 0x22 #DO POSIBBLE I2C: 20-27
         
-        i2cDI01 = 0x64 #DI POSIBBLE 64-78
-        i2cDI02 = 0x65 #DI POSIBBLE 64-78
-        i2cDI03 = 0x66 #DI POSIBBLE 64-78
+        i2cDI01 = 0x64 #DI POSIBBLE I2C: 64-78
+        i2cDI02 = 0x65 #DI POSIBBLE I2C: 64-78
+        i2cDI03 = 0x66 #DI POSIBBLE I2C: 64-78
         
-        i2cAI01 = 0x00 #AI POSIBBLE
+        i2cAI01 = 0x00 #AI POSIBBLE I2C: ?
 
         #----------------------------------------------------------------------------------
         # INIT RELAIS BOARDS 
@@ -716,7 +716,7 @@ if REGION:
                 if btn_states_HW[i]:
                     init_pcf8575(buses[i], addr, i)
 
-#----------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------
         # I2C ANALOG INPUT
         #----------------------------------------------------------------------------------
         if sys_linux and btn_states_HW[6] == True:
@@ -1850,7 +1850,7 @@ class P01_DASH(tk.Frame):
                         self.canvas.create_text(1910, 225, **txt_style_S34c, text=gau_S06U02_txt[18])
                         self.canvas.create_text(2020, 225, **txt_style_S34c, text=gau_S06U02_txt[19])
                         self.canvas.create_text(2120, 225, **txt_style_S34c, text=gau_S06U02_txt[20])
-                        self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S06U02_txt[21])
+                        self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S06U02_txt[21])                        
         #----------------------------------------------------------------------------------
         # POWER BUTTON (SWITCH FRAME TO SETUP)
         #----------------------------------------------------------------------------------
@@ -1955,6 +1955,18 @@ class P01_DASH(tk.Frame):
                             btn_PB[i].config(image=localimage16)
                         elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                             btn_PB[i].config(image=lcarsOF_img_list[3])
+        #----------------------------------------------------------------------------------
+        # SPECIAL BUTTONS (YELLOW)
+        #----------------------------------------------------------------------------------
+        self.audio_on_img = localimage15
+        self.audio_off_img = localimage16
+        
+        self.audio_file = os.path.join(snd_fldr, "sfx", "001_SCANNER_08.mp3")
+        print (self.audio_file)
+        self.audio_button = tk.Button(self, **btn_style_imgbtn,
+                                      image=self.audio_off_img,
+                                      command=lambda: self.toggle_audio(self.audio_file))
+        self.audio_button.place(x=500, y=200)
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTONS (LO HI VHF UHF AM FM CB) / (ATTACK SUST DELAY DEL)
         #---------------------------------------------------------------------------------- 
@@ -2781,6 +2793,12 @@ class P01_DASH(tk.Frame):
 
                 lbl.place(x=x, y=y, width=w, height=h)
                 lbls_sysinfo.append(lbl)
+    def toggle_audio(self, filepath):
+        read.toggle_audio_loop(filepath)
+        if read.audio_playing:
+            self.audio_button.config(image=self.audio_on_img)
+        else:
+            self.audio_button.config(image=self.audio_off_img)
     #--------------------------------------------------------------------------------------
     # THREAD LISTEN_FOR_ACTIVATION_WORD #todo move to myfunctions
     #--------------------------------------------------------------------------------------
@@ -5849,6 +5867,8 @@ class P11_RES(tk.Frame):
 # FUNCTIONS
 #------------------------------------------------------------------------------------------
 class myfunctions():
+    def __init__(self):
+        self.audio_playing = False
     #--------------------------------------------------------------------------------------
     # MAIN APP FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -6443,6 +6463,7 @@ class myfunctions():
                     elif style == STYLE_B_txt[1]:
                         soundfolder = "KITT3000"
                 snd_fldr = os.path.join(folder,'sound', soundfolder)
+
             #------------------------------------------------------------------------------
             # GET AMOUNT OF SUBFOLDERS
             #------------------------------------------------------------------------------
@@ -6464,6 +6485,17 @@ class myfunctions():
                 pygame.mixer.music.play()
             except Exception as e:
                 print(f"Fehler beim Abspielen von {full_path}: {e}")
+        #----------------------------------------------------------------------------------
+        # PLAY A SPECIFIC MP3 FILE IN A LOOP
+        #----------------------------------------------------------------------------------
+        def toggle_audio_loop(self, filepath):
+            if not self.audio_playing:
+                pygame.mixer.music.load(filepath)
+                pygame.mixer.music.play(-1)
+                self.audio_playing = True
+            else:
+                pygame.mixer.music.stop()
+                self.audio_playing = False
         #----------------------------------------------------------------------------------
         # VOICECOMMAND LISTEN FOR ACTIVATION WORD #todo import from above
         #----------------------------------------------------------------------------------
