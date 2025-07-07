@@ -1958,15 +1958,24 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # SPECIAL BUTTONS (YELLOW)
         #----------------------------------------------------------------------------------
-        self.audio_on_img = localimage15
-        self.audio_off_img = localimage16
-        
-        self.audio_file = os.path.join(snd_fldr, "sfx", "001_SCANNER_08.mp3")
-        print (self.audio_file)
-        self.audio_button = tk.Button(self, **btn_style_imgbtn,
-                                      image=self.audio_off_img,
-                                      command=lambda: self.toggle_audio(self.audio_file))
-        self.audio_button.place(x=500, y=200)
+        if REGION:
+            self.audio_on_img = localimage15
+            self.audio_off_img = localimage16
+
+            self.audio_buttons = []
+            self.audio_definitions = [
+                ("sfx", "SCANNER_1x.mp3", True),
+                ("sfx", "STARTUP_001.mp3", False),
+                ("sfx", "WINDOW.mp3", False),
+                ("introduce", "VORSTELLUNG_KITT_KURZ.mp3", False)
+            ]
+
+            for i, (subfolder, filename, loop_mode) in enumerate(self.audio_definitions):
+                filepath = os.path.join(snd_fldr, subfolder, filename)
+                btn = tk.Button(self, **btn_style_imgbtn, image=self.audio_off_img,
+                                command=lambda path=filepath, idx=i, loop=loop_mode: self.toggle_audio(idx, path, loop))
+                btn.place(x=507, y=115 + i * 58)
+                self.audio_buttons.append(btn)
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTONS (LO HI VHF UHF AM FM CB) / (ATTACK SUST DELAY DEL)
         #---------------------------------------------------------------------------------- 
@@ -2793,12 +2802,18 @@ class P01_DASH(tk.Frame):
 
                 lbl.place(x=x, y=y, width=w, height=h)
                 lbls_sysinfo.append(lbl)
-    def toggle_audio(self, filepath):
-        read.toggle_audio_loop(filepath)
-        if read.audio_playing:
-            self.audio_button.config(image=self.audio_on_img)
+    def toggle_audio(self, idx, filepath, loop):
+        result = read.toggle_audio_loop(filepath, loop)
+        if loop:
+            # Bei Loop: ON/OFF je nach Zustand
+            if result is True:
+                self.audio_buttons[idx].config(image=self.audio_on_img)
+            elif result is False:
+                self.audio_buttons[idx].config(image=self.audio_off_img)
         else:
-            self.audio_button.config(image=self.audio_off_img)
+            # Bei einmaliger Wiedergabe: Bild kurz auf ON, dann zurück
+            self.audio_buttons[idx].config(image=self.audio_on_img)
+            self.after(500, lambda: self.audio_buttons[idx].config(image=self.audio_off_img))
     #--------------------------------------------------------------------------------------
     # THREAD LISTEN_FOR_ACTIVATION_WORD #todo move to myfunctions
     #--------------------------------------------------------------------------------------
@@ -5868,7 +5883,8 @@ class P11_RES(tk.Frame):
 #------------------------------------------------------------------------------------------
 class myfunctions():
     def __init__(self):
-        self.audio_playing = False
+        self.audio_channels = {}  # filename -> Channel
+        self.audio_sounds = {}    # filename -> Sound
     #--------------------------------------------------------------------------------------
     # MAIN APP FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -6488,14 +6504,37 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         # PLAY A SPECIFIC MP3 FILE IN A LOOP
         #----------------------------------------------------------------------------------
-        def toggle_audio_loop(self, filepath):
-            if not self.audio_playing:
-                pygame.mixer.music.load(filepath)
-                pygame.mixer.music.play(-1)
-                self.audio_playing = True
+        def toggle_audio_loop(self, filepath, loop=True):
+            filename = os.path.basename(filepath)
+
+            if filename not in self.audio_sounds:
+                try:
+                    self.audio_sounds[filename] = pygame.mixer.Sound(filepath)
+                except Exception as e:
+                    print(f"[AUDIO] Fehler beim Laden: {filepath} → {e}")
+                    return False
+
+            # Wenn im Loop: Toggle Start/Stop
+            if loop:
+                if filename in self.audio_channels and self.audio_channels[filename].get_busy():
+                    self.audio_channels[filename].stop()
+                    del self.audio_channels[filename]
+                    return False  # gestoppt
+                else:
+                    channel = pygame.mixer.find_channel()
+                    if channel:
+                        channel.play(self.audio_sounds[filename], loops=-1)
+                        self.audio_channels[filename] = channel
+                        return True  # gestartet
+                    else:
+                        print("[AUDIO] Kein freier Kanal")
+                        return False
             else:
-                pygame.mixer.music.stop()
-                self.audio_playing = False
+                # Nur einmal abspielen
+                channel = pygame.mixer.find_channel()
+                if channel:
+                    channel.play(self.audio_sounds[filename], loops=0)
+                return None  # kein Statuswechsel
         #----------------------------------------------------------------------------------
         # VOICECOMMAND LISTEN FOR ACTIVATION WORD #todo import from above
         #----------------------------------------------------------------------------------
