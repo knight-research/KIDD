@@ -8,7 +8,7 @@
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb02",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,
@@ -66,16 +66,16 @@
                 false
             ],
             "SW": [
-                false,
-                true,
-                false,
-                false,
-                true,
-                false,
-                false,
-                false,
-                false,
-                false
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
             ],
             "QOPT": [
                 false,
@@ -241,16 +241,16 @@
                 false
             ],
             "SW": [
-                false,
-                false,
-                false,
-                false,
-                true,
-                false,
-                false,
-                false,
-                false,
-                false
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
             ],
             "QOPT": [
                 false,

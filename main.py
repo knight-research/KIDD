@@ -275,7 +275,7 @@ if REGION:
             lbl_btnsw_DEV001_txt  = DEV001.get("LBL_SW", [])
             btnsw_DEV001_txt_0    = DEV001.get("BTN_SW_0", [])
             btnsw_DEV001_txt_1    = DEV001.get("BTN_SW_1", [])
-            btnsw_DEV001_txt_3    = DEV001.get("BTN_SW_3", [])
+            btnsw_DEV001_txt_2   = DEV001.get("BTN_SW_2", [])
             msg_center_S01_txt    = DEV001.get("MSG_CENTER_S01", [])
 
             gau001 = DEV001.get("GAUGES", {})
@@ -844,10 +844,12 @@ class P00_BOOT(tk.Frame):
             print(f"Unbekanntes Gerät: {device}")
         #LANGUAGE
         global states_txt_act
-        if btn_states_SW[4]:
+        if btn_states_SW[4] == 0:
+            states_txt_act = states_txt_de
+        elif btn_states_SW[4] == 1:
             states_txt_act = states_txt_en
         else:
-            states_txt_act = states_txt_de
+            states_txt_act = states_txt_en  # Fallback
 
     def load_images_from_folder(self, path, suffix=".jpg"):
         images = [ImageTk.PhotoImage(Image.open(os.path.join(path, f)))
@@ -2088,10 +2090,12 @@ class P01_DASH(tk.Frame):
                     btn_units.place(x=1105, y=248, width=166, height=81)
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                     btn_units.place(x=770, y=110, width=202, height=68)
-                if btn_states_SW[0] == True:
+                if btn_states_SW[0] == 0:
+                    btn_units.config(image=localimage02)
+                elif btn_states_SW[0] == 1:
                     btn_units.config(image=localimage01)
                 else:
-                    btn_units.config(image=localimage02)
+                    btn_units.config(image=localimage02) # Fallback
             elif device == DEVICE_B_txt[2]:
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2            
@@ -2100,10 +2104,12 @@ class P01_DASH(tk.Frame):
                     btn_units.place(x=1064, y=296, width=166, height=81)
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                     btn_units.place(x=1064, y=296, width=166, height=81)
-                if btn_states_SW[0] == True:
+                if btn_states_SW[0] == 0:
+                    btn_units.config(image=localimage09)
+                elif btn_states_SW[0] == 1:
                     btn_units.config(image=localimage08)
                 else:
-                    btn_units.config(image=localimage09)
+                    btn_units.config(image=localimage08) # Fallback
         #----------------------------------------------------------------------------------
         # VOICECOMMAND LABELS AND ICONS
         #----------------------------------------------------------------------------------
@@ -2630,13 +2636,17 @@ class P01_DASH(tk.Frame):
                         label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
                         label_7SEG001.place(x=582, y=160, width=370, height=147)
                     elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        if btn_states_SW[3] == False:
-                            if btn_states_SW[1] == True:
+                        if btn_states_SW[3] == 0:
+                            if btn_states_SW[1] == 1:
                                 label_7SEG001.config(image=localimage03, compound="center")
+                            elif btn_states_SW[1] == 0:
+                                label_7SEG001.config(image=localimage04, compound="center")
                             else:
                                 label_7SEG001.config(image=localimage04, compound="center")
-                        else:
+                        elif btn_states_SW[0] == 1:
                             label_7SEG001.config(image=localimage05, compound="center")
+                        else:
+                            label_7SEG001.config(image=localimage05, compound="center")# Fallback
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.place(x=609, y=116, width=496, height=212)
                     elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
@@ -2683,7 +2693,14 @@ class P01_DASH(tk.Frame):
     def update_pb_ui_elements(self):
         self.canvas.delete("pb_overlay")
 
-        lang = "eng" if btn_states_SW[4] else "deu"
+        if btn_states_SW[4] == 0:
+            lang = "eng"
+        elif btn_states_SW[4] == 1:
+            lang = "deu"
+        elif btn_states_SW[4] == 2:
+            lang = "fr"
+        else:
+            lang = "deu"  # Fallback
         pb = btn_states_PB
 
         if pb not in self.pb_texts or lang not in self.pb_texts[pb]:
@@ -3290,13 +3307,20 @@ class P01_DASH(tk.Frame):
             # SIMULATION
             #------------------------------------------------------------------------------            
             if REGION:
-                if btn_states_SW[3] == True:
+                if btn_states_SW[3] == 1:
+                    # Simulation EIN – normaler Betrieb
                     for i in range(3):
                         val_cnt_sim[i] += val_sim[i] if val_cnt_sim_updn[i] else -val_sim[i]
                         if val_cnt_sim[i] > val_max[i]:
-                            val_cnt_sim_updn[i], val_cnt_sim[i] = False, val_cnt_sim[i] -val_sim[i]
+                            val_cnt_sim_updn[i], val_cnt_sim[i] = False, val_cnt_sim[i] - val_sim[i]
                         elif val_cnt_sim[i] < val_min[i]:
-                            val_cnt_sim_updn[i], val_cnt_sim[i] = True, val_cnt_sim[i] +val_sim[i]
+                            val_cnt_sim_updn[i], val_cnt_sim[i] = True, val_cnt_sim[i] + val_sim[i]
+                elif btn_states_SW[3] == 2:
+                    # Simulation EIN – aber alternative Logik (falls du später etwas anderes machen willst)
+                    pass  # noch keine Aktion definiert
+                else:
+                    # Fallback – z. B. Simulation AUS oder ungültiger Wert
+                    pass
             #------------------------------------------------------------------------------
             # UPDATE GPS DATA AND WRITE SPEED DATA
             #------------------------------------------------------------------------------                      
@@ -3326,6 +3350,26 @@ class P01_DASH(tk.Frame):
                         seven_seg_speed = aldl_vehicle_speed_mph
                     else:
                         seven_seg_speed = aldl_vehicle_speed_kph
+
+                if btn_states_SW[3] == 1:
+                    seven_seg_speed = val_cnt_sim[0]
+                elif btn_states_SW[0] == 1 and btn_states_SW[1] == 0:
+                    seven_seg_speed = aldl_vehicle_speed_mph
+                elif btn_states_SW[0] == 0 and btn_states_SW[1] == 0:
+                    seven_seg_speed = aldl_vehicle_speed_kph
+                elif btn_states_HW[0] and btn_states_SW[1] == 1:
+                    if btn_states_SW[0] == 1:
+                        seven_seg_speed = gps_mph_0
+                    elif btn_states_SW[0] == 0:
+                        seven_seg_speed = gps_kph_0
+                    else:
+                        seven_seg_speed = 0  # Fallback, falls undefinierter Modus
+                elif btn_states_SW[0] == 1:
+                    seven_seg_speed = aldl_vehicle_speed_mph
+                elif btn_states_SW[0] == 0:
+                    seven_seg_speed = aldl_vehicle_speed_kph
+                else:
+                    seven_seg_speed = 0  # finaler Fallback
             #------------------------------------------------------------------------------
             # UPDATE VOICECOMMAND TEXT IN TOTAL DISPLAY
             #------------------------------------------------------------------------------
@@ -3419,10 +3463,13 @@ class P01_DASH(tk.Frame):
                 # ----------------------------------------------------------------------
                 # Wert holen (LIVE oder SIMU)
                 # ----------------------------------------------------------------------
-                if btn_states_SW[3] == False:  # LIVE
+                if btn_states_SW[3] == 0:  # LIVE
                     seven_seg_DEV001G002 = speed_int / 15
-                else:
+                elif btn_states_SW[3] == 1:  # SIMULATION
                     seven_seg_DEV001G002 = val_cnt_sim[2]
+                else:
+                    seven_seg_DEV001G002 = 0  # Fallback für ungültige Modi
+
 
                 # Wert auf Bereich normalisieren
                 val_DEV001G002 = seven_seg_DEV001G002 / ammount_DEV001G002
@@ -3639,7 +3686,7 @@ class P01_DASH(tk.Frame):
                 val_sim      = [ 20,  10,  14,   8,   2,   6,  10,   7,   8,   9] #HIGHER NUMBER FASTER SIMULATION
                 val_conf_min = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
 
-                if btn_states_SW[3] == True:
+                if btn_states_SW[3] == 1:
                     for i in range(len(val_sim)):
                         val_cnt_sim[i] += val_sim[i] if val_cnt_sim_updn[i] else -val_sim[i]
                         if val_cnt_sim[i] > val_max[i]:
@@ -3660,7 +3707,7 @@ class P01_DASH(tk.Frame):
                     aldl_fuel_capacity = val_min[5]
             
                 seg_DEV002 = [0,1,2,3,4,5,6]
-                if btn_states_SW[3] == False:  # LIVE
+                if btn_states_SW[3] == 0:  # LIVE
                     seg_DEV002[0] = int(aldl_engine_speed)
                     seg_DEV002[1] = int(aldl_mainfold_air_temp)
                     seg_DEV002[2] = int(aldl_coolant_temp)
@@ -3668,7 +3715,7 @@ class P01_DASH(tk.Frame):
                     seg_DEV002[4] = int(aldl_barometric_pressure)
                     seg_DEV002[5] = int(aldl_fuel_capacity)
                     seg_DEV002[6] = int(aldl_throttle_pos)
-                else:
+                elif btn_states_SW[3] == 1:  # SIMULATION
                     seg_DEV002[0] = val_cnt_sim[0]
                     seg_DEV002[1] = val_cnt_sim[1]
                     seg_DEV002[2] = val_cnt_sim[2]
@@ -3676,6 +3723,14 @@ class P01_DASH(tk.Frame):
                     seg_DEV002[4] = val_cnt_sim[4]
                     seg_DEV002[5] = val_cnt_sim[5]
                     seg_DEV002[6] = val_cnt_sim[6]
+                else:  # LIVE
+                    seg_DEV002[0] = int(aldl_engine_speed)
+                    seg_DEV002[1] = int(aldl_mainfold_air_temp)
+                    seg_DEV002[2] = int(aldl_coolant_temp)
+                    seg_DEV002[3] = int(aldl_coolant_temp)
+                    seg_DEV002[4] = int(aldl_barometric_pressure)
+                    seg_DEV002[5] = int(aldl_fuel_capacity)
+                    seg_DEV002[6] = int(aldl_throttle_pos)
 
                 val_DEV002 = [0,1,2,3,4,5,6]
                 for i in range(len(val_DEV002)):
@@ -3743,10 +3798,12 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
-                if btn_states_SW[3] == False:  # LIVE
+                if btn_states_SW[3] == 0:  # LIVE
                     seven_seg_DEV002G007 = int(aldl_battery_voltage)
-                else:
+                elif btn_states_SW[3] == 1:
                     seven_seg_DEV002G007 = val_cnt_sim[7]
+                else:
+                    seven_seg_DEV002G007 = int(aldl_battery_voltage)
                 val_DEV002G007 = seven_seg_DEV002G007/ammount_DEV002G007
                 #-------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
@@ -3786,10 +3843,12 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
-                if btn_states_SW[3] == False:  # LIVE
+                if btn_states_SW[3] == 0:  # LIVE
                     seven_seg_DEV002G008 = int(aldl_fuel_pump_voltage)
-                else:
+                elif btn_states_SW[3] == 1:
                     seven_seg_DEV002G008 = val_cnt_sim[8]
+                else:  # LIVE
+                    seven_seg_DEV002G008 = int(aldl_fuel_pump_voltage)
                 val_DEV002G008 = seven_seg_DEV002G008/ammount_DEV002G008
                 #-------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
@@ -3829,10 +3888,12 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # VALUE VALID OR SIMULATION ON
                 #--------------------------------------------------------------------------
-                if btn_states_SW[3] == False:  # LIVE
+                if btn_states_SW[3] == 0:  # LIVE
                     seven_seg_DEV002G009 = int(aldl_throttle_pos_v)
-                else:
+                elif btn_states_SW[3] == 1:
                     seven_seg_DEV002G009 = val_cnt_sim[9]
+                else:
+                    seven_seg_DEV002G009 = int(aldl_throttle_pos_v)
                 val_DEV002G009 = seven_seg_DEV002G009/ammount_DEV002G009
                 #-------------------------------------------------------------------------
                 # CONVERT VALUE FOR xx LEDS
@@ -3906,7 +3967,7 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # SIMULATE VARIABLE
                 #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
+                if btn_states_SW[3] == 1:
                     if count_SIM_DEV001G000:
                         count_ctr_SIM_DEV001G000 += 5
                         if count_ctr_SIM_DEV001G000 > 310:
@@ -3920,22 +3981,25 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # WRITE SPEED VARIABLE TO 7SEG VARIABLE
                 #--------------------------------------------------------------------------
-                if btn_states_SW[3]:
+                if btn_states_SW[3] == 1:
                     seven_seg_speed = count_ctr_SIM_DEV001G000
-                elif btn_states_SW[0] and not btn_states_SW[1]:
+                elif btn_states_SW[0] == 1 and btn_states_SW[1] == 0:
                     seven_seg_speed = aldl_vehicle_speed_mph
-                elif not btn_states_SW[0] and not btn_states_SW[1]:
+                elif btn_states_SW[0] == 0 and btn_states_SW[1] == 0:
                     seven_seg_speed = aldl_vehicle_speed_kph
-                elif btn_states_HW[0] and btn_states_SW[1]:
-                    if btn_states_SW[0]:
+                elif btn_states_HW[0] and btn_states_SW[1] == 1:
+                    if btn_states_SW[0] == 1:
                         seven_seg_speed = gps_mph_0
-                    else:
+                    elif btn_states_SW[0] == 0:
                         seven_seg_speed = gps_kph_0
-                else:
-                    if btn_states_SW[0]:
-                        seven_seg_speed = aldl_vehicle_speed_mph
                     else:
-                        seven_seg_speed = aldl_vehicle_speed_kph
+                        seven_seg_speed = 0  # Fallback für unbekannten US/EU-Modus
+                elif btn_states_SW[0] == 1:
+                    seven_seg_speed = aldl_vehicle_speed_mph
+                elif btn_states_SW[0] == 0:
+                    seven_seg_speed = aldl_vehicle_speed_kph
+                else:
+                    seven_seg_speed = 0  # finaler Fallback
             #------------------------------------------------------------------------------
             # UPDATE VOICECOMMAND TEXT IN TOTAL DISPLAY
             #------------------------------------------------------------------------------
@@ -4530,10 +4594,15 @@ class P03_SETUP(tk.Frame):
             #--------------------------------------------------------------------------
             btns_SW = []
             x_pos = x_start
+
             for i in range(quant_btns_SW):
-                btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28),  command=lambda i=i: [read.toggle_btn_SW(i),self.master.switch_frame(P03_SETUP)])
+                btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
                 btn_SW.place(x=x_pos, y=y_l5, width=btn_w, height=btn_h)
-                x_pos += +px_to_next
+
+                # Button-Funktion nach Erstellung setzen, damit btn_SW definiert ist
+                btn_SW.config(command=lambda i=i, b=btn_SW: [read.toggle_btn_SW(i, b), self.master.switch_frame(P03_SETUP)])
+
+                x_pos += px_to_next
                 btns_SW.append(btn_SW)
         #----------------------------------------------------------------------------------
         # KEYPAD BUTTONS
@@ -4803,10 +4872,14 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             for i in range(quant_btns_SW):
-                if btn_states_SW[i]:
+                if btn_states_SW[i] == 1:
                     btns_SW[i].config(text=btnsw_DEV001_txt_1[i])
-                else:
+                elif btn_states_SW[i] == 0:
                     btns_SW[i].config(text=btnsw_DEV001_txt_0[i])
+                elif btn_states_SW[i] == 2:
+                    btns_SW[i].config(text=btnsw_DEV001_txt_2[i])
+                else:
+                    btns_SW[i].config(text="???")  # Fallback oder Debuganzeige
         #----------------------------------------------------------------------------------
         # FAV BUTTONS
         #----------------------------------------------------------------------------------
@@ -6259,14 +6332,30 @@ class myfunctions():
                 bsm.set_current_button_states("HW", btn_states_HW)
                 bsm.save()
 
-            def toggle_btn_SW(self, i):
+            def toggle_btn_SW(self, i, button):
                 global btn_states_SW
-                if btn_states_SW[i] == True:
-                    btn_states_SW[i] = False
+
+                # Zustand zyklisch erhöhen: 0 → 1 → 2 → 0
+                btn_states_SW[i] = (btn_states_SW[i] + 1) % 3
+
+                # Falls AUDIO-Umschaltung (SW[2]), Ausgang wechseln
+                if i == 2:
+                    self.switch_audio_output(btn_states_SW[i])
+
+                # Text aktualisieren je nach Zustand
+                if btn_states_SW[i] == 0:
+                    button.config(text=btnsw_DEV001_txt_0[i])
+                elif btn_states_SW[i] == 1:
+                    button.config(text=btnsw_DEV001_txt_1[i])
+                elif btn_states_SW[i] == 2:
+                    button.config(text=btnsw_DEV001_txt_2[i])
                 else:
-                    btn_states_SW[i] = True
+                    button.config(text="???")
+
+                # Zustand speichern
                 bsm.set_current_button_states("SW", btn_states_SW)
                 bsm.save()
+
                 
             def toggle_btn_qopt(self, i):
                 if btn_states_qopt[i] == True:
@@ -6344,6 +6433,28 @@ class myfunctions():
     # SOUND FUNCTIONS
     #--------------------------------------------------------------------------------------
     if REGION:
+        #----------------------------------------------------------------------------------
+        # AUDIOAUSGANG BEI RASPBERRY PI UMSCHALTEN
+        #----------------------------------------------------------------------------------
+        def switch_audio_output(self, mode_int):
+            if not sys_pi:
+                print(f"[INFO] Audioumschaltung übersprungen – nicht auf Raspberry Pi (sys_pi = {sys_pi})")
+                return
+
+            import subprocess
+            try:
+                if mode_int == 0:
+                    subprocess.run(["amixer", "cset", "numid=3", "1"], check=True)  # HDMI1
+                elif mode_int == 1:
+                    subprocess.run(["amixer", "cset", "numid=3", "2"], check=True)  # HDMI2
+                elif mode_int == 2:
+                    subprocess.run(["amixer", "cset", "numid=3", "0"], check=True)  # Analog (3.5mm)
+                else:
+                    print(f"[WARN] Ungültiger Audio-Modus: {mode_int}")
+            except Exception as e:
+                print(f"[ERROR] Audio-Umschaltung fehlgeschlagen: {e}")
+
+
         #----------------------------------------------------------------------------------
         # GET THE TEXT OF A SOUND BUTTON
         #----------------------------------------------------------------------------------

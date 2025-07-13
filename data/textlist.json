@@ -33,7 +33,7 @@
       "LBL_SW": ["EU/US","ALDL/GPS","AUDIO","SIMU","LANG","---","---","---","---","---"],
       "BTN_SW_0": ["EU","ALDL","HDMI1","LIVE","DEU","---","---","---","---","---"],
       "BTN_SW_1": ["US","GPS","HDMI2","SIMU","ENG","---","---","---","---","---"],
-      "BTN_SW_3": ["--","---","AV   ","----","---","---","---","---","---","---"],
+      "BTN_SW_2": ["--","---","AV   ","----","---","---","---","---","---","---"],
       "MSG_CENTER_S01": ["CALIBRATE","PRESEN","TBI","MILES","TRIP","RANGE","FUEL"],
       "GAUGES": {
         "S01": ["0","200","INLET TEMP","FREE TURBINE","MASS FLOW LBS","E.G.T. F","FUEL FLOW GPH","MAIN OIL PRESS",
