@@ -1932,9 +1932,9 @@ class P01_DASH(tk.Frame):
                     theme_index = THEME_B_txt.index(theme)
                     theme_key = f"THEME{theme_index}"
 
-                    pb_btn_data = self.positions["PB_BUTTONS"][device][theme_key]
-                    x_btn = pb_btn_data.get("x", [])
-                    y_btn = pb_btn_data.get("y", [])
+                    pb_btn_data = self.positions["POSITIONS"][device][theme_key]
+                    x_btn = pb_btn_data.get("x_btn_PB", [])
+                    y_btn = pb_btn_data.get("y_btn_PB", [])
                     quant_btn = min(len(x_btn), len(y_btn), len(btn_PB))
 
                     for i in range(quant_btn):
