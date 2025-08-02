@@ -1214,9 +1214,61 @@ class P01_DASH(tk.Frame):
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [THEME_B_txt[9]]:
-                    pass
+                    localimage01 = sledON_img_list[10] #MPH
+                    localimage02 = sledON_img_list[9] #KPH
+                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    localimage06 = sledON_img_list[8] #HI LO VHF
+                    localimage07 = sledOF_img_list[8] #HI LO VHF
+                    localimage08 = sledON_img_list[17] #RPMi
+                    localimage09 = sledON_img_list[18] #RPMm
+                    localimage15 = ledFU_img_list[62] #YE
+                    localimage16 = ledOF_img_list[62] #YEDK
+                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
+                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
+                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
+                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
+                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
+                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
+                    localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
+                    localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[10]]:
-                    pass
+                    localimage01 = sledON_img_list[10] #MPH
+                    localimage02 = sledON_img_list[9] #KPH
+                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    localimage06 = sledON_img_list[8] #HI LO VHF
+                    localimage07 = sledOF_img_list[8] #HI LO VHF
+                    localimage08 = sledON_img_list[17] #RPMi
+                    localimage09 = sledON_img_list[18] #RPMm
+                    localimage15 = ledFU_img_list[62] #YE
+                    localimage16 = ledOF_img_list[62] #YEDK
+                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
+                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
+                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
+                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
+                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
+                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
+                    localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
+                    localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[11]]:
                     pass
                 elif theme in [THEME_B_txt[12]]:
@@ -1478,9 +1530,61 @@ class P01_DASH(tk.Frame):
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [THEME_B_txt[9]]:
-                    pass
+                    localimage01 = sledON_img_list[14] #MPH
+                    localimage02 = sledON_img_list[13] #KPH
+                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    localimage06 = sledON_img_list[8] #HI LO VHF
+                    localimage07 = sledOF_img_list[8] #HI LO VHF
+                    localimage08 = sledON_img_list[21] #RPMi
+                    localimage09 = sledON_img_list[22] #RPMm
+                    localimage15 = ledFU_img_list[62] #YE
+                    localimage16 = ledOF_img_list[62] #YEDK
+                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
+                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
+                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
+                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
+                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
+                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
+                    localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
+                    localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[10]]:
-                    pass
+                    localimage01 = sledON_img_list[14] #MPH
+                    localimage02 = sledON_img_list[13] #KPH
+                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    localimage06 = sledON_img_list[8] #HI LO VHF
+                    localimage07 = sledOF_img_list[8] #HI LO VHF
+                    localimage08 = sledON_img_list[21] #RPMi
+                    localimage09 = sledON_img_list[22] #RPMm
+                    localimage15 = ledFU_img_list[62] #YE
+                    localimage16 = ledOF_img_list[62] #YEDK
+                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
+                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
+                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
+                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
+                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
+                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
+                    localimage61 = ledFU_img_list[78] #OHC BU
+                    localimage64 = ledFU_img_list[81] #OHC RD
+                    localimage65 = ledFU_img_list[82] #OHC WH
+                    localimage66 = ledFU_img_list[83] #OHC YE
+                    localimage71 = ledOF_img_list[78] #OHC BU
+                    localimage74 = ledOF_img_list[81] #OHC RD
+                    localimage75 = ledOF_img_list[82] #OHC WH
+                    localimage76 = ledOF_img_list[83] #OHC YE
+                    localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
+                    localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[11]]:
                     pass
                 elif theme in [THEME_B_txt[12]]:
@@ -1529,7 +1633,7 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 # BACKGROUNDIMAGE OVERLAYS
                 #--------------------------------------------------------------------------
-                if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                if THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                     self.canvas.create_rectangle(1808, 30, 2130, 134, fill=sty_clr[3])   #PROGNO
         #----------------------------------------------------------------------------------
         # STATIC TEXT
@@ -1987,7 +2091,7 @@ class P01_DASH(tk.Frame):
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 if THEME_B_txt[0:3].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1040, y=218, width=166, height=81)
-                elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1105, y=248, width=166, height=81)
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                     btn_units.place(x=770, y=110, width=202, height=68)
@@ -1999,7 +2103,7 @@ class P01_DASH(tk.Frame):
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2            
                     btn_units.place(x=970, y=245, width=166, height=81)
-                elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                     btn_units.place(x=1064, y=296, width=166, height=81)
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                     btn_units.place(x=1064, y=296, width=166, height=81)
@@ -2018,26 +2122,15 @@ class P01_DASH(tk.Frame):
                     label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
                     lbls_voicecmd.append(label_voicecmd)
                     
-                if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                if THEME_B_txt[3:8].count(theme) > 0: # THEME 3 to 8
                     lbls_voicecmd[0].place(x=500, y=590, height="30", width="280")   
                     lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
                     lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
 
                 self.btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
                 self.function_running = False
-            elif device == DEVICE_B_txt[31]:
-                lbls_voicecmd = []
-                for voicecmdtext in voicecmd_txt:
-                    label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
-                    lbls_voicecmd.append(label_voicecmd)
-                    
-                if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                    lbls_voicecmd[0].place(x=500, y=590, height="30", width="280")   
-                    lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
-                    lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
-
-                self.btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
-                self.function_running = False
+            else:
+                pass
         #----------------------------------------------------------------------------------
         # CREATE GAUGES FUNCTION
         #----------------------------------------------------------------------------------
@@ -2072,7 +2165,7 @@ class P01_DASH(tk.Frame):
                         width = 30
                         height = 30
                         ammount_DEV001G000 = 21
-                    elif theme in THEME_B_txt[3:9]:  # THEME 3 to 9
+                    elif theme in THEME_B_txt[3:11]:  # THEME 3 to 10
                         x_pos = 95
                         y_pos = 8
                         x_pos_nxt = 84
@@ -2092,7 +2185,7 @@ class P01_DASH(tk.Frame):
                         width = 30
                         height = 30
                         ammount_DEV001G001 = 16
-                    elif theme in THEME_B_txt[3:9]:  # THEME 3 to 9
+                    elif theme in THEME_B_txt[3:11]:  # THEME 3 to 9
                         x_pos = 5
                         y_pos = 465
                         x_pos_nxt = 20
@@ -2112,7 +2205,7 @@ class P01_DASH(tk.Frame):
                         width = 30
                         height = 30
                         ammount_DEV001G002 = 16
-                    elif theme in THEME_B_txt[3:9]:  # THEME 3 to 9
+                    elif theme in THEME_B_txt[3:11]:  # THEME 3 to 9
                         x_pos = 5
                         y_pos = 640
                         x_pos_nxt = 20
@@ -2199,7 +2292,7 @@ class P01_DASH(tk.Frame):
                     if theme in THEME_B_txt[:3]: # THEME 0 1 2
                         ammount_VB = 18
                         middle_index = 9  # Index of the middle LED
-                    elif theme in THEME_B_txt[3:9]: # THEME 3 to 8
+                    elif theme in THEME_B_txt[3:11]: # THEME 3 to 8
                         ammount_VB = 20
                         middle_index = 10  # Index of the middle LED
                 
@@ -2296,7 +2389,7 @@ class P01_DASH(tk.Frame):
                         y_pos_RPM = [295, 270, 247, 226, 205, 186, 168, 152, 136, 122, 109, 97, 86, 76, 67, 58, 52, 47, 42, 39, 36, 35, 35, 36, 40, 43, 48, 53, 60, 69, 79, 90, 103, 115, 130]
                         x_pos_RPM_next = +30
                         ammount_DEV002G000 = len(y_pos_RPM)
-                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                         x_pos_RPM = 5
                         y_pos_RPM = [290, 257, 230, 205, 185, 162, 147, 130, 113, 100, 90, 78, 68, 58, 53, 46, 40, 35, 32, 30, 30, 30, 28, 30, 35, 40, 47, 55, 65, 75, 88, 100]
                         x_pos_RPM_next = +40
@@ -2324,7 +2417,7 @@ class P01_DASH(tk.Frame):
                             width = width01[i]
                             height = height01[i]
                             quant = quant01[i]
-                        elif theme in THEME_B_txt[3:9]:  # THEME 3 to 9
+                        elif theme in THEME_B_txt[3:11]:  # THEME 3 to 9
                             x_pos = x_pos02[i]
                             y_pos = y_pos02[i]
                             x_pos_nxt = x_posn02[i]
@@ -2349,7 +2442,7 @@ class P01_DASH(tk.Frame):
                         width_DEV002G007 = 29
                         height_DEV002G007 = 22
                         ammount_DEV002G007 = 24
-                    elif theme in THEME_B_txt[3:9]: # THEME 3 to 9
+                    elif theme in THEME_B_txt[3:11]: # THEME 3 to 9
                         x_pos_DEV002G007 = 1285
                         y_pos_DEV002G007 = 71
                         x_pos_DEV002G007_next = +84
@@ -2381,7 +2474,7 @@ class P01_DASH(tk.Frame):
                         width_DEV002G008 = 29
                         height_DEV002G008 = 22
                         ammount_DEV002G008 = 24
-                    elif theme in THEME_B_txt[3:9]: # THEME 3 to 9
+                    elif theme in THEME_B_txt[3:11]: # THEME 3 to 9
                         x_pos_DEV002G008 = 1285
                         y_pos_DEV002G008 = 184
                         x_pos_DEV002G008_next = +84
@@ -2413,7 +2506,7 @@ class P01_DASH(tk.Frame):
                         width_DEV002G009 = 29
                         height_DEV002G009 = 22
                         ammount_DEV002G009 = 24
-                    elif theme in THEME_B_txt[3:9]: # THEME 3 to 9
+                    elif theme in THEME_B_txt[3:11]: # THEME 3 to 9
                         x_pos_DEV002G009 = 1285
                         y_pos_DEV002G009 = 297
                         x_pos_DEV002G009_next = +84
@@ -2442,7 +2535,7 @@ class P01_DASH(tk.Frame):
                         height_PBFNKT = 55
                         x_pos_PBFNKT_mext = +width_PBFNKT +8
                         ammount_PBFNKT = 4 
-                    elif theme in THEME_B_txt[3:9]: # THEME 3 to 9
+                    elif theme in THEME_B_txt[3:11]: # THEME 3 to 9
                         x_pos_PBFNKT = 1285
                         y_pos_PBFNKT = 546
                         width_PBFNKT = 82
@@ -2532,7 +2625,7 @@ class P01_DASH(tk.Frame):
                     if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
                         label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
                         label_7SEG001.place(x=582, y=160, width=370, height=147)
-                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                         if btn_states_SW[3] == False:
                             if btn_states_SW[1] == True:
                                 label_7SEG001.config(image=localimage03, compound="center")
@@ -2551,7 +2644,7 @@ class P01_DASH(tk.Frame):
                     if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 3
                         label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
                         label_7SEG003.place(x=940, y=470, width=285, height=84)
-                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                         label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                         label_7SEG003.place(x=800, y=590, width=460, height=90)
             elif device == DEVICE_B_txt[2]:
@@ -2562,23 +2655,12 @@ class P01_DASH(tk.Frame):
                     if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
                         label_7SEG001.config(font=(fonts[2], 125), anchor="c")
                         label_7SEG001.place(x=625, y=150, width=220, height=185)
-                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                    elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.config(image=localimage04, compound="center")
                         label_7SEG001.place(x=567, y=164, width=496, height=212)
                     elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
-            elif device == DEVICE_B_txt[31]:
-                #--------------------------------------------------------------------------
-                # 7-SEGMENT DISPLAY 001: SPEED / RPM
-                #--------------------------------------------------------------------------
-                if REGION:
-                    label_7SEG001.place(x=609, y=116, width=496, height=212)
-                #--------------------------------------------------------------------------
-                # 7-SEGMENT DISPLAY 003: TOTAL / ---
-                #--------------------------------------------------------------------------
-                if REGION:                
-                    label_7SEG003.place(x=800, y=590, width=460, height=90)
         #----------------------------------------------------------------------------------
         # END INIT PAGE
         #----------------------------------------------------------------------------------
@@ -3162,6 +3244,72 @@ class P01_DASH(tk.Frame):
                     localimage21 = ledMI_img_list[41] #VOICEBOX34 ONNORM
                     localimage22 = ledLO_img_list[41] #VOICEBOX34 ONMIN
                     localimage23 = ledOF_img_list[41] #VOICEBOX34 OF
+                elif style == STYLE_B_txt[1]:
+                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                    localimage23 = ledOF_img_list[46]
+            elif theme == THEME_B_txt[9]:
+                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                localimage10 = ledOF_img_list[60] #RD
+                localimage11 = ledOF_img_list[62] #YE
+                localimage12 = ledOF_img_list[58] #RD
+                localimage13 = ledFU_img_list[30] #SIGNAL ONRD
+                localimage14 = ledOF_img_list[30] #SIGNAL OFRD
+                localimage15 = ledFU_img_list[60] #RD
+                localimage16 = ledFU_img_list[62] #YE
+                localimage17 = ledFU_img_list[58] #RD
+                localimage18 = rpmON_img_list
+                localimage19 = rpmOF_img_list
+                localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
+                localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
+                if style == STYLE_B_txt[0]:
+                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
+                elif style == STYLE_B_txt[1]:
+                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                    localimage23 = ledOF_img_list[46]
+            elif theme == THEME_B_txt[10]:
+                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                localimage10 = ledOF_img_list[60] #RD
+                localimage11 = ledOF_img_list[62] #YE
+                localimage12 = ledOF_img_list[58] #RD
+                localimage13 = ledFU_img_list[30] #SIGNAL ONRD
+                localimage14 = ledOF_img_list[30] #SIGNAL OFRD
+                localimage15 = ledFU_img_list[60] #RD
+                localimage16 = ledFU_img_list[62] #YE
+                localimage17 = ledFU_img_list[58] #RD
+                localimage18 = rpmON_img_list
+                localimage19 = rpmOF_img_list
+                localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
+                localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
+                if style == STYLE_B_txt[0]:
+                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
                 elif style == STYLE_B_txt[1]:
                     localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
                     localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
@@ -3797,8 +3945,8 @@ class P01_DASH(tk.Frame):
         global lbls_sysinfo
         self.update_labels()
         if REGION:
-            if theme in THEME_B_txt[0:3] + THEME_B_txt[3:9] + THEME_B_txt[15:17]:
-                if device == DEVICE_B_txt[1] or device == DEVICE_B_txt[31]:
+            if theme in THEME_B_txt[0:3] + THEME_B_txt[3:11] + THEME_B_txt[15:17]:
+                if device == DEVICE_B_txt[1]:
                     if btn_states_PB == "pb00":
                         if sys_linux:
                             if btn_states_FNKT[2] == True:
@@ -3850,7 +3998,7 @@ class P01_DASH(tk.Frame):
                         if theme in THEME_B_txt[0:3]:    
                             label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                             label_7SEG002.place(x=2175, y=515, width=245, height=100)
-                        elif theme in THEME_B_txt[3:9]:
+                        elif theme in THEME_B_txt[3:11]:
                             label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
                             label_7SEG002.place(x=1810, y=34, width=320, height=100)
                         try:
@@ -4572,8 +4720,6 @@ class P03_SETUP(tk.Frame):
             elif device == DEVICE_B_txt[4]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
             elif device == DEVICE_B_txt[8]:
-                quant_btns_FAV = quant_btns_HW + quant_btns_SW    
-            elif device == DEVICE_B_txt[31]:
                 quant_btns_FAV = quant_btns_HW + quant_btns_SW
             
             for i in range(quant_btns_FAV):
@@ -5891,7 +6037,7 @@ class myfunctions():
                     #btns_theme[6].config(state=tk.DISABLED)
                     #btns_theme[7].config(state=tk.DISABLED)
                     #btns_theme[8].config(state=tk.DISABLED)
-                    btns_theme[9].config(state=tk.DISABLED)
+                    #btns_theme[9].config(state=tk.DISABLED)
                     #btns_theme[10].config(state=tk.DISABLED)
                     btns_theme[11].config(state=tk.DISABLED)
                     btns_theme[12].config(state=tk.DISABLED)
@@ -6294,14 +6440,15 @@ class myfunctions():
             if REGION:
                 if device in [DEVICE_B_txt[1], DEVICE_B_txt[2], DEVICE_B_txt[4], DEVICE_B_txt[8]]:
                     if style == STYLE_B_txt[0]:
-                        soundfolder = "KARR2000"
+                        if theme in [THEME_B_txt[0], THEME_B_txt[1], THEME_B_txt[2], THEME_B_txt[3], THEME_B_txt[4], THEME_B_txt[5], THEME_B_txt[6], THEME_B_txt[7], THEME_B_txt[8]]:
+                            soundfolder = "KARR2000"
+                        elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
+                            soundfolder = "KARR3000"
                     elif style == STYLE_B_txt[1]:
-                        soundfolder = "KITT2000"
-                elif device in [DEVICE_B_txt[31]]:
-                    if style == STYLE_B_txt[0]:
-                        soundfolder = "KARR3000"
-                    elif style == STYLE_B_txt[1]:
-                        soundfolder = "KITT3000"
+                        if theme in [THEME_B_txt[0], THEME_B_txt[1], THEME_B_txt[2], THEME_B_txt[3], THEME_B_txt[4], THEME_B_txt[5], THEME_B_txt[6], THEME_B_txt[7], THEME_B_txt[8]]:
+                            soundfolder = "KITT2000"
+                        elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
+                            soundfolder = "KITT3000"
                 snd_fldr = os.path.join(folder,'sound', soundfolder)
 
             #------------------------------------------------------------------------------
