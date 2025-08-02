@@ -249,7 +249,7 @@ if REGION:
             STYLE_B_txt  = textdata["ALL_DEVICES"]["CONFIG"]["styles"]
             THEME_B_txt  = textdata["ALL_DEVICES"]["CONFIG"]["themes"]
             SYS_B_txt    = textdata["ALL_DEVICES"]["CONFIG"]["systems"]
-            PB_B_txt        = textdata["ALL_DEVICES"]["PB_B_NAMES"]
+            btn_SELECT_txt        = textdata["ALL_DEVICES"]["btn_SELECT_txt"]
             FNKT_B_txt      = textdata["ALL_DEVICES"]["FNKT_B_NAMES"]
 
             units_eu = textdata["ALL_DEVICES"]["UNITS"]["eu"]
@@ -1853,73 +1853,35 @@ class P01_DASH(tk.Frame):
                         self.canvas.create_text(2120, 225, **txt_style_S34c, text=gau_S06U02_txt[20])
                         self.canvas.create_text(1970, 170, **txt_style_S34c, text=gau_S06U02_txt[21])                        
         #----------------------------------------------------------------------------------
-        # POWER BUTTON (SWITCH FRAME TO SETUP)
+        # SETUP BUTTON
         #----------------------------------------------------------------------------------
         if REGION:
-            button = tk.Button(self, command=lambda: self.master.switch_frame(P03_SETUP))
-            if device == DEVICE_B_txt[1]:
-                if theme in THEME_B_txt[:3]:
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=45)
-                elif theme in (THEME_B_txt[3:9]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=64)
-                elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
-                    button.place(x=10, y=10)
-            elif device == DEVICE_B_txt[2]:
-                if theme in (THEME_B_txt[:3]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=2, y=42)
-                elif theme in (THEME_B_txt[3:9]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=21)
-                elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
-                    button.place(x=10, y=10)
-            elif device == DEVICE_B_txt[4]:
-                if theme in (THEME_B_txt[:3]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=2, y=42)
-                elif theme in (THEME_B_txt[3:9]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=21)
-                elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
-                    button.place(x=10, y=10)
-            elif device == DEVICE_B_txt[8]:
-                if theme in (THEME_B_txt[:3]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=50, y=0)
-                elif theme in (THEME_B_txt[3:9]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=50, y=0)
-                elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
-                    button.place(x=0, y=0)
-            elif device == DEVICE_B_txt[31]:
-                if theme in (THEME_B_txt[:3]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=21)
-                elif theme in (THEME_B_txt[3:9]):
-                    button.config(**btn_style_imgbtn, image=localimage15)
-                    button.place(x=4, y=21)
-                elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                    button.config(**btn_style_imgbtn_lcars, image=lcarsOF_img_list[2])
-                    button.place(x=10, y=10)
+            try:
+                theme_index = THEME_B_txt.index(theme)
+                theme_key = f"THEME{theme_index}"
+
+                setup_pos = self.positions["BUTTON_POSITIONS"][device][theme_key]
+                x_setup = setup_pos.get("x_btn_SETUP", 10)
+                y_setup = setup_pos.get("y_btn_SETUP", 10)
+
+                button = tk.Button(self, **btn_style_imgbtn, image=localimage15,
+                                   command=lambda: self.master.switch_frame(P03_SETUP))
+                button.place(x=x_setup, y=y_setup)
+            except Exception as e:
+                print(f"[WARN] Failed to place SETUP button for {device} / {theme_key}: {e}")
         #----------------------------------------------------------------------------------
-        # POWER BUTTONS DASH (YELLOW)
+        # SELECT BUTTONS
         #----------------------------------------------------------------------------------   
         if REGION:
-            global btn_PB
-            global PB_B_txt
+            global btn_SELECT
+            global btn_SELECT_txt
             #--------------------------------------------------------------------------
             # BUTTONS
             #--------------------------------------------------------------------------
             if REGION:
-                btn_PB = []
-                for pb_text in PB_B_txt:
-                    btns_PB = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [
+                btn_SELECT = []
+                for pb_text in btn_SELECT_txt:
+                    btns_SELECT = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [
                         read.toggle_PB(text),
                         read.update_pb_buttons(localimage15, localimage16),
                     self.refresh_background_image(),
@@ -1927,35 +1889,35 @@ class P01_DASH(tk.Frame):
                     self.update_pb_ui_elements(),
                     self.update_labels()
                     ])
-                    btn_PB.append(btns_PB)
+                    btn_SELECT.append(btns_SELECT)
                 try:
                     theme_index = THEME_B_txt.index(theme)
                     theme_key = f"THEME{theme_index}"
 
-                    pb_btn_data = self.positions["POSITIONS"][device][theme_key]
-                    x_btn = pb_btn_data.get("x_btn_PB", [])
-                    y_btn = pb_btn_data.get("y_btn_PB", [])
-                    quant_btn = min(len(x_btn), len(y_btn), len(btn_PB))
+                    setup_pos = self.positions["BUTTON_POSITIONS"][device][theme_key]
+                    x_btn = setup_pos.get("x_btn_SELECT", [])
+                    y_btn = setup_pos.get("y_btn_SELECT", [])
+                    quant_btn = min(len(x_btn), len(y_btn), len(btn_SELECT))
 
                     for i in range(quant_btn):
-                        btn_PB[i].place(x=x_btn[i], y=y_btn[i])
+                        btn_SELECT[i].place(x=x_btn[i], y=y_btn[i])
                 except (KeyError, ValueError) as e:
                     print(f"⚠️ Keine PB-Button-Positionen für {device} / {theme_key}: {e}")
             #--------------------------------------------------------------------------
             # STATE
             #--------------------------------------------------------------------------
             if REGION:
-                for i, text in enumerate(PB_B_txt):
+                for i, text in enumerate(btn_SELECT_txt):
                     if btn_states_PB == text:
                         if THEME_B_txt[0:9].count(theme) > 0: # THEME 0 to 9
-                            btn_PB[i].config(image=localimage15)
+                            btn_SELECT[i].config(image=localimage15)
                         elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                            btn_PB[i].config(image=lcarsON_img_list[3])
+                            btn_SELECT[i].config(image=lcarsON_img_list[3])
                     else:
                         if THEME_B_txt[0:9].count(theme) > 0: # THEME 0 to 9
-                            btn_PB[i].config(image=localimage16)
+                            btn_SELECT[i].config(image=localimage16)
                         elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                            btn_PB[i].config(image=lcarsOF_img_list[3])
+                            btn_SELECT[i].config(image=lcarsOF_img_list[3])
         #----------------------------------------------------------------------------------
         # SPECIAL BUTTONS (YELLOW)
         #----------------------------------------------------------------------------------
@@ -1971,111 +1933,79 @@ class P01_DASH(tk.Frame):
                 ("introduce", "VORSTELLUNG_KITT_KURZ.mp3", False)
             ]
 
-            for i, (subfolder, filename, loop_mode) in enumerate(self.audio_definitions):
-                filepath = os.path.join(snd_fldr, subfolder, filename)
-                btn = tk.Button(self, **btn_style_imgbtn, image=self.audio_off_img,
-                                command=lambda path=filepath, idx=i, loop=loop_mode: self.toggle_audio(idx, path, loop))
-                btn.place(x=507, y=115 + i * 58)
-                self.audio_buttons.append(btn)
+            try:
+                theme_index = THEME_B_txt.index(theme)
+                theme_key = f"THEME{theme_index}"
+
+                special_pos = self.positions["BUTTON_POSITIONS"][device][theme_key]
+                x_btns = special_pos.get("x_btn_SPECIAL", [])
+                y_btns = special_pos.get("y_btn_SPECIAL", [])
+
+                for i, (subfolder, filename, loop_mode) in enumerate(self.audio_definitions):
+                    filepath = os.path.join(snd_fldr, subfolder, filename)
+                    btn = tk.Button(self, **btn_style_imgbtn, image=self.audio_off_img,
+                                    command=lambda path=filepath, idx=i, loop=loop_mode: self.toggle_audio(idx, path, loop))
+                    if i < len(x_btns) and i < len(y_btns):
+                        btn.place(x=x_btns[i], y=y_btns[i])
+                    else:
+                        print(f"[WARN] Missing SPECIAL button position for index {i}")
+                    self.audio_buttons.append(btn)
+            except Exception as e:
+                print(f"[ERROR] Failed to place SPECIAL buttons for {device}/{theme_key}: {e}")
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTONS (LO HI VHF UHF AM FM CB) / (ATTACK SUST DELAY DEL)
         #---------------------------------------------------------------------------------- 
         if REGION:
-            global btns_FNKT
-            global btn_FNKT
-            #--------------------------------------------------------------------------
-            # POSITIONS todo export to json
-            #--------------------------------------------------------------------------
-            if REGION:
-                if device == DEVICE_B_txt[1]:
-                    if THEME_B_txt[:3].count(theme) > 0: # THEME 0 to 3
-                        x_btn = [585, 635, 685, 735]
-                        y_btn = [663, 663, 663, 663]
-                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [507, 620, 733, 846, 959, 1072, 1185]
-                        y_btn = [374, 374, 374, 374, 374, 374, 374]
-                    elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                        x_btn = [10, 192, 374, 556]
-                        y_btn = [380, 380, 380, 380]
-                elif device == DEVICE_B_txt[2]:
-                    if THEME_B_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [2205, 2255, 2305, 2355]
-                        y_btn = [715, 715, 715, 715]
-                    if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [1762, 1870, 1978, 2086]
-                        y_btn = [256, 256, 256, 256]
-                    elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                        x_btn = [10, 192, 374, 556]
-                        y_btn = [380, 380, 380, 380]
-                elif device == DEVICE_B_txt[4]:
-                    if THEME_B_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [2205, 2255, 2305, 2355]
-                        y_btn = [715, 715, 715, 715]
-                    if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [1762, 1870, 1978, 2086]
-                        y_btn = [256, 256, 256, 256]
-                    elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                        x_btn = [10, 192, 374, 556]
-                        y_btn = [380, 380, 380, 380]
-                elif device == DEVICE_B_txt[8]:
-                    if THEME_B_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [20, 220]
-                        y_btn = [50, 50]
-                    if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [35, 175,  35, 175,  35, 175,  35, 175,  35, 175,  35, 175,  35, 175,  35, 175,   35,  175,   35,  175,   35,  175,   35,  175]
-                        y_btn = [50,  50, 170, 170, 290, 290, 410, 410, 530, 530, 650, 650, 770, 770, 890, 890, 1010, 1010, 1130, 1130, 1250, 1250, 1370, 1370]
-                    elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                        x_btn = [10, 192, 374, 556]
-                        y_btn = [380, 380, 380, 380]
-                elif device == DEVICE_B_txt[31]:
-                    if THEME_B_txt[:3].count(theme) > 0: # THEME 0 to 2
-                        x_btn = [2205, 2255, 2305, 2355]
-                        y_btn = [715, 715, 715, 715]
-                    if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                        x_btn = [1762, 1870, 1978, 2086]
-                        y_btn = [256, 256, 256, 256]
-                    elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                        x_btn = [10, 192, 374, 556]
-                        y_btn = [380, 380, 380, 380]
-                quant_btn = len(x_btn)
-            #--------------------------------------------------------------------------
-            # BUTTONS
-            #--------------------------------------------------------------------------
-            if REGION:
-                btn_FNKT = []
+            self.btn_FNKT = []  # ← sicherstellen, dass Attribut immer existiert
+            try:
+                theme_index = THEME_B_txt.index(theme)
+                theme_key = f"THEME{theme_index}"
+
+                fnkt_pos = self.positions["BUTTON_POSITIONS"][device][theme_key]
+                x_btn = fnkt_pos.get("x_btn_FUNCTION", [])
+                y_btn = fnkt_pos.get("y_btn_FUNCTION", [])
+
+                quant_btn = min(len(x_btn), len(y_btn))
+
+                map_img_on = [
+                    localimage64, localimage64, localimage64, localimage64, localimage64, localimage64,
+                    localimage66, localimage66,
+                    localimage66, localimage61,
+                    localimage61, localimage61, localimage61, localimage61,
+                    localimage66, localimage61,
+                    localimage66, localimage66,
+                    localimage65, localimage65, localimage65, localimage65, localimage65, localimage65
+                ]
+
+                map_img_off = [
+                    localimage74, localimage74, localimage74, localimage74, localimage74, localimage74,
+                    localimage76, localimage76,
+                    localimage76, localimage71,
+                    localimage71, localimage71, localimage71, localimage71,
+                    localimage76, localimage71,
+                    localimage76, localimage76,
+                    localimage75, localimage75, localimage75, localimage75, localimage75, localimage75
+                ]
+
                 for i in range(quant_btn):
-                    btns_FNKT = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
-                    btn_FNKT.append(btns_FNKT)
-                    btn_FNKT[i].place(x=x_btn[i], y=y_btn[i])
-            #--------------------------------------------------------------------------
-            # STATE
-            #--------------------------------------------------------------------------  
-                    if btn_states_FNKT[i] == True:
-                        map_img =  [localimage64,localimage64,localimage64,localimage64,localimage64,localimage64,
-                                    localimage66,localimage66,
-                                    localimage66,localimage61,
-                                    localimage61,localimage61,localimage61,localimage61,
-                                    localimage66,localimage61,
-                                    localimage66,localimage66,
-                                    localimage65,localimage65,localimage65,localimage65,localimage65,localimage65
-                                    ]                       
-                        if device == DEVICE_B_txt[8]:
-                            btn_FNKT[i].config(image=map_img[i])
+                    btn = tk.Button(self, **btn_style_imgbtn,
+                                    command=lambda i=i: [read.toggle_button_states_FNKT(i),self.master.switch_frame(P01_DASH)])
+                    btn.place(x=x_btn[i], y=y_btn[i])
+                    self.btn_FNKT.append(btn)
+
+                    if i < len(btn_states_FNKT) and btn_states_FNKT[i]:
+                        if device == DEVICE_B_txt[8] and i < len(map_img_on):
+                            btn.config(image=map_img_on[i])
                         else:
-                            btn_FNKT[i].config(image=localimage06)
+                            btn.config(image=localimage06)
                     else:
-                        map_img =  [localimage74,localimage74,localimage74,localimage74,localimage74,localimage74,
-                                    localimage76,localimage76,
-                                    localimage76,localimage71,
-                                    localimage71,localimage71,localimage71,localimage71,
-                                    localimage76,localimage71,
-                                    localimage76,localimage76,
-                                    localimage75,localimage75,localimage75,localimage75,localimage75,localimage75
-                                    ] 
-                        if device == DEVICE_B_txt[8]:
-                            btn_FNKT[i].config(image=map_img[i])
+                        if device == DEVICE_B_txt[8] and i < len(map_img_off):
+                            btn.config(image=map_img_off[i])
                         else:
-                            btn_FNKT[i].config(image=localimage07)
+                            btn.config(image=localimage07)
+
+            except Exception as e:
+                print(f"[ERROR] Failed to load FNKT button positions or images for {device}/{theme_key}: {e}")
         #----------------------------------------------------------------------------------
         # SWITCH UNITS BUTTON (IMPERIAL/METRIC)
         #----------------------------------------------------------------------------------   
@@ -2121,7 +2051,7 @@ class P01_DASH(tk.Frame):
                     lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
                     lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
 
-                btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
+                self.btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
                 self.function_running = False
             elif device == DEVICE_B_txt[31]:
                 lbls_voicecmd = []
@@ -2134,7 +2064,7 @@ class P01_DASH(tk.Frame):
                     lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
                     lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
 
-                btns_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
+                self.btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
                 self.function_running = False
         #----------------------------------------------------------------------------------
         # CREATE GAUGES FUNCTION
@@ -5902,11 +5832,11 @@ class myfunctions():
         #----------------------------------------------------------------------------------
         if REGION:
             def update_pb_buttons(self, var1, var2):
-                for i, text in enumerate(PB_B_txt):
+                for i, text in enumerate(btn_SELECT_txt):
                     if btn_states_PB == text:
-                        btn_PB[i].config(image=var1)
+                        btn_SELECT[i].config(image=var1)
                     else:
-                        btn_PB[i].config(image=var2)
+                        btn_SELECT[i].config(image=var2)
             #------------------------------------------------------------------------------
             # DEVICE BUTTONS
             #------------------------------------------------------------------------------
