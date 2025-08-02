@@ -268,7 +268,6 @@ if REGION:
             # -----------------------------------------------------
             DEV001 = textdata["DEVICES"].get("DEV001", {})
             DEV002 = textdata["DEVICES"].get("DEV002", {})
-            DEV031 = textdata["DEVICES"].get("DEV031", {})
 
             # === DEV001 ===
             btnhw_DEV001_txt      = DEV001.get("BTN_HW", [])
@@ -308,14 +307,6 @@ if REGION:
             rb01_DEV002_txt = inputs002.get("RB01", [])
             rb02_DEV002_txt = inputs002.get("RB02", [])
             rb03_DEV002_txt = inputs002.get("RB03", [])
-
-            # === DEV031 ===
-            btnhw_DEV031_txt      = DEV031.get("BTN_HW", [])
-            lbl_btnsw_DEV031_txt  = DEV031.get("LBL_SW", [])
-            btnsw_DEV031_txt_0    = DEV031.get("BTN_SW_0", [])
-            btnsw_DEV031_txt_1    = DEV031.get("BTN_SW_1", [])
-            btnsw_DEV031_txt_3    = DEV031.get("BTN_SW_3", [])
-
             #------------------------------------------------------------------------------
             # LANGUAGE LISTS
             #------------------------------------------------------------------------------
@@ -353,12 +344,6 @@ if REGION:
             bgDEV008_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV008', 'DASH')
             bgDEV008_DASH_img_dir_srt = sorted(os.listdir(bgDEV008_DASH_img_dir), key=str.lower)
             bgDEV008_DASH_img_list = []
-            bgDEV031_img_dir = os.path.join(folder,'images', '000_bg', 'DEV031')
-            bgDEV031_img_dir_srt = sorted(os.listdir(bgDEV031_img_dir), key=str.lower)
-            bgDEV031_img_list = []
-            bgDEV031_DASH_img_dir = os.path.join(folder,'images', '000_bg', 'DEV031', 'DASH')
-            bgDEV031_DASH_img_dir_srt = sorted(os.listdir(bgDEV031_DASH_img_dir), key=str.lower)
-            bgDEV031_DASH_img_list = []
             #------------------------------------------------------------------------------
             # 001_led
             #------------------------------------------------------------------------------
@@ -552,7 +537,7 @@ if REGION:
             grid_spacing = 15
             if device == DEVICE_B_txt[1]:
                 dual_disp_style = "LR"
-                bggrid = [0, 1280, 800, 0, 768, 0]
+                bggrid = [0, 1280, 1280, 0, 768, 0]
             elif device == DEVICE_B_txt[2]:
                 dual_disp_style = "LR"
                 bggrid = [0, 1280,1280, 0, 768, 0]
@@ -565,9 +550,6 @@ if REGION:
             elif device == DEVICE_B_txt[8]:
                 dual_disp_style = "UD"
                 bggrid = [0, 320, 0, 0, 1480 , 0]
-            elif device == DEVICE_B_txt[31]:
-                dual_disp_style = "LR"
-                bggrid = [0, 1280,1280, 0, 768, 0]
             
             kidd_left   =  "%s" % bggrid[0]
             kidd_top    =  "%s" % bggrid[3]
@@ -649,7 +631,7 @@ if REGION:
         #font_BTTF01 = ("ccar7seg", 90)
         #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
     #--------------------------------------------------------------------------------------
-    # SETUP HARDWARE DEV001 AND DEV031
+    # SETUP HARDWARE DEV001
     #--------------------------------------------------------------------------------------
     if REGION:
         #------------------------------------------------------------------------------
@@ -809,8 +791,8 @@ class P00_BOOT(tk.Frame):
         super().__init__(master)
         global device, style, theme, system
         global btn_states_PB, btn_states_PBFNKT, btn_states_FNKT, btn_states_HW, btn_states_SW, btn_states_qopt, btn_states_FAV
-        global bgDEV001_img_list, bgDEV002_img_list, bgDEV004_img_list, bgDEV008_img_list, bgDEV031_img_list
-        global bgDEV001_DASH_img_list, bgDEV002_DASH_img_list, bgDEV004_DASH_img_list, bgDEV008_DASH_img_list, bgDEV031_DASH_img_list
+        global bgDEV001_img_list, bgDEV002_img_list, bgDEV004_img_list, bgDEV008_img_list
+        global bgDEV001_DASH_img_list, bgDEV002_DASH_img_list, bgDEV004_DASH_img_list, bgDEV008_DASH_img_list
         global segmentKA_img_list, segmentKI_img_list
         global lcarsON_img_list, lcarsOF_img_list, lcarsON_R_img_list, lcarsOF_R_img_list
         global rpmON_img_list, rpmOF_img_list
@@ -865,15 +847,13 @@ class P00_BOOT(tk.Frame):
             "DEV001": (bgDEV001_img_dir, "bgDEV001_img_list"),
             "DEV002": (bgDEV002_img_dir, "bgDEV002_img_list"),
             "DEV004": (bgDEV004_img_dir, "bgDEV004_img_list"),
-            "DEV008": (bgDEV008_img_dir, "bgDEV008_img_list"),
-            "DEV031": (bgDEV031_img_dir, "bgDEV031_img_list")
+            "DEV008": (bgDEV008_img_dir, "bgDEV008_img_list")
         }
         dash_map = {
             "DEV001": (bgDEV001_DASH_img_dir, "bgDEV001_DASH_img_list"),
             "DEV002": (bgDEV002_DASH_img_dir, "bgDEV002_DASH_img_list"),
             "DEV004": (bgDEV004_DASH_img_dir, "bgDEV004_DASH_img_list"),
-            "DEV008": (bgDEV008_DASH_img_dir, "bgDEV008_DASH_img_list"),
-            "DEV031": (bgDEV031_DASH_img_dir, "bgDEV031_DASH_img_list")
+            "DEV008": (bgDEV008_DASH_img_dir, "bgDEV008_DASH_img_list")
         }
         if device in path_map:
             path, varname = path_map[device]
@@ -948,8 +928,7 @@ class P00_BOOT(tk.Frame):
             "DEV001": bgDEV001_img_list,
             "DEV002": bgDEV002_img_list,
             "DEV004": bgDEV004_img_list,
-            "DEV008": bgDEV008_img_list,
-            "DEV031": bgDEV031_img_list
+            "DEV008": bgDEV008_img_list
         }
         background_image = bg_map.get(device, [None, None])[1]
 
@@ -1552,13 +1531,6 @@ class P01_DASH(tk.Frame):
                 #--------------------------------------------------------------------------
                 if THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
                     self.canvas.create_rectangle(1808, 30, 2130, 134, fill=sty_clr[3])   #PROGNO
-            elif device == DEVICE_B_txt[31]:
-                #--------------------------------------------------------------------------
-                # GET BACKGROUNDIMAGE
-                #--------------------------------------------------------------------------
-                theme_bg_image = bgDEV031_DASH_img_list
-                background_image = theme_bg_image[THEME_B_txt.index(theme)]
-                self.canvas.create_image(0, 0, image=background_image, anchor='nw')
         #----------------------------------------------------------------------------------
         # STATIC TEXT
         #----------------------------------------------------------------------------------
@@ -2686,8 +2658,6 @@ class P01_DASH(tk.Frame):
             self.background_image = bgDEV001_DASH_img_list[theme_index]
         elif device == DEVICE_B_txt[2]:
             self.background_image = bgDEV002_DASH_img_list[theme_index]
-        elif device == DEVICE_B_txt[31]:
-            self.background_image = bgDEV031_DASH_img_list[theme_index]
         else:
             print(f"⚠️ Kein Hintergrundbild für Device {device}")
             return
@@ -3212,15 +3182,15 @@ class P01_DASH(tk.Frame):
         # DEV001 GAUGES
         #----------------------------------------------------------------------------------
         if device == DEVICE_B_txt[1]:
-            #               #00  #01  #02
-            val_min      = [  0,   0,   0]
-            val_max      = [310, 100, 200]
-            val_sim      = [ 5,  10,  14] #HIGHER NUMBER FASTER SIMULATION
-            val_conf_min = [  0,   0,   0]
             #------------------------------------------------------------------------------
             # SIMULATION
             #------------------------------------------------------------------------------            
             if REGION:
+                #               #00  #01  #02
+                val_min      = [  0,   0,   0]
+                val_max      = [310, 100, 200]
+                val_sim      = [ 5,  10,  14] #HIGHER NUMBER FASTER SIMULATION
+                val_conf_min = [  0,   0,   0]
                 if btn_states_SW[3] == True:
                     for i in range(3):
                         val_cnt_sim[i] += val_sim[i] if val_cnt_sim_updn[i] else -val_sim[i]
@@ -3821,65 +3791,6 @@ class P01_DASH(tk.Frame):
             #button_pin.direction = digitalio.Direction.INPUT
             #val_io001_01 = button_pin.value
         #----------------------------------------------------------------------------------
-        # DEV031 GAUGES
-        #----------------------------------------------------------------------------------
-        if device == DEVICE_B_txt[31]:
-            #------------------------------------------------------------------------------
-            # UPDATE GPS DATA AND WRITE SPEED DATA
-            #------------------------------------------------------------------------------                      
-            if REGION:
-                #--------------------------------------------------------------------------
-                # GET NEW GPS DATA
-                #--------------------------------------------------------------------------
-                if btn_states_HW[0] == True:  #SW0 = GPS MODUL
-                    if gps_port is not None:                    
-                        read.gps_data()
-                #--------------------------------------------------------------------------
-                # SIMULATE VARIABLE
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3] == True:
-                    if count_SIM_DEV001G000:
-                        count_ctr_SIM_DEV001G000 += 5
-                        if count_ctr_SIM_DEV001G000 > 310:
-                            count_SIM_DEV001G000 = False
-                            count_ctr_SIM_DEV001G000 -= 2
-                    else:
-                        count_ctr_SIM_DEV001G000 -= 5
-                        if count_ctr_SIM_DEV001G000 < 0:
-                            count_SIM_DEV001G000 = True
-                            count_ctr_SIM_DEV001G000 += 2
-                #--------------------------------------------------------------------------
-                # WRITE SPEED VARIABLE TO 7SEG VARIABLE
-                #--------------------------------------------------------------------------
-                if btn_states_SW[3]:
-                    seven_seg_speed = count_ctr_SIM_DEV001G000
-                elif btn_states_SW[0] and not btn_states_SW[1]:
-                    seven_seg_speed = aldl_vehicle_speed_mph
-                elif not btn_states_SW[0] and not btn_states_SW[1]:
-                    seven_seg_speed = aldl_vehicle_speed_kph
-                elif btn_states_HW[0] and btn_states_SW[1]:
-                    if btn_states_SW[0]:
-                        seven_seg_speed = gps_mph_0
-                    else:
-                        seven_seg_speed = gps_kph_0
-                else:
-                    if btn_states_SW[0]:
-                        seven_seg_speed = aldl_vehicle_speed_mph
-                    else:
-                        seven_seg_speed = aldl_vehicle_speed_kph
-            #------------------------------------------------------------------------------
-            # UPDATE VOICECOMMAND TEXT IN TOTAL DISPLAY
-            #------------------------------------------------------------------------------
-            if REGION:
-                if btn_states_FNKT[1] == True:
-                    lbls_voicecmd[0].config(text= vinfo)
-                    lbls_voicecmd[1].config(text= vtext)
-                    lbls_voicecmd[2].config(text= activation_word_info)
-                else:
-                    lbls_voicecmd[0].config(text="---")
-                    lbls_voicecmd[1].config(text="---")
-                    lbls_voicecmd[2].config(text='SpeechRecognition is off')
-        #----------------------------------------------------------------------------------
         # UPDATE SYSINFO MTR DISPLAY
         #----------------------------------------------------------------------------------
         # Initialisiere 8 Labels für sysinfo global und leer
@@ -3992,12 +3903,6 @@ class P01_DASH(tk.Frame):
                 if device == DEVICE_B_txt[2]:
                     label_7SEG001.config(text=str(new_rpm).zfill(3), anchor="nw")
                     self.old_values["rpm_label"] = new_rpm
-     
-        if device == DEVICE_B_txt[31]:
-            new_speed = seven_seg_speed
-            if self.old_values.get("speed_label") != new_speed:
-                label_7SEG001.config(text=str(seven_seg_speed).zfill(3), anchor="nw")
-                self.old_values["speed_label"] = new_speed
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
@@ -4403,8 +4308,7 @@ class P03_SETUP(tk.Frame):
             lbls_btnsw = []
             lbls_btnhw_info = []
             lbls_btnhw_info_txt_DEV001 = [gps_port, "---", "---", "---", "---", "---", "---", "---", "---", "---"]
-            lbls_btnhw_info_txt_DEV002 = ["---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]
-            lbls_btnhw_info_txt_DEV031 = [gps_port, "---", "---", "---", "---", "---", "---", "---", "---", "---"]           
+            lbls_btnhw_info_txt_DEV002 = ["---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]        
             x_pos = x_start
             for i in range(quant_btns_HW):
                 lbls_btnhw = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
@@ -4412,8 +4316,6 @@ class P03_SETUP(tk.Frame):
                     lbls_btnhw.config(text=btnhw_DEV001_txt[i])
                 elif device == DEVICE_B_txt[2]:
                     lbls_btnhw.config(text=btnhw_DEV002_txt[i])
-                elif device == DEVICE_B_txt[31]:
-                    lbls_btnhw.config(text=btnhw_DEV031_txt[i])
                 lbls_btnhw.place(x=x_pos, y=y_l1, width=lbl_w, height=lbl_f_h)
                 x_pos += +px_to_next
             x_pos = x_start
@@ -4423,8 +4325,6 @@ class P03_SETUP(tk.Frame):
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV001[i])
                 elif device == DEVICE_B_txt[2]:
                     lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV002[i])
-                elif device == DEVICE_B_txt[31]:
-                    lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV031[i])
                 lbls_btnhw_info.place(x=x_pos, y=y_l2, width=lbl_w, height=lbl_i_h)
                 x_pos += +px_to_next
             x_pos = x_start
@@ -4434,8 +4334,6 @@ class P03_SETUP(tk.Frame):
                     lbls_btnsw.config(text=lbl_btnsw_DEV001_txt[i])
                 elif device == DEVICE_B_txt[2]:
                     lbls_btnsw.config(text=lbl_btnsw_DEV002_txt[i])
-                elif device == DEVICE_B_txt[31]:
-                    lbls_btnsw.config(text=lbl_btnsw_DEV031_txt[i])
                 lbls_btnsw.place(x=x_pos, y=y_l4, width=lbl_w, height=lbl_f_h)
                 x_pos += +px_to_next
         #----------------------------------------------------------------------------------
@@ -5008,9 +4906,8 @@ class P04_THEMES(tk.Frame):
             canvas.create_text(1320, frm00_YPOS+470, **txt_style_pagename, fill=sys_clr[9], text="DEV015: WIFI RELAIS BOARD")
             
             canvas.create_text(1320, frm00_YPOS+530, **txt_style_pagename, fill=sys_clr[9], text="DEV030: KNIGHT3000 HUD")
-            canvas.create_text(1320, frm00_YPOS+560, **txt_style_pagename, fill=sys_clr[9], text="DEV031: KNIGHT3000 DASH/VOICEBOX")
-            canvas.create_text(1320, frm00_YPOS+590, **txt_style_pagename, fill=sys_clr[9], text="DEV032: KNIGHT3000 RADIO")
-            canvas.create_text(1320, frm00_YPOS+620, **txt_style_pagename, fill=sys_clr[9], text="DEV033: KNIGHT3000 MIRROR")
+            canvas.create_text(1320, frm00_YPOS+560, **txt_style_pagename, fill=sys_clr[9], text="DEV032: KNIGHT3000 RADIO")
+            canvas.create_text(1320, frm00_YPOS+590, **txt_style_pagename, fill=sys_clr[9], text="DEV033: KNIGHT3000 MIRROR")
         #----------------------------------------------------------------------------------
         # DEVICE BUTTONS
         #----------------------------------------------------------------------------------   
@@ -5058,8 +4955,6 @@ class P05_CARFUNCTIONS(tk.Frame):
             background_image = bgDEV001_img_list[2]
         elif device == DEVICE_B_txt[2]:
             background_image = bgDEV002_img_list[2]
-        elif device == DEVICE_B_txt[31]:
-            background_image = bgDEV031_img_list[2]
             
         canvas = tk.Canvas(self, bg='black', highlightthickness=0)
         canvas.pack(fill='both', expand=True)
@@ -5089,8 +4984,6 @@ class P06_KNIGHTFUNCTIONS(tk.Frame):
             background_image = bgDEV001_img_list[3]
         elif device == DEVICE_B_txt[2]:
             background_image = bgDEV002_img_list[3]
-        elif device == DEVICE_B_txt[31]:
-            background_image = bgDEV031_img_list[3]
             
         canvas = tk.Canvas(self, bg='black', highlightthickness=0)
         canvas.pack(fill='both', expand=True)
@@ -5892,7 +5785,7 @@ class myfunctions():
                     btns_device[28].config(state=tk.DISABLED)
                     btns_device[29].config(state=tk.DISABLED)
                     btns_device[30].config(state=tk.DISABLED)
-                    #btns_device[31].config(state=tk.DISABLED)
+                    btns_device[31].config(state=tk.DISABLED)
                     btns_device[32].config(state=tk.DISABLED)
                     btns_device[33].config(state=tk.DISABLED)
                     btns_device[34].config(state=tk.DISABLED)
@@ -5999,7 +5892,7 @@ class myfunctions():
                     #btns_theme[7].config(state=tk.DISABLED)
                     #btns_theme[8].config(state=tk.DISABLED)
                     btns_theme[9].config(state=tk.DISABLED)
-                    btns_theme[10].config(state=tk.DISABLED)
+                    #btns_theme[10].config(state=tk.DISABLED)
                     btns_theme[11].config(state=tk.DISABLED)
                     btns_theme[12].config(state=tk.DISABLED)
                     btns_theme[13].config(state=tk.DISABLED)
@@ -6618,8 +6511,6 @@ class myfunctions():
                 buses[board_num].write_word_data(i2c_addr_dev02rb[board_num], lo, hi)
             except Exception as e:
                 print("Relaisbefehl uebersprungen – Board nicht erreichbar oder nicht definiert:", e)
-
-
 #------------------------------------------------------------------------------------------
 # END PROGRAM
 #------------------------------------------------------------------------------------------
