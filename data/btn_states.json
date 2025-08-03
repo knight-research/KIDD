@@ -14,7 +14,7 @@
                 false,
                 false,
                 true,
-                true,
+                false,
                 false,
                 false,
                 false,
@@ -67,10 +67,10 @@
                 false
             ],
             "SW": [
-                0,
+                false,
                 1,
                 0,
-                true,
+                false,
                 false,
                 0,
                 0,
@@ -242,11 +242,11 @@
                 false
             ],
             "SW": [
-                0,
-                0,
-                0,
-                0,
+                false,
                 1,
+                0,
+                true,
+                false,
                 0,
                 0,
                 0,

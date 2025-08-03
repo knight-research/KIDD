@@ -284,6 +284,7 @@ if REGION:
             gau_S04U01_txt = gau001.get("S04", [])
             gau_S05U01_txt = gau001.get("S05", [])
             gau_S06U01_txt = gau001.get("S06", [])
+            gau_KR3KU01_txt = gau001.get("KR3K", [])
 
             # === DEV002 ===
             btnhw_DEV002_txt      = DEV002.get("BTN_HW", [])
@@ -584,9 +585,9 @@ if REGION:
         sys_clr_GN = ["#001500", "#003010", "#103010", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#44FF44", "#FF4444"]
         sys_clr_BU = ["#000515", "#001530", "#001030", "#0099FF", "#BBFFFF", "#005555", "#00FFFF", "#009999", "#002020", "#33AAFF", "#44FF44", "#FF4444"]        
         sys_clr_WH = ["#000000", "#101010", "#151515", "#AAAAAA", "#BBBBBB", "#555555", "#FFFFFF", "#999999", "#202020", "#FFFFFF", "#44FF44", "#FF4444"]
-        #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG  04_BG_INF  05_TXT_INF
-        sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200", "#142827", "#00FFFF"]
-        sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000", "#142827", "#00FFFF"]
+        #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG  04_BG_INF  05_TXT_INF 06_BLACK
+        sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200", "#142827", "#00FFFF", "#000000"]
+        sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000", "#142827", "#00FFFF", "#000000"]
         #----------------------------------------------------------------------------------
         # APPLY SYSTEM STYLES
         #----------------------------------------------------------------------------------
@@ -973,302 +974,298 @@ class P01_DASH(tk.Frame):
                 if theme in [THEME_B_txt[0]]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
-                    localimage01 = sledON_img_list[30] #MPH
-                    localimage02 = sledON_img_list[29] #KPH
-                    localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledFU_img_list[11] #HI LO VHF
-                    localimage08 = sledON_img_list[33] #RPMi
-                    localimage09 = sledON_img_list[34] #RPMm
-                    localimage15 = ledFU_img_list[6] #SELECT BUTTONS
-                    localimage16 = ledOF_img_list[6] #SELECT BUTTONS
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE                  
+                    l_img01 = sledON_img_list[30] #MPH
+                    l_img02 = sledON_img_list[29] #KPH
+                    l_img06 = ledFU_img_list[9] #HI LO VHF
+                    l_img07 = ledFU_img_list[11] #HI LO VHF
+                    l_img08 = sledON_img_list[33] #RPMi
+                    l_img09 = sledON_img_list[34] #RPMm
+                    l_img80 = ledFU_img_list[6] #SELECT BUTTONS
+                    l_img81 = ledOF_img_list[6] #SELECT BUTTONS
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE                  
                 elif theme in [THEME_B_txt[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
-                    localimage01 = sledON_img_list[32] #MPH
-                    localimage02 = sledON_img_list[31] #KPH
-                    localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledFU_img_list[11] #HI LO VHF
-                    localimage08 = sledON_img_list[35] #RPMi
-                    localimage09 = sledON_img_list[36] #RPMm
-                    localimage15 = ledFU_img_list[6] #SELECT BUTTONS
-                    localimage16 = ledOF_img_list[6] #SELECT BUTTONS
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[32] #MPH
+                    l_img02 = sledON_img_list[31] #KPH
+                    l_img06 = ledFU_img_list[9] #HI LO VHF
+                    l_img07 = ledFU_img_list[11] #HI LO VHF
+                    l_img08 = sledON_img_list[35] #RPMi
+                    l_img09 = sledON_img_list[36] #RPMm
+                    l_img80 = ledFU_img_list[6] #SELECT BUTTONS
+                    l_img81 = ledOF_img_list[6] #SELECT BUTTONS
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                 elif theme in [THEME_B_txt[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
-                    localimage01 = sledON_img_list[32] #MPH
-                    localimage02 = sledON_img_list[31] #KPH
-                    localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledFU_img_list[11] #HI LO VHF
-                    localimage08 = sledON_img_list[35] #RPMi
-                    localimage09 = sledON_img_list[36] #RPMm
-                    localimage15 = ledFU_img_list[6] #SELECT BUTTONS
-                    localimage16 = ledOF_img_list[6] #SELECT BUTTONS
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[32] #MPH
+                    l_img02 = sledON_img_list[31] #KPH
+                    l_img06 = ledFU_img_list[9] #HI LO VHF
+                    l_img07 = ledFU_img_list[11] #HI LO VHF
+                    l_img08 = sledON_img_list[35] #RPMi
+                    l_img09 = sledON_img_list[36] #RPMm
+                    l_img80 = ledFU_img_list[6] #SELECT BUTTONS
+                    l_img81 = ledOF_img_list[6] #SELECT BUTTONS
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                 elif theme in [THEME_B_txt[3]]:
-                    localimage01 = sledON_img_list[10] #MPH
-                    localimage02 = sledON_img_list[9] #KPH
-                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[7] #HI LO VHF
-                    localimage07 = sledOF_img_list[7] #HI LO VHF
-                    localimage08 = sledON_img_list[17] #RPMi
-                    localimage09 = sledON_img_list[18] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[61] #GY
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[10] #MPH
+                    l_img02 = sledON_img_list[9] #KPH
+                    l_img03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[7] #HI LO VHF
+                    l_img07 = sledOF_img_list[7] #HI LO VHF
+                    l_img08 = sledON_img_list[17] #RPMi
+                    l_img09 = sledON_img_list[18] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[61] #GY
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
                 elif theme in [THEME_B_txt[4]]:
-                    localimage01 = sledON_img_list[10] #MPH
-                    localimage02 = sledON_img_list[9] #KPH
-                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[17] #RPMi
-                    localimage09 = sledON_img_list[18] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[10] #MPH
+                    l_img02 = sledON_img_list[9] #KPH
+                    l_img03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[17] #RPMi
+                    l_img09 = sledON_img_list[18] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[5]]:
-                    localimage01 = sledON_img_list[10] #MPH
-                    localimage02 = sledON_img_list[9] #KPH
-                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[17] #RPMi
-                    localimage09 = sledON_img_list[18] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[10] #MPH
+                    l_img02 = sledON_img_list[9] #KPH
+                    l_img03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[17] #RPMi
+                    l_img09 = sledON_img_list[18] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[6]]:
-                    localimage01 = sledON_img_list[10] #MPH
-                    localimage02 = sledON_img_list[9] #KPH
-                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[17] #RPMi
-                    localimage09 = sledON_img_list[18] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[10] #MPH
+                    l_img02 = sledON_img_list[9] #KPH
+                    l_img03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[17] #RPMi
+                    l_img09 = sledON_img_list[18] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[7]]:
-                    localimage01 = sledON_img_list[10] #MPH
-                    localimage02 = sledON_img_list[9] #KPH
-                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[25] #RPMi
-                    localimage09 = sledON_img_list[26] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[10] #MPH
+                    l_img02 = sledON_img_list[9] #KPH
+                    l_img03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[25] #RPMi
+                    l_img09 = sledON_img_list[26] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
                 elif theme in [THEME_B_txt[8]]:
-                    localimage01 = sledON_img_list[12] #MPH
-                    localimage02 = sledON_img_list[11] #KPH
-                    localimage03 = segmentKA_img_list[7] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[7] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[7] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[19] #RPMi
-                    localimage09 = sledON_img_list[20] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[12] #MPH
+                    l_img02 = sledON_img_list[11] #KPH
+                    l_img03 = segmentKA_img_list[7] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[7] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[7] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[19] #RPMi
+                    l_img09 = sledON_img_list[20] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [THEME_B_txt[9]]:
-                    localimage01 = sledON_img_list[10] #MPH
-                    localimage02 = sledON_img_list[9] #KPH
-                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[17] #RPMi
-                    localimage09 = sledON_img_list[18] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
-                    localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
-                    localimagelist02 = list(vbOF_S04_img_list)
+                    l_img01 = sledON_img_list[10] #MPH
+                    l_img02 = sledON_img_list[9] #KPH
+                    l_img03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[17] #RPMi
+                    l_img09 = sledON_img_list[18] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                 elif theme in [THEME_B_txt[10]]:
-                    localimage01 = sledON_img_list[10] #MPH
-                    localimage02 = sledON_img_list[9] #KPH
-                    localimage03 = segmentKA_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKA_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[17] #RPMi
-                    localimage09 = sledON_img_list[18] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
-                    localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
-                    localimagelist02 = list(vbOF_S04_img_list)
+                    l_img01 = sledON_img_list[10] #MPH
+                    l_img02 = sledON_img_list[9] #KPH
+                    l_img03 = segmentKA_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKA_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKA_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[17] #RPMi
+                    l_img09 = sledON_img_list[18] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                 elif theme in [THEME_B_txt[11]]:
                     pass
                 elif theme in [THEME_B_txt[12]]:
@@ -1278,311 +1275,311 @@ class P01_DASH(tk.Frame):
                 elif theme in [THEME_B_txt[14]]:
                     pass
                 elif theme in [THEME_B_txt[15]]:
-                    localimage01 = lcarsON_img_list[0]
-                    localimage02 = lcarsOF_img_list[0]
-                    localimage03 = segmentKA_img_list[11]
+                    l_img01 = lcarsON_img_list[0]
+                    l_img02 = lcarsOF_img_list[0]
+                    l_img03 = segmentKA_img_list[11]
                 elif theme in [THEME_B_txt[16]]:
-                    localimage01 = lcarsON_img_list[0]
-                    localimage02 = lcarsOF_img_list[0]
-                    localimage03 = segmentKA_img_list[11]
+                    l_img01 = lcarsON_img_list[0]
+                    l_img02 = lcarsOF_img_list[0]
+                    l_img03 = segmentKA_img_list[11]
             elif style == STYLE_B_txt[1]:
                 if theme in [THEME_B_txt[0]]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
-                    localimage01 = sledON_img_list[30] #MPH
-                    localimage02 = sledON_img_list[29] #KPH
-                    localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledFU_img_list[11] #HI LO VHF
-                    localimage08 = sledON_img_list[33] #RPMi
-                    localimage09 = sledON_img_list[34] #RPMm
-                    localimage15 = ledFU_img_list[6] #SELECT BUTTONS
-                    localimage16 = ledOF_img_list[6] #SELECT BUTTONS
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[30] #MPH
+                    l_img02 = sledON_img_list[29] #KPH
+                    l_img06 = ledFU_img_list[9] #HI LO VHF
+                    l_img07 = ledFU_img_list[11] #HI LO VHF
+                    l_img08 = sledON_img_list[33] #RPMi
+                    l_img09 = sledON_img_list[34] #RPMm
+                    l_img80 = ledFU_img_list[6] #SELECT BUTTONS
+                    l_img81 = ledOF_img_list[6] #SELECT BUTTONS
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                 elif theme in [THEME_B_txt[1]]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
-                    localimage01 = sledON_img_list[32] #MPH
-                    localimage02 = sledON_img_list[31] #KPH
-                    localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledFU_img_list[11] #HI LO VHF
-                    localimage08 = sledON_img_list[35] #RPMi
-                    localimage09 = sledON_img_list[36] #RPMm
-                    localimage15 = ledFU_img_list[6] #SELECT BUTTONS
-                    localimage16 = ledOF_img_list[6] #SELECT BUTTONS
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[32] #MPH
+                    l_img02 = sledON_img_list[31] #KPH
+                    l_img06 = ledFU_img_list[9] #HI LO VHF
+                    l_img07 = ledFU_img_list[11] #HI LO VHF
+                    l_img08 = sledON_img_list[35] #RPMi
+                    l_img09 = sledON_img_list[36] #RPMm
+                    l_img80 = ledFU_img_list[6] #SELECT BUTTONS
+                    l_img81 = ledOF_img_list[6] #SELECT BUTTONS
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                 elif theme in [THEME_B_txt[2]]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list)
-                    localimage01 = sledON_img_list[32] #MPH
-                    localimage02 = sledON_img_list[31] #KPH
-                    localimage06 = ledFU_img_list[9] #HI LO VHF
-                    localimage07 = ledFU_img_list[11] #HI LO VHF
-                    localimage08 = sledON_img_list[35] #RPMi
-                    localimage09 = sledON_img_list[36] #RPMm
-                    localimage15 = ledFU_img_list[6] #SELECT BUTTONS
-                    localimage16 = ledOF_img_list[6] #SELECT BUTTONS
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[32] #MPH
+                    l_img02 = sledON_img_list[31] #KPH
+                    l_img06 = ledFU_img_list[9] #HI LO VHF
+                    l_img07 = ledFU_img_list[11] #HI LO VHF
+                    l_img08 = sledON_img_list[35] #RPMi
+                    l_img09 = sledON_img_list[36] #RPMm
+                    l_img80 = ledFU_img_list[6] #SELECT BUTTONS
+                    l_img81 = ledOF_img_list[6] #SELECT BUTTONS
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                 elif theme in [THEME_B_txt[3]]:
-                    localimage01 = sledON_img_list[14] #MPH
-                    localimage02 = sledON_img_list[13] #KPH
-                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[7] #HI LO VHF
-                    localimage07 = sledOF_img_list[7] #HI LO VHF
-                    localimage08 = sledON_img_list[21] #RPMi
-                    localimage09 = sledON_img_list[22] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[61] #GY
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[14] #MPH
+                    l_img02 = sledON_img_list[13] #KPH
+                    l_img03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[7] #HI LO VHF
+                    l_img07 = sledOF_img_list[7] #HI LO VHF
+                    l_img08 = sledON_img_list[21] #RPMi
+                    l_img09 = sledON_img_list[22] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[61] #GY
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S03_img_list)
                 elif theme in [THEME_B_txt[4]]:
-                    localimage01 = sledON_img_list[14] #MPH
-                    localimage02 = sledON_img_list[13] #KPH
-                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[21] #RPMi
-                    localimage09 = sledON_img_list[22] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[14] #MPH
+                    l_img02 = sledON_img_list[13] #KPH
+                    l_img03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[21] #RPMi
+                    l_img09 = sledON_img_list[22] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[5]]:
-                    localimage01 = sledON_img_list[14] #MPH
-                    localimage02 = sledON_img_list[13] #KPH
-                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[21] #RPMi
-                    localimage09 = sledON_img_list[22] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[14] #MPH
+                    l_img02 = sledON_img_list[13] #KPH
+                    l_img03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[21] #RPMi
+                    l_img09 = sledON_img_list[22] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[6]]:
-                    localimage01 = sledON_img_list[14] #MPH
-                    localimage02 = sledON_img_list[13] #KPH
-                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[21] #RPMi
-                    localimage09 = sledON_img_list[22] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[14] #MPH
+                    l_img02 = sledON_img_list[13] #KPH
+                    l_img03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[21] #RPMi
+                    l_img09 = sledON_img_list[22] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[7]]:
-                    localimage01 = sledON_img_list[14] #MPH
-                    localimage02 = sledON_img_list[13] #KPH
-                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[27] #RPMi
-                    localimage09 = sledON_img_list[28] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[14] #MPH
+                    l_img02 = sledON_img_list[13] #KPH
+                    l_img03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[27] #RPMi
+                    l_img09 = sledON_img_list[28] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_OTTO_img_list)
                 elif theme in [THEME_B_txt[8]]:
-                    localimage01 = sledON_img_list[16] #MPH
-                    localimage02 = sledON_img_list[15] #KPH
-                    localimage03 = segmentKI_img_list[7] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[7] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[7] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[23] #RPMi
-                    localimage09 = sledON_img_list[24] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[16] #MPH
+                    l_img02 = sledON_img_list[15] #KPH
+                    l_img03 = segmentKI_img_list[7] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[7] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[7] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[23] #RPMi
+                    l_img09 = sledON_img_list[24] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_MAX_img_list)
                 elif theme in [THEME_B_txt[9]]:
-                    localimage01 = sledON_img_list[14] #MPH
-                    localimage02 = sledON_img_list[13] #KPH
-                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[21] #RPMi
-                    localimage09 = sledON_img_list[22] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[14] #MPH
+                    l_img02 = sledON_img_list[13] #KPH
+                    l_img03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[46] #HI LO VHF
+                    l_img07 = sledOF_img_list[46] #HI LO VHF
+                    l_img08 = sledON_img_list[21] #RPMi
+                    l_img09 = sledON_img_list[22] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[10]]:
-                    localimage01 = sledON_img_list[14] #MPH
-                    localimage02 = sledON_img_list[13] #KPH
-                    localimage03 = segmentKI_img_list[5] #GPS SPEED GAUGE
-                    localimage04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
-                    localimage05 = segmentKI_img_list[6] #SIM SPEED GAUGE
-                    localimage06 = sledON_img_list[8] #HI LO VHF
-                    localimage07 = sledOF_img_list[8] #HI LO VHF
-                    localimage08 = sledON_img_list[21] #RPMi
-                    localimage09 = sledON_img_list[22] #RPMm
-                    localimage15 = ledFU_img_list[62] #YE
-                    localimage16 = ledOF_img_list[62] #YEDK
-                    localimage17 = ledFU_img_list[65] #POWER BTNS GN
-                    localimage18 = ledFU_img_list[67] #POWER BTNS RD
-                    localimage19 = ledFU_img_list[69] #POWER BTNS YE
-                    localimage20 = ledOF_img_list[65] #POWER BTNS GN
-                    localimage21 = ledOF_img_list[67] #POWER BTNS RD
-                    localimage22 = ledOF_img_list[69] #POWER BTNS YE
-                    localimage61 = ledFU_img_list[78] #OHC BU
-                    localimage64 = ledFU_img_list[81] #OHC RD
-                    localimage65 = ledFU_img_list[82] #OHC WH
-                    localimage66 = ledFU_img_list[83] #OHC YE
-                    localimage71 = ledOF_img_list[78] #OHC BU
-                    localimage74 = ledOF_img_list[81] #OHC RD
-                    localimage75 = ledOF_img_list[82] #OHC WH
-                    localimage76 = ledOF_img_list[83] #OHC YE
+                    l_img01 = sledON_img_list[14] #MPH
+                    l_img02 = sledON_img_list[13] #KPH
+                    l_img03 = segmentKI_img_list[5] #GPS SPEED GAUGE
+                    l_img04 = segmentKI_img_list[4] #ALDL SPEED GAUGE
+                    l_img05 = segmentKI_img_list[6] #SIM SPEED GAUGE
+                    l_img06 = sledON_img_list[8] #HI LO VHF
+                    l_img07 = sledOF_img_list[8] #HI LO VHF
+                    l_img08 = sledON_img_list[21] #RPMi
+                    l_img09 = sledON_img_list[22] #RPMm
+                    l_img80 = ledFU_img_list[62] #YE
+                    l_img81 = ledOF_img_list[62] #YEDK
+                    l_img15 = ledFU_img_list[65] #POWER BTNS GN
+                    l_img16 = ledFU_img_list[67] #POWER BTNS RD
+                    l_img17 = ledFU_img_list[69] #POWER BTNS YE
+                    l_img18 = ledOF_img_list[65] #POWER BTNS GN
+                    l_img19 = ledOF_img_list[67] #POWER BTNS RD
+                    l_img20 = ledOF_img_list[69] #POWER BTNS YE
+                    l_img61 = ledFU_img_list[78] #OHC BU
+                    l_img64 = ledFU_img_list[81] #OHC RD
+                    l_img65 = ledFU_img_list[82] #OHC WH
+                    l_img66 = ledFU_img_list[83] #OHC YE
+                    l_img71 = ledOF_img_list[78] #OHC BU
+                    l_img74 = ledOF_img_list[81] #OHC RD
+                    l_img75 = ledOF_img_list[82] #OHC WH
+                    l_img76 = ledOF_img_list[83] #OHC YE
                     localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S04_img_list)
                 elif theme in [THEME_B_txt[11]]:
@@ -1594,17 +1591,17 @@ class P01_DASH(tk.Frame):
                 elif theme in [THEME_B_txt[14]]:
                     pass
                 elif theme in [THEME_B_txt[15]]:
-                    localimage01 = lcarsON_img_list[0]
-                    localimage02 = lcarsOF_img_list[0]
-                    localimage03 = segmentKI_img_list[11]
-                    localimage06 = lcarsON_img_list[7] #HI LO VHF
-                    localimage07 = lcarsOF_img_list[7] #HI LO VHF
+                    l_img01 = lcarsON_img_list[0]
+                    l_img02 = lcarsOF_img_list[0]
+                    l_img03 = segmentKI_img_list[11]
+                    l_img06 = lcarsON_img_list[7] #HI LO VHF
+                    l_img07 = lcarsOF_img_list[7] #HI LO VHF
                 elif theme in [THEME_B_txt[16]]:
-                    localimage01 = lcarsON_img_list[0]
-                    localimage02 = lcarsOF_img_list[0]
-                    localimage03 = segmentKI_img_list[11]
-                    localimage06 = lcarsON_img_list[7] #HI LO VHF
-                    localimage07 = lcarsOF_img_list[7]
+                    l_img01 = lcarsON_img_list[0]
+                    l_img02 = lcarsOF_img_list[0]
+                    l_img03 = segmentKI_img_list[11]
+                    l_img06 = lcarsON_img_list[7] #HI LO VHF
+                    l_img07 = lcarsOF_img_list[7]
         #----------------------------------------------------------------------------------
         # UPDATE BACKGROUNDIMAGE
         #----------------------------------------------------------------------------------
@@ -1742,6 +1739,22 @@ class P01_DASH(tk.Frame):
                     self.canvas.create_text( 140,  95, **txt_style_S34c, text=gau_S06U01_txt[16])
                     self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_S06U01_txt[17])
                     self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_S06U01_txt[18])
+                elif theme == THEME_B_txt[9]:
+                    #OVERLAY TEXTE SPEEDOMETER
+                    self.canvas.create_text( 100,  65, **txt_style_S34c, text=gau_KR3KU01_txt[1])
+                    self.canvas.create_text( 700,  65, **txt_style_S34c, text=gau_KR3KU01_txt[2])
+                    self.canvas.create_text( 950,  65, **txt_style_S34c, text=gau_KR3KU01_txt[3])
+                    self.canvas.create_text(1235,  65, **txt_style_S34c, text=gau_KR3KU01_txt[4])
+                    self.canvas.create_text( 548, 475, **txt_style_S34c, text=gau_KR3KU01_txt[8])
+                    self.canvas.create_text( 660, 475, **txt_style_S34c, text=gau_KR3KU01_txt[9])
+                    self.canvas.create_text( 770, 475, **txt_style_S34c, text=gau_KR3KU01_txt[10])
+                    self.canvas.create_text( 880, 475, **txt_style_S34c, text=gau_KR3KU01_txt[11])
+                    self.canvas.create_text( 995, 475, **txt_style_S34c, text=gau_KR3KU01_txt[12])
+                    self.canvas.create_text(1110, 475, **txt_style_S34c, text=gau_KR3KU01_txt[13])
+                    self.canvas.create_text(1225, 475, **txt_style_S34c, text=gau_KR3KU01_txt[14])
+                    self.canvas.create_text( 140,  95, **txt_style_S34c, text=gau_KR3KU01_txt[16])
+                    self.canvas.create_text( 220,  95, **txt_style_S34c, text=gau_KR3KU01_txt[17])
+                    self.canvas.create_text( 300,  95, **txt_style_S34c, text=gau_KR3KU01_txt[18])
             elif device == DEVICE_B_txt[2]:
                 if theme == THEME_B_txt[3]:
                     #----------------------------------------------------------------------
@@ -1940,7 +1953,7 @@ class P01_DASH(tk.Frame):
                 x_setup = setup_pos.get("x_btn_SETUP", 10)
                 y_setup = setup_pos.get("y_btn_SETUP", 10)
 
-                button = tk.Button(self, **btn_style_imgbtn, image=localimage15,
+                button = tk.Button(self, **btn_style_imgbtn, image=l_img80,
                                    command=lambda: self.master.switch_frame(P03_SETUP))
                 button.place(x=x_setup, y=y_setup)
             except Exception as e:
@@ -1959,7 +1972,7 @@ class P01_DASH(tk.Frame):
                 for pb_text in btn_SELECT_txt:
                     btns_SELECT = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [
                         read.toggle_PB(text),
-                        read.update_pb_buttons(localimage15, localimage16),
+                        read.update_pb_buttons(l_img80, l_img81),
                     self.refresh_background_image(),
                     self.update_positions(),
                     self.update_pb_ui_elements(),
@@ -1986,20 +1999,20 @@ class P01_DASH(tk.Frame):
                 for i, text in enumerate(btn_SELECT_txt):
                     if btn_states_PB == text:
                         if THEME_B_txt[0:9].count(theme) > 0: # THEME 0 to 9
-                            btn_SELECT[i].config(image=localimage15)
+                            btn_SELECT[i].config(image=l_img80)
                         elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                             btn_SELECT[i].config(image=lcarsON_img_list[3])
                     else:
                         if THEME_B_txt[0:9].count(theme) > 0: # THEME 0 to 9
-                            btn_SELECT[i].config(image=localimage16)
+                            btn_SELECT[i].config(image=l_img81)
                         elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                             btn_SELECT[i].config(image=lcarsOF_img_list[3])
         #----------------------------------------------------------------------------------
-        # SPECIAL BUTTONS (YELLOW)
+        # QUICKSOUND BUTTONS (YELLOW)
         #----------------------------------------------------------------------------------
         if REGION:
-            self.audio_on_img = localimage15
-            self.audio_off_img = localimage16
+            self.audio_on_img = l_img80
+            self.audio_off_img = l_img81
 
             self.audio_buttons = []
             self.audio_definitions = [
@@ -2014,8 +2027,8 @@ class P01_DASH(tk.Frame):
                 theme_key = f"THEME{theme_index}"
 
                 special_pos = self.positions["BUTTON_POSITIONS"][device][theme_key]
-                x_btns = special_pos.get("x_btn_SPECIAL", [])
-                y_btns = special_pos.get("y_btn_SPECIAL", [])
+                x_btns = special_pos.get("x_btn_QUICKSOUND", [])
+                y_btns = special_pos.get("y_btn_QUICKSOUND", [])
 
                 for i, (subfolder, filename, loop_mode) in enumerate(self.audio_definitions):
                     filepath = os.path.join(snd_fldr, subfolder, filename)
@@ -2024,10 +2037,10 @@ class P01_DASH(tk.Frame):
                     if i < len(x_btns) and i < len(y_btns):
                         btn.place(x=x_btns[i], y=y_btns[i])
                     else:
-                        print(f"[WARN] Missing SPECIAL button position for index {i}")
+                        print(f"[WARN] Missing QUICKSOUND button position for index {i}")
                     self.audio_buttons.append(btn)
             except Exception as e:
-                print(f"[ERROR] Failed to place SPECIAL buttons for {device}/{theme_key}: {e}")
+                print(f"[ERROR] Failed to place QUICKSOUND buttons for {device}/{theme_key}: {e}")
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTONS (LO HI VHF UHF AM FM CB) / (ATTACK SUST DELAY DEL)
         #---------------------------------------------------------------------------------- 
@@ -2042,25 +2055,26 @@ class P01_DASH(tk.Frame):
                 y_btn = fnkt_pos.get("y_btn_FUNCTION", [])
 
                 quant_btn = min(len(x_btn), len(y_btn))
-
+                
+                #IMAGES FOR OHC THATS WHY WE NEED MAPPING
                 map_img_on = [
-                    localimage64, localimage64, localimage64, localimage64, localimage64, localimage64,
-                    localimage66, localimage66,
-                    localimage66, localimage61,
-                    localimage61, localimage61, localimage61, localimage61,
-                    localimage66, localimage61,
-                    localimage66, localimage66,
-                    localimage65, localimage65, localimage65, localimage65, localimage65, localimage65
+                    l_img64, l_img64, l_img64, l_img64, l_img64, l_img64,
+                    l_img66, l_img66,
+                    l_img66, l_img61,
+                    l_img61, l_img61, l_img61, l_img61,
+                    l_img66, l_img61,
+                    l_img66, l_img66,
+                    l_img65, l_img65, l_img65, l_img65, l_img65, l_img65
                 ]
 
                 map_img_off = [
-                    localimage74, localimage74, localimage74, localimage74, localimage74, localimage74,
-                    localimage76, localimage76,
-                    localimage76, localimage71,
-                    localimage71, localimage71, localimage71, localimage71,
-                    localimage76, localimage71,
-                    localimage76, localimage76,
-                    localimage75, localimage75, localimage75, localimage75, localimage75, localimage75
+                    l_img74, l_img74, l_img74, l_img74, l_img74, l_img74,
+                    l_img76, l_img76,
+                    l_img76, l_img71,
+                    l_img71, l_img71, l_img71, l_img71,
+                    l_img76, l_img71,
+                    l_img76, l_img76,
+                    l_img75, l_img75, l_img75, l_img75, l_img75, l_img75
                 ]
 
                 for i in range(quant_btn):
@@ -2073,12 +2087,12 @@ class P01_DASH(tk.Frame):
                         if device == DEVICE_B_txt[8] and i < len(map_img_on):
                             btn.config(image=map_img_on[i])
                         else:
-                            btn.config(image=localimage06)
+                            btn.config(image=l_img06)
                     else:
                         if device == DEVICE_B_txt[8] and i < len(map_img_off):
                             btn.config(image=map_img_off[i])
                         else:
-                            btn.config(image=localimage07)
+                            btn.config(image=l_img07)
 
             except Exception as e:
                 print(f"[ERROR] Failed to load FNKT button positions or images for {device}/{theme_key}: {e}")
@@ -2096,9 +2110,9 @@ class P01_DASH(tk.Frame):
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                     btn_units.place(x=770, y=110, width=202, height=68)
                 if btn_states_SW[0] == True:
-                    btn_units.config(image=localimage01)
+                    btn_units.config(image=l_img01)
                 else:
-                    btn_units.config(image=localimage02)
+                    btn_units.config(image=l_img02)
             elif device == DEVICE_B_txt[2]:
                 btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
                 if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2            
@@ -2108,9 +2122,9 @@ class P01_DASH(tk.Frame):
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                     btn_units.place(x=1064, y=296, width=166, height=81)
                 if btn_states_SW[0] == True:
-                    btn_units.config(image=localimage08)
+                    btn_units.config(image=l_img08)
                 else:
-                    btn_units.config(image=localimage09)
+                    btn_units.config(image=l_img09)
         #----------------------------------------------------------------------------------
         # VOICECOMMAND LABELS AND ICONS
         #----------------------------------------------------------------------------------
@@ -2548,8 +2562,8 @@ class P01_DASH(tk.Frame):
                         x_pos_PBFNKT += x_pos_PBFNKT_mext
                         btns_PBFNKT.append(btn_PBFNKT)
 
-                    btn_PBFNKT_FU = [localimage18, localimage17, localimage19, localimage18]
-                    btn_PBFNKT_OF = [localimage21, localimage20, localimage22, localimage21]
+                    btn_PBFNKT_FU = [l_img16, l_img15, l_img17, l_img16]
+                    btn_PBFNKT_OF = [l_img19, l_img18, l_img20, l_img19]
                     for i in range(4):
                         if btn_states_PBFNKT[i]:
                             btns_PBFNKT[i].config(image=btn_PBFNKT_FU[i])
@@ -2628,15 +2642,15 @@ class P01_DASH(tk.Frame):
                     elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         if btn_states_SW[3] == False:
                             if btn_states_SW[1] == True:
-                                label_7SEG001.config(image=localimage03, compound="center")
+                                label_7SEG001.config(image=l_img03, compound="center")
                             else:
-                                label_7SEG001.config(image=localimage04, compound="center")
+                                label_7SEG001.config(image=l_img04, compound="center")
                         else:
-                            label_7SEG001.config(image=localimage05, compound="center")
+                            label_7SEG001.config(image=l_img05, compound="center")
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.place(x=609, y=116, width=496, height=212)
                     elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
-                        label_7SEG001.config(font=(fonts[9], 150), fg=sty_clr[0], anchor="c")
+                        label_7SEG001.config(font=(fonts[9], 150), bg=sty_clr[6], fg=sty_clr[0], anchor="c")
                         label_7SEG001.place(x=609, y=116, width=496, height=212)
                     elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
@@ -2647,8 +2661,11 @@ class P01_DASH(tk.Frame):
                     if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 3
                         label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
                         label_7SEG003.place(x=940, y=470, width=285, height=84)
-                    elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
+                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+                        label_7SEG003.place(x=800, y=590, width=460, height=90)
+                    elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
+                        label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[6], fg=sty_clr[0])
                         label_7SEG003.place(x=800, y=590, width=460, height=90)
             elif device == DEVICE_B_txt[2]:
                 #--------------------------------------------------------------------------
@@ -2660,7 +2677,7 @@ class P01_DASH(tk.Frame):
                         label_7SEG001.place(x=625, y=150, width=220, height=185)
                     elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
-                        label_7SEG001.config(image=localimage04, compound="center")
+                        label_7SEG001.config(image=l_img04, compound="center")
                         label_7SEG001.place(x=567, y=164, width=496, height=212)
                     elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
@@ -2945,390 +2962,366 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if REGION:
             if theme in [THEME_B_txt[0], THEME_B_txt[1], THEME_B_txt[2]]:
-                localimage10 = ledOF_img_list[11] #SPEED OFRD
-                localimage11 = ledOF_img_list[11] #SPEED OFRD
-                localimage12 = ledOF_img_list[11] #SPEED OFRD
-                localimage13 = ledFU_img_list[11] #SIGNAL FURD
-                localimage14 = ledOF_img_list[11] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[11] #SPEED FURD
-                localimage16 = ledFU_img_list[11] #SPEED FURD
-                localimage17 = ledFU_img_list[11] #SPEED FURD
-                localimage18 = ledFU_img_list[11]
-                localimage19 = ledOF_img_list[11]
+                l_img10 = ledOF_img_list[11] #SPEED OFRD
+                l_img11 = ledOF_img_list[11] #SPEED OFRD
+                l_img12 = ledOF_img_list[11] #SPEED OFRD
+                l_img13 = ledFU_img_list[11] #SIGNAL FURD
+                l_img14 = ledOF_img_list[11] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[11] #SPEED FURD
+                l_img81 = ledFU_img_list[11] #SPEED FURD
+                l_img15 = ledFU_img_list[11] #SPEED FURD
+                l_img16 = ledFU_img_list[11]
+                l_img17 = ledOF_img_list[11]
                 if theme == THEME_B_txt[0]:
                     localimagelist01 = list(vbON_PILOT_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_PILOT_img_list)
                     if style == STYLE_B_txt[0]:
-                        localimage30 = ledOF_img_list[19] #DEV002GAUGES 1GN
-                        localimage31 = ledOF_img_list[19] #DEV002GAUGES 1RD
-                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
-                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage34 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage40 = ledOF_img_list[19] #DEV002GAUGES 2GN
-                        localimage41 = ledOF_img_list[19] #DEV002GAUGES 2RD
-                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
-                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage44 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                        localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                        localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                        localimage23 = ledOF_img_list[48]
+                        l_img30 = ledOF_img_list[19] #DEV002GAUGES 1GN
+                        l_img31 = ledOF_img_list[19] #DEV002GAUGES 1RD
+                        l_img32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        l_img33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img34 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img40 = ledOF_img_list[19] #DEV002GAUGES 2GN
+                        l_img41 = ledOF_img_list[19] #DEV002GAUGES 2RD
+                        l_img42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img44 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                        l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                        l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                        l_img23 = ledOF_img_list[48]
                     elif style == STYLE_B_txt[1]:
-                        localimage30 = ledOF_img_list[19] #DEV002GAUGES 1GN
-                        localimage31 = ledOF_img_list[19] #DEV002GAUGES 1RD
-                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
-                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage34 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage40 = ledOF_img_list[19] #DEV002GAUGES 2GN
-                        localimage41 = ledOF_img_list[19] #DEV002GAUGES 2RD
-                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
-                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage44 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                        localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                        localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                        localimage23 = ledOF_img_list[46]
+                        l_img30 = ledOF_img_list[19] #DEV002GAUGES 1GN
+                        l_img31 = ledOF_img_list[19] #DEV002GAUGES 1RD
+                        l_img32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        l_img33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img34 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img40 = ledOF_img_list[19] #DEV002GAUGES 2GN
+                        l_img41 = ledOF_img_list[19] #DEV002GAUGES 2RD
+                        l_img42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img44 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                        l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                        l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                        l_img23 = ledOF_img_list[46]
                 elif theme == THEME_B_txt[1]:
                     localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S01_img_list)
                     if style == STYLE_B_txt[0]:
-                        localimage30 = ledOF_img_list[20] #DEV002GAUGES 1GN
-                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
-                        localimage32 = ledFU_img_list[20] #DEV002GAUGES 1GN
-                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage34 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage40 = ledOF_img_list[20] #DEV002GAUGES 2GN
-                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
-                        localimage42 = ledFU_img_list[20] #DEV002GAUGES 2GN
-                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage44 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                        localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                        localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                        localimage23 = ledOF_img_list[48]
+                        l_img30 = ledOF_img_list[20] #DEV002GAUGES 1GN
+                        l_img31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        l_img32 = ledFU_img_list[20] #DEV002GAUGES 1GN
+                        l_img33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img34 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img40 = ledOF_img_list[20] #DEV002GAUGES 2GN
+                        l_img41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        l_img42 = ledFU_img_list[20] #DEV002GAUGES 2GN
+                        l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img44 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                        l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                        l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                        l_img23 = ledOF_img_list[48]
                     elif style == STYLE_B_txt[1]:
-                        localimage30 = ledOF_img_list[16] #DEV002GAUGES 1GN
-                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
-                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
-                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage34 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage40 = ledOF_img_list[16] #DEV002GAUGES 2GN
-                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
-                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
-                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage44 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                        localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                        localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                        localimage23 = ledOF_img_list[46]
+                        l_img30 = ledOF_img_list[16] #DEV002GAUGES 1GN
+                        l_img31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        l_img32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        l_img33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img34 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img40 = ledOF_img_list[16] #DEV002GAUGES 2GN
+                        l_img41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        l_img42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img44 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                        l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                        l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                        l_img23 = ledOF_img_list[46]
                 elif theme == THEME_B_txt[2]:
                     localimagelist01 = list(vbON_S02_img_list) #VOICEBOX
                     localimagelist02 = list(vbOF_S02_img_list) #VOICEBOX
                     if style == STYLE_B_txt[0]:
-                        localimage30 = ledOF_img_list[14] #DEV002GAUGES 1GN
-                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
-                        localimage32 = ledFU_img_list[14] #DEV002GAUGES 1GN
-                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage34 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage40 = ledOF_img_list[14] #DEV002GAUGES 2GN
-                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
-                        localimage42 = ledFU_img_list[14] #DEV002GAUGES 2GN
-                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage44 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                        localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                        localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                        localimage23 = ledOF_img_list[48]
+                        l_img30 = ledOF_img_list[14] #DEV002GAUGES 1GN
+                        l_img31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        l_img32 = ledFU_img_list[14] #DEV002GAUGES 1GN
+                        l_img33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img34 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img40 = ledOF_img_list[14] #DEV002GAUGES 2GN
+                        l_img41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        l_img42 = ledFU_img_list[14] #DEV002GAUGES 2GN
+                        l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img44 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                        l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                        l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                        l_img23 = ledOF_img_list[48]
                     elif style == STYLE_B_txt[1]:
-                        localimage30 = ledOF_img_list[16] #DEV002GAUGES 1GN
-                        localimage31 = ledOF_img_list[18] #DEV002GAUGES 1RD
-                        localimage32 = ledFU_img_list[16] #DEV002GAUGES 1GN
-                        localimage33 = ledFU_img_list[18] #DEV002GAUGES 1RD
-                        localimage34 = ledOF_img_list[16] #DEV002GAUGES 1RD
-                        localimage40 = ledOF_img_list[16] #DEV002GAUGES 2GN
-                        localimage41 = ledOF_img_list[18] #DEV002GAUGES 2RD
-                        localimage42 = ledFU_img_list[16] #DEV002GAUGES 2GN
-                        localimage43 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                        localimage44 = ledFU_img_list[16] #DEV002GAUGES 2RD
-                        localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                        localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                        localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                        localimage23 = ledOF_img_list[46]
+                        l_img30 = ledOF_img_list[16] #DEV002GAUGES 1GN
+                        l_img31 = ledOF_img_list[18] #DEV002GAUGES 1RD
+                        l_img32 = ledFU_img_list[16] #DEV002GAUGES 1GN
+                        l_img33 = ledFU_img_list[18] #DEV002GAUGES 1RD
+                        l_img34 = ledOF_img_list[16] #DEV002GAUGES 1RD
+                        l_img40 = ledOF_img_list[16] #DEV002GAUGES 2GN
+                        l_img41 = ledOF_img_list[18] #DEV002GAUGES 2RD
+                        l_img42 = ledFU_img_list[16] #DEV002GAUGES 2GN
+                        l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
+                        l_img44 = ledFU_img_list[16] #DEV002GAUGES 2RD
+                        l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                        l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                        l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                        l_img23 = ledOF_img_list[46]
             elif theme == THEME_B_txt[3]:
-                localimage30 = ledOF_img_list[61] #DEV002GAUGES 1GY
-                localimage31 = ledOF_img_list[61] #DEV002GAUGES 1GY
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[61] #DEV002GAUGES 2GN
-                localimage41 = ledOF_img_list[61] #DEV002GAUGES 2RD
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[61] #RPM OF GY
-                localimage11 = ledOF_img_list[61] #RPM OF GY
-                localimage12 = ledOF_img_list[61] #RPM OF GY
-                localimage13 = ledFU_img_list[25] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[25] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
+                l_img30 = ledOF_img_list[61] #DEV002GAUGES 1GY
+                l_img31 = ledOF_img_list[61] #DEV002GAUGES 1GY
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[61] #DEV002GAUGES 2GN
+                l_img41 = ledOF_img_list[61] #DEV002GAUGES 2RD
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[61] #RPM OF GY
+                l_img11 = ledOF_img_list[61] #RPM OF GY
+                l_img12 = ledOF_img_list[61] #RPM OF GY
+                l_img13 = ledFU_img_list[25] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[25] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
                 localimagelist01 = list(vbON_S03_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S03_img_list) #VOICEBOX
                 if style == STYLE_B_txt[0]:
-                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
+                    l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[48] #VOICEBOX34 OF
                 elif style == STYLE_B_txt[1]:
-                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[46]
+                    l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[46]
             elif theme == THEME_B_txt[4]:
-                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[60] #RPM RD
-                localimage11 = ledOF_img_list[62] #YE
-                localimage12 = ledOF_img_list[58] #RPM GN
-                localimage13 = ledFU_img_list[32] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[32] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
+                l_img30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[60] #RPM RD
+                l_img11 = ledOF_img_list[62] #YE
+                l_img12 = ledOF_img_list[58] #RPM GN
+                l_img13 = ledFU_img_list[32] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[32] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
                 localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
                 if style == STYLE_B_txt[0]:
-                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
+                    l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[48] #VOICEBOX34 OF
                 elif style == STYLE_B_txt[1]:
-                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[46]
+                    l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[46]
             elif theme == THEME_B_txt[5]:
-                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[60] #RD
-                localimage11 = ledOF_img_list[62] #YE
-                localimage12 = ledOF_img_list[58] #RD
-                localimage13 = ledFU_img_list[30] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[30] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
+                l_img30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[60] #RD
+                l_img11 = ledOF_img_list[62] #YE
+                l_img12 = ledOF_img_list[58] #RD
+                l_img13 = ledFU_img_list[30] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[30] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
                 localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
                 if style == STYLE_B_txt[0]:
-                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
+                    l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[48] #VOICEBOX34 OF
                 elif style == STYLE_B_txt[1]:
-                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[46]
+                    l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[46]
             elif theme == THEME_B_txt[6]:
-                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[60] #RD
-                localimage11 = ledOF_img_list[62] #YE
-                localimage12 = ledOF_img_list[58] #RD
-                localimage13 = ledFU_img_list[32] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[32] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
+                l_img30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[60] #RD
+                l_img11 = ledOF_img_list[62] #YE
+                l_img12 = ledOF_img_list[58] #RD
+                l_img13 = ledFU_img_list[32] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[32] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
                 localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
                 if style == STYLE_B_txt[0]:
-                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
+                    l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[48] #VOICEBOX34 OF
                 elif style == STYLE_B_txt[1]:
-                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[46]
+                    l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[46]
             elif theme == THEME_B_txt[7]:
-                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[60] #RD
-                localimage11 = ledOF_img_list[62] #YE
-                localimage12 = ledOF_img_list[58] #RD
-                localimage13 = ledFU_img_list[32] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[32] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
+                l_img30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[60] #RD
+                l_img11 = ledOF_img_list[62] #YE
+                l_img12 = ledOF_img_list[58] #RD
+                l_img13 = ledFU_img_list[32] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[32] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
                 if style == STYLE_B_txt[0]:
-                    localimage20 = sledON_img_list[0] #VOICEBOXOTTO ONMAX LE
-                    localimage21 = sledON_img_list[1] #VOICEBOXOTTO ONMAX RI
-                    localimage22 = sledOF_img_list[0]  #VOICEBOXOTTO OF RI
-                    localimage23 = sledOF_img_list[1]  #VOICEBOXOTTO OF LE
+                    l_img18 = sledON_img_list[0] #VOICEBOXOTTO ONMAX LE
+                    l_img19 = sledON_img_list[1] #VOICEBOXOTTO ONMAX RI
+                    l_img20 = sledOF_img_list[0]  #VOICEBOXOTTO OF RI
+                    l_img23 = sledOF_img_list[1]  #VOICEBOXOTTO OF LE
                 elif style == STYLE_B_txt[1]:
-                    localimage20 = sledON_img_list[2] #VOICEBOXOTTO ONMAX LE
-                    localimage21 = sledON_img_list[3] #VOICEBOXOTTO ONMAX RI
-                    localimage22 = sledOF_img_list[2]  #VOICEBOXOTTO OF RI
-                    localimage23 = sledOF_img_list[3]  #VOICEBOXOTTO OF LE
+                    l_img18 = sledON_img_list[2] #VOICEBOXOTTO ONMAX LE
+                    l_img19 = sledON_img_list[3] #VOICEBOXOTTO ONMAX RI
+                    l_img20 = sledOF_img_list[2]  #VOICEBOXOTTO OF RI
+                    l_img23 = sledOF_img_list[3]  #VOICEBOXOTTO OF LE
                 localimagelist01 = list(vbON_OTTO_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_OTTO_img_list)
             elif theme == THEME_B_txt[8]:
-                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[60] #RD
-                localimage11 = ledOF_img_list[62] #YE
-                localimage12 = ledOF_img_list[58] #RD
-                localimage13 = ledFU_img_list[32] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[32] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
+                l_img30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[60] #RD
+                l_img11 = ledOF_img_list[62] #YE
+                l_img12 = ledOF_img_list[58] #RD
+                l_img13 = ledFU_img_list[32] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[32] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
                 localimagelist01 = list(vbON_MAX_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_MAX_img_list) #VOICEBOX
                 if style == STYLE_B_txt[0]:
-                    localimage20 = ledFU_img_list[41] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[41] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[41] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[41] #VOICEBOX34 OF
+                    l_img18 = ledFU_img_list[41] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[41] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[41] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[41] #VOICEBOX34 OF
                 elif style == STYLE_B_txt[1]:
-                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[46]
+                    l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
+                    l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
+                    l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
+                    l_img23 = ledOF_img_list[46]
             elif theme == THEME_B_txt[9]:
-                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[60] #RD
-                localimage11 = ledOF_img_list[62] #YE
-                localimage12 = ledOF_img_list[58] #RD
-                localimage13 = ledFU_img_list[30] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[30] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
-                localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
-                localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
-                if style == STYLE_B_txt[0]:
-                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
-                elif style == STYLE_B_txt[1]:
-                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[46]
+                l_img30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[60] #RD
+                l_img11 = ledOF_img_list[62] #YE
+                l_img12 = ledOF_img_list[58] #RD
+                l_img13 = ledFU_img_list[28] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[28] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
             elif theme == THEME_B_txt[10]:
-                localimage30 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage31 = ledOF_img_list[60] #DEV002GAUGES 1DK
-                localimage32 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage33 = ledFU_img_list[60] #DEV002GAUGES 1RD
-                localimage34 = ledOF_img_list[62] #DEV002GAUGES 1YE
-                localimage40 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage41 = ledOF_img_list[58] #DEV002GAUGES 2DK
-                localimage42 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage43 = ledFU_img_list[58] #DEV002GAUGES 2GN
-                localimage44 = ledFU_img_list[62] #DEV002GAUGES 2YE
-                localimage10 = ledOF_img_list[60] #RD
-                localimage11 = ledOF_img_list[62] #YE
-                localimage12 = ledOF_img_list[58] #RD
-                localimage13 = ledFU_img_list[30] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[30] #SIGNAL OFRD
-                localimage15 = ledFU_img_list[60] #RD
-                localimage16 = ledFU_img_list[62] #YE
-                localimage17 = ledFU_img_list[58] #RD
-                localimage18 = rpmON_img_list
-                localimage19 = rpmOF_img_list
-                localimagelist01 = list(vbON_S04_img_list) #VOICEBOX
-                localimagelist02 = list(vbOF_S04_img_list) #VOICEBOX
-                if style == STYLE_B_txt[0]:
-                    localimage20 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[48] #VOICEBOX34 OF
-                elif style == STYLE_B_txt[1]:
-                    localimage20 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    localimage21 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    localimage22 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    localimage23 = ledOF_img_list[46]
+                l_img30 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img31 = ledOF_img_list[60] #DEV002GAUGES 1DK
+                l_img32 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img33 = ledFU_img_list[60] #DEV002GAUGES 1RD
+                l_img34 = ledOF_img_list[62] #DEV002GAUGES 1YE
+                l_img40 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img41 = ledOF_img_list[58] #DEV002GAUGES 2DK
+                l_img42 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img43 = ledFU_img_list[58] #DEV002GAUGES 2GN
+                l_img44 = ledFU_img_list[62] #DEV002GAUGES 2YE
+                l_img10 = ledOF_img_list[60] #RD
+                l_img11 = ledOF_img_list[62] #YE
+                l_img12 = ledOF_img_list[58] #RD
+                l_img13 = ledFU_img_list[30] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[30] #SIGNAL OFRD
+                l_img80 = ledFU_img_list[60] #RD
+                l_img81 = ledFU_img_list[62] #YE
+                l_img15 = ledFU_img_list[58] #RD
+                l_img16 = rpmON_img_list
+                l_img17 = rpmOF_img_list
             elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                localimage10 = lcarsOF_img_list[5]
-                localimage11 = lcarsOF_img_list[5]
-                localimage12 = lcarsOF_img_list[5]
-                localimage13 = ledFU_img_list[32] #SIGNAL ONRD
-                localimage14 = ledOF_img_list[32] #SIGNAL OFRD
-                localimage15 = lcarsON_img_list[5]
-                localimage16 = lcarsON_img_list[5]
-                localimage17 = lcarsON_img_list[6]
-                localimage18 = lcarsON_R_img_list
-                localimage19 = lcarsOF_R_img_list
+                l_img10 = lcarsOF_img_list[5]
+                l_img11 = lcarsOF_img_list[5]
+                l_img12 = lcarsOF_img_list[5]
+                l_img13 = ledFU_img_list[32] #SIGNAL ONRD
+                l_img14 = ledOF_img_list[32] #SIGNAL OFRD
+                l_img80 = lcarsON_img_list[5]
+                l_img81 = lcarsON_img_list[5]
+                l_img15 = lcarsON_img_list[6]
+                l_img16 = lcarsON_R_img_list
+                l_img17 = lcarsOF_R_img_list
         #----------------------------------------------------------------------------------
         # DEV001 GAUGES
         #----------------------------------------------------------------------------------
@@ -3415,11 +3408,11 @@ class P01_DASH(tk.Frame):
                 # Richtige Farblogik beachten
                 def get_led_image(i, on):
                     if i < 7:
-                        return localimage17 if on else localimage12  # GRÜN
+                        return l_img15 if on else l_img12  # GRÜN
                     elif i == 7:
-                        return localimage16 if on else localimage11  # GELB
+                        return l_img81 if on else l_img11  # GELB
                     else:
-                        return localimage15 if on else localimage10  # ROT
+                        return l_img80 if on else l_img10  # ROT
 
                 # LEDs aktualisieren (nur bei Änderung)
                 for i in range(val_conf_min[0], ammount_DEV001G000):
@@ -3455,7 +3448,7 @@ class P01_DASH(tk.Frame):
                 # ----------------------------------------------------------------------
                 for i in range(val_conf_min[1], ammount_DEV001G001):
                     is_on = btn_states_FNKT[3] and (perc_DEV001G001 >= i + 1)
-                    img = localimage13 if is_on else localimage14
+                    img = l_img13 if is_on else l_img14
 
                     if self.old_signal_leds.get(i) != img:
                         led_DEV001G001[i].config(image=img)
@@ -3487,7 +3480,7 @@ class P01_DASH(tk.Frame):
                 # ----------------------------------------------------------------------
                 for i in range(val_conf_min[1], ammount_DEV001G002):
                     is_on = btn_states_FNKT[3] and (perc_DEV001G002 >= i + 1)
-                    img = localimage13 if is_on else localimage14
+                    img = l_img13 if is_on else l_img14
 
                     if self.old_tuning_leds.get(i) != img:
                         led_DEV001G002[i].config(image=img)
@@ -3509,133 +3502,133 @@ class P01_DASH(tk.Frame):
                             if style == STYLE_B_txt[0]:
                                 #LEFT
                                 if distance_from_middle-4 >= (DEV001VBS34):
-                                    led_DEV001VBS34L01[i].config(image=localimage20)
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
                                 elif distance_from_middle-3 == DEV001VBS34:
-                                    led_DEV001VBS34L01[i].config(image=localimage21)
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
                                 elif distance_from_middle-2 == DEV001VBS34:
-                                    led_DEV001VBS34L01[i].config(image=localimage22)
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L01[i].config(image=localimage23)
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
                                 #RIGHT
                                 if distance_from_middle-4 >= (DEV001VBS34):
-                                    led_DEV001VBS34L03[i].config(image=localimage20)
+                                    led_DEV001VBS34L03[i].config(image=l_img18)
                                 elif distance_from_middle-3 == DEV001VBS34:
-                                    led_DEV001VBS34L03[i].config(image=localimage21)
+                                    led_DEV001VBS34L03[i].config(image=l_img19)
                                 elif distance_from_middle-2 == DEV001VBS34:
-                                    led_DEV001VBS34L03[i].config(image=localimage22)
+                                    led_DEV001VBS34L03[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L03[i].config(image=localimage23)
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
                                 #MIDDLE
                                 if distance_from_middle <= DEV001VBS34-4:
-                                    led_DEV001VBS34L02[i].config(image=localimage20)
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 -3:
-                                    led_DEV001VBS34L02[i].config(image=localimage21)
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBS34 -2:
-                                    led_DEV001VBS34L02[i].config(image=localimage22)
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L02[i].config(image=localimage23)
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
                             elif style == STYLE_B_txt[1]:
                                 #LEFT
                                 if distance_from_middle <= (DEV001VBS34-4):
-                                    led_DEV001VBS34L01[i].config(image=localimage20)
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 - 3:
-                                    led_DEV001VBS34L01[i].config(image=localimage21)
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBS34 - 2:
-                                    led_DEV001VBS34L01[i].config(image=localimage22)
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L01[i].config(image=localimage23)
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
                                 #RIGHT
                                 if distance_from_middle <= (DEV001VBS34-4):
-                                    led_DEV001VBS34L03[i].config(image=localimage20)
+                                    led_DEV001VBS34L03[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 - 3:
-                                    led_DEV001VBS34L03[i].config(image=localimage21)
+                                    led_DEV001VBS34L03[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBS34 - 2:
-                                    led_DEV001VBS34L03[i].config(image=localimage22)
+                                    led_DEV001VBS34L03[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L03[i].config(image=localimage23)
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
                                 #MIDDLE
                                 if distance_from_middle <= DEV001VBS34:
-                                    led_DEV001VBS34L02[i].config(image=localimage20)
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 + 1:
-                                    led_DEV001VBS34L02[i].config(image=localimage21)
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBS34 + 2:
-                                    led_DEV001VBS34L02[i].config(image=localimage22)
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L02[i].config(image=localimage23)
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
                     elif theme == THEME_B_txt[8]:
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
                             if style == STYLE_B_txt[0]:
                                 #LEFT
                                 if distance_from_middle >= (DEV001VBS34-6):
-                                    led_DEV001VBS34L01[i].config(image=localimage20)
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 - 3:
-                                    led_DEV001VBS34L01[i].config(image=localimage21)
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBMAX:
-                                    led_DEV001VBS34L01[i].config(image=localimage22)
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L01[i].config(image=localimage23)
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
                                 #RIGHT
                                 if distance_from_middle <= (DEV001VBS34-4):
-                                    led_DEV001VBS34L03[i].config(image=localimage23)
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
                                 else:
-                                    led_DEV001VBS34L03[i].config(image=localimage23)
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
                                 #MIDDLE
                                 if distance_from_middle <= DEV001VBMAX:
-                                    led_DEV001VBS34L02[i].config(image=localimage20)
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 + 1:
-                                    led_DEV001VBS34L02[i].config(image=localimage21)
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBOTTO + 2:
-                                    led_DEV001VBS34L02[i].config(image=localimage22)
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L02[i].config(image=localimage23)
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
                             elif style == STYLE_B_txt[1]:
                                 #LEFT
                                 if distance_from_middle <= (DEV001VBS34-6):
-                                    led_DEV001VBS34L01[i].config(image=localimage20)
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 - 3:
-                                    led_DEV001VBS34L01[i].config(image=localimage21)
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBMAX:
-                                    led_DEV001VBS34L01[i].config(image=localimage22)
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L01[i].config(image=localimage23)
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
                                 #RIGHT
                                 if distance_from_middle <= (DEV001VBS34-4):
-                                    led_DEV001VBS34L03[i].config(image=localimage23)
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
                                 else:
-                                    led_DEV001VBS34L03[i].config(image=localimage23)
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
                                 #MIDDLE
                                 if distance_from_middle <= DEV001VBMAX:
-                                    led_DEV001VBS34L02[i].config(image=localimage20)
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
                                 elif distance_from_middle == DEV001VBS34 + 1:
-                                    led_DEV001VBS34L02[i].config(image=localimage21)
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
                                 elif distance_from_middle == DEV001VBOTTO + 2:
-                                    led_DEV001VBS34L02[i].config(image=localimage22)
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
                                 else:
-                                    led_DEV001VBS34L02[i].config(image=localimage23)
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
                     elif theme == THEME_B_txt[7]:
                         for i in range (0, 8):
                             if DEV001VBS34 <= i:
-                                led_DEV001VBS34L01[i].config(image=localimage20)
+                                led_DEV001VBS34L01[i].config(image=l_img18)
                             else:
-                                led_DEV001VBS34L01[i].config(image=localimage22)
+                                led_DEV001VBS34L01[i].config(image=l_img20)
                             if DEV001VBOTTO <= i:
-                                led_DEV001VBS34L02[i].config(image=localimage21)
+                                led_DEV001VBS34L02[i].config(image=l_img19)
                             else:
-                                led_DEV001VBS34L02[i].config(image=localimage23)
+                                led_DEV001VBS34L02[i].config(image=l_img23)
                 else:
                     #----------------------------------------------------------------------
                     # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
                     #----------------------------------------------------------------------
                     if theme in THEME_B_txt[1:9]: # THEME 1 to 8
                         for i in range(ammount_VB):
-                            led_DEV001VBS34L01[i].config(image=localimage23)
-                            led_DEV001VBS34L02[i].config(image=localimage23)
-                            led_DEV001VBS34L03[i].config(image=localimage23)
+                            led_DEV001VBS34L01[i].config(image=l_img23)
+                            led_DEV001VBS34L02[i].config(image=l_img23)
+                            led_DEV001VBS34L03[i].config(image=l_img23)
                     elif theme == THEME_B_txt[7]:
                         for i in range(0, 8):
-                            led_DEV001VBS34L01[i].config(image=localimage22)
-                            led_DEV001VBS34L02[i].config(image=localimage23)
+                            led_DEV001VBS34L01[i].config(image=l_img20)
+                            led_DEV001VBS34L02[i].config(image=l_img23)
             #------------------------------------------------------------------------------
             # VOICEBOX STATUS BUTTONS (3)
             #------------------------------------------------------------------------------ 
@@ -3748,33 +3741,33 @@ class P01_DASH(tk.Frame):
                     if btn_states_FNKT[3] == True:
                         for i in range (val_conf_min[0], ammount_DEV002G000):
                             if perc_DEV002[0] >= i+1:
-                                led_DEV002G000[i].config(image=localimage18)
+                                led_DEV002G000[i].config(image=l_img16)
                             else:
-                                led_DEV002G000[i].config(image=localimage19)
+                                led_DEV002G000[i].config(image=l_img17)
                     else:
                         for i in range (val_conf_min[0], ammount_DEV002G000):
-                            led_DEV002G000[i].config(image=localimage19) 
+                            led_DEV002G000[i].config(image=l_img17) 
                 else:
                     if btn_states_FNKT[3] == True:
                         for i in range (val_conf_min[0], ammount_DEV002G000):
                             if perc_DEV002[0] >= i+1:
-                                led_DEV002G000[i].config(image=localimage18[i])
+                                led_DEV002G000[i].config(image=l_img16[i])
                             else:
-                                led_DEV002G000[i].config(image=localimage19[i])
+                                led_DEV002G000[i].config(image=l_img17[i])
                     else:
                         for i in range (val_conf_min[0], ammount_DEV002G000):
-                            led_DEV002G000[i].config(image=localimage19[i])            
+                            led_DEV002G000[i].config(image=l_img17[i])            
             #------------------------------------------------------------------------------
             # SHOW DEV002 GAUGES 1-6
             #------------------------------------------------------------------------------
             if REGION:
                 parameters = [
-                    (1, localimage33, localimage32, localimage31, localimage30),
-                    (2, localimage43, localimage42, localimage41, localimage40),
-                    (3, localimage43, localimage42, localimage41, localimage40),
-                    (4, localimage33, localimage32, localimage31, localimage30),
-                    (5, localimage33, localimage32, localimage31, localimage30),
-                    (6, localimage43, localimage42, localimage41, localimage40),
+                    (1, l_img33, l_img32, l_img31, l_img30),
+                    (2, l_img43, l_img42, l_img41, l_img40),
+                    (3, l_img43, l_img42, l_img41, l_img40),
+                    (4, l_img33, l_img32, l_img31, l_img30),
+                    (5, l_img33, l_img32, l_img31, l_img30),
+                    (6, l_img43, l_img42, l_img41, l_img40),
                 ]
             
                 if REGION and btn_states_FNKT[3]:
@@ -3811,26 +3804,26 @@ class P01_DASH(tk.Frame):
                     for i in range (val_conf_min[7], ammount_DEV002G007):
                         if perc_DEV002G007 >= i+1:
                             if i==0:
-                                led_DEV002G007[i].config(image=localimage32)
+                                led_DEV002G007[i].config(image=l_img32)
                             elif i==1:
-                                led_DEV002G007[i].config(image=localimage44)
+                                led_DEV002G007[i].config(image=l_img44)
                             else:
-                                led_DEV002G007[i].config(image=localimage42)
+                                led_DEV002G007[i].config(image=l_img42)
                         else:
                             if i==0:
-                                led_DEV002G007[i].config(image=localimage30)
+                                led_DEV002G007[i].config(image=l_img30)
                             elif i==1:
-                                led_DEV002G007[i].config(image=localimage34)
+                                led_DEV002G007[i].config(image=l_img34)
                             else:
-                                led_DEV002G007[i].config(image=localimage40)
+                                led_DEV002G007[i].config(image=l_img40)
                 else:
                     for i in range (val_conf_min[7], ammount_DEV002G007):
                             if i==0:
-                                led_DEV002G007[i].config(image=localimage30)
+                                led_DEV002G007[i].config(image=l_img30)
                             elif i==1:
-                                led_DEV002G007[i].config(image=localimage34)
+                                led_DEV002G007[i].config(image=l_img34)
                             else:
-                                led_DEV002G007[i].config(image=localimage40)
+                                led_DEV002G007[i].config(image=l_img40)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G008 (AMP)
             #------------------------------------------------------------------------------
@@ -3854,26 +3847,26 @@ class P01_DASH(tk.Frame):
                     for i in range (val_conf_min[8], ammount_DEV002G008):
                         if perc_DEV002G008 >= i+1:
                             if i==0:
-                                led_DEV002G008[i].config(image=localimage32)
+                                led_DEV002G008[i].config(image=l_img32)
                             elif i==1:
-                                led_DEV002G008[i].config(image=localimage44)
+                                led_DEV002G008[i].config(image=l_img44)
                             else:
-                                led_DEV002G008[i].config(image=localimage42)
+                                led_DEV002G008[i].config(image=l_img42)
                         else:
                             if i==0:
-                                led_DEV002G008[i].config(image=localimage30)
+                                led_DEV002G008[i].config(image=l_img30)
                             elif i==1:
-                                led_DEV002G008[i].config(image=localimage34)
+                                led_DEV002G008[i].config(image=l_img34)
                             else:
-                                led_DEV002G008[i].config(image=localimage40)
+                                led_DEV002G008[i].config(image=l_img40)
                 else:
                     for i in range (val_conf_min[8], ammount_DEV002G008):
                             if i==0:
-                                led_DEV002G008[i].config(image=localimage30)
+                                led_DEV002G008[i].config(image=l_img30)
                             elif i==1:
-                                led_DEV002G008[i].config(image=localimage34)
+                                led_DEV002G008[i].config(image=l_img34)
                             else:
-                                led_DEV002G008[i].config(image=localimage40)
+                                led_DEV002G008[i].config(image=l_img40)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G009 (AUX)
             #------------------------------------------------------------------------------
@@ -3897,26 +3890,26 @@ class P01_DASH(tk.Frame):
                     for i in range (val_conf_min[9], ammount_DEV002G009):
                         if perc_DEV002G009 >= i+1:
                             if i==0:
-                                led_DEV002G009[i].config(image=localimage32)
+                                led_DEV002G009[i].config(image=l_img32)
                             elif i==1:
-                                led_DEV002G009[i].config(image=localimage44)
+                                led_DEV002G009[i].config(image=l_img44)
                             else:
-                                led_DEV002G009[i].config(image=localimage42)
+                                led_DEV002G009[i].config(image=l_img42)
                         else:
                             if i==0:
-                                led_DEV002G009[i].config(image=localimage30)
+                                led_DEV002G009[i].config(image=l_img30)
                             elif i==1:
-                                led_DEV002G009[i].config(image=localimage34)
+                                led_DEV002G009[i].config(image=l_img34)
                             else:
-                                led_DEV002G009[i].config(image=localimage40)
+                                led_DEV002G009[i].config(image=l_img40)
                 else:
                     for i in range (val_conf_min[9], ammount_DEV002G009):
                             if i==0:
-                                led_DEV002G009[i].config(image=localimage30)
+                                led_DEV002G009[i].config(image=l_img30)
                             elif i==1:
-                                led_DEV002G009[i].config(image=localimage34)
+                                led_DEV002G009[i].config(image=l_img34)
                             else:
-                                led_DEV002G009[i].config(image=localimage40)
+                                led_DEV002G009[i].config(image=l_img40)
             #------------------------------------------------------------------------------
             # UPDATE DEV002 INFORMATION CENTER
             #------------------------------------------------------------------------------
