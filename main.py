@@ -574,8 +574,8 @@ if REGION:
         #----------------------------------------------------------------------------------
         # SETUP STYLES
         #----------------------------------------------------------------------------------
-        #        00            01                 02          03                    04                05       06           07             08
-        fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station"]
+        #        00            01                 02          03                    04                05       06           07             08              09
+        fonts = ["BankGothic", "Bebas Neue Bold", "ccar7seg", "DSEG7 Classic Mini", "DSEG14 Classic", "lcars", "LCDDot TR", "led16sgmnt2", "Penn Station", "NostromoOutline-Black"]
 
         sys_clr = []
         sty_clr = []
@@ -2005,8 +2005,8 @@ class P01_DASH(tk.Frame):
             self.audio_definitions = [
                 ("sfx", "SCANNER_1x.mp3", True),
                 ("sfx", "STARTUP_001.mp3", False),
-                ("sfx", "WINDOW.mp3", False),
-                ("introduce", "VORSTELLUNG_KITT_KURZ.mp3", False)
+                ("notouch", "NICHT_BERUEHREN_00.mp3", False),
+                ("introduce", "VORSTELLUNG_MITTEL.mp3", False)
             ]
 
             try:
@@ -2625,7 +2625,7 @@ class P01_DASH(tk.Frame):
                     if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
                         label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
                         label_7SEG001.place(x=582, y=160, width=370, height=147)
-                    elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
+                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         if btn_states_SW[3] == False:
                             if btn_states_SW[1] == True:
                                 label_7SEG001.config(image=localimage03, compound="center")
@@ -2634,6 +2634,9 @@ class P01_DASH(tk.Frame):
                         else:
                             label_7SEG001.config(image=localimage05, compound="center")
                         label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
+                        label_7SEG001.place(x=609, y=116, width=496, height=212)
+                    elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
+                        label_7SEG001.config(font=(fonts[9], 150), fg=sty_clr[0], anchor="c")
                         label_7SEG001.place(x=609, y=116, width=496, height=212)
                     elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
                         label_7SEG001.place(x=985, y=100, width=220, height=200)
@@ -3500,7 +3503,7 @@ class P01_DASH(tk.Frame):
                     DEV001VBS34 = random.randint(0, 8)
                     DEV001VBOTTO = random.randint(0, 8)
                     DEV001VBMAX = random.randint(0, 8)
-                    if theme in THEME_B_txt[1:7] or theme in THEME_B_txt[9]: # THEME 1 to 6 or 8
+                    if theme in THEME_B_txt[1:7]: # THEME 1 to 6 or 8
                         for i in range(ammount_VB):
                             distance_from_middle = abs(i - middle_index)
                             if style == STYLE_B_txt[0]:

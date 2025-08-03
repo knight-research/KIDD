@@ -9,7 +9,8 @@
       "styles": ["KARR","KITT","---","---","---"],
       "themes": ["PILOT","K2_S01","K2_S02","K2_S03","K2_S04","K2_S05","K2_S06","K2_OTTO","K2_MAX",
         "K3_S01","K3_S02","GMA","GMD","DMC","BTTF","LCARS1","LCARS2"],
-      "systems": ["ORANGE","GREEN","AQUA","WHITE"]
+      "systems": ["ORANGE","GREEN","AQUA","WHITE"],
+      "languages": ["DEU","ENG","ESP","FRA","ITA","NLD","POL","POR","RUS","TUR","CHS","JPN"]
     },
     "btn_SELECT_txt": ["pb00","pb01","pb02","pb03","pb04","pb05","pb06","pb07","pb08","pb09","pb10","pb11","pb12"],
     "FNKT_B_NAMES": ["pb00","pb01","pb02","pb03","pb04","pb05","pb06","pb07","pb08","pb09","pb10","pb11","pb12"],

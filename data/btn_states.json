@@ -4,6 +4,7 @@
         "style": "KITT",
         "theme": "K2_S05",
         "system": "GREEN",
+        "language": "DEU",
         "timezone": "+2"
     },
     "buttons": {
@@ -12,8 +13,8 @@
             "FNKT": [
                 false,
                 false,
-                false,
-                false,
+                true,
+                true,
                 false,
                 false,
                 false,
@@ -69,8 +70,8 @@
                 0,
                 1,
                 0,
+                true,
                 false,
-                0,
                 0,
                 0,
                 0,
