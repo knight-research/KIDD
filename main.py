@@ -10,9 +10,9 @@ debug = False # PRINT INFORMATIONS TO CONSOLE
 # BEFORE MAINAPP
 #------------------------------------------------------------------------------------------
 if REGION:
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     # VERSION
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     if REGION:
         try:
             with open("version.txt", "r") as f:
@@ -22,9 +22,9 @@ if REGION:
         except FileNotFoundError:
             version = "unknown"
             last_change = "unknown"
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     # IMPORTS
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     if REGION:
         from import_all import *
         sys_win = False
@@ -44,18 +44,18 @@ if REGION:
                     from import_pi import *
             except FileNotFoundError:
                 pass
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     # DATA FOLDERS
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     folder = os.path.dirname(os.path.abspath(__file__))
     datadir = os.path.join(folder,'data')
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     # BUTTONSTATEMANEAGER
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     bsm = ButtonStateManager(folder)
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     # INIT SOUND
-    #------------------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------------
     pygame.mixer.init()
     #--------------------------------------------------------------------------------------
     # GLOBAL VARIABLES
@@ -4318,34 +4318,23 @@ class P03_SETUP(tk.Frame):
                     #--------------------------------------------------------------------------
                     canvas.create_line(15, 285, 25, 285, fill=colors_corner[0], width=1)   #LT_X
                     canvas.create_line(15, 285, 15, 295, fill=colors_corner[1], width=1)   #LT_Y
-                    canvas.create_line(245, 285, 255, 285, fill=colors_corner[0], width=1) #RT_X
-                    canvas.create_line(255, 285, 255, 295, fill=colors_corner[1], width=1) #RT_Y
-                    canvas.create_line(15, 495, 25, 495, fill=colors_corner[0], width=1)   #LB_X
-                    canvas.create_line(15, 485, 15, 495, fill=colors_corner[1], width=1)   #LB_Y
-                    canvas.create_line(245, 495, 255, 495, fill=colors_corner[0], width=1) #RB_X
-                    canvas.create_line(255, 485, 255, 495, fill=colors_corner[1], width=1) #RB_Y
-                    #--------------------------------------------------------------------------
-                    # CREATE INPUTVALUE CORNERS
-                    #--------------------------------------------------------------------------
-                    canvas.create_line(285, 285, 295, 285, fill=colors_corner[0], width=1) #LT_X
-                    canvas.create_line(285, 285, 285, 295, fill=colors_corner[1], width=1) #LT_Y
-                    canvas.create_line(470, 285, 480, 285, fill=colors_corner[0], width=1) #RT_X
-                    canvas.create_line(480, 285, 480, 295, fill=colors_corner[1], width=1) #RT_Y
-                    canvas.create_line(285, 330, 295, 330, fill=colors_corner[0], width=1) #LB_X
-                    canvas.create_line(285, 320, 285, 330, fill=colors_corner[1], width=1) #LB_Y
-                    canvas.create_line(470, 330, 480, 330, fill=colors_corner[0], width=1) #RB_X
-                    canvas.create_line(480, 320, 480, 330, fill=colors_corner[1], width=1) #RB_Y
+                    canvas.create_line(290, 285, 300, 285, fill=colors_corner[0], width=1) #RT_X
+                    canvas.create_line(300, 285, 300, 295, fill=colors_corner[1], width=1) #RT_Y
+                    canvas.create_line(15, 480, 25, 480, fill=colors_corner[0], width=1)   #LB_X
+                    canvas.create_line(15, 470, 15, 480, fill=colors_corner[1], width=1)   #LB_Y
+                    canvas.create_line(290, 480, 300, 480, fill=colors_corner[0], width=1) #RB_X
+                    canvas.create_line(300, 470, 300, 480, fill=colors_corner[1], width=1) #RB_Y
                     #--------------------------------------------------------------------------
                     # CREATE KEYPAD CORNERS
                     #--------------------------------------------------------------------------
                     canvas.create_line(510, 285, 520, 285, fill=colors_corner[0], width=1) #LT_X
                     canvas.create_line(510, 285, 510, 295, fill=colors_corner[1], width=1) #LT_Y
-                    canvas.create_line(755, 285, 765, 285, fill=colors_corner[0], width=1) #RT_X
-                    canvas.create_line(765, 285, 765, 295, fill=colors_corner[1], width=1) #RT_Y
-                    canvas.create_line(510, 600, 520, 600, fill=colors_corner[0], width=1) #LB_X
-                    canvas.create_line(510, 590, 510, 600, fill=colors_corner[1], width=1) #LB_Y
-                    canvas.create_line(755, 600, 765, 600, fill=colors_corner[0], width=1) #RB_X
-                    canvas.create_line(765, 590, 765, 600, fill=colors_corner[1], width=1) #RB_Y                        
+                    canvas.create_line(830, 285, 840, 285, fill=colors_corner[0], width=1) #RT_X
+                    canvas.create_line(840, 285, 840, 295, fill=colors_corner[1], width=1) #RT_Y
+                    canvas.create_line(510, 615, 520, 615, fill=colors_corner[0], width=1) #LB_X
+                    canvas.create_line(510, 605, 510, 615, fill=colors_corner[1], width=1) #LB_Y
+                    canvas.create_line(830, 615, 840, 615, fill=colors_corner[0], width=1) #RB_X
+                    canvas.create_line(840, 605, 840, 615, fill=colors_corner[1], width=1) #RB_Y                        
                 #--------------------------------------------------------------------------
                 # CREATE FRAME 02 (MENU) CORNERS LEFT/TOP DISPLAY
                 #--------------------------------------------------------------------------
@@ -4512,73 +4501,130 @@ class P03_SETUP(tk.Frame):
         # KEYPAD BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            global current_value
-            global variables
-            global variable_dropdown
-            global dropdown
-            global lbl_target_val
-            current_value = tk.StringVar()
-            current_value.set('')
+            # === CONFIG KEYPAD & DROPDOWN (reads/writes btn_states.json["config"]) ===
+            # UI: dropdown of keys, label showing current value, editable buffer controlled by keypad, SAVE writes file.
 
-            # Create a dictionary of variables to store the target values
-            variables = {
-                'SPARE': tk.DoubleVar(),
-                'ODOMETER': tk.DoubleVar(),
-                'TRIP_1': tk.DoubleVar(),
-                'Variable 4': tk.DoubleVar(),
-                'Variable 5': tk.DoubleVar(),
-                'Variable 6': tk.DoubleVar(),
-                'Variable 7': tk.DoubleVar(),
-                'Variable 8': tk.DoubleVar(),
-                'Variable 9': tk.DoubleVar(),
-                'Variable 10': tk.DoubleVar()
-            }
+            # --- helpers to load/save the JSON once and reuse in handlers ----------------
+            def _load_btn_states():
+                with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
+                    return json.load(f)
 
-            # Create the dropdown list
-            variable_dropdown = tk.StringVar()
-            variable_dropdown.set('SPARE')  # Default selection
-            dropdown = tk.OptionMenu(self, variable_dropdown, *variables.keys())
-            dropdown.config(bg=sys_clr[8], fg=sys_clr[9], font=("BankGothic", 18))
-            dropdown["menu"].config(bg=sys_clr[8], fg=sys_clr[9], font=("BankGothic", 16))
-            dropdown.place(x=292, y=355, width=176)
-            #------------------------------------------------------------------------------
-            # INPUT VALUE LABEL
-            #------------------------------------------------------------------------------
-            current_value_label = tk.Label(self, textvariable=current_value, **lbl_style_SETUP, bg=sys_clr[8], fg=sys_clr[9])
-            current_value_label.place(x=292, y=295, width=176, height=28)
-            #------------------------------------------------------------------------------
-            # TARGET VALUES LABEL
-            #------------------------------------------------------------------------------
-            lbl_target_val = tk.Label(self, text="", **lbl_style_SETUP2, bg=sys_clr[8], fg=sys_clr[9])
-            lbl_target_val.place(x=25, y=295, width=220, height=192)
-            #------------------------------------------------------------------------------
-            # KEYPAD BUTTONS
-            #------------------------------------------------------------------------------
-            if REGION:
-                keypad_buttons = [str(i) for i in range(10)]
-                x_pos_keyR0 = 521
-                x_pos_keyR1 = 521
-                x_pos_keyR2 = 521
-                for i in range(1, 10):
-                    btn_key = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text=keypad_buttons[i], command=lambda num=i: read.btn_key_click(num))
-                    if i < 4:
-                        btn_key.place(x=x_pos_keyR0, y=296)
-                        x_pos_keyR0 += +80
-                    elif i < 7:
-                        btn_key.place(x=x_pos_keyR1, y=371)
-                        x_pos_keyR1 += +80
+            def _save_btn_states(data):
+                # Keep structure and pretty print for readability
+                with open(os.path.join(datadir, "btn_states.json"), "w", encoding="utf-8") as f:
+                    json.dump(data, f, ensure_ascii=False, indent=4)
+
+            # --- state -------------------------------------------------------------------
+            self._cfg_data = _load_btn_states()
+            self._cfg_keys = list(self._cfg_data.get("config", {}).keys())
+            if not self._cfg_keys:
+                self._cfg_keys = ["odo_trip_gps_imperial"]  # fallback
+
+            self._cfg_selected_key = tk.StringVar(value=self._cfg_keys[0])
+            self._cfg_current_value_var = tk.StringVar()    # read-only shown value
+            self._cfg_edit_value_var = tk.StringVar()       # editable buffer (keypad writes here)
+            self._cfg_status_var = tk.StringVar(value="")   # small status line
+
+            # --- handlers ----------------------------------------------------------------
+            def _refresh_value_from_file():
+                key = self._cfg_selected_key.get()
+                self._cfg_data = _load_btn_states()
+                val = self._cfg_data.get("config", {}).get(key, 0.0)
+                # Normalize to string but don’t lose decimals
+                self._cfg_current_value_var.set(str(val))
+                # start edit buffer with the current value
+                self._cfg_edit_value_var.set(str(val))
+
+            def _on_select_key(*_):
+                _refresh_value_from_file()
+
+            def _on_keypad_press(token):
+                buf = self._cfg_edit_value_var.get()
+
+                if token == "C":
+                    self._cfg_edit_value_var.set("")
+                elif token == "←":
+                    self._cfg_edit_value_var.set(buf[:-1])
+                elif token == ".":
+                    if "." not in buf:
+                        self._cfg_edit_value_var.set(buf + ".")
+                else:
+                    # numeric 0-9
+                    self._cfg_edit_value_var.set(buf + token)
+
+            def _save_config_value():
+                key = self._cfg_selected_key.get()
+                raw = self._cfg_edit_value_var.get().strip().replace(",", ".")
+                try:
+                    # store as float if possible, else as int if clean, else leave as string
+                    if raw == "" or raw == "-" or raw == "." or raw == "-.":
+                        raise ValueError("empty buffer")
+                    val = float(raw)
+                    if val.is_integer():
+                        val = float(val)  # keep float in file for consistency with other keys
+                except Exception:
+                    self._cfg_status_var.set("not a usable Value")
+                    self.after(1200, lambda: self._cfg_status_var.set(""))
+                    return
+
+                data = _load_btn_states()
+                if "config" not in data:
+                    data["config"] = {}
+                data["config"][key] = val
+                _save_btn_states(data)
+
+                # Reflect on screen
+                self._cfg_current_value_var.set(str(val))
+                self._cfg_status_var.set("Values Saved")
+                self.after(1200, lambda: self._cfg_status_var.set(""))
+
+            # --- widgets -----------------------------------------------------------------
+            # Dropdown: choose config key
+            opt_cfg = tk.OptionMenu(self, self._cfg_selected_key, *self._cfg_keys, command=lambda *_: _on_select_key())
+            opt_cfg.config(bg=sys_clr[8], fg=sys_clr[3], font=(fonts[6], 22))
+            opt_cfg.place(x=30, y=300, width=250, height=30)
+
+            # Current value (read-only)
+            lbl_curr = tk.Label(self, **lbl_style_setup_btns, text="act. Val.", bg=sys_clr[8], fg=sys_clr[3])
+            lbl_curr.place(x=30, y=345, width=120, height=30)
+            val_curr = tk.Label(self, **lbl_style_setup_btns, textvariable=self._cfg_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
+            val_curr.place(x=165, y=345, width=120, height=30)
+
+            # Edit buffer (what keypad writes)
+            lbl_edit = tk.Label(self, **lbl_style_setup_btns, text="new Val.", bg=sys_clr[8], fg=sys_clr[3])
+            lbl_edit.place(x=30, y=390, width=120, height=30)
+            val_edit = tk.Label(self, **lbl_style_setup_btns, textvariable=self._cfg_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
+            val_edit.place(x=165, y=390, width=120, height=30)
+
+            # Status line
+            lbl_status = tk.Label(self, font=(fonts[6], 22), textvariable=self._cfg_status_var, bg=sys_clr[8], fg=sys_clr[3], anchor="w")
+            lbl_status.place(x=30, y=435, width=255, height=30)
+
+            # Keypad (reuse your visual style)
+            # layout rows; tweak positions to match your existing UI grid
+            keypad_layout = [
+                ("7","8","9","←"),
+                ("4","5","6","C"),
+                ("1","2","3",""),
+                ("0",".","OK","")
+            ]
+
+            x0, y0 = 525, 300
+            dx, dy = 77, 77
+            w, h = 70, 70
+
+            for r, row in enumerate(keypad_layout):
+                for c, token in enumerate(row):
+                    if not token:  # empty cell
+                        continue
+                    if token == "OK":
+                        btn = tk.Button(self, **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=_save_config_value)
                     else:
-                        btn_key.place(x=x_pos_keyR2, y=446)
-                        x_pos_keyR2 += +80
+                        btn = tk.Button(self, **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=lambda t=token: _on_keypad_press(t))
+                    btn.place(x=x0 + c*dx, y=y0 + r*dy, width=w, height=h)
 
-                btn_dot = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text=".", command=read.btn_dot_click)
-                btn_dot.place(x=521, y=521)
-
-                btn_0 = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text="0", command=lambda: read.btn_key_click(0))
-                btn_0.place(x=601, y=521)
-
-                btn_apply = tk.Button(canvas, **keypad_style, bg=sys_clr[8], fg=sys_clr[9], text="OK", command=read.btn_apply_click)
-                btn_apply.place(x=681, y=521)
+            # Load initial display for first key
+            _refresh_value_from_file()
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------

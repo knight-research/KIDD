@@ -3,17 +3,17 @@
         "device": "DEV001",
         "style": "KITT",
         "theme": "K2_S05",
-        "system": "GREEN",
+        "system": "AQUA",
         "language": "DEU",
         "timezone": "+2"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb00",
+            "PB": "pb04",
             "FNKT": [
                 false,
                 false,
-                true,
+                false,
                 false,
                 false,
                 false,
@@ -720,13 +720,13 @@
         }
     },
     "config": {
-        "odo_trip_gps_imperial": 0.0,
+        "odo_trip_gps_imperial": 0.03,
         "odo_trip_gps_metric": 0.0,
-        "odo_total_gps_imperial": 0.0,
+        "odo_total_gps_imperial": 129000.0,
         "odo_total_gps_metric": 0.0,
-        "odo_trip_aldl_imperial": 0.0,
+        "odo_trip_aldl_imperial": 44.0,
         "odo_trip_aldl_metric": 0.0,
-        "odo_total_aldl_imperial": 118151.0,
+        "odo_total_aldl_imperial": 118160.0,
         "odo_total_aldl_metric": 190146.0
     }
 }
