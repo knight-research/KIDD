@@ -503,21 +503,24 @@ if REGION:
         }
 
         def _on_net_message(msg):
+            # headers we expect NetBus to attach, or that peers include
+            if msg.get("carno") != carno:
+                return
+            if msg.get("devno") == devno:
+                return  # ignore our own messages
+
             topic = msg.get("topic")
             data  = msg.get("data") or {}
-            src   = msg.get("devno")
-            if topic == "gps":
-                # store; UI thread will pick it up
-                net_inbox["gps_from_peer"] = data
-                net_inbox["last_peer_dev"] = src
 
-        netbus = NetBus(carno=carno,
-                        devno=devno,
-                        group=mcast_group,
-                        port=mcast_port,
-                        on_message=_on_net_message,
-                        enabled=net_enabled)
-        netbus.start()
+            # optional per‑message destination filter (see section 3)
+            dst = msg.get("dst")
+            if dst not in (None, "*", devno):
+                return
+
+            if topic == "gps":
+                net_inbox["gps_from_peer"] = data
+                net_inbox["last_peer_dev"] = msg.get("devno")
+
 
         # make sure to stop on exit
         def on_close():
@@ -6740,7 +6743,6 @@ class myfunctions():
                 maybe_publish_gps()
 
             def apply_peer_gps_if_any(self):
-                print ("Test")
                 d = net_inbox.get("gps_from_peer")
                 if not d:
                     return
