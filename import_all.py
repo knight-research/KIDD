@@ -16,6 +16,9 @@ import time
 import threading
 import websocket
 
+from network_sync import NetworkSync
+import socket
+
 from btn_state_manager import ButtonStateManager
 from datetime import timedelta
 from PIL import ImageTk, Image

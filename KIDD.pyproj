@@ -28,6 +28,7 @@
     <Compile Include="import_pi.py" />
     <Compile Include="import_win.py" />
     <Compile Include="main.py" />
+    <Compile Include="network_sync.py" />
     <Compile Include="update.py" />
     <Compile Include="_fake_GPIO.py" />
   </ItemGroup>

@@ -9,11 +9,11 @@
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb04",
+            "PB": "pb01",
             "FNKT": [
                 false,
                 false,
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -720,7 +720,7 @@
         }
     },
     "config": {
-        "odo_trip_gps_imperial": 0.03,
+        "odo_trip_gps_imperial": 0.0,
         "odo_trip_gps_metric": 0.0,
         "odo_total_gps_imperial": 129000.0,
         "odo_total_gps_metric": 0.0,
