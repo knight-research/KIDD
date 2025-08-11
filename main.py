@@ -2466,10 +2466,10 @@ class P01_DASH(tk.Frame):
                     for i in range(0, ammount_DEV002G007):
                         val_DEV002G007 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G007.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)
+                            val_DEV002G007.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, width=width_DEV002G007, height=height_DEV002G007)
                             x_pos_DEV002G007 += x_pos_DEV002G007_next
                         elif i > 11:
-                            val_DEV002G007.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, w=width_DEV002G007, h=height_DEV002G007)                    
+                            val_DEV002G007.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, width=width_DEV002G007, height=height_DEV002G007)                    
                             x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
                         led_DEV002G007.append(val_DEV002G007)
                 #--------------------------------------------------------------------------
@@ -2498,10 +2498,10 @@ class P01_DASH(tk.Frame):
                     for i in range(0, ammount_DEV002G008):
                         val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G008.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)
+                            val_DEV002G008.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, width=width_DEV002G008, height=height_DEV002G008)
                             x_pos_DEV002G008 += x_pos_DEV002G008_next
                         elif i > 11:
-                            val_DEV002G008.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, w=width_DEV002G008, h=height_DEV002G008)                    
+                            val_DEV002G008.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, width=width_DEV002G008, height=height_DEV002G008)                    
                             x_pos_DEV002G008_after12 += x_pos_DEV002G008_next
                         led_DEV002G008.append(val_DEV002G008)
                 #--------------------------------------------------------------------------
@@ -2530,10 +2530,10 @@ class P01_DASH(tk.Frame):
                     for i in range(0, ammount_DEV002G009):
                         val_DEV002G009 = tk.Label(self, **btn_style_imgbtn)
                         if i < 12:
-                            val_DEV002G009.place(x=x_pos_DEV002G009, y=y_pos_DEV002G009, w=width_DEV002G009, h=height_DEV002G009)
+                            val_DEV002G009.place(x=x_pos_DEV002G009, y=y_pos_DEV002G009, width=width_DEV002G009, height=height_DEV002G009)
                             x_pos_DEV002G009 += x_pos_DEV002G009_next
                         elif i > 11:
-                            val_DEV002G009.place(x=x_pos_DEV002G009_after12, y=y_pos_DEV002G009, w=width_DEV002G009, h=height_DEV002G009)                    
+                            val_DEV002G009.place(x=x_pos_DEV002G009_after12, y=y_pos_DEV002G009, width=width_DEV002G009, height=height_DEV002G009)                    
                             x_pos_DEV002G009_after12 += x_pos_DEV002G009_next
                         led_DEV002G009.append(val_DEV002G009)
                 #--------------------------------------------------------------------------
@@ -2764,9 +2764,9 @@ class P01_DASH(tk.Frame):
             print(f"⚠️ Kein Hintergrundbild für Device {device}")
             return
 
-            # Canvas leeren und neu zeichnen
-            self.canvas.delete("all")
-            self.canvas.create_image(0, 0, image=self.background_image, anchor="nw", tags="bg")
+        # Canvas leeren und neu zeichnen
+        self.canvas.delete("all")
+        self.canvas.create_image(0, 0, image=self.background_image, anchor="nw", tags="bg")
     def update_labels(self):
         global lbls_sysinfo
         current_pb = btn_states_PB
@@ -4018,7 +4018,7 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[7].config(text=update_duration)
                     else:
                         DG02_values = {
-                            "pb00": seg_DEV002[1],
+                            "pb00": gps_time, #seg_DEV002[1],
                             "pb01": seg_DEV002[2],
                             "pb02": seg_DEV002[3],
                             "pb03": seg_DEV002[4],
@@ -4432,7 +4432,7 @@ class P03_SETUP(tk.Frame):
             btn_EXIT = tk.Button(self, bd=0, bg=sys_clr[8], fg="#FF0000", font=(fonts[1], 28))
             btn_EXIT.config(text="X")
             btn_EXIT.configure(command=read.quitDASH)
-            btn_EXIT.place(x=125, y=18, w=28, h=28)
+            btn_EXIT.place(x=125, y=18, width=28, height=28)
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTON LABELS
         #----------------------------------------------------------------------------------
@@ -5933,7 +5933,7 @@ class myfunctions():
                 for i in range(btn_device_place):
                     btn_device = tk.Button(text=DEVICE_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_device(DEVICE_B_txt[i]),kidd.switch_frame(P00_BOOT)])                                                                                                                                                     
                     btns_device.append(btn_device)
-                    btns_device[i].place(x=x_pos_r1, y=frm01_YPOS+45, w=btn_w, h=btn_h)
+                    btns_device[i].place(x=x_pos_r1, y=frm01_YPOS+45, width=btn_w, height=btn_h)
                     x_pos_r1 += +(btn_w+15)
                 for i, text in enumerate(DEVICE_B_txt):
                     if device == text:
@@ -5983,7 +5983,7 @@ class myfunctions():
                     btns_device[38].config(state=tk.DISABLED)
                     btns_device[39].config(state=tk.DISABLED)
                     btns_device[40].config(state=tk.DISABLED)
-                btns_device_slider = tk.Scale(from_=0, to=btn_device_place, command=read.buttons_device_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_device_slider = tk.Scale(from_=0, to=btn_device_place, command=read.buttons_device_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
                 btns_device_slider.set(1)
                 btns_device_slider.place(x=145, y=frm01_YPOS+2)
             #------------------------------------------------------------------------------
@@ -5998,7 +5998,7 @@ class myfunctions():
                     if i < start_index or i >= start_index + 8:
                         btns_device[i].place_forget()  # Hide the btns_device outside the range
                     else:
-                        btns_device[i].place(x=x_pos_r1, y=frm01_YPOS+45, w=btn_w, h=btn_h)  # Show the btns_device within the range
+                        btns_device[i].place(x=x_pos_r1, y=frm01_YPOS+45, width=btn_w, height=btn_h)  # Show the btns_device within the range
                         x_pos_r1 += +(btn_w+15) 
             #------------------------------------------------------------------------------
             # STYLE BUTTONS
@@ -6015,7 +6015,7 @@ class myfunctions():
                 for i in range(btn_style_place):
                     btn_style = tk.Button(text=STYLE_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_style(STYLE_B_txt[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
                     btns_style.append(btn_style)
-                    btns_style[i].place(x=x_pos_r1, y=frm02_YPOS+45, w=btn_w, h=btn_h)
+                    btns_style[i].place(x=x_pos_r1, y=frm02_YPOS+45, width=btn_w, height=btn_h)
                     x_pos_r1 += +(btn_w+15)
                 for i, text in enumerate(STYLE_B_txt):
                     if style == text:
@@ -6029,7 +6029,7 @@ class myfunctions():
                     btns_style[2].config(state=tk.DISABLED)
                     btns_style[3].config(state=tk.DISABLED)
                     btns_style[4].config(state=tk.DISABLED)
-                btns_style_slider = tk.Scale(from_=0, to=btn_style_place, command=read.buttons_style_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_style_slider = tk.Scale(from_=0, to=btn_style_place, command=read.buttons_style_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
                 btns_style_slider.set(0)
                 btns_style_slider.place(x=145, y=frm02_YPOS+2)
             #------------------------------------------------------------------------------
@@ -6044,7 +6044,7 @@ class myfunctions():
                     if i < start_index or i >= start_index + 8:
                         btns_style[i].place_forget()  # Hide the btns_style outside the range
                     else:
-                        btns_style[i].place(x=x_pos_r1, y=frm02_YPOS+45, w=btn_w, h=btn_h)  # Show the btns_style within the range
+                        btns_style[i].place(x=x_pos_r1, y=frm02_YPOS+45, width=btn_w, height=btn_h)  # Show the btns_style within the range
                         x_pos_r1 += +(btn_w+15) 
             #------------------------------------------------------------------------------
             # THEME BUTTONS
@@ -6061,7 +6061,7 @@ class myfunctions():
                 for i in range(btn_theme_place):
                     btn_theme = tk.Button(text=THEME_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_theme(THEME_B_txt[i]),kidd.switch_frame(P01_DASH)])                                                                                                                                                     
                     btns_theme.append(btn_theme)
-                    btns_theme[i].place(x=x_pos_r1, y=frm03_YPOS+45, w=btn_w, h=btn_h)
+                    btns_theme[i].place(x=x_pos_r1, y=frm03_YPOS+45, width=btn_w, height=btn_h)
                     x_pos_r1 += +(btn_w+15)
                 for i, text in enumerate(THEME_B_txt):
                     if theme == text:
@@ -6087,7 +6087,7 @@ class myfunctions():
                     btns_theme[14].config(state=tk.DISABLED)
                     btns_theme[15].config(state=tk.DISABLED)
                     btns_theme[16].config(state=tk.DISABLED)
-                btns_theme_slider = tk.Scale(from_=0, to=btn_theme_place, command=read.buttons_theme_show, showvalue=0, length=(bggrid[1]-160), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_theme_slider = tk.Scale(from_=0, to=btn_theme_place, command=read.buttons_theme_show, showvalue=0, length=(bggrid[1]-160), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
                 btns_theme_slider.set(1)
                 btns_theme_slider.place(x=127, y=frm03_YPOS+2)
             #------------------------------------------------------------------------------
@@ -6102,7 +6102,7 @@ class myfunctions():
                     if i < start_index or i >= start_index + 8:
                         btns_theme[i].place_forget()  # Hide the btns_theme outside the range
                     else:
-                        btns_theme[i].place(x=x_pos_r1, y=frm03_YPOS+45, w=btn_w, h=btn_h)  # Show the btns_theme within the range
+                        btns_theme[i].place(x=x_pos_r1, y=frm03_YPOS+45, width=btn_w, height=btn_h)  # Show the btns_theme within the range
                         x_pos_r1 += +(btn_w+15)           
             #------------------------------------------------------------------------------
             # SYS BUTTONS
@@ -6119,14 +6119,14 @@ class myfunctions():
                 for i in range(btn_sys_place):
                     btn_sys = tk.Button(text=SYS_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_button_system(SYS_B_txt[i]),kidd.switch_frame(P04_THEMES)])                                                                                                                                                     
                     btns_sys.append(btn_sys)
-                    btns_sys[i].place(x=x_pos_r1, y=frm04_YPOS+45, w=btn_w, h=btn_h)
+                    btns_sys[i].place(x=x_pos_r1, y=frm04_YPOS+45, width=btn_w, height=btn_h)
                     x_pos_r1 += +(btn_w+15)
                 for i, text in enumerate(SYS_B_txt):
                     if system == text:
                         btns_sys[i].config(fg=sys_clr[10])
                     else:
                         btns_sys[i].config(fg=sys_clr[11])
-                btns_sys_slider = tk.Scale(from_=0, to=btn_sys_place, command=read.buttons_sys_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_sys_slider = tk.Scale(from_=0, to=btn_sys_place, command=read.buttons_sys_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
                 btns_sys_slider.set(0)
                 btns_sys_slider.place(x=107, y=frm04_YPOS+2)
             #------------------------------------------------------------------------------
@@ -6141,7 +6141,7 @@ class myfunctions():
                     if i < start_index or i >= start_index + 8:
                         btns_sys[i].place_forget()  # Hide the btns_sys outside the range
                     else:
-                        btns_sys[i].place(x=x_pos_r1, y=frm04_YPOS+45, w=btn_w, h=btn_h)  # Show the btns_sys within the range
+                        btns_sys[i].place(x=x_pos_r1, y=frm04_YPOS+45, width=btn_w, height=btn_h)  # Show the btns_sys within the range
                         x_pos_r1 += +(btn_w+15)
             #------------------------------------------------------------------------------
             # MENU BUTTONS
@@ -6159,14 +6159,14 @@ class myfunctions():
                     btn_menu = tk.Button(text=MENU_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
                     btn_menu.config(command=lambda i=i: kidd.switch_frame(i))
                     btns_menu.append(btn_menu)
-                    btns_menu[i].place(x=x_pos_r1, y=frm05_YPOS+45, w=btn_w, h=btn_h)
+                    btns_menu[i].place(x=x_pos_r1, y=frm05_YPOS+45, width=btn_w, height=btn_h)
                     x_pos_r1 += +(btn_w+15)
                 #for i, text in enumerate(MENU_B_txt):
                 #    if menu == text:
                 #        btns_menu[i].config(fg=sys_clr[10])
                 #    else:
                 #        btns_menu[i].config(fg=sys_clr[11])
-                btns_menu_slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.buttons_menu_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', w=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+                btns_menu_slider = tk.Scale(from_=0, to=btn_menu_place-5, command=read.buttons_menu_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
                 btns_menu_slider.set(1)
                 btns_menu_slider.place(x=107, y=frm05_YPOS+2)
             #------------------------------------------------------------------------------
@@ -6181,7 +6181,7 @@ class myfunctions():
                     if i < start_index or i >= start_index + 8:
                         btns_menu[i].place_forget()  # Hide the btns_menu outside the range
                     else:
-                        btns_menu[i].place(x=x_pos_r1, y=frm05_YPOS+45, w=btn_w, h=btn_h)  # Show the btns_menu within the range
+                        btns_menu[i].place(x=x_pos_r1, y=frm05_YPOS+45, width=btn_w, height=btn_h)  # Show the btns_menu within the range
                         x_pos_r1 += +(btn_w+15)
             #------------------------------------------------------------------------------
             # QOPT PAGE: SHOW FAV BUTTONS (MAX 20)
