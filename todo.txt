@@ -1,19 +1,6 @@
 #------------------------------------------------------------------------------------------
 # TODO
 #------------------------------------------------------------------------------------------
-
-OLD TO NEW:
-DONE: Favorites - Make relaisboard buttons and things as favorites, to show them on the qopt page.
-DONE: button obd/aldl (variable cardata == GPS)
-DONE: enable_gps mic scanner rb01.... make it with one myfunction give variable in function command -done
-DONE: V1.3.6 switch unit in settings
-DONE: Otto button on Switchpod with Ottifantenlogo and otto knight rider theme
-DONE: PB DEV USE SEPARATE JSON COLUMN FOR EACH DEVICE
-DONE: GPS NOW ALSO WORKS ON WINDOWS
-DONE: SWITCH LANGUAGE (TEXTS)
-DONE: THEME COLOR SWITCHER (PREPARED ALL THEME COLORS NOW IN "BEFORE MAIN APP GLOBALS")
-
-TODO: Scammer sound in Main Tachometer screen ON/OFF
 TODO: OBD2 CONNECTION FOR DEV031
 TODO: Switchpod communication with sending labels texts (S34) from here
 TODO: Connect the Favoritebuttons with the spare buttons on qopt page (max 20 buttons)
@@ -23,3 +10,16 @@ TODO: Integrate scannerfunction
 TODO: voicebox sync with mic - turn mic on and off with F-Buttons
 TODO: Switch from IP to Hostname for communication (SWPDLE_RE...) Websocket communication with Hostname not IP
 TODO: 2x DIGITAL RGB OUTPUT FOR AMBILIGHT
+
+
+OLD TO NEW:
+DONE: Favorites - Make relaisboard buttons and things as favorites, to show them on the qopt page.
+DONE: button obd/aldl (variable cardata == GPS)
+DONE: enable_gps mic scanner rb01.... make it with one myfunction give variable in function command -done
+DONE: V1.3.6 switch unit in settings
+DONE: Otto button on Switchpod with Ottifantenlogo and otto knight rider theme
+DONE: PB DEV USE SEPARATE JSON COLUMN FOR EACH DEVICE
+DONE: GPS NOW ALSO WORKS ON WINDOWS
+DONE: V2.0.0 SWITCH LANGUAGE (TEXTS)
+DONE: V2.0.0 THEME COLOR SWITCHER (PREPARED ALL THEME COLORS NOW IN "BEFORE MAIN APP GLOBALS")
+DONE: V2.2.3 Scammer sound in Main Tachometer screen ON/OFF

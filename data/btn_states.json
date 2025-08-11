@@ -4,8 +4,7 @@
         "style": "KITT",
         "theme": "K2_S05",
         "system": "AQUA",
-        "language": "DEU",
-        "timezone": "+2"
+        "language": "DEU"
     },
     "buttons": {
         "DEV001": {
@@ -71,7 +70,7 @@
                 1,
                 0,
                 false,
-                false,
+                true,
                 0,
                 0,
                 0,
@@ -719,12 +718,24 @@
             ]
         }
     },
-    "config": {
-        "odo_trip_gps_imperial": 0.0,
+    "other_config": {
+        "OTHER": "---",
+        "timezone": -2,
+        "examplevalue_02": 2,
+        "examplevalue_03": 3,
+        "examplevalue_04": 5,
+        "examplevalue_05": 5,
+        "examplevalue_06": 6,
+        "examplevalue_07": 7,
+        "examplevalue_08": 7.2
+    },
+    "odo_config": {
+        "ODOMETER": "---",
+        "odo_trip_gps_imperial": 1.5,
         "odo_trip_gps_metric": 0.0,
-        "odo_total_gps_imperial": 129000.0,
+        "odo_total_gps_imperial": 129001.0,
         "odo_total_gps_metric": 0.0,
-        "odo_trip_aldl_imperial": 44.0,
+        "odo_trip_aldl_imperial": 45.0,
         "odo_trip_aldl_metric": 0.0,
         "odo_total_aldl_imperial": 118160.0,
         "odo_total_aldl_metric": 190146.0

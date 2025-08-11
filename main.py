@@ -88,10 +88,6 @@ if REGION:
                 carno = parts[0]
                 devno = "dev" + parts[1]
             #------------------------------------------------------------------------------
-            # TIME SETTINGS
-            #------------------------------------------------------------------------------
-            etc_timezones = ["-12","-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1","+0","+1","+2","+3","+4","+5","+6","+7","+8","+9","+10","+11","+12"]
-            #------------------------------------------------------------------------------
             # SIMULATION COUNTERS
             #------------------------------------------------------------------------------
             count_ctr_SIM_DEV001G000 = 0           
@@ -491,14 +487,14 @@ if REGION:
         #----------------------------------------------------------------------------------
         # DEV001 UPDATE LAST ODOMETER DATA
         #----------------------------------------------------------------------------------
-        odo_trip_gps_imperial_old = data["config"]["odo_trip_gps_imperial"]
-        odo_trip_gps_metric_old = data["config"]["odo_trip_gps_metric"]
-        odo_total_gps_imperial_old = data["config"]["odo_total_gps_imperial"]
-        odo_total_gps_metric_old = data["config"]["odo_total_gps_metric"]
-        odo_trip_aldl_imperial_old = data["config"]["odo_trip_aldl_imperial"]
-        odo_trip_aldl_metric_old = data["config"]["odo_trip_aldl_metric"]
-        odo_total_aldl_imperial_old = data["config"]["odo_total_aldl_imperial"]
-        odo_total_aldl_metric_old = data["config"]["odo_total_aldl_metric"]
+        odo_trip_gps_imperial_old = data["odo_config"]["odo_trip_gps_imperial"]
+        odo_trip_gps_metric_old = data["odo_config"]["odo_trip_gps_metric"]
+        odo_total_gps_imperial_old = data["odo_config"]["odo_total_gps_imperial"]
+        odo_total_gps_metric_old = data["odo_config"]["odo_total_gps_metric"]
+        odo_trip_aldl_imperial_old = data["odo_config"]["odo_trip_aldl_imperial"]
+        odo_trip_aldl_metric_old = data["odo_config"]["odo_trip_aldl_metric"]
+        odo_total_aldl_imperial_old = data["odo_config"]["odo_total_aldl_imperial"]
+        odo_total_aldl_metric_old = data["odo_config"]["odo_total_aldl_metric"]
         #----------------------------------------------------------------------------------
         # UPDATE LAST BUTTON STATES
         #----------------------------------------------------------------------------------
@@ -4501,130 +4497,186 @@ class P03_SETUP(tk.Frame):
         # KEYPAD BUTTONS
         #----------------------------------------------------------------------------------
         if REGION:
-            # === CONFIG KEYPAD & DROPDOWN (reads/writes btn_states.json["config"]) ===
-            # UI: dropdown of keys, label showing current value, editable buffer controlled by keypad, SAVE writes file.
-
-            # --- helpers to load/save the JSON once and reuse in handlers ----------------
+            # === CONFIG + OTHER_CONFIG: two dropdowns, one keypad (reads/writes btn_states.json) ===
             def _load_btn_states():
                 with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
                     return json.load(f)
 
             def _save_btn_states(data):
-                # Keep structure and pretty print for readability
                 with open(os.path.join(datadir, "btn_states.json"), "w", encoding="utf-8") as f:
                     json.dump(data, f, ensure_ascii=False, indent=4)
 
-            # --- state -------------------------------------------------------------------
+            # Local state
             self._cfg_data = _load_btn_states()
-            self._cfg_keys = list(self._cfg_data.get("config", {}).keys())
-            if not self._cfg_keys:
-                self._cfg_keys = ["odo_trip_gps_imperial"]  # fallback
 
-            self._cfg_selected_key = tk.StringVar(value=self._cfg_keys[0])
-            self._cfg_current_value_var = tk.StringVar()    # read-only shown value
-            self._cfg_edit_value_var = tk.StringVar()       # editable buffer (keypad writes here)
-            self._cfg_status_var = tk.StringVar(value="")   # small status line
+            self._odo_keys = list(self._cfg_data.get("odo_config", {}).keys()) or ["odo_trip_gps_imperial"]
+            self._other_keys = list(self._cfg_data.get("other_config", {}).keys()) or ["timezone"]
 
-            # --- handlers ----------------------------------------------------------------
-            def _refresh_value_from_file():
-                key = self._cfg_selected_key.get()
+            self._odo_selected_key    = tk.StringVar(value=self._odo_keys[0])
+            self._other_selected_key  = tk.StringVar(value=self._other_keys[0])
+
+            self._odo_current_value_var   = tk.StringVar()
+            self._odo_edit_value_var      = tk.StringVar()
+            self._other_current_value_var = tk.StringVar()
+            self._other_edit_value_var    = tk.StringVar()
+
+            self._status_var = tk.StringVar(value="")
+            self._active_section = tk.StringVar(value="ODO")  # "ODO" or "OTHER"
+
+            def _refresh_value(section):
                 self._cfg_data = _load_btn_states()
-                val = self._cfg_data.get("config", {}).get(key, 0.0)
-                # Normalize to string but don’t lose decimals
-                self._cfg_current_value_var.set(str(val))
-                # start edit buffer with the current value
-                self._cfg_edit_value_var.set(str(val))
+                if section == "ODO":
+                    key = self._odo_selected_key.get()
+                    val = self._cfg_data.get("odo_config", {}).get(key, 0.0)
+                    s = str(val)
+                    self._odo_current_value_var.set(s)
+                    self._odo_edit_value_var.set(s)
+                else:
+                    key = self._other_selected_key.get()
+                    val = self._cfg_data.get("other_config", {}).get(key, 0.0)
+                    s = str(val)
+                    self._other_current_value_var.set(s)
+                    self._other_edit_value_var.set(s)
 
-            def _on_select_key(*_):
-                _refresh_value_from_file()
+            def _on_select_odo(*_):
+                self._active_section.set("ODO")
+                _refresh_value("ODO")
+
+            def _on_select_other(*_):
+                self._active_section.set("OTHER")
+                _refresh_value("OTHER")
+
+            def _keypad_target_vars():
+                # return (edit_var, current_var, section, key)
+                if self._active_section.get() == "ODO":
+                    return (self._odo_edit_value_var, self._odo_current_value_var, "ODO", self._odo_selected_key.get())
+                else:
+                    return (self._other_edit_value_var, self._other_current_value_var, "OTHER", self._other_selected_key.get())
 
             def _on_keypad_press(token):
-                buf = self._cfg_edit_value_var.get()
+                edit_var, _, _, _ = _keypad_target_vars()
+                buf = edit_var.get()
 
                 if token == "C":
-                    self._cfg_edit_value_var.set("")
-                elif token == "←":
-                    self._cfg_edit_value_var.set(buf[:-1])
-                elif token == ".":
+                    edit_var.set("")
+                    return
+                if token == "BS":
+                    edit_var.set(buf[:-1])
+                    return
+                if token == "+/-":
+                    if buf.startswith("-"):
+                        edit_var.set(buf[1:])
+                    else:
+                        edit_var.set("-" + buf if buf else "-")
+                    return
+                if token == ".":
                     if "." not in buf:
-                        self._cfg_edit_value_var.set(buf + ".")
-                else:
-                    # numeric 0-9
-                    self._cfg_edit_value_var.set(buf + token)
+                        edit_var.set(buf + ".")
+                    return
+                if token.isdigit():
+                    edit_var.set(buf + token)
+                    return
 
-            def _save_config_value():
-                key = self._cfg_selected_key.get()
-                raw = self._cfg_edit_value_var.get().strip().replace(",", ".")
+            def _coerce_value(raw):
+                txt = raw.strip().replace(",", ".")
+                if txt in ("", "-", ".", "-."):
+                    raise ValueError("empty buffer")
                 try:
-                    # store as float if possible, else as int if clean, else leave as string
-                    if raw == "" or raw == "-" or raw == "." or raw == "-.":
-                        raise ValueError("empty buffer")
-                    val = float(raw)
-                    if val.is_integer():
-                        val = float(val)  # keep float in file for consistency with other keys
+                    # store as int if it has no decimal point
+                    if "." not in txt:
+                        return int(txt)
+                    else:
+                        return float(txt)
+                except ValueError:
+                    return raw  # allow non-numeric strings
+
+
+            def _save_active_value():
+                edit_var, curr_var, section, key = _keypad_target_vars()
+                raw = edit_var.get()
+                try:
+                    val = _coerce_value(raw)
                 except Exception:
-                    self._cfg_status_var.set("not a usable Value")
-                    self.after(1200, lambda: self._cfg_status_var.set(""))
+                    self._status_var.set("Invalid value")
+                    self.after(1200, lambda: self._status_var.set(""))
                     return
 
                 data = _load_btn_states()
-                if "config" not in data:
-                    data["config"] = {}
-                data["config"][key] = val
+                if section == "ODO":
+                    data.setdefault("odo_config", {})[key] = val
+                else:
+                    data.setdefault("other_config", {})[key] = val
                 _save_btn_states(data)
 
-                # Reflect on screen
-                self._cfg_current_value_var.set(str(val))
-                self._cfg_status_var.set("Values Saved")
-                self.after(1200, lambda: self._cfg_status_var.set(""))
+                curr_var.set(str(val))
+                self._status_var.set("CONFIG SAVED")
+                self.after(1200, lambda: self._status_var.set(""))
 
-            # --- widgets -----------------------------------------------------------------
-            # Dropdown: choose config key
-            opt_cfg = tk.OptionMenu(self, self._cfg_selected_key, *self._cfg_keys, command=lambda *_: _on_select_key())
-            opt_cfg.config(bg=sys_clr[8], fg=sys_clr[3], font=(fonts[6], 22))
-            opt_cfg.place(x=30, y=300, width=250, height=30)
+            # ODO dropdown
+            opt_odo = tk.OptionMenu(self, self._odo_selected_key, *self._odo_keys, command=lambda *_: _on_select_odo())
+            opt_odo.config(bg=sys_clr[8], fg=sys_clr[3], font=(fonts[6], 22))
+            opt_odo.place(x=30, y=300, width=250, height=30)
 
-            # Current value (read-only)
-            lbl_curr = tk.Label(self, **lbl_style_setup_btns, text="act. Val.", bg=sys_clr[8], fg=sys_clr[3])
-            lbl_curr.place(x=30, y=345, width=120, height=30)
-            val_curr = tk.Label(self, **lbl_style_setup_btns, textvariable=self._cfg_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
-            val_curr.place(x=165, y=345, width=120, height=30)
+            # Current/Edit (odo)
+            lbl_curr_odo = tk.Label(self, **lbl_style_setup_btns, text="ACTUAL", bg=sys_clr[8], fg=sys_clr[3])
+            lbl_curr_odo.place(x=30, y=345, width=120, height=30)
+            val_curr_odo = tk.Label(self, **lbl_style_setup_btns, textvariable=self._odo_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
+            val_curr_odo.place(x=165, y=345, width=120, height=30)
 
-            # Edit buffer (what keypad writes)
-            lbl_edit = tk.Label(self, **lbl_style_setup_btns, text="new Val.", bg=sys_clr[8], fg=sys_clr[3])
-            lbl_edit.place(x=30, y=390, width=120, height=30)
-            val_edit = tk.Label(self, **lbl_style_setup_btns, textvariable=self._cfg_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
-            val_edit.place(x=165, y=390, width=120, height=30)
+            lbl_edit_odo = tk.Label(self, **lbl_style_setup_btns, text="NEW", bg=sys_clr[8], fg=sys_clr[3])
+            lbl_edit_odo.place(x=30, y=390, width=120, height=30)
+            val_edit_odo = tk.Label(self, **lbl_style_setup_btns, textvariable=self._odo_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
+            val_edit_odo.place(x=165, y=390, width=120, height=30)
 
-            # Status line
-            lbl_status = tk.Label(self, font=(fonts[6], 22), textvariable=self._cfg_status_var, bg=sys_clr[8], fg=sys_clr[3], anchor="w")
-            lbl_status.place(x=30, y=435, width=255, height=30)
+            # OTHER dropdown
+            opt_other = tk.OptionMenu(self, self._other_selected_key, *self._other_keys, command=lambda *_: _on_select_other())
+            opt_other.config(bg=sys_clr[8], fg=sys_clr[3], font=(fonts[6], 22))
+            opt_other.place(x=30, y=435, width=250, height=30)
 
-            # Keypad (reuse your visual style)
-            # layout rows; tweak positions to match your existing UI grid
+            # Current/Edit (other)
+            lbl_curr_other = tk.Label(self, **lbl_style_setup_btns, text="ACTUAL", bg=sys_clr[8], fg=sys_clr[3])
+            lbl_curr_other.place(x=30, y=480, width=120, height=30)
+            val_curr_other = tk.Label(self, **lbl_style_setup_btns, textvariable=self._other_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
+            val_curr_other.place(x=165, y=480, width=120, height=30)
+
+            lbl_edit_other = tk.Label(self, **lbl_style_setup_btns, text="NEW", bg=sys_clr[8], fg=sys_clr[3])
+            lbl_edit_other.place(x=30, y=525, width=120, height=30)
+            val_edit_other = tk.Label(self, **lbl_style_setup_btns, textvariable=self._other_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
+            val_edit_other.place(x=165, y=525, width=120, height=30)
+
+            # Active hint + status
+            lbl_active = tk.Label(self, font=(fonts[6], 22), textvariable=self._active_section, bg=sys_clr[8], fg=sys_clr[3], anchor="c")
+            lbl_active.place(x=30, y=570, width=60, height=30)
+
+            lbl_status = tk.Label(self, font=(fonts[6], 22), textvariable=self._status_var, bg=sys_clr[8], fg=sys_clr[3], anchor="c")
+            lbl_status.place(x=110, y=570, width=175, height=30)
+
+            # One keypad for both
             keypad_layout = [
-                ("7","8","9","←"),
+                ("7","8","9","BS"),
                 ("4","5","6","C"),
-                ("1","2","3",""),
-                ("0",".","OK","")
+                ("1","2","3","+/-"),
+                ("0",".","SAVE","")
             ]
-
             x0, y0 = 525, 300
             dx, dy = 77, 77
             w, h = 70, 70
 
             for r, row in enumerate(keypad_layout):
                 for c, token in enumerate(row):
-                    if not token:  # empty cell
+                    if not token:
                         continue
-                    if token == "OK":
-                        btn = tk.Button(self, **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=_save_config_value)
+                    if token == "SAVE":
+                        btn = tk.Button(self, **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=_save_active_value)
                     else:
                         btn = tk.Button(self, **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=lambda t=token: _on_keypad_press(t))
                     btn.place(x=x0 + c*dx, y=y0 + r*dy, width=w, height=h)
 
-            # Load initial display for first key
-            _refresh_value_from_file()
+            # Initialize
+            _refresh_value("ODO")
+            _refresh_value("OTHER")
+            self._active_section.set("ODO")
+            # === REGION END ===
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -4792,15 +4844,6 @@ class P03_SETUP(tk.Frame):
                     btn_FAV.place(x=x_pos21, y=y_l21, width=btn_f_w, height=btn_h)
                     x_pos21 += +px_to_next
                 btns_FAV.append(btn_FAV)
-        #----------------------------------------------------------------------------------
-        # CLOCK SETTINGS
-        #----------------------------------------------------------------------------------
-        if REGION:
-            global timezone_var
-            timezone_var = tk.StringVar()
-            timezone_var.set("+0")  # Set default timezone to UTC
-            timezone_dropdown = ttk.Combobox(canvas, textvariable=timezone_var, values=etc_timezones)
-            timezone_dropdown.place(x=1100, y=400, width=40, height=20)
         #----------------------------------------------------------------------------------
         # END INIT
         #----------------------------------------------------------------------------------
@@ -6576,10 +6619,10 @@ class myfunctions():
                 # Lade alte Werte aus Datei
                 with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
                     data = json.load(f)
-                odo_trip_gps_imperial_old = data["config"]["odo_trip_gps_imperial"]
-                odo_trip_gps_metric_old = data["config"]["odo_trip_gps_metric"]
-                odo_total_gps_imperial_old = data["config"]["odo_total_gps_imperial"]
-                odo_total_gps_metric_old = data["config"]["odo_total_gps_metric"]
+                odo_trip_gps_imperial_old = data["odo_config"]["odo_trip_gps_imperial"]
+                odo_trip_gps_metric_old = data["odo_config"]["odo_trip_gps_metric"]
+                odo_total_gps_imperial_old = data["odo_config"]["odo_total_gps_imperial"]
+                odo_total_gps_metric_old = data["odo_config"]["odo_total_gps_metric"]
                 
                 last_gps_time = time.time()
                 try:
