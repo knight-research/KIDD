@@ -16,8 +16,6 @@ import time
 import threading
 import websocket
 
-from netbus import NetBus
-
 from btn_state_manager import ButtonStateManager
 from datetime import timedelta
 from PIL import ImageTk, Image

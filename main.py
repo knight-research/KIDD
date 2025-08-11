@@ -488,48 +488,6 @@ if REGION:
         theme = data["main_config"]["theme"]
         system = data["main_config"]["system"]
 
-        #------------------------------------------------------------------------------
-        # SETUP NETBUS COMMUNICATION
-        #------------------------------------------------------------------------------
-        net_enabled = bool(data["main_config"].get("net_enabled", True))
-        mcast_group = str(data["main_config"].get("net_group", "239.10.20.30"))
-        mcast_port  = int(data["main_config"].get("net_port", 49300))
-
-
-        # shared state updated from network (example)
-        net_inbox = {
-            "gps_from_peer": None,   # last GPS dict received
-            "last_peer_dev": None,
-        }
-
-        def _on_net_message(msg):
-            # headers we expect NetBus to attach, or that peers include
-            if msg.get("carno") != carno:
-                return
-            if msg.get("devno") == devno:
-                return  # ignore our own messages
-
-            topic = msg.get("topic")
-            data  = msg.get("data") or {}
-
-            # optional per‑message destination filter (see section 3)
-            dst = msg.get("dst")
-            if dst not in (None, "*", devno):
-                return
-
-            if topic == "gps":
-                net_inbox["gps_from_peer"] = data
-                net_inbox["last_peer_dev"] = msg.get("devno")
-
-
-        # make sure to stop on exit
-        def on_close():
-            try:
-                netbus.stop()
-            except Exception:
-                pass
-            # your existing shutdown...
-
         #----------------------------------------------------------------------------------
         # DEV001 UPDATE LAST ODOMETER DATA
         #----------------------------------------------------------------------------------
@@ -2990,8 +2948,6 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         if not hasattr(self, "old_values"):
             self.old_values = {}
-
-        read.apply_peer_gps_if_any()
         #----------------------------------------------------------------------------------
         # GLOBALS
         #----------------------------------------------------------------------------------
@@ -4062,7 +4018,7 @@ class P01_DASH(tk.Frame):
                         lbls_sysinfo[7].config(text=update_duration)
                     else:
                         DG02_values = {
-                            "pb00": gps_time, #seg_DEV002[1],
+                            "pb00": seg_DEV002[1],
                             "pb01": seg_DEV002[2],
                             "pb02": seg_DEV002[3],
                             "pb03": seg_DEV002[4],
@@ -6720,63 +6676,6 @@ class myfunctions():
 
                 if save_needed:
                     bsm.save()
-                def maybe_publish_gps():
-                    # only DEV001 is the GPS publisher for now
-                    if devno != "DEV001":
-                        return
-                    payload = {
-                        "time": str(gps_time),           # "HH:MM:SS"
-                        "lat":  str(gps_lat_str),        # e.g. "48.123456"
-                        "lat_dir": str(gps_lat_dir),     # "N" or "S"
-                        "lon":  str(gps_long_str),       # e.g. "11.654321"
-                        "lon_dir": str(gps_lon_dir),     # "E" or "W"
-                        "alt":  float(gps_altitude or 0.0),
-                        "alt_u": str(gps_altitude_units or "M"),
-                        "kph":  float(gps_kph_0 or 0.0),
-                        "mph":  float(gps_mph_0 or 0.0),
-                        "odo_km": float((gps_odo_metric_cnt or 0)/10000.0),
-                        "odo_mi": float((gps_odo_imperial_cnt or 0)/10000.0),
-                        "fix":  int(gps_fix_quality if "gps_fix_quality" in globals() else 0),
-                        "sat":  int(gps_num_sats if "gps_num_sats" in globals() else 0),
-                    }
-                    netbus.publish("gps", payload)
-                maybe_publish_gps()
-
-            def apply_peer_gps_if_any(self):
-                d = net_inbox.get("gps_from_peer")
-                if not d:
-                    return
-                # Example: adopt peer GPS when our local GPS is unavailable
-                # or always adopt if this device is a display-only node.
-                # Adjust logic to your needs.
-                try:
-                    # write into your existing globals or fields:
-                    # (keep your formatting/units as before)
-                    # Only update if values changed to avoid needless redraws
-                    set_if_change("gps_time", d.get("time"))
-                    set_if_change("gps_lat_str", d.get("lat"))
-                    set_if_change("gps_lat_dir", d.get("lat_dir"))
-                    set_if_change("gps_long_str", d.get("lon"))
-                    set_if_change("gps_lon_dir", d.get("lon_dir"))
-                    set_if_change("gps_altitude", float(d.get("alt", 0.0)))
-                    set_if_change("gps_altitude_units", d.get("alt_u", "M"))
-                    set_if_change("gps_kph_0", float(d.get("kph", 0.0)))
-                    set_if_change("gps_mph_0", float(d.get("mph", 0.0)))
-                    # optional odometer mirroring:
-                    # set_if_change("gps_odo_metric_cnt", int(round(float(d.get("odo_km", 0.0) * 10000.0))))
-                    # set_if_change("gps_odo_imperial_cnt", int(round(float(d.get("odo_mi", 0.0) * 10000.0))))
-                except Exception:
-                    pass
-                finally:
-                    # clear so we apply once per message
-                    net_inbox["gps_from_peer"] = None
-
-            def set_if_change(name, val):
-                # helper to avoid repaint storms; replace to match your state model
-                if name in globals():
-                    if globals()[name] != val:
-                        globals()[name] = val
-
     #--------------------------------------------------------------------------------------
     # DEV002 FUNCTIONS
     #--------------------------------------------------------------------------------------
