@@ -2,13 +2,13 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "K2_S05",
-        "system": "AQUA",
+        "theme": "K3_S01",
+        "system": "GREEN",
         "language": "DEU"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb01",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,
@@ -739,5 +739,8 @@
         "odo_trip_aldl_metric": 0.0,
         "odo_total_aldl_imperial": 118160.0,
         "odo_total_aldl_metric": 190146.0
+    },
+    "config": {
+        "odo_trip_gps_metric": 0.01
     }
 }
