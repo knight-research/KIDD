@@ -3,7 +3,7 @@
         "device": "DEV001",
         "style": "KITT",
         "theme": "K3_S01",
-        "system": "GREEN",
+        "system": "CYBER",
         "language": "DEU"
     },
     "buttons": {
@@ -731,7 +731,7 @@
     },
     "odo_config": {
         "ODOMETER": "---",
-        "odo_trip_gps_imperial": 1.5,
+        "odo_trip_gps_imperial": 20,
         "odo_trip_gps_metric": 0.0,
         "odo_total_gps_imperial": 129001.0,
         "odo_total_gps_metric": 0.0,

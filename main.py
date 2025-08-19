@@ -581,6 +581,7 @@ if REGION:
         sys_clr_GN = ["#001500", "#003010", "#103010", "#55FF55", "#BBFFBB", "#005500", "#00FF00", "#449944", "#002000", "#88FF88", "#44FF44", "#FF4444"]
         sys_clr_BU = ["#000515", "#001530", "#001030", "#0099FF", "#BBFFFF", "#005555", "#00FFFF", "#009999", "#002020", "#33AAFF", "#44FF44", "#FF4444"]        
         sys_clr_WH = ["#000000", "#101010", "#151515", "#AAAAAA", "#BBBBBB", "#555555", "#FFFFFF", "#999999", "#202020", "#FFFFFF", "#44FF44", "#FF4444"]
+        sys_clr_CP = ["#000000", "#110000", "#050000", "#EDC64D", "#EDC64D", "#FF0000", "#F8403E", "#F8403E", "#100000", "#76DAEB", "#44FF44", "#FF4444"]
         #             00_TXT_LBL 01_TXT_SYS 02_TXT_SYS 03_LBL_BG  04_BG_INF  05_TXT_INF 06_BLACK
         sty_clr_ka = ["#FFFFFF", "#FFFFDD", "#FFBB00", "#222200", "#142827", "#00FFFF", "#000000"]
         sty_clr_ki = ["#FFFFFF", "#FFDDDD", "#FF0000", "#250000", "#142827", "#00FFFF", "#000000"]
@@ -595,6 +596,8 @@ if REGION:
             sys_clr = sys_clr_BU
         elif system == SYS_B_txt[3]: 
             sys_clr = sys_clr_WH
+        elif system == SYS_B_txt[4]: 
+            sys_clr = sys_clr_CP
         #----------------------------------------------------------------------------------
         # APPLY KIDD STYLES
         #----------------------------------------------------------------------------------
@@ -6405,6 +6408,8 @@ class myfunctions():
                 sys_clr = sys_clr_BU
             elif system == SYS_B_txt[3]: 
                 sys_clr = sys_clr_WH
+            elif system == SYS_B_txt[4]: 
+                sys_clr = sys_clr_CP
             bsm.data["main_config"]["system"] = system
             bsm.save()
     #--------------------------------------------------------------------------------------
