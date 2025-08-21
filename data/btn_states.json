@@ -2,18 +2,18 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "K3_S01",
+        "theme": "K2_S06",
         "system": "CYBER",
         "language": "DEU"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb00",
+            "PB": "pb01",
             "FNKT": [
                 false,
                 false,
                 true,
-                false,
+                true,
                 false,
                 false,
                 false,

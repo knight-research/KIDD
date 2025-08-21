@@ -3619,7 +3619,7 @@ class P01_DASH(tk.Frame):
                     #----------------------------------------------------------------------
                     # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
                     #----------------------------------------------------------------------
-                    if theme in THEME_B_txt[1:9]: # THEME 1 to 8
+                    if theme in THEME_B_txt[1:6] or THEME_B_txt[8]: # THEME 1 to 8
                         for i in range(ammount_VB):
                             led_DEV001VBS34L01[i].config(image=l_img23)
                             led_DEV001VBS34L02[i].config(image=l_img23)
