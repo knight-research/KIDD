@@ -647,11 +647,13 @@ if REGION:
                         # Check if the connected device is named "U-Blox"
                         gps_serial.write(b'ATI\r\n')
                         response = gps_serial.readline().decode('utf-8')
-                        print (response)
+                        if debug:
+                            print (response)
                         if "u-blox" in response:
                             break                    
                     except serial.SerialException:
-                        print ("no GPS")
+                        if debug:
+                            print ("no GPS")
                         break
     #--------------------------------------------------------------------------------------
     # SETUP HARDWARE DEV002
@@ -2662,10 +2664,10 @@ class P01_DASH(tk.Frame):
                         label_7SEG003.place(x=940, y=470, width=285, height=84)
                     elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
                         label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                        label_7SEG003.place(x=800, y=590, width=460, height=90)
+                        label_7SEG003.place(x=870, y=595, width=390, height=90)
                     elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
                         label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[6], fg=sty_clr[0])
-                        label_7SEG003.place(x=800, y=590, width=460, height=90)
+                        label_7SEG003.place(x=870, y=595, width=390, height=90)
             elif device == DEVICE_B_txt[2]:
                 #--------------------------------------------------------------------------
                 # 7-SEGMENT DISPLAY 001: SPEED / RPM
@@ -6701,7 +6703,8 @@ class myfunctions():
                             gps_altitude_units = parsed.altitude_units
 
                 except Exception as e:
-                    print("no GPS data:", e)
+                    if debug:
+                        print("no GPS data:", e)
 
                 save_needed = False
 
