@@ -2726,7 +2726,6 @@ class P01_DASH(tk.Frame):
                 print(f"⚠️ Kein Positionseintrag für Textzeile {i} ({entry['text']})")
     def update_positions(self):
         pb = btn_states_PB
-        dev_key = device
         try:
             theme_index = THEME_B_txt.index(theme)
             theme_key = f"THEME{theme_index}"
@@ -2735,15 +2734,15 @@ class P01_DASH(tk.Frame):
             return
 
         try:
-            pos_data = self.positions[pb][dev_key][theme_key]
+            pos_data = self.positions[pb][device][theme_key]
             self.x_txt_sysinfo = pos_data.get("x_txt_sysinfo", [])
             self.y_txt_sysinfo = pos_data.get("y_txt_sysinfo", [])
             self.x_lbl_sysinfo = pos_data.get("x_lbl_sysinfo", [])
             self.y_lbl_sysinfo = pos_data.get("y_lbl_sysinfo", [])
             self.wh_lbl_sysinfo = pos_data.get("wh_lbl_sysinfo", [])
-            print(f"✅ Positionsdaten geladen für {pb} / {dev_key} / {theme_key}")
+            print(f"✅ Positionsdaten geladen für {pb} / {device} / {theme_key}")
         except KeyError:
-            print(f"❌ Fehlende Positionsdaten für {pb} / {dev_key} / {theme_key}")
+            print(f"❌ Fehlende Positionsdaten für {pb} / {device} / {theme_key}")
             self.x_txt_sysinfo = []
             self.y_txt_sysinfo = []
             self.x_lbl_sysinfo = []
