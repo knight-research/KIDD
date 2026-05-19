@@ -376,108 +376,12 @@ txt_style_S34e =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'ancho
 #todo delete convert to style
 #font_BTTF01 = ("ccar7seg", 90)
 #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
+
 #--------------------------------------------------------------------------------------
-# SETUP HARDWARE DEV001
+# SETUP HARDWARE
 #--------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# USB GPS MODULE
-#------------------------------------------------------------------------------
-if btn_states_HW[0] == True:
-    # Search for GPS module on all available ACM or COM ports        
-    for port in serial.tools.list_ports.comports():
-        if "ACM" in port.device or "COM" in port.device:
-            try:
-                gps_serial = serial.Serial(port.device, 9600, timeout=1)
-                gps_port = port.device
-                # Check if the connected device is named "U-Blox"
-                gps_serial.write(b'ATI\r\n')
-                response = gps_serial.readline().decode('utf-8')
-                print (response)
-                if "u-blox" in response:
-                    break                    
-            except serial.SerialException:
-                print ("no GPS")
-                break
-#--------------------------------------------------------------------------------------
-# SETUP HARDWARE DEV002
-#--------------------------------------------------------------------------------------    
-#----------------------------------------------------------------------------------
-# I2C ADRESSES DEV002:
-#----------------------------------------------------------------------------------
-i2cRB01 = 0x20 #DO POSIBBLE I2C: 20-27
-i2cRB02 = 0x21 #DO POSIBBLE I2C: 20-27
-i2cRB03 = 0x22 #DO POSIBBLE I2C: 20-27
-        
-i2cDI01 = 0x64 #DI POSIBBLE I2C: 64-78
-i2cDI02 = 0x65 #DI POSIBBLE I2C: 64-78
-i2cDI03 = 0x66 #DI POSIBBLE I2C: 64-78
-        
-i2cAI01 = 0x00 #AI POSIBBLE I2C: ?
-
-#----------------------------------------------------------------------------------
-# INIT RELAIS BOARDS 
-#----------------------------------------------------------------------------------        
-i2c_addr_dev02rb = [i2cRB01, i2cRB02, i2cRB03]
-if sys_pi:
-    buses = [SMBus(1) for _ in i2c_addr_dev02rb]
-
-#----------------------------------------------------------------------------------
-# INIT DIGITAL INPUT BOARDS 
-#----------------------------------------------------------------------------------                
-
-#----------------------------------------------------------------------------------
-# RELAIS BOARDS 
-#----------------------------------------------------------------------------------
-def init_pcf8575(bus, address, board_index):
-    global relay_states_1to8, relay_states_9to16
-    relay_states_1to8[board_index] = 0xFF
-    relay_states_9to16[board_index] = 0xFF
-    hi = relay_states_9to16[board_index]
-    lo = relay_states_1to8[board_index]
-    bus.write_word_data(address, lo, hi)
-
-relay_states_1to8 = [0xFF for _ in i2c_addr_dev02rb]
-relay_states_9to16 = [0xFF for _ in i2c_addr_dev02rb]
-
-
-if sys_linux and btn_states_HW[0] == True and device == DEVICE_B_txt[2]:
-    for i, addr in enumerate(i2c_addr_dev02rb):
-        if btn_states_HW[i]:
-            init_pcf8575(buses[i], addr, i)
-
-#----------------------------------------------------------------------------------
-# I2C ANALOG INPUT
-#----------------------------------------------------------------------------------
-if sys_linux and btn_states_HW[6] == True:
-    try:
-        i2c_dev02ai01 = busio.I2C(board.SCL, board.SDA)
-        ads = ADS.ADS1115(i2c_dev02ai01, address=i2cAI01)
-    except:
-        print ("DEVICE AI01 NOT FOUND")
-#----------------------------------------------------------------------------------
-# I2C DIGITAL INPUT 01 POS 0x58
-#----------------------------------------------------------------------------------
-if sys_linux and btn_states_HW[7] == True:
-    try:
-        i2c_dev02di01 = board.I2C()
-        aw001 = adafruit_aw9523.AW9523(i2c_dev02di01, address=i2cDI01)
-    except:
-        print ("DEVICE DI01 NOT FOUND")
-#----------------------------------------------------------------------------------
-# I2C DIGITAL INPUT 02 NEG 
-#----------------------------------------------------------------------------------
-if sys_linux and btn_states_HW[8] == True:
-    try:
-        i2c_dev02di02 = board.I2C()
-        aw002 = adafruit_aw9523.AW9523(i2c_dev02di02, address=i2cDI02)
-    except:
-        print ("DEVICE DI02 NOT FOUND")
-#----------------------------------------------------------------------------------
-# I2C 7-SEGMENT 0x70 
-#----------------------------------------------------------------------------------
-# endregion
-
-# endregion
+from hardware_setup import setup_hardware
+globals().update(setup_hardware(sys_linux, sys_pi, btn_states_HW, device, DEVICE_B_txt, globals()))
 
 #------------------------------------------------------------------------------------------
 # MAIN APP

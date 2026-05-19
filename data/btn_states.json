@@ -1,6 +1,6 @@
 {
     "main_config": {
-        "device": "DEV001",
+        "device": "DEV002",
         "style": "KITT",
         "theme": "K2_S05",
         "system": "CYBER",
@@ -55,7 +55,7 @@
             ],
             "HW": [
                 true,
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -230,7 +230,7 @@
             ],
             "HW": [
                 true,
-                false,
+                true,
                 false,
                 false,
                 false,

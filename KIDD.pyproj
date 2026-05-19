@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Include="app_version.py" />
     <Compile Include="btn_state_manager.py" />
+    <Compile Include="hardware_setup.py" />
     <Compile Include="image_paths.py" />
     <Compile Include="import_all.py" />
     <Compile Include="import_linux.py" />
