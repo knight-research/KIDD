@@ -612,48 +612,45 @@ txt_style_pageinfo =            {'font':(fonts[5], 16), 'anchor':'nw'}
 lbl_style_sysinfo =             {'font':(fonts[6], 36), 'anchor':'nw'}
 lbl_style_voicecmd =            {'font':(fonts[6], 24), 'anchor':'nw'}
         
-txt_style_sysinfo =             {'font':(fonts[6], 36), 'anchor':'nw'}
-txt_style_S34c =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'c'}
-txt_style_S34e =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'e'}
-#todo delete convert to style
-#font_BTTF01 = ("ccar7seg", 90)
-#font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
-
-# endregion
-
-#--------------------------------------------------------------------------------------
-# region SETUP HARDWARE DEV001
-#--------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# USB GPS MODULE
-#------------------------------------------------------------------------------
-if btn_states_HW[0] == True:
-    # Search for GPS module on all available ACM or COM ports        
-    for port in serial.tools.list_ports.comports():
-        if "ACM" in port.device or "COM" in port.device:
-            try:
-                gps_serial = serial.Serial(port.device, 9600, timeout=1)
-                gps_port = port.device
-                # Check if the connected device is named "U-Blox"
-                gps_serial.write(b'ATI\r\n')
-                response = gps_serial.readline().decode('utf-8')
-                print (response)
-                if "u-blox" in response:
-                    break                    
-            except serial.SerialException:
-                print ("no GPS")
-                break
-# endregion
-
-#--------------------------------------------------------------------------------------
-# region SETUP HARDWARE DEV002
-#--------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------
-# I2C ADRESSES DEV002:
-#----------------------------------------------------------------------------------
-i2cRB01 = 0x20 #DO POSIBBLE I2C: 20-27
-i2cRB02 = 0x21 #DO POSIBBLE I2C: 20-27
-i2cRB03 = 0x22 #DO POSIBBLE I2C: 20-27
+        txt_style_sysinfo =             {'font':(fonts[6], 36), 'anchor':'nw'}
+        txt_style_S34c =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'c'}
+        txt_style_S34e =                {'fill':sty_clr[0],'font':(fonts[5], 24), 'anchor':'e'}
+        #todo delete convert to style
+        #font_BTTF01 = ("ccar7seg", 90)
+        #font_BTTF02 = ("DSEG14 Classic", 71, "italic", "bold")
+    #--------------------------------------------------------------------------------------
+    # SETUP HARDWARE DEV001
+    #--------------------------------------------------------------------------------------
+    if REGION:
+        #------------------------------------------------------------------------------
+        # USB GPS MODULE
+        #------------------------------------------------------------------------------
+        if btn_states_HW[0] == True:
+            # Search for GPS module on all available ACM or COM ports        
+            for port in serial.tools.list_ports.comports():
+                if "ACM" in port.device or "COM" in port.device:
+                    try:
+                        gps_serial = serial.Serial(port.device, 9600, timeout=1)
+                        gps_port = port.device
+                        # Check if the connected device is named "U-Blox"
+                        gps_serial.write(b'ATI\r\n')
+                        response = gps_serial.readline().decode('utf-8')
+                        print (response)
+                        if "u-blox" in response:
+                            break                    
+                    except serial.SerialException:
+                        print ("no GPS")
+                        break
+    #--------------------------------------------------------------------------------------
+    # SETUP HARDWARE DEV002
+    #--------------------------------------------------------------------------------------    
+    if REGION:
+        #----------------------------------------------------------------------------------
+        # I2C ADRESSES DEV002:
+        #----------------------------------------------------------------------------------
+        i2cRB01 = 0x20 #DO POSIBBLE I2C: 20-27
+        i2cRB02 = 0x21 #DO POSIBBLE I2C: 20-27
+        i2cRB03 = 0x22 #DO POSIBBLE I2C: 20-27
         
 i2cDI01 = 0x64 #DI POSIBBLE I2C: 64-78
 i2cDI02 = 0x65 #DI POSIBBLE I2C: 64-78
@@ -2587,53 +2584,56 @@ class P01_DASH(tk.Frame):
         label_7SEG001 = tk.Label(self, bg=sty_clr[3], fg=sty_clr[2])
         label_7SEG003 = tk.Label(self)
 
-        if device == DEVICE_B_txt[1]:
-            #--------------------------------------------------------------------------
-            # 7-SEGMENT DISPLAY 001: SPEED / RPM
-            #--------------------------------------------------------------------------
-            if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
-                label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
-                label_7SEG001.place(x=582, y=160, width=370, height=147)
-            elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                if btn_states_SW[3] == False:
-                    if btn_states_SW[1] == True:
-                        label_7SEG001.config(image=l_img03, compound="center")
-                    else:
+            if device == DEVICE_B_txt[1]:
+                #--------------------------------------------------------------------------
+                # 7-SEGMENT DISPLAY 001: SPEED / RPM
+                #--------------------------------------------------------------------------
+                if REGION: 
+                    if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
+                        label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
+                        label_7SEG001.place(x=582, y=160, width=370, height=147)
+                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        if btn_states_SW[3] == False:
+                            if btn_states_SW[1] == True:
+                                label_7SEG001.config(image=l_img03, compound="center")
+                            else:
+                                label_7SEG001.config(image=l_img04, compound="center")
+                        else:
+                            label_7SEG001.config(image=l_img05, compound="center")
+                        label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
+                        label_7SEG001.place(x=609, y=116, width=496, height=212)
+                    elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
+                        label_7SEG001.config(font=(fonts[9], 150), bg=sty_clr[6], fg=sty_clr[0], anchor="c")
+                        label_7SEG001.place(x=609, y=116, width=496, height=212)
+                    elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
+                        label_7SEG001.place(x=985, y=100, width=220, height=200)
+                #--------------------------------------------------------------------------
+                # 7-SEGMENT DISPLAY 003: TOTAL / ---
+                #--------------------------------------------------------------------------
+                if REGION:
+                    if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 3
+                        label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
+                        label_7SEG003.place(x=940, y=470, width=285, height=84)
+                    elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
+                        label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+                        label_7SEG003.place(x=800, y=590, width=460, height=90)
+                    elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
+                        label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[6], fg=sty_clr[0])
+                        label_7SEG003.place(x=800, y=590, width=460, height=90)
+            elif device == DEVICE_B_txt[2]:
+                #--------------------------------------------------------------------------
+                # 7-SEGMENT DISPLAY 001: SPEED / RPM
+                #--------------------------------------------------------------------------
+                if REGION:
+                    if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
+                        label_7SEG001.config(font=(fonts[2], 125), anchor="c")
+                        label_7SEG001.place(x=625, y=150, width=220, height=185)
+                    elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
+                        label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
                         label_7SEG001.config(image=l_img04, compound="center")
-                else:
-                    label_7SEG001.config(image=l_img05, compound="center")
-                label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
-                label_7SEG001.place(x=609, y=116, width=496, height=212)
-            elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
-                label_7SEG001.config(font=(fonts[9], 150), bg=sty_clr[6], fg=sty_clr[0], anchor="c")
-                label_7SEG001.place(x=609, y=116, width=496, height=212)
-            elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                label_7SEG001.place(x=985, y=100, width=220, height=200)
-            #--------------------------------------------------------------------------
-            # 7-SEGMENT DISPLAY 003: TOTAL / ---
-            #--------------------------------------------------------------------------
-            if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 3
-                label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
-                label_7SEG003.place(x=940, y=470, width=285, height=84)
-            elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                label_7SEG003.place(x=800, y=590, width=460, height=90)
-            elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
-                label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[6], fg=sty_clr[0])
-                label_7SEG003.place(x=800, y=590, width=460, height=90)
-        elif device == DEVICE_B_txt[2]:
-            #--------------------------------------------------------------------------
-            # 7-SEGMENT DISPLAY 001: SPEED / RPM
-            #--------------------------------------------------------------------------
-            if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
-                label_7SEG001.config(font=(fonts[2], 125), anchor="c")
-                label_7SEG001.place(x=625, y=150, width=220, height=185)
-            elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
-                label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
-                label_7SEG001.config(image=l_img04, compound="center")
-                label_7SEG001.place(x=567, y=164, width=496, height=212)
-            elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                label_7SEG001.place(x=985, y=100, width=220, height=200)
+                        label_7SEG001.place(x=567, y=164, width=496, height=212)
+                    elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
+                        label_7SEG001.place(x=985, y=100, width=220, height=200)
         #----------------------------------------------------------------------------------
         # END INIT PAGE
         #----------------------------------------------------------------------------------
@@ -2680,7 +2680,6 @@ class P01_DASH(tk.Frame):
 
     def update_positions(self):
         pb = btn_states_PB
-        dev_key = device
         try:
             theme_index = THEME_B_txt.index(theme)
             theme_key = f"THEME{theme_index}"
@@ -2689,15 +2688,15 @@ class P01_DASH(tk.Frame):
             return
 
         try:
-            pos_data = self.positions[pb][dev_key][theme_key]
+            pos_data = self.positions[pb][device][theme_key]
             self.x_txt_sysinfo = pos_data.get("x_txt_sysinfo", [])
             self.y_txt_sysinfo = pos_data.get("y_txt_sysinfo", [])
             self.x_lbl_sysinfo = pos_data.get("x_lbl_sysinfo", [])
             self.y_lbl_sysinfo = pos_data.get("y_lbl_sysinfo", [])
             self.wh_lbl_sysinfo = pos_data.get("wh_lbl_sysinfo", [])
-            print(f"✅ Positionsdaten geladen für {pb} / {dev_key} / {theme_key}")
+            print(f"✅ Positionsdaten geladen für {pb} / {device} / {theme_key}")
         except KeyError:
-            print(f"❌ Fehlende Positionsdaten für {pb} / {dev_key} / {theme_key}")
+            print(f"❌ Fehlende Positionsdaten für {pb} / {device} / {theme_key}")
             self.x_txt_sysinfo = []
             self.y_txt_sysinfo = []
             self.x_lbl_sysinfo = []
@@ -3439,146 +3438,147 @@ class P01_DASH(tk.Frame):
             #------------------------------------------------------------------------------
             # DEV001VBS34 (VOICEBOX)
             #------------------------------------------------------------------------------
-            #--------------------------------------------------------------------------
-            # DISPLAY THE LEDs
-            #--------------------------------------------------------------------------
-            if btn_states_FNKT[3] == True:
-                DEV001VBS34 = random.randint(0, 8)
-                DEV001VBOTTO = random.randint(0, 8)
-                DEV001VBMAX = random.randint(0, 8)
-                if theme in THEME_B_txt[1:7]: # THEME 1 to 6 or 8
-                    for i in range(ammount_VB):
-                        distance_from_middle = abs(i - middle_index)
-                        if style == STYLE_B_txt[0]:
-                            #LEFT
-                            if distance_from_middle-4 >= (DEV001VBS34):
+            if REGION:
+                #--------------------------------------------------------------------------
+                # DISPLAY THE LEDs
+                #--------------------------------------------------------------------------
+                if btn_states_FNKT[3] == True:
+                    DEV001VBS34 = random.randint(0, 8)
+                    DEV001VBOTTO = random.randint(0, 8)
+                    DEV001VBMAX = random.randint(0, 8)
+                    if theme in THEME_B_txt[1:7]: # THEME 1 to 6 or 8
+                        for i in range(ammount_VB):
+                            distance_from_middle = abs(i - middle_index)
+                            if style == STYLE_B_txt[0]:
+                                #LEFT
+                                if distance_from_middle-4 >= (DEV001VBS34):
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
+                                elif distance_from_middle-3 == DEV001VBS34:
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
+                                elif distance_from_middle-2 == DEV001VBS34:
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
+                                #RIGHT
+                                if distance_from_middle-4 >= (DEV001VBS34):
+                                    led_DEV001VBS34L03[i].config(image=l_img18)
+                                elif distance_from_middle-3 == DEV001VBS34:
+                                    led_DEV001VBS34L03[i].config(image=l_img19)
+                                elif distance_from_middle-2 == DEV001VBS34:
+                                    led_DEV001VBS34L03[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
+                                #MIDDLE
+                                if distance_from_middle <= DEV001VBS34-4:
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 -3:
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBS34 -2:
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
+                            elif style == STYLE_B_txt[1]:
+                                #LEFT
+                                if distance_from_middle <= (DEV001VBS34-4):
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 - 3:
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBS34 - 2:
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
+                                #RIGHT
+                                if distance_from_middle <= (DEV001VBS34-4):
+                                    led_DEV001VBS34L03[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 - 3:
+                                    led_DEV001VBS34L03[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBS34 - 2:
+                                    led_DEV001VBS34L03[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
+                                #MIDDLE
+                                if distance_from_middle <= DEV001VBS34:
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 + 1:
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBS34 + 2:
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
+                    elif theme == THEME_B_txt[8]:
+                        for i in range(ammount_VB):
+                            distance_from_middle = abs(i - middle_index)
+                            if style == STYLE_B_txt[0]:
+                                #LEFT
+                                if distance_from_middle >= (DEV001VBS34-6):
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 - 3:
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBMAX:
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
+                                #RIGHT
+                                if distance_from_middle <= (DEV001VBS34-4):
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
+                                else:
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
+                                #MIDDLE
+                                if distance_from_middle <= DEV001VBMAX:
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 + 1:
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBOTTO + 2:
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
+                            elif style == STYLE_B_txt[1]:
+                                #LEFT
+                                if distance_from_middle <= (DEV001VBS34-6):
+                                    led_DEV001VBS34L01[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 - 3:
+                                    led_DEV001VBS34L01[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBMAX:
+                                    led_DEV001VBS34L01[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L01[i].config(image=l_img23)
+                                #RIGHT
+                                if distance_from_middle <= (DEV001VBS34-4):
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
+                                else:
+                                    led_DEV001VBS34L03[i].config(image=l_img23)
+                                #MIDDLE
+                                if distance_from_middle <= DEV001VBMAX:
+                                    led_DEV001VBS34L02[i].config(image=l_img18)
+                                elif distance_from_middle == DEV001VBS34 + 1:
+                                    led_DEV001VBS34L02[i].config(image=l_img19)
+                                elif distance_from_middle == DEV001VBOTTO + 2:
+                                    led_DEV001VBS34L02[i].config(image=l_img20)
+                                else:
+                                    led_DEV001VBS34L02[i].config(image=l_img23)
+                    elif theme == THEME_B_txt[7]:
+                        for i in range (0, 8):
+                            if DEV001VBS34 <= i:
                                 led_DEV001VBS34L01[i].config(image=l_img18)
-                            elif distance_from_middle-3 == DEV001VBS34:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
-                            elif distance_from_middle-2 == DEV001VBS34:
+                            else:
                                 led_DEV001VBS34L01[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
-                            #RIGHT
-                            if distance_from_middle-4 >= (DEV001VBS34):
-                                led_DEV001VBS34L03[i].config(image=l_img18)
-                            elif distance_from_middle-3 == DEV001VBS34:
-                                led_DEV001VBS34L03[i].config(image=l_img19)
-                            elif distance_from_middle-2 == DEV001VBS34:
-                                led_DEV001VBS34L03[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
-                            #MIDDLE
-                            if distance_from_middle <= DEV001VBS34-4:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 -3:
+                            if DEV001VBOTTO <= i:
                                 led_DEV001VBS34L02[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBS34 -2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
                             else:
                                 led_DEV001VBS34L02[i].config(image=l_img23)
-                        elif style == STYLE_B_txt[1]:
-                            #LEFT
-                            if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L01[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBS34 - 2:
-                                led_DEV001VBS34L01[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
-                            #RIGHT
-                            if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L03[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L03[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBS34 - 2:
-                                led_DEV001VBS34L03[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
-                            #MIDDLE
-                            if distance_from_middle <= DEV001VBS34:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 + 1:
-                                led_DEV001VBS34L02[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBS34 + 2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L02[i].config(image=l_img23)
-                elif theme == THEME_B_txt[8]:
-                    for i in range(ammount_VB):
-                        distance_from_middle = abs(i - middle_index)
-                        if style == STYLE_B_txt[0]:
-                            #LEFT
-                            if distance_from_middle >= (DEV001VBS34-6):
-                                led_DEV001VBS34L01[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBMAX:
-                                led_DEV001VBS34L01[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
-                            #RIGHT
-                            if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L03[i].config(image=l_img23)
-                            else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
-                            #MIDDLE
-                            if distance_from_middle <= DEV001VBMAX:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 + 1:
-                                led_DEV001VBS34L02[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBOTTO + 2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L02[i].config(image=l_img23)
-                        elif style == STYLE_B_txt[1]:
-                            #LEFT
-                            if distance_from_middle <= (DEV001VBS34-6):
-                                led_DEV001VBS34L01[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBMAX:
-                                led_DEV001VBS34L01[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
-                            #RIGHT
-                            if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L03[i].config(image=l_img23)
-                            else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
-                            #MIDDLE
-                            if distance_from_middle <= DEV001VBMAX:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
-                            elif distance_from_middle == DEV001VBS34 + 1:
-                                led_DEV001VBS34L02[i].config(image=l_img19)
-                            elif distance_from_middle == DEV001VBOTTO + 2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
-                            else:
-                                led_DEV001VBS34L02[i].config(image=l_img23)
-                elif theme == THEME_B_txt[7]:
-                    for i in range (0, 8):
-                        if DEV001VBS34 <= i:
-                            led_DEV001VBS34L01[i].config(image=l_img18)
-                        else:
-                            led_DEV001VBS34L01[i].config(image=l_img20)
-                        if DEV001VBOTTO <= i:
-                            led_DEV001VBS34L02[i].config(image=l_img19)
-                        else:
+                else:
+                    #----------------------------------------------------------------------
+                    # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
+                    #----------------------------------------------------------------------
+                    if theme in THEME_B_txt[1:9]: # THEME 1 to 8
+                        for i in range(ammount_VB):
+                            led_DEV001VBS34L01[i].config(image=l_img23)
                             led_DEV001VBS34L02[i].config(image=l_img23)
-            else:
-                #----------------------------------------------------------------------
-                # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
-                #----------------------------------------------------------------------
-                if theme in THEME_B_txt[1:9]: # THEME 1 to 8
-                    for i in range(ammount_VB):
-                        led_DEV001VBS34L01[i].config(image=l_img23)
-                        led_DEV001VBS34L02[i].config(image=l_img23)
-                        led_DEV001VBS34L03[i].config(image=l_img23)
-                elif theme == THEME_B_txt[7]:
-                    for i in range(0, 8):
-                        led_DEV001VBS34L01[i].config(image=l_img20)
-                        led_DEV001VBS34L02[i].config(image=l_img23)
+                            led_DEV001VBS34L03[i].config(image=l_img23)
+                    elif theme == THEME_B_txt[7]:
+                        for i in range(0, 8):
+                            led_DEV001VBS34L01[i].config(image=l_img20)
+                            led_DEV001VBS34L02[i].config(image=l_img23)
             #------------------------------------------------------------------------------
             # VOICEBOX STATUS BUTTONS (3)
             #------------------------------------------------------------------------------ 
@@ -6544,8 +6544,8 @@ class myfunctions():
                     gps_altitude = f"{parsed.altitude:.1f}"
                     gps_altitude_units = parsed.altitude_units
 
-        except Exception as e:
-            print("no GPS data:", e)
+                except Exception as e:
+                    print("no GPS data:", e)
 
         save_needed = False
 

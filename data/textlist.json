@@ -7,6 +7,13 @@
         "DEV023","DEV024","DEV025","DEV026","DEV027","DEV028","DEV029","DEV030","DEV031","DEV032","DEV033","DEV034",
         "DEV035","DEV036","DEV037","DEV038","DEV039","DEV040"],
       "styles": ["KARR","KITT","---","---","---"],
+      "THEME_GROUPS": {
+        "K2_OLD": ["PILOT","K2_S01","K2_S02","K2_OTTO"],
+        "K2_NEW": ["K2_S03","K2_S04","K2_S05","K2_S06","K2_MAX"],
+        "K3": ["K3_S01","K3_S02"],
+        "CARS": ["GMA","GMD","DMC","BTTF"],
+        "LCARS": ["LCARS1","LCARS2"]
+      },
       "themes": ["PILOT","K2_S01","K2_S02","K2_S03","K2_S04","K2_S05","K2_S06","K2_OTTO","K2_MAX",
         "K3_S01","K3_S02","GMA","GMD","DMC","BTTF","LCARS1","LCARS2"],
       "systems": ["ORANGE","GREEN","AQUA","WHITE","CYBER"],
