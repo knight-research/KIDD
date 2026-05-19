@@ -11,14 +11,9 @@ debug = False # PRINT INFORMATIONS TO CONSOLE
 #--------------------
 # region VERSION
 #--------------------
-try:
-    with open("version.txt", "r") as f:
-        lines = f.readlines()
-        version = lines[0].strip() if len(lines) > 0 else "unknown"
-        last_change = lines[1].strip() if len(lines) > 1 else "unknown"
-except FileNotFoundError:
-    version = "unknown"
-    last_change = "unknown"
+from app_version import load_version
+
+version, last_change = load_version()
 # endregion
 
 #--------------------
