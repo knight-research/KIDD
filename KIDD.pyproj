@@ -32,6 +32,7 @@
     <Compile Include="main.py" />
     <Compile Include="platform_detection.py" />
     <Compile Include="platform_imports.py" />
+    <Compile Include="text_lists.py" />
     <Compile Include="update.py" />
     <Compile Include="_fake_GPIO.py" />
   </ItemGroup>
