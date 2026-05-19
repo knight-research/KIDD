@@ -4343,7 +4343,7 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         # STATIC TEXT
         #----------------------------------------------------------------------------------
-        if sys_linux and sys_pi == "PI":
+        if sys_linux and sys_pi:
             ip_address = subprocess.check_output(["ip", "address", "show", "wlan0"]).decode("utf-8")
             ip_line = [line.strip() for line in ip_address.split("\n") if "inet " in line][0]
             wlan0_ip = ip_line.split()[1]
