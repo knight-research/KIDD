@@ -16,6 +16,7 @@ from app_version import load_version
 version, last_change = load_version()
 # endregion
 
+
 #--------------------
 # region IMPORTS
 #--------------------
