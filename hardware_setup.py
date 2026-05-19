@@ -10,13 +10,13 @@ def setup_hardware(sys_linux, sys_pi, btn_states_HW, device, device_names, depen
     hardware = {
         "gps_serial": None,
         "gps_port": None,
-        "i2cRB01": 0x20,
-        "i2cRB02": 0x21,
-        "i2cRB03": 0x22,
-        "i2cDI01": 0x64,
-        "i2cDI02": 0x65,
-        "i2cDI03": 0x66,
-        "i2cAI01": 0x00,
+        "i2cRB01": 0x20,  # DO POSIBBLE I2C: 20-27
+        "i2cRB02": 0x21,  # DO POSIBBLE I2C: 20-27
+        "i2cRB03": 0x22,  # DO POSIBBLE I2C: 20-27
+        "i2cDI01": 0x64,  # DI POSIBBLE I2C: 64-78
+        "i2cDI02": 0x65,  # DI POSIBBLE I2C: 64-78
+        "i2cDI03": 0x66,  # DI POSIBBLE I2C: 64-78
+        "i2cAI01": 0x00,  # AI POSIBBLE I2C: ?
         "buses": [],
         "i2c_dev02ai01": None,
         "ads": None,
