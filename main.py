@@ -20,23 +20,15 @@ version, last_change = load_version()
 # region IMPORTS
 #--------------------
 from import_all import *
-sys_win = False
-sys_linux = False
-sys_pi = False
-if sys.platform == "win32" or sys.platform == "win64":
-    sys_win = True
+from platform_detection import detect_platform
+
+sys_win, sys_linux, sys_pi = detect_platform()
+if sys_win:
     from import_win import *
-elif sys.platform == "linux":
-    sys_linux = True
+elif sys_linux:
     from import_linux import *
-    try:
-        with open('/sys/firmware/devicetree/base/model', 'r') as f:
-            model = f.read().strip()
-        if 'Raspberry Pi' in model:
-            sys_pi = True
-            from import_pi import *
-    except FileNotFoundError:
-        pass
+    if sys_pi:
+        from import_pi import *
 #--------------------
 # DATA FOLDERS
 #--------------------
