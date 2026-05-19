@@ -22,14 +22,10 @@ version, last_change = load_version()
 #--------------------
 from import_all import *
 from platform_detection import detect_platform
+from platform_imports import load_platform_symbols
 
 sys_win, sys_linux, sys_pi = detect_platform()
-if sys_win:
-    from import_win import *
-elif sys_linux:
-    from import_linux import *
-    if sys_pi:
-        from import_pi import *
+globals().update(load_platform_symbols(sys_win, sys_linux, sys_pi))
 #--------------------
 # DATA FOLDERS
 #--------------------
