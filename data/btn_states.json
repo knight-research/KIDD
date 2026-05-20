@@ -3,12 +3,12 @@
         "device": "DEV002",
         "style": "KARR",
         "theme": "K2_S05",
-        "system": "CYBER",
+        "system": "GREEN",
         "language": "DEU"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb02",
+            "PB": "pb01",
             "FNKT": [
                 false,
                 false,
@@ -183,7 +183,7 @@
             ]
         },
         "DEV002": {
-            "PB": "pb00",
+            "PB": "pb06",
             "FNKT": [
                 false,
                 false,
@@ -241,7 +241,7 @@
                 false
             ],
             "SW": [
-                false,
+                true,
                 true,
                 0,
                 true,

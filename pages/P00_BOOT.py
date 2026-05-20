@@ -55,6 +55,10 @@ class P00_BOOT(tk.Frame):
         master.after(100, lambda: master.switch_frame(P01_DASH))
 
     def load_config(self):
+        global device, style, theme, system
+        global btn_states_PB, btn_states_PBFNKT, btn_states_FNKT, btn_states_HW, btn_states_SW, btn_states_qopt, btn_states_FAV
+        global states_txt_act
+
         with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
             data = json.load(f)
         device = data["main_config"]["device"]
@@ -75,7 +79,6 @@ class P00_BOOT(tk.Frame):
         else:
             print(f"Unbekanntes GerÃƒÆ’Ã‚Â¤t: {device}")
         #LANGUAGE
-        global states_txt_act
         if btn_states_SW[4]:
             states_txt_act = states_txt_en
         else:

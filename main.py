@@ -127,10 +127,68 @@ class P01_DASH(tk.Frame):
     # CREATE THE PAGE
     #--------------------------------------------------------------------------------------
     def __init__(self, master):
-        tk.Frame.__init__(self, master)     
+        tk.Frame.__init__(self, master)
+        self.update_job = None
+        self._destroyed = False
+        self.lbls_sysinfo = []
+        self.lbls_voicecmd = []
+        self.label_7SEG001 = None
+        self.label_7SEG002 = None
+        self.label_7SEG003 = None
+        self.btn_units = None
+        self.btn_SELECT = []
+        self.led_DEV002IC = []
+        self.led_DEV002G007 = []
+        self.led_DEV002G008 = []
+        self.led_DEV002G009 = []
+        self.ammount_DEV002G007 = 0
+        self.ammount_DEV002G008 = 0
+        self.ammount_DEV002G009 = 0
         self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
         self.canvas.pack(fill='both', expand=True)
         self.create_widgets()
+
+    def destroy(self):
+        self._destroyed = True
+        if self.update_job is not None:
+            try:
+                self.after_cancel(self.update_job)
+            except tk.TclError:
+                pass
+            self.update_job = None
+        super().destroy()
+
+    def _is_alive(self):
+        try:
+            return not self._destroyed and self.winfo_exists()
+        except tk.TclError:
+            return False
+
+    def _schedule_update(self):
+        if self._is_alive():
+            self.update_job = self.after(time_digital, self.update_page)
+
+    def _place_label_7SEG002(self):
+        if self.label_7SEG002 is None:
+            self.label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+        else:
+            self.label_7SEG002.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+
+        if theme in THEME_B_txt[0:3]:
+            self.label_7SEG002.place(x=2175, y=515, width=245, height=100)
+        elif theme in THEME_B_txt[3:11]:
+            self.label_7SEG002.place(x=1810, y=34, width=320, height=100)
+
+    def _hide_label_7SEG002(self):
+        if self.label_7SEG002 is not None:
+            self.label_7SEG002.place_forget()
+
+    def update_pb_buttons(self, active_image, inactive_image):
+        for button, text in zip(self.btn_SELECT, btn_SELECT_txt):
+            if btn_states_PB == text:
+                button.config(image=active_image)
+            else:
+                button.config(image=inactive_image)
     #--------------------------------------------------------------------------------------
     # CREATE THE WIDGETS
     #--------------------------------------------------------------------------------------
@@ -1127,22 +1185,20 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # SELECT BUTTONS
         #----------------------------------------------------------------------------------   
-        global btn_SELECT
-        global btn_SELECT_txt
         #--------------------------------------------------------------------------
         # BUTTONS
         #--------------------------------------------------------------------------
-        btn_SELECT = []
+        self.btn_SELECT = []
         for pb_text in btn_SELECT_txt:
             btns_SELECT = tk.Button(self, **btn_style_imgbtn, command=lambda text=pb_text: [
                 read.toggle_PB(text),
-                read.update_pb_buttons(l_img80, l_img81),
+                self.update_pb_buttons(l_img80, l_img81),
             self.refresh_background_image(),
             self.update_positions(),
             self.update_pb_ui_elements(),
             self.update_labels()
             ])
-            btn_SELECT.append(btns_SELECT)
+            self.btn_SELECT.append(btns_SELECT)
         try:
             theme_index = THEME_B_txt.index(theme)
             theme_key = f"THEME{theme_index}"
@@ -1150,10 +1206,10 @@ class P01_DASH(tk.Frame):
             setup_pos = self.positions["BUTTON_POSITIONS"][device][theme_key]
             x_btn = setup_pos.get("x_btn_SELECT", [])
             y_btn = setup_pos.get("y_btn_SELECT", [])
-            quant_btn = min(len(x_btn), len(y_btn), len(btn_SELECT))
+            quant_btn = min(len(x_btn), len(y_btn), len(self.btn_SELECT))
 
             for i in range(quant_btn):
-                btn_SELECT[i].place(x=x_btn[i], y=y_btn[i])
+                self.btn_SELECT[i].place(x=x_btn[i], y=y_btn[i])
         except (KeyError, ValueError) as e:
             print(f"⚠️ Keine PB-Button-Positionen für {device} / {theme_key}: {e}")
         #--------------------------------------------------------------------------
@@ -1162,14 +1218,14 @@ class P01_DASH(tk.Frame):
         for i, text in enumerate(btn_SELECT_txt):
             if btn_states_PB == text:
                 if THEME_B_txt[0:11].count(theme) > 0: # THEME 0 to 9
-                    btn_SELECT[i].config(image=l_img80)
+                    self.btn_SELECT[i].config(image=l_img80)
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                    btn_SELECT[i].config(image=lcarsON_img_list[3])
+                    self.btn_SELECT[i].config(image=lcarsON_img_list[3])
             else:
                 if THEME_B_txt[0:11].count(theme) > 0: # THEME 0 to 9
-                    btn_SELECT[i].config(image=l_img81)
+                    self.btn_SELECT[i].config(image=l_img81)
                 elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                    btn_SELECT[i].config(image=lcarsOF_img_list[3])
+                    self.btn_SELECT[i].config(image=lcarsOF_img_list[3])
         #----------------------------------------------------------------------------------
         # QUICKSOUND BUTTONS (YELLOW)
         #----------------------------------------------------------------------------------
@@ -1260,45 +1316,43 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # SWITCH UNITS BUTTON (IMPERIAL/METRIC)
         #----------------------------------------------------------------------------------   
-        global btn_units
         if device == DEVICE_B_txt[1]:
-            btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
+            self.btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
             if THEME_B_txt[0:3].count(theme) > 0: # THEME 3 to 8
-                btn_units.place(x=1040, y=218, width=166, height=81)
+                self.btn_units.place(x=1040, y=218, width=166, height=81)
             elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
-                btn_units.place(x=1105, y=248, width=166, height=81)
+                self.btn_units.place(x=1105, y=248, width=166, height=81)
             elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                btn_units.place(x=770, y=110, width=202, height=68)
+                self.btn_units.place(x=770, y=110, width=202, height=68)
             if btn_states_SW[0] == True:
-                btn_units.config(image=l_img01)
+                self.btn_units.config(image=l_img01)
             else:
-                btn_units.config(image=l_img02)
+                self.btn_units.config(image=l_img02)
         elif device == DEVICE_B_txt[2]:
-            btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
+            self.btn_units = tk.Button(self, **btn_style_imgbtn, command=lambda:[read.toggle_btn_SW(0),self.master.switch_frame(P01_DASH)])
             if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2            
-                btn_units.place(x=970, y=245, width=166, height=81)
+                self.btn_units.place(x=970, y=245, width=166, height=81)
             elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
-                btn_units.place(x=1064, y=296, width=166, height=81)
+                self.btn_units.place(x=1064, y=296, width=166, height=81)
             elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                btn_units.place(x=1064, y=296, width=166, height=81)
+                self.btn_units.place(x=1064, y=296, width=166, height=81)
             if btn_states_SW[0] == True:
-                btn_units.config(image=l_img08)
+                self.btn_units.config(image=l_img08)
             else:
-                btn_units.config(image=l_img09)
+                self.btn_units.config(image=l_img09)
         #----------------------------------------------------------------------------------
         # VOICECOMMAND LABELS AND ICONS
         #----------------------------------------------------------------------------------
-        global lbls_voicecmd
         if device == DEVICE_B_txt[1]:
-            lbls_voicecmd = []
+            self.lbls_voicecmd = []
             for voicecmdtext in voicecmd_txt:
                 label_voicecmd = tk.Label(self.canvas, **lbl_style_voicecmd, bg=sty_clr[3], fg=sty_clr[1])
-                lbls_voicecmd.append(label_voicecmd)
+                self.lbls_voicecmd.append(label_voicecmd)
                     
             if THEME_B_txt[3:8].count(theme) > 0: # THEME 3 to 8
-                lbls_voicecmd[0].place(x=500, y=590, height="30", width="280")   
-                lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
-                lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
+                self.lbls_voicecmd[0].place(x=500, y=590, height="30", width="280")
+                self.lbls_voicecmd[1].place(x=500, y=620, height="30", width="280")
+                self.lbls_voicecmd[2].place(x=500, y=650, height="30", width="280")
 
             self.btn_FNKT[1].config(command=lambda: [self.toggle_function(),read.toggle_button_states_FNKT(1),self.master.switch_frame(P01_DASH)])
             self.function_running = False
@@ -1592,10 +1646,7 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             # DEV002G007 (VDC)
             #--------------------------------------------------------------------------
-            global led_DEV002G007
-            global val_DEV002G007
-            global ammount_DEV002G007
-            led_DEV002G007 = []
+            self.led_DEV002G007 = []
             if theme in THEME_B_txt[:3]: # THEME 0 1 2
                 x_pos_DEV002G007 = 1365
                 x_pos_DEV002G007_after12 = 1785
@@ -1603,15 +1654,15 @@ class P01_DASH(tk.Frame):
                 x_pos_DEV002G007_next = +29
                 width_DEV002G007 = 29
                 height_DEV002G007 = 22
-                ammount_DEV002G007 = 24
+                self.ammount_DEV002G007 = 24
             elif theme in THEME_B_txt[3:11]: # THEME 3 to 9
                 x_pos_DEV002G007 = 1285
                 y_pos_DEV002G007 = 71
                 x_pos_DEV002G007_next = +84
                 width_DEV002G007 = 80
                 height_DEV002G007 = 40
-                ammount_DEV002G007 = 5
-            for i in range(0, ammount_DEV002G007):
+                self.ammount_DEV002G007 = 5
+            for i in range(0, self.ammount_DEV002G007):
                 val_DEV002G007 = tk.Label(self, **btn_style_imgbtn)
                 if i < 12:
                     val_DEV002G007.place(x=x_pos_DEV002G007, y=y_pos_DEV002G007, width=width_DEV002G007, height=height_DEV002G007)
@@ -1619,14 +1670,11 @@ class P01_DASH(tk.Frame):
                 elif i > 11:
                     val_DEV002G007.place(x=x_pos_DEV002G007_after12, y=y_pos_DEV002G007, width=width_DEV002G007, height=height_DEV002G007)                    
                     x_pos_DEV002G007_after12 += x_pos_DEV002G007_next
-                led_DEV002G007.append(val_DEV002G007)
+                self.led_DEV002G007.append(val_DEV002G007)
             #--------------------------------------------------------------------------
             # DEV002G008 (AMP)
             #--------------------------------------------------------------------------
-            global led_DEV002G008
-            global val_DEV002G008
-            global ammount_DEV002G008
-            led_DEV002G008 = []
+            self.led_DEV002G008 = []
             if theme in THEME_B_txt[:3]: # THEME 0 1 2
                 x_pos_DEV002G008 = 1365
                 x_pos_DEV002G008_after12 = 1785
@@ -1634,15 +1682,15 @@ class P01_DASH(tk.Frame):
                 x_pos_DEV002G008_next = +29
                 width_DEV002G008 = 29
                 height_DEV002G008 = 22
-                ammount_DEV002G008 = 24
+                self.ammount_DEV002G008 = 24
             elif theme in THEME_B_txt[3:11]: # THEME 3 to 9
                 x_pos_DEV002G008 = 1285
                 y_pos_DEV002G008 = 184
                 x_pos_DEV002G008_next = +84
                 width_DEV002G008 = 80
                 height_DEV002G008 = 40
-                ammount_DEV002G008 = 5
-            for i in range(0, ammount_DEV002G008):
+                self.ammount_DEV002G008 = 5
+            for i in range(0, self.ammount_DEV002G008):
                 val_DEV002G008 = tk.Label(self, **btn_style_imgbtn)
                 if i < 12:
                     val_DEV002G008.place(x=x_pos_DEV002G008, y=y_pos_DEV002G008, width=width_DEV002G008, height=height_DEV002G008)
@@ -1650,14 +1698,11 @@ class P01_DASH(tk.Frame):
                 elif i > 11:
                     val_DEV002G008.place(x=x_pos_DEV002G008_after12, y=y_pos_DEV002G008, width=width_DEV002G008, height=height_DEV002G008)                    
                     x_pos_DEV002G008_after12 += x_pos_DEV002G008_next
-                led_DEV002G008.append(val_DEV002G008)
+                self.led_DEV002G008.append(val_DEV002G008)
             #--------------------------------------------------------------------------
             # DEV002G009 (AUX)
             #--------------------------------------------------------------------------
-            global led_DEV002G009
-            global val_DEV002G009
-            global ammount_DEV002G009
-            led_DEV002G009 = []
+            self.led_DEV002G009 = []
             if theme in THEME_B_txt[:3]: # THEME 0 1 2
                 x_pos_DEV002G009 = 1365
                 x_pos_DEV002G009_after12 = 1785
@@ -1665,15 +1710,15 @@ class P01_DASH(tk.Frame):
                 x_pos_DEV002G009_next = +29
                 width_DEV002G009 = 29
                 height_DEV002G009 = 22
-                ammount_DEV002G009 = 24
+                self.ammount_DEV002G009 = 24
             elif theme in THEME_B_txt[3:11]: # THEME 3 to 9
                 x_pos_DEV002G009 = 1285
                 y_pos_DEV002G009 = 297
                 x_pos_DEV002G009_next = +84
                 width_DEV002G009 = 80
                 height_DEV002G009 = 40
-                ammount_DEV002G009 = 5
-            for i in range(0, ammount_DEV002G009):
+                self.ammount_DEV002G009 = 5
+            for i in range(0, self.ammount_DEV002G009):
                 val_DEV002G009 = tk.Label(self, **btn_style_imgbtn)
                 if i < 12:
                     val_DEV002G009.place(x=x_pos_DEV002G009, y=y_pos_DEV002G009, width=width_DEV002G009, height=height_DEV002G009)
@@ -1681,7 +1726,7 @@ class P01_DASH(tk.Frame):
                 elif i > 11:
                     val_DEV002G009.place(x=x_pos_DEV002G009_after12, y=y_pos_DEV002G009, width=width_DEV002G009, height=height_DEV002G009)                    
                     x_pos_DEV002G009_after12 += x_pos_DEV002G009_next
-                led_DEV002G009.append(val_DEV002G009)
+                self.led_DEV002G009.append(val_DEV002G009)
             #--------------------------------------------------------------------------
             # FUNCTION POWER BUTTONS DEVICE02 (POWER AUTO NORMAL PURSUIT)
             #--------------------------------------------------------------------------
@@ -1717,39 +1762,36 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             # DEV002 INFORMATION CENTER
             #--------------------------------------------------------------------------
-            global led_DEV002IC
-            global led_gauge_DEV002IC
-            led_DEV002IC = []
+            self.led_DEV002IC = []
             for i in range(0, 16):
                 led_gauge_DEV002IC = tk.Label(self, **btn_style_imgbtn)
-                led_DEV002IC.append(led_gauge_DEV002IC)
-            led_DEV002IC[0].place(x=2174, y=17, width=80, height=80)
-            led_DEV002IC[1].place(x=2257, y=17, width=80, height=80)
-            led_DEV002IC[2].place(x=2340, y=17, width=80, height=80)
-            led_DEV002IC[3].place(x=2174, y=100, width=80, height=80)
-            led_DEV002IC[4].place(x=2257, y=100, width=80, height=80)
-            led_DEV002IC[5].place(x=2340, y=100, width=80, height=80)
-            led_DEV002IC[6].place(x=2174, y=183, width=80, height=80)
-            led_DEV002IC[7].place(x=2257, y=183, width=80, height=80)
-            led_DEV002IC[8].place(x=2340, y=183, width=80, height=80)
-            led_DEV002IC[9].place(x=2174, y=266, width=80, height=80)
-            led_DEV002IC[10].place(x=2257, y=266, width=80, height=80)
-            led_DEV002IC[11].place(x=2340, y=266, width=80, height=80)
-            led_DEV002IC[12].place(x=2174, y=349, width=80, height=80)
-            led_DEV002IC[13].place(x=2257, y=349, width=80, height=80)
-            led_DEV002IC[14].place(x=2340, y=349, width=80, height=80)
-            led_DEV002IC[15].place(x=2174, y=432, width=80, height=80)
+                self.led_DEV002IC.append(led_gauge_DEV002IC)
+            self.led_DEV002IC[0].place(x=2174, y=17, width=80, height=80)
+            self.led_DEV002IC[1].place(x=2257, y=17, width=80, height=80)
+            self.led_DEV002IC[2].place(x=2340, y=17, width=80, height=80)
+            self.led_DEV002IC[3].place(x=2174, y=100, width=80, height=80)
+            self.led_DEV002IC[4].place(x=2257, y=100, width=80, height=80)
+            self.led_DEV002IC[5].place(x=2340, y=100, width=80, height=80)
+            self.led_DEV002IC[6].place(x=2174, y=183, width=80, height=80)
+            self.led_DEV002IC[7].place(x=2257, y=183, width=80, height=80)
+            self.led_DEV002IC[8].place(x=2340, y=183, width=80, height=80)
+            self.led_DEV002IC[9].place(x=2174, y=266, width=80, height=80)
+            self.led_DEV002IC[10].place(x=2257, y=266, width=80, height=80)
+            self.led_DEV002IC[11].place(x=2340, y=266, width=80, height=80)
+            self.led_DEV002IC[12].place(x=2174, y=349, width=80, height=80)
+            self.led_DEV002IC[13].place(x=2257, y=349, width=80, height=80)
+            self.led_DEV002IC[14].place(x=2340, y=349, width=80, height=80)
+            self.led_DEV002IC[15].place(x=2174, y=432, width=80, height=80)
         #----------------------------------------------------------------------------------
         # SYSINFO LABELS
         #----------------------------------------------------------------------------------
-        global lbls_sysinfo
         self.update_positions()
         self.update_pb_ui_elements()
         self.update_labels()
         #------------------------------------------------------------------------------
         # PLACE LABEL
         #------------------------------------------------------------------------------
-        for i, label in enumerate(lbls_sysinfo):
+        for i, label in enumerate(self.lbls_sysinfo):
             if i < len(self.x_lbl_sysinfo) and i < len(self.y_lbl_sysinfo):
                 if i < 5:
                     label.place(
@@ -1768,58 +1810,56 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # GAUGE 7-SEGMENT DISPLAYS
         #----------------------------------------------------------------------------------
-        global label_7SEG001
-        global label_7SEG003
-        label_7SEG001 = tk.Label(self, bg=sty_clr[3], fg=sty_clr[2])
-        label_7SEG003 = tk.Label(self)
+        self.label_7SEG001 = tk.Label(self, bg=sty_clr[3], fg=sty_clr[2])
+        self.label_7SEG003 = tk.Label(self)
 
         if device == DEVICE_B_txt[1]:
             #--------------------------------------------------------------------------
             # 7-SEGMENT DISPLAY 001: SPEED / RPM
             #--------------------------------------------------------------------------
             if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
-                label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
-                label_7SEG001.place(x=582, y=160, width=370, height=147)
+                self.label_7SEG001.config(font=(fonts[2], 125), anchor="nw")
+                self.label_7SEG001.place(x=582, y=160, width=370, height=147)
             elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
                 if btn_states_SW[3] == False:
                     if btn_states_SW[1] == True:
-                        label_7SEG001.config(image=l_img03, compound="center")
+                        self.label_7SEG001.config(image=l_img03, compound="center")
                     else:
-                        label_7SEG001.config(image=l_img04, compound="center")
+                        self.label_7SEG001.config(image=l_img04, compound="center")
                 else:
-                    label_7SEG001.config(image=l_img05, compound="center")
-                label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
-                label_7SEG001.place(x=609, y=116, width=496, height=212)
+                    self.label_7SEG001.config(image=l_img05, compound="center")
+                self.label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
+                self.label_7SEG001.place(x=609, y=116, width=496, height=212)
             elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
-                label_7SEG001.config(font=(fonts[9], 150), bg=sty_clr[6], fg=sty_clr[0], anchor="c")
-                label_7SEG001.place(x=609, y=116, width=496, height=212)
+                self.label_7SEG001.config(font=(fonts[9], 150), bg=sty_clr[6], fg=sty_clr[0], anchor="c")
+                self.label_7SEG001.place(x=609, y=116, width=496, height=212)
             elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                label_7SEG001.place(x=985, y=100, width=220, height=200)
+                self.label_7SEG001.place(x=985, y=100, width=220, height=200)
             #--------------------------------------------------------------------------
             # 7-SEGMENT DISPLAY 003: TOTAL / ---
             #--------------------------------------------------------------------------
             if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 3
-                label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
-                label_7SEG003.place(x=940, y=470, width=285, height=84)
+                self.label_7SEG003.config(**lbl_style_7SEG01_S12, bg=sty_clr[4], fg=sty_clr[5])
+                self.label_7SEG003.place(x=940, y=470, width=285, height=84)
             elif THEME_B_txt[3:9].count(theme) > 0: # THEME 3 to 8
-                label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                label_7SEG003.place(x=800, y=590, width=460, height=90)
+                self.label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
+                self.label_7SEG003.place(x=800, y=590, width=460, height=90)
             elif theme in [THEME_B_txt[9], THEME_B_txt[10]]:
-                label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[6], fg=sty_clr[0])
-                label_7SEG003.place(x=800, y=590, width=460, height=90)
+                self.label_7SEG003.config(**lbl_style_7SEG01_S34, bg=sty_clr[6], fg=sty_clr[0])
+                self.label_7SEG003.place(x=800, y=590, width=460, height=90)
         elif device == DEVICE_B_txt[2]:
             #--------------------------------------------------------------------------
             # 7-SEGMENT DISPLAY 001: SPEED / RPM
             #--------------------------------------------------------------------------
             if THEME_B_txt[0:3].count(theme) > 0: # THEME 0 to 2
-                label_7SEG001.config(font=(fonts[2], 125), anchor="c")
-                label_7SEG001.place(x=625, y=150, width=220, height=185)
+                self.label_7SEG001.config(font=(fonts[2], 125), anchor="c")
+                self.label_7SEG001.place(x=625, y=150, width=220, height=185)
             elif THEME_B_txt[3:11].count(theme) > 0: # THEME 3 to 8
-                label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
-                label_7SEG001.config(image=l_img04, compound="center")
-                label_7SEG001.place(x=567, y=164, width=496, height=212)
+                self.label_7SEG001.config(font=(fonts[2], 165), anchor="nw")
+                self.label_7SEG001.config(image=l_img04, compound="center")
+                self.label_7SEG001.place(x=567, y=164, width=496, height=212)
             elif theme in [THEME_B_txt[15], THEME_B_txt[16]]:
-                label_7SEG001.place(x=985, y=100, width=220, height=200)
+                self.label_7SEG001.place(x=985, y=100, width=220, height=200)
         #----------------------------------------------------------------------------------
         # END INIT PAGE
         #----------------------------------------------------------------------------------
@@ -1835,34 +1875,24 @@ class P01_DASH(tk.Frame):
             return
 
         if not hasattr(self, "x_txt_sysinfo") or not hasattr(self, "y_txt_sysinfo"):
-            print("⚠️ x/y_txt_sysinfo nicht gesetzt.")
             return
 
-        for i, entry in enumerate(self.pb_texts[pb][lang]):
-            try:
-                x = self.x_txt_sysinfo[i]
-                y = self.y_txt_sysinfo[i]
+        entries = self.pb_texts[pb][lang]
+        for entry, x, y in zip(entries, self.x_txt_sysinfo, self.y_txt_sysinfo):
+            style = dict(txt_style_sysinfo)
+            if "font" in entry:
+                style["font"] = tuple(entry["font"])
+            if "anchor" in entry:
+                style["anchor"] = entry["anchor"]
 
-                # Basis-Stil aus dem Code übernehmen
-                style = dict(txt_style_sysinfo)  # z. B. {"font": ..., "anchor": ...}
-                # Falls JSON etwas vorgibt, überschreiben
-                if "font" in entry:
-                    style["font"] = tuple(entry["font"])
-                if "anchor" in entry:
-                    style["anchor"] = entry["anchor"]
-
-                fill_color = entry.get("fill", sty_clr[2])  # Standardfarbe sty_clr[2]
-
-                self.canvas.create_text(
-                    x, y,
-                    text=entry["text"],
-                    fill=fill_color,
-                    tags="pb_overlay",
-                    **style
-                )
-
-            except IndexError:
-                print(f"⚠️ Kein Positionseintrag für Textzeile {i} ({entry['text']})")
+            fill_color = entry.get("fill", sty_clr[2])
+            self.canvas.create_text(
+                x, y,
+                text=entry["text"],
+                fill=fill_color,
+                tags="pb_overlay",
+                **style
+            )
 
     def update_positions(self):
         pb = btn_states_PB
@@ -1870,7 +1900,7 @@ class P01_DASH(tk.Frame):
             theme_index = THEME_B_txt.index(theme)
             theme_key = f"THEME{theme_index}"
         except ValueError:
-            print(f"⚠️ Theme {theme} nicht in THEME_B_txt")
+            print(f"Theme {theme} nicht in THEME_B_txt")
             return
 
         try:
@@ -1880,9 +1910,7 @@ class P01_DASH(tk.Frame):
             self.x_lbl_sysinfo = pos_data.get("x_lbl_sysinfo", [])
             self.y_lbl_sysinfo = pos_data.get("y_lbl_sysinfo", [])
             self.wh_lbl_sysinfo = pos_data.get("wh_lbl_sysinfo", [])
-            print(f"✅ Positionsdaten geladen für {pb} / {device} / {theme_key}")
         except KeyError:
-            print(f"❌ Fehlende Positionsdaten für {pb} / {device} / {theme_key}")
             self.x_txt_sysinfo = []
             self.y_txt_sysinfo = []
             self.x_lbl_sysinfo = []
@@ -1910,7 +1938,6 @@ class P01_DASH(tk.Frame):
             self.canvas.create_image(0, 0, image=self.background_image, anchor="nw", tags="bg")
 
     def update_labels(self):
-        global lbls_sysinfo
         current_pb = btn_states_PB
         # Prüfen, ob sich PB geändert hat
         if hasattr(self, "last_pb_state") and self.last_pb_state == current_pb:
@@ -1918,9 +1945,9 @@ class P01_DASH(tk.Frame):
         self.last_pb_state = current_pb
 
         # Alte Labels entfernen
-        for lbl in lbls_sysinfo:
+        for lbl in self.lbls_sysinfo:
             lbl.destroy()
-        lbls_sysinfo.clear()
+        self.lbls_sysinfo.clear()
 
         # Prüfen, ob Positionen vorhanden sind
         if not hasattr(self, "x_lbl_sysinfo") or not hasattr(self, "y_lbl_sysinfo") or not hasattr(self, "wh_lbl_sysinfo"):
@@ -1946,7 +1973,11 @@ class P01_DASH(tk.Frame):
                     h = self.wh_lbl_sysinfo[3] if len(self.wh_lbl_sysinfo) > 3 else self.wh_lbl_sysinfo[1]
 
                 lbl.place(x=x, y=y, width=w, height=h)
-                lbls_sysinfo.append(lbl)
+                self.lbls_sysinfo.append(lbl)
+        while len(self.lbls_sysinfo) < 8:
+            lbl = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
+            lbl.place_forget()
+            self.lbls_sysinfo.append(lbl)
 
     def toggle_audio(self, idx, filepath, loop):
         result = read.toggle_audio_loop(filepath, loop)
@@ -2086,6 +2117,9 @@ class P01_DASH(tk.Frame):
     # MAINLOOP DASH
     #--------------------------------------------------------------------------------------                        
     def update_page(self):
+        if not self._is_alive():
+            return
+        self.update_job = None
         start_time = time.time()
         #----------------------------------------------------------------------------------
         # Dictionary chechen if not, create
@@ -2515,13 +2549,13 @@ class P01_DASH(tk.Frame):
             # UPDATE VOICECOMMAND TEXT IN TOTAL DISPLAY
             #------------------------------------------------------------------------------
             if btn_states_FNKT[1] == True:
-                lbls_voicecmd[0].config(text= vinfo)
-                lbls_voicecmd[1].config(text= vtext)
-                lbls_voicecmd[2].config(text= activation_word_info)
+                self.lbls_voicecmd[0].config(text= vinfo)
+                self.lbls_voicecmd[1].config(text= vtext)
+                self.lbls_voicecmd[2].config(text= activation_word_info)
             else:
-                lbls_voicecmd[0].config(text="---")
-                lbls_voicecmd[1].config(text="---")
-                lbls_voicecmd[2].config(text='SpeechRecognition is off')
+                self.lbls_voicecmd[0].config(text="---")
+                self.lbls_voicecmd[1].config(text="---")
+                self.lbls_voicecmd[2].config(text='SpeechRecognition is off')
             #------------------------------------------------------------------------------
             # UPDATE DEV001G000 (SPEED)
             #------------------------------------------------------------------------------
@@ -2921,38 +2955,38 @@ class P01_DASH(tk.Frame):
                 seven_seg_DEV002G007 = int(aldl_battery_voltage)
             else:
                 seven_seg_DEV002G007 = val_cnt_sim[7]
-            val_DEV002G007 = seven_seg_DEV002G007/ammount_DEV002G007
+            val_DEV002G007 = seven_seg_DEV002G007/self.ammount_DEV002G007
             #-------------------------------------------------------------------------
             # CONVERT VALUE FOR xx LEDS
             #-------------------------------------------------------------------------
-            perc_DEV002G007 = int (val_DEV002G007 - val_min[7]) * (ammount_DEV002G007 - val_conf_min[7]) / (ammount_DEV002G007 - val_conf_min[7]) + val_conf_min[7]
+            perc_DEV002G007 = int (val_DEV002G007 - val_min[7]) * (self.ammount_DEV002G007 - val_conf_min[7]) / (self.ammount_DEV002G007 - val_conf_min[7]) + val_conf_min[7]
             #-------------------------------------------------------------------------
             # DISPLAY THE LEDs
             #-------------------------------------------------------------------------
             if btn_states_FNKT[3] == True:
-                for i in range (val_conf_min[7], ammount_DEV002G007):
+                for i in range (val_conf_min[7], self.ammount_DEV002G007):
                     if perc_DEV002G007 >= i+1:
                         if i==0:
-                            led_DEV002G007[i].config(image=l_img32)
+                            self.led_DEV002G007[i].config(image=l_img32)
                         elif i==1:
-                            led_DEV002G007[i].config(image=l_img44)
+                            self.led_DEV002G007[i].config(image=l_img44)
                         else:
-                            led_DEV002G007[i].config(image=l_img42)
+                            self.led_DEV002G007[i].config(image=l_img42)
                     else:
                         if i==0:
-                            led_DEV002G007[i].config(image=l_img30)
+                            self.led_DEV002G007[i].config(image=l_img30)
                         elif i==1:
-                            led_DEV002G007[i].config(image=l_img34)
+                            self.led_DEV002G007[i].config(image=l_img34)
                         else:
-                            led_DEV002G007[i].config(image=l_img40)
+                            self.led_DEV002G007[i].config(image=l_img40)
             else:
-                for i in range (val_conf_min[7], ammount_DEV002G007):
+                for i in range (val_conf_min[7], self.ammount_DEV002G007):
                         if i==0:
-                            led_DEV002G007[i].config(image=l_img30)
+                            self.led_DEV002G007[i].config(image=l_img30)
                         elif i==1:
-                            led_DEV002G007[i].config(image=l_img34)
+                            self.led_DEV002G007[i].config(image=l_img34)
                         else:
-                            led_DEV002G007[i].config(image=l_img40)
+                            self.led_DEV002G007[i].config(image=l_img40)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G008 (AMP)
             #------------------------------------------------------------------------------
@@ -2963,38 +2997,38 @@ class P01_DASH(tk.Frame):
                 seven_seg_DEV002G008 = int(aldl_fuel_pump_voltage)
             else:
                 seven_seg_DEV002G008 = val_cnt_sim[8]
-            val_DEV002G008 = seven_seg_DEV002G008/ammount_DEV002G008
+            val_DEV002G008 = seven_seg_DEV002G008/self.ammount_DEV002G008
             #-------------------------------------------------------------------------
             # CONVERT VALUE FOR xx LEDS
             #-------------------------------------------------------------------------
-            perc_DEV002G008 = int (val_DEV002G008 - val_min[8]) * (ammount_DEV002G008 - val_conf_min[8]) / (ammount_DEV002G008 - val_conf_min[8]) + val_conf_min[8]
+            perc_DEV002G008 = int (val_DEV002G008 - val_min[8]) * (self.ammount_DEV002G008 - val_conf_min[8]) / (self.ammount_DEV002G008 - val_conf_min[8]) + val_conf_min[8]
             #-------------------------------------------------------------------------
             # DISPLAY THE LEDs
             #-------------------------------------------------------------------------            
             if btn_states_FNKT[3] == True:
-                for i in range (val_conf_min[8], ammount_DEV002G008):
+                for i in range (val_conf_min[8], self.ammount_DEV002G008):
                     if perc_DEV002G008 >= i+1:
                         if i==0:
-                            led_DEV002G008[i].config(image=l_img32)
+                            self.led_DEV002G008[i].config(image=l_img32)
                         elif i==1:
-                            led_DEV002G008[i].config(image=l_img44)
+                            self.led_DEV002G008[i].config(image=l_img44)
                         else:
-                            led_DEV002G008[i].config(image=l_img42)
+                            self.led_DEV002G008[i].config(image=l_img42)
                     else:
                         if i==0:
-                            led_DEV002G008[i].config(image=l_img30)
+                            self.led_DEV002G008[i].config(image=l_img30)
                         elif i==1:
-                            led_DEV002G008[i].config(image=l_img34)
+                            self.led_DEV002G008[i].config(image=l_img34)
                         else:
-                            led_DEV002G008[i].config(image=l_img40)
+                            self.led_DEV002G008[i].config(image=l_img40)
             else:
-                for i in range (val_conf_min[8], ammount_DEV002G008):
+                for i in range (val_conf_min[8], self.ammount_DEV002G008):
                         if i==0:
-                            led_DEV002G008[i].config(image=l_img30)
+                            self.led_DEV002G008[i].config(image=l_img30)
                         elif i==1:
-                            led_DEV002G008[i].config(image=l_img34)
+                            self.led_DEV002G008[i].config(image=l_img34)
                         else:
-                            led_DEV002G008[i].config(image=l_img40)
+                            self.led_DEV002G008[i].config(image=l_img40)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G009 (AUX)
             #------------------------------------------------------------------------------
@@ -3005,38 +3039,38 @@ class P01_DASH(tk.Frame):
                 seven_seg_DEV002G009 = int(aldl_throttle_pos_v)
             else:
                 seven_seg_DEV002G009 = val_cnt_sim[9]
-            val_DEV002G009 = seven_seg_DEV002G009/ammount_DEV002G009
+            val_DEV002G009 = seven_seg_DEV002G009/self.ammount_DEV002G009
             #-------------------------------------------------------------------------
             # CONVERT VALUE FOR xx LEDS
             #-------------------------------------------------------------------------
-            perc_DEV002G009 = int (val_DEV002G009 - val_min[9]) * (ammount_DEV002G009 - val_conf_min[9]) / (ammount_DEV002G009 - val_conf_min[9]) + val_conf_min[9]
+            perc_DEV002G009 = int (val_DEV002G009 - val_min[9]) * (self.ammount_DEV002G009 - val_conf_min[9]) / (self.ammount_DEV002G009 - val_conf_min[9]) + val_conf_min[9]
             #-------------------------------------------------------------------------
             # DISPLAY THE LEDs
             #-------------------------------------------------------------------------            
             if btn_states_FNKT[3] == True:
-                for i in range (val_conf_min[9], ammount_DEV002G009):
+                for i in range (val_conf_min[9], self.ammount_DEV002G009):
                     if perc_DEV002G009 >= i+1:
                         if i==0:
-                            led_DEV002G009[i].config(image=l_img32)
+                            self.led_DEV002G009[i].config(image=l_img32)
                         elif i==1:
-                            led_DEV002G009[i].config(image=l_img44)
+                            self.led_DEV002G009[i].config(image=l_img44)
                         else:
-                            led_DEV002G009[i].config(image=l_img42)
+                            self.led_DEV002G009[i].config(image=l_img42)
                     else:
                         if i==0:
-                            led_DEV002G009[i].config(image=l_img30)
+                            self.led_DEV002G009[i].config(image=l_img30)
                         elif i==1:
-                            led_DEV002G009[i].config(image=l_img34)
+                            self.led_DEV002G009[i].config(image=l_img34)
                         else:
-                            led_DEV002G009[i].config(image=l_img40)
+                            self.led_DEV002G009[i].config(image=l_img40)
             else:
-                for i in range (val_conf_min[9], ammount_DEV002G009):
+                for i in range (val_conf_min[9], self.ammount_DEV002G009):
                         if i==0:
-                            led_DEV002G009[i].config(image=l_img30)
+                            self.led_DEV002G009[i].config(image=l_img30)
                         elif i==1:
-                            led_DEV002G009[i].config(image=l_img34)
+                            self.led_DEV002G009[i].config(image=l_img34)
                         else:
-                            led_DEV002G009[i].config(image=l_img40)
+                            self.led_DEV002G009[i].config(image=l_img40)
             #------------------------------------------------------------------------------
             # UPDATE DEV002 INFORMATION CENTER
             #------------------------------------------------------------------------------
@@ -3045,15 +3079,15 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------                      
             infocenter_states = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
             if infocenter_states[0] == True:
-                led_DEV002IC[0].config(image=infocenterON_img_list[0])
+                self.led_DEV002IC[0].config(image=infocenterON_img_list[0])
             else:
-                led_DEV002IC[0].config(image=infocenterOF_img_list[0])
+                self.led_DEV002IC[0].config(image=infocenterOF_img_list[0])
 
             for i in range (1, 16):
                 if infocenter_states[i] == True:
-                    led_DEV002IC[i].config(image=infocenterON_img_list[i])
+                    self.led_DEV002IC[i].config(image=infocenterON_img_list[i])
                 else:
-                    led_DEV002IC[i].config(image=infocenterOF_img_list[i])
+                    self.led_DEV002IC[i].config(image=infocenterOF_img_list[i])
             #------------------------------------------------------------------------------
             # UPDATE DEV002 DIGITAL I/O todo
             #------------------------------------------------------------------------------
@@ -3064,7 +3098,6 @@ class P01_DASH(tk.Frame):
         # UPDATE SYSINFO MTR DISPLAY
         #----------------------------------------------------------------------------------
         # Initialisiere 8 Labels für sysinfo global und leer
-        global lbls_sysinfo
         self.update_labels()
         if theme in THEME_B_txt[0:3] + THEME_B_txt[3:11] + THEME_B_txt[15:17]:
             if device == DEVICE_B_txt[1]:
@@ -3072,66 +3105,58 @@ class P01_DASH(tk.Frame):
                     if sys_linux:
                         if btn_states_FNKT[2] == True:
                             read.get_system_data()
-                        lbls_sysinfo[0].config(text=sys_diskused)
-                        lbls_sysinfo[1].config(text=sys_diskmax)
-                        lbls_sysinfo[2].config(text=sys_memused)
-                        lbls_sysinfo[3].config(text=sys_memmax)
-                        lbls_sysinfo[4].config(text=sys_cpuload)
-                        lbls_sysinfo[5].config(text=sys_cputemp)
-                        lbls_sysinfo[6].config(text=update_duration)
+                        self.lbls_sysinfo[0].config(text=sys_diskused)
+                        self.lbls_sysinfo[1].config(text=sys_diskmax)
+                        self.lbls_sysinfo[2].config(text=sys_memused)
+                        self.lbls_sysinfo[3].config(text=sys_memmax)
+                        self.lbls_sysinfo[4].config(text=sys_cpuload)
+                        self.lbls_sysinfo[5].config(text=sys_cputemp)
+                        self.lbls_sysinfo[6].config(text=update_duration)
                     else:
-                        lbls_sysinfo[0].config(text="--.--")
-                        lbls_sysinfo[1].config(text="--.--")
-                        lbls_sysinfo[2].config(text="--.--")
-                        lbls_sysinfo[3].config(text="--.--")
-                        lbls_sysinfo[4].config(text="--.--")
-                        lbls_sysinfo[5].config(text="--.--")
-                        lbls_sysinfo[6].config(text=update_duration)
+                        self.lbls_sysinfo[0].config(text="--.--")
+                        self.lbls_sysinfo[1].config(text="--.--")
+                        self.lbls_sysinfo[2].config(text="--.--")
+                        self.lbls_sysinfo[3].config(text="--.--")
+                        self.lbls_sysinfo[4].config(text="--.--")
+                        self.lbls_sysinfo[5].config(text="--.--")
+                        self.lbls_sysinfo[6].config(text=update_duration)
                 elif btn_states_PB == "pb01":
-                    lbls_sysinfo[0].config(text=gps_time)
-                    lbls_sysinfo[1].config(text=gps_date)
-                    lbls_sysinfo[2].config(text=gps_altitude)
-                    lbls_sysinfo[3].config(text=gps_lat_str)
-                    lbls_sysinfo[4].config(text=gps_long_str)
-                    lbls_sysinfo[5].config(text=gps_altitude_units)
-                    lbls_sysinfo[6].config(text=gps_lon_dir)
-                    lbls_sysinfo[7].config(text=gps_lat_dir)                           
+                    self.lbls_sysinfo[0].config(text=gps_time)
+                    self.lbls_sysinfo[1].config(text=gps_date)
+                    self.lbls_sysinfo[2].config(text=gps_altitude)
+                    self.lbls_sysinfo[3].config(text=gps_lat_str)
+                    self.lbls_sysinfo[4].config(text=gps_long_str)
+                    self.lbls_sysinfo[5].config(text=gps_altitude_units)
+                    self.lbls_sysinfo[6].config(text=gps_lon_dir)
+                    self.lbls_sysinfo[7].config(text=gps_lat_dir)
                 elif btn_states_PB == "pb02":
-                    lbls_sysinfo[0].config(text=gps_mph_0)
-                    lbls_sysinfo[1].config(text=gps_kph_0)
-                    lbls_sysinfo[2].config(text=gps_odo_imperial_0str)
-                    lbls_sysinfo[3].config(text=gps_odo_metric_0str)
-                    lbls_sysinfo[4].config(text=update_duration)
+                    self.lbls_sysinfo[0].config(text=gps_mph_0)
+                    self.lbls_sysinfo[1].config(text=gps_kph_0)
+                    self.lbls_sysinfo[2].config(text=gps_odo_imperial_0str)
+                    self.lbls_sysinfo[3].config(text=gps_odo_metric_0str)
+                    self.lbls_sysinfo[4].config(text=update_duration)
                 elif btn_states_PB == "pb03":
-                    lbls_sysinfo[0].config(text=odo_trip_gps_imperial_old)
-                    lbls_sysinfo[1].config(text=odo_trip_gps_metric_old)
-                    lbls_sysinfo[2].config(text=odo_total_gps_imperial_old)
-                    lbls_sysinfo[3].config(text=odo_total_gps_metric_old)
-                    lbls_sysinfo[4].config(text=update_duration)
+                    self.lbls_sysinfo[0].config(text=odo_trip_gps_imperial_old)
+                    self.lbls_sysinfo[1].config(text=odo_trip_gps_metric_old)
+                    self.lbls_sysinfo[2].config(text=odo_total_gps_imperial_old)
+                    self.lbls_sysinfo[3].config(text=odo_total_gps_metric_old)
+                    self.lbls_sysinfo[4].config(text=update_duration)
                 elif btn_states_PB == "pb04":
-                    lbls_sysinfo[0].config(text=odo_trip_aldl_imperial_old)
-                    lbls_sysinfo[1].config(text=odo_trip_aldl_metric_old)
-                    lbls_sysinfo[2].config(text=odo_total_aldl_imperial_old)
-                    lbls_sysinfo[3].config(text=odo_total_aldl_metric_old)
-                    lbls_sysinfo[4].config(text=update_duration)
+                    self.lbls_sysinfo[0].config(text=odo_trip_aldl_imperial_old)
+                    self.lbls_sysinfo[1].config(text=odo_trip_aldl_metric_old)
+                    self.lbls_sysinfo[2].config(text=odo_total_aldl_imperial_old)
+                    self.lbls_sysinfo[3].config(text=odo_total_aldl_metric_old)
+                    self.lbls_sysinfo[4].config(text=update_duration)
             elif device == DEVICE_B_txt[2]:
                 if btn_states_PB != "pb09":
-                    if theme in THEME_B_txt[0:3]:    
-                        label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                        label_7SEG002.place(x=2175, y=515, width=245, height=100)
-                    elif theme in THEME_B_txt[3:11]:
-                        label_7SEG002 = tk.Label(self, **lbl_style_7SEG01_S34, bg=sty_clr[3], fg=sty_clr[2])
-                        label_7SEG002.place(x=1810, y=34, width=320, height=100)
+                    self._place_label_7SEG002()
                     try:
                         for i in range(12):
-                            lbls_sysinfo[i].destroy()
+                            self.lbls_sysinfo[i].destroy()
                     except:
                         pass
                 if btn_states_PB == "pb09": # POWER BUTTON
-                    try:
-                        label_7SEG002.destroy()
-                    except:
-                        pass
+                    self._hide_label_7SEG002()
                     if sys_linux and btn_states_FNKT[2]:
                         read.get_system_data()
                         sys_info = [sys_diskused, sys_diskmax, sys_memused, sys_memmax, sys_cputemp, sys_cpuload, update_duration]
@@ -3139,8 +3164,8 @@ class P01_DASH(tk.Frame):
                         sys_info = ["- - -", "- - -", "- - -", "- - -", "- - -", "- - -", "- - -"]
 
                     for i in range(7):
-                        lbls_sysinfo[i].config(text=sys_info[i])
-                    lbls_sysinfo[7].config(text=update_duration)
+                        self.lbls_sysinfo[i].config(text=sys_info[i])
+                    self.lbls_sysinfo[7].config(text=update_duration)
                 else:
                     DG02_values = {
                         "pb00": seg_DEV002[1],
@@ -3155,22 +3180,22 @@ class P01_DASH(tk.Frame):
                     }
                     # todo check the label should be progno label
                     if btn_states_PB in DG02_values:
-                        label_7SEG002.config(text=str(DG02_values[btn_states_PB]).zfill(4), anchor="c")
+                        self.label_7SEG002.config(text=str(DG02_values[btn_states_PB]).zfill(4), anchor="c")
         #----------------------------------------------------------------------------------
         # UPDATE ONLY IF SOMETHING CHANGED // 7 SEGMENT SPEED AND TOTAL RPM PROGNO DISPLAY
         #----------------------------------------------------------------------------------                
         if device == DEVICE_B_txt[1]:
             new_speed = seven_seg_speed
             if self.old_values.get("speed_label") != new_speed:
-                label_7SEG001.config(text=str(new_speed).zfill(3))                
-                label_7SEG003.config(text=str(new_speed).zfill(6))
+                self.label_7SEG001.config(text=str(new_speed).zfill(3))
+                self.label_7SEG003.config(text=str(new_speed).zfill(6))
                 self.old_values["speed_label"] = new_speed
 
         if device == DEVICE_B_txt[2]:
             new_rpm = seg_DEV002[0]
             if self.old_values.get("rpm_label") != new_rpm:
                 if device == DEVICE_B_txt[2]:
-                    label_7SEG001.config(text=str(new_rpm).zfill(3), anchor="nw")
+                    self.label_7SEG001.config(text=str(new_rpm).zfill(3), anchor="nw")
                     self.old_values["rpm_label"] = new_rpm
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
@@ -3178,7 +3203,7 @@ class P01_DASH(tk.Frame):
         end_time = time.time()
         elapsed_time = end_time - start_time
         update_duration = (f"{elapsed_time:.4f}")
-        self.after(time_digital, self.update_page)
+        self._schedule_update()
 
 #------------------------------------------------------------------------------------------
 # LOAD PAGES
@@ -3217,12 +3242,6 @@ class myfunctions():
     #----------------------------------------------------------------------------------
     # NAV AND INPUT BUTTONS
     #----------------------------------------------------------------------------------
-    def update_pb_buttons(self, var1, var2):
-        for i, text in enumerate(btn_SELECT_txt):
-            if btn_states_PB == text:
-                btn_SELECT[i].config(image=var1)
-            else:
-                btn_SELECT[i].config(image=var2)
     #------------------------------------------------------------------------------
     # DEVICE BUTTONS
     #------------------------------------------------------------------------------
