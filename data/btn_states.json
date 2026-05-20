@@ -2,18 +2,18 @@
     "main_config": {
         "device": "DEV002",
         "style": "KARR",
-        "theme": "K2_S04",
+        "theme": "K2_S05",
         "system": "CYBER",
         "language": "DEU"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb00",
+            "PB": "pb02",
             "FNKT": [
                 false,
                 false,
-                false,
-                false,
+                true,
+                true,
                 false,
                 false,
                 false,
@@ -69,7 +69,7 @@
                 true,
                 1,
                 0,
-                false,
+                true,
                 true,
                 0,
                 0,
@@ -242,7 +242,7 @@
             ],
             "SW": [
                 false,
-                1,
+                true,
                 0,
                 true,
                 false,
@@ -730,7 +730,7 @@
         "examplevalue_08": 7.2
     },
     "odo_config": {
-        "ODOMETER": "---",
+        "ODOMETER": "---855",
         "odo_trip_gps_imperial": 20,
         "odo_trip_gps_metric": 0.0,
         "odo_total_gps_imperial": 129001.0,

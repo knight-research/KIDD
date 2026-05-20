@@ -32,7 +32,14 @@
     <Compile Include="import_pi.py" />
     <Compile Include="import_win.py" />
     <Compile Include="main.py" />
+    <Compile Include="pages\P00_BOOT.py" />
+    <Compile Include="pages\P02_QOPT.py" />
+    <Compile Include="pages\P03_SETUP.py" />
+    <Compile Include="pages\P04_THEMES.py" />
+    <Compile Include="pages\P05_CARFUNCTIONS.py" />
+    <Compile Include="pages\P06_KNIGHTFUNCTIONS.py" />
     <Compile Include="pages\P07_AUDIO.py" />
+    <Compile Include="pages\P08_VIDEO.py" />
     <Compile Include="pages\P09_RES.py" />
     <Compile Include="pages\P10_RES.py" />
     <Compile Include="pages\P11_RES.py" />
