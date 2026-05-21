@@ -44,6 +44,7 @@
     <Compile Include="pages\P10_RES.py" />
     <Compile Include="pages\P11_RES.py" />
     <Compile Include="pages\page_context.py" />
+    <Compile Include="pages\voicebox.py" />
     <Compile Include="pages\__init__.py" />
     <Compile Include="platform_detection.py" />
     <Compile Include="platform_imports.py" />

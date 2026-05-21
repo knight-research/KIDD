@@ -74,6 +74,7 @@ globals().update(load_style_symbols(device, style, system, DEVICE_B_txt, STYLE_B
 #--------------------------------------------------------------------------------------
 from hardware_setup import setup_hardware
 globals().update(setup_hardware(sys_linux, sys_pi, btn_states_HW, device, DEVICE_B_txt, globals()))
+from pages.voicebox import create_voicebox_controls, create_voicebox_leds, update_voicebox_status
 
 #------------------------------------------------------------------------------------------
 # MAIN APP
@@ -138,6 +139,19 @@ class P01_DASH(tk.Frame):
         self.btn_units = None
         self.btn_SELECT = []
         self.led_DEV002IC = []
+        self.led_DEV002 = []
+        self.quantity_DEV002 = []
+        self.led_DEV001G001 = []
+        self.led_DEV001G002 = []
+        self.ammount_DEV001G001 = 0
+        self.ammount_DEV001G002 = 0
+        self.btns_DEV001VBBTN = []
+        self.btns_DEV001VBSTBTN = []
+        self.led_DEV001VBS34L01 = []
+        self.led_DEV001VBS34L02 = []
+        self.led_DEV001VBS34L03 = []
+        self.ammount_VB = 0
+        self.middle_index = 0
         self.led_DEV002G007 = []
         self.led_DEV002G008 = []
         self.led_DEV002G009 = []
@@ -189,6 +203,7 @@ class P01_DASH(tk.Frame):
                 button.config(image=active_image)
             else:
                 button.config(image=inactive_image)
+
     #--------------------------------------------------------------------------------------
     # CREATE THE WIDGETS
     #--------------------------------------------------------------------------------------
@@ -1372,7 +1387,6 @@ class P01_DASH(tk.Frame):
         #----------------------------------------------------------------------------------
         # CREATE GAUGES
         #----------------------------------------------------------------------------------        
-        global quantity
         #------------------------------------------------------------------------------
         # DEV001 GAUGES
         #------------------------------------------------------------------------------
@@ -1401,180 +1415,47 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             # DEV001G001 (SIGNAL)
             #--------------------------------------------------------------------------
-            global led_DEV001G001, ammount_DEV001G001
             if theme in THEME_B_txt[:3]:  # THEME 0 1 2
                 x_pos = 10
                 y_pos = 442
                 x_pos_nxt = 31
                 width = 30
                 height = 30
-                ammount_DEV001G001 = 16
+                self.ammount_DEV001G001 = 16
             elif theme in THEME_B_txt[3:11]:  # THEME 3 to 9
                 x_pos = 5
                 y_pos = 465
                 x_pos_nxt = 20
                 width = 20
                 height = 77
-                ammount_DEV001G001 = 20
-            led_DEV001G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV001G001)
+                self.ammount_DEV001G001 = 20
+            self.led_DEV001G001 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, self.ammount_DEV001G001)
             #--------------------------------------------------------------------------
             # DEV001G002 (TUNING)
             #--------------------------------------------------------------------------
-            global led_DEV001G002, ammount_DEV001G002
             if theme in THEME_B_txt[:3]:  # THEME 0 1 2
                 x_pos = 5
                 y_pos = 640
                 x_pos_nxt = 31
                 width = 30
                 height = 30
-                ammount_DEV001G002 = 16
+                self.ammount_DEV001G002 = 16
             elif theme in THEME_B_txt[3:11]:  # THEME 3 to 9
                 x_pos = 5
                 y_pos = 640
                 x_pos_nxt = 20
                 width = 20
                 height = 77
-                ammount_DEV001G002 = 20
-            led_DEV001G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, ammount_DEV001G002)
+                self.ammount_DEV001G002 = 20
+            self.led_DEV001G002 = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, self.ammount_DEV001G002)
             #--------------------------------------------------------------------------
             # VOICEBOX BUTTONS (PILOT S01 S02 OTTO = 8/3) / (S03 S04 S05 S06 MAX =10/6)
             #-------------------------------------------------------------------------- 
-            global btns_DEV001VBBTN
-            global btn_DEV001VBBTN
-            btns_DEV001VBBTN = []
-            if theme in THEME_B_txt[:3] or theme in [THEME_B_txt[7]]: #0 1 2 oder 7
-                x_pos_VBBTN = 1282
-                x_pos_VBBTN2 = 1633
-                y_pos_VBBTN_next = +130
-                y_pos_VBBTN2_next = +130
-                y_pos_VBBTN = 90
-                y_pos_VBBTN2 = 90
-                wh_btn_VBBTN = [115, 71]
-                no_VBBRN = 8
-            else:
-                x_pos_VBBTN = 1282
-                x_pos_VBBTN2 = 1640
-                y_pos_VBBTN_next = +120
-                y_pos_VBBTN2_next = +120
-                y_pos_VBBTN = 30
-                y_pos_VBBTN2 = 30
-                wh_btn_VBBTN = [100, 70]
-                no_VBBRN = 10
-            if theme in THEME_B_txt[:9]: #0 to 8
-                for i in range(no_VBBRN):
-                    if i < (no_VBBRN/2):
-                        btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
-                        btn_DEV001VBBTN.place(x=x_pos_VBBTN, y=y_pos_VBBTN, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
-                        y_pos_VBBTN += y_pos_VBBTN_next
-                        btns_DEV001VBBTN.append(btn_DEV001VBBTN)
-                    else:
-                        btn_DEV001VBBTN = tk.Button(self, **btn_style_imgbtn, command=lambda i=i: [self.master.switch_frame(P01_DASH)])
-                        btn_DEV001VBBTN.place(x=x_pos_VBBTN2, y=y_pos_VBBTN2, width=wh_btn_VBBTN[0], height=wh_btn_VBBTN[1])
-                        y_pos_VBBTN2 += y_pos_VBBTN2_next
-                        btns_DEV001VBBTN.append(btn_DEV001VBBTN)
-                    btns_DEV001VBBTN[i].config(image=localimagelist01[i+4])
-            #--------------------------------------------------------------------------
-            # VOICEBOX STATUS BUTTONS (3)
-            #-------------------------------------------------------------------------- 
-            global btns_DEV001VBSTBTN
-            global btn_DEV001VBSTBTN
-            btns_DEV001VBSTBTN = []
-            if theme in (THEME_B_txt[:3] or THEME_B_txt[7]): #0 1 2 oder 7
-                x_pos_VBSTBTN = 1400
-                y_pos_VBSTBTN_next = +85
-                y_pos_VBSTBTN = 380
-                wh_btn_VBSTBTN = [235, 82]
-                no_VBBRN = 3
-            else:
-                x_pos_VBSTBTN = 1397
-                y_pos_VBSTBTN_next = +85
-                y_pos_VBSTBTN = 410
-                wh_btn_VBSTBTN = [235, 80]
-                no_VBBRN = 3
-            if theme in THEME_B_txt[:9]: #0 to 8
-                for i in range(3):
-                    btn_DEV001VBSTBTN = tk.Label(self, **btn_style_imgbtn)
-                    btn_DEV001VBSTBTN.place(x=x_pos_VBSTBTN, y=y_pos_VBSTBTN, width=wh_btn_VBSTBTN[0], height=wh_btn_VBSTBTN[1])
-                    y_pos_VBSTBTN += +(wh_btn_VBSTBTN[1] +5)
-                    btns_DEV001VBSTBTN.append(btn_DEV001VBSTBTN)
+            create_voicebox_controls(self, theme, THEME_B_txt, btn_style_imgbtn, localimagelist01)
             #--------------------------------------------------------------------------
             # DEV001VBS34 (VOICEBOX)
             #--------------------------------------------------------------------------
-            global led_DEV001VBS34L01
-            global led_gauge_U01VB34L01
-            global led_DEV001VBS34L02
-            global led_gauge_U01VB34L02
-            global led_DEV001VBS34L03
-            global led_gauge_U01VB34L03
-            global ammount_VB
-            global middle_index
-                
-            if theme in THEME_B_txt[:3]: # THEME 0 1 2
-                ammount_VB = 18
-                middle_index = 9  # Index of the middle LED
-            elif theme in THEME_B_txt[3:11]: # THEME 3 to 8
-                ammount_VB = 20
-                middle_index = 10  # Index of the middle LED
-                
-            if theme in THEME_B_txt[0:7]: # THEME 1 to 8
-                led_DEV001VBS34L01 = []
-                led_DEV001VBS34L02 = []
-                led_DEV001VBS34L03 = []
-                y_pos_VBL01 = 10
-                y_pos_VBL02 = 10
-                y_pos_VBL03 = 10
-                for i in range(0, ammount_VB):
-                    led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
-                    y_pos_VBL01 += +20
-                    led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                for i in range(0, ammount_VB):
-                    led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
-                    y_pos_VBL02 += +20
-                    led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
-                for i in range(0, ammount_VB):
-                    led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
-                    y_pos_VBL03 += +20
-                    led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
-            elif theme == THEME_B_txt[8]:
-                led_DEV001VBS34L01 = []
-                led_DEV001VBS34L02 = []
-                led_DEV001VBS34L03 = []
-                y_pos_VBL01 = 10
-                y_pos_VBL02 = 10
-                y_pos_VBL03 = 10
-                for i in range(0, ammount_VB):
-                    led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L01.place(x=1400, y=y_pos_VBL01, width=77, height=20)
-                    y_pos_VBL01 += +20
-                    led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                for i in range(0, ammount_VB):
-                    led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L02.place(x=1477, y=y_pos_VBL02, width=77, height=20)
-                    y_pos_VBL02 += +20
-                    led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
-                for i in range(0, ammount_VB):
-                    led_gauge_U01VB34L03 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L03.place(x=1554, y=y_pos_VBL03, width=77, height=20)
-                    y_pos_VBL03 += +20
-                    led_DEV001VBS34L03.append(led_gauge_U01VB34L03)
-            elif theme == THEME_B_txt[7]:
-                led_DEV001VBS34L01 = []
-                led_DEV001VBS34L02 = []
-                y_pos_VBL01 = 10
-                y_pos_VBL02 = 10
-                for i in range(0, 8):
-                    led_gauge_U01VB34L01 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L01.place(x=1410, y=y_pos_VBL01, width=95, height=35)
-                    y_pos_VBL01 += +45
-                    led_DEV001VBS34L01.append(led_gauge_U01VB34L01)
-                for i in range(0, 8):
-                    led_gauge_U01VB34L02 = tk.Label(self, **btn_style_imgbtn)
-                    led_gauge_U01VB34L02.place(x=1530, y=y_pos_VBL02, width=95, height=35)
-                    y_pos_VBL02 += +45
-                    led_DEV001VBS34L02.append(led_gauge_U01VB34L02)
+            create_voicebox_leds(self, theme, THEME_B_txt, btn_style_imgbtn, ledOF_img_list[74] if theme == THEME_B_txt[0] else None)
         #------------------------------------------------------------------------------
         # DEV002 GAUGES
         #------------------------------------------------------------------------------
@@ -1595,7 +1476,7 @@ class P01_DASH(tk.Frame):
             width02  = [5,  80,  80,  80,  80,  80,  80]
             height02 = [5,  40,  40,  40,  40,  40,  40]
             quant02  = [5,   7,   7,   7,   7,   7,   7]
-            quantity = [1,   2,   3,   4,   5,   6,   7]
+            self.quantity_DEV002 = [1,   2,   3,   4,   5,   6,   7]
             #--------------------------------------------------------------------------
             # DEV002GMASTER (RPM)   #todo
             #--------------------------------------------------------------------------
@@ -1624,9 +1505,8 @@ class P01_DASH(tk.Frame):
             #--------------------------------------------------------------------------
             # DEV002G001-G006
             #--------------------------------------------------------------------------
-            global led_DEV002
-            led_DEV002 = [0,1,2,3,4,5,6]
-            for i in range(len(quantity)):
+            self.led_DEV002 = [None] * len(self.quantity_DEV002)
+            for i in range(len(self.quantity_DEV002)):
                 if theme in THEME_B_txt[:3]:  # THEME 0 1 2
                     x_pos = x_pos01[i]
                     y_pos = y_pos01[i]
@@ -1641,8 +1521,8 @@ class P01_DASH(tk.Frame):
                     width = width02[i]
                     height = height02[i]
                     quant = quant02[i]
-                quantity[i] = quant
-                led_DEV002[i] = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
+                self.quantity_DEV002[i] = quant
+                self.led_DEV002[i] = create_gauges(self, x_pos, y_pos, x_pos_nxt, width, height, quant)
             #--------------------------------------------------------------------------
             # DEV002G007 (VDC)
             #--------------------------------------------------------------------------
@@ -2162,10 +2042,10 @@ class P01_DASH(tk.Frame):
                     l_img42 = ledFU_img_list[16] #DEV002GAUGES 2GN
                     l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
                     l_img44 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                    l_img18 = ledFU_img_list[48] #VOICEBOX34 ONMAX
-                    l_img19 = ledMI_img_list[48] #VOICEBOX34 ONNORM
-                    l_img20 = ledLO_img_list[48] #VOICEBOX34 ONMIN
-                    l_img23 = ledOF_img_list[48]
+                    l_img18 = ledFU_img_list[74] #VOICEBOX34 BULB_RD ONMAX
+                    l_img19 = ledMI_img_list[74] #VOICEBOX34 BULB_RD ONNORM
+                    l_img20 = ledLO_img_list[74] #VOICEBOX34 BULB_RD ONMIN
+                    l_img23 = ledOF_img_list[74] #VOICEBOX34 BULB_RD OF
                 elif style == STYLE_B_txt[1]:
                     l_img30 = ledOF_img_list[19] #DEV002GAUGES 1GN
                     l_img31 = ledOF_img_list[19] #DEV002GAUGES 1RD
@@ -2177,10 +2057,10 @@ class P01_DASH(tk.Frame):
                     l_img42 = ledFU_img_list[16] #DEV002GAUGES 2GN
                     l_img43 = ledFU_img_list[18] #DEV002GAUGES 2RD
                     l_img44 = ledFU_img_list[18] #DEV002GAUGES 2RD
-                    l_img18 = ledFU_img_list[46] #VOICEBOX34 ONMAX
-                    l_img19 = ledMI_img_list[46] #VOICEBOX34 ONNORM
-                    l_img20 = ledLO_img_list[46] #VOICEBOX34 ONMIN
-                    l_img23 = ledOF_img_list[46]
+                    l_img18 = ledFU_img_list[74] #VOICEBOX34 BULB_RD ONMAX
+                    l_img19 = ledMI_img_list[74] #VOICEBOX34 BULB_RD ONNORM
+                    l_img20 = ledLO_img_list[74] #VOICEBOX34 BULB_RD ONMIN
+                    l_img23 = ledOF_img_list[74] #VOICEBOX34 BULB_RD OF
             elif theme == THEME_B_txt[1]:
                 localimagelist01 = list(vbON_S01_img_list) #VOICEBOX
                 localimagelist02 = list(vbOF_S01_img_list)
@@ -2609,20 +2489,20 @@ class P01_DASH(tk.Frame):
                 seven_seg_DEV001G001 = val_cnt_sim[1]
 
             # Wert auf Bereich normalisieren
-            val_DEV001G001 = seven_seg_DEV001G001 / ammount_DEV001G001
+            val_DEV001G001 = seven_seg_DEV001G001 / self.ammount_DEV001G001
 
             # LED-Grenze berechnen
-            perc_DEV001G001 = int(val_DEV001G001 - val_min[1]) * (ammount_DEV001G001 - val_conf_min[1]) / (ammount_DEV001G001 - val_conf_min[1]) + val_conf_min[1]
+            perc_DEV001G001 = int(val_DEV001G001 - val_min[1]) * (self.ammount_DEV001G001 - val_conf_min[1]) / (self.ammount_DEV001G001 - val_conf_min[1]) + val_conf_min[1]
 
             # ----------------------------------------------------------------------
             # LEDs zeichnen – aber nur bei Änderung
             # ----------------------------------------------------------------------
-            for i in range(val_conf_min[1], ammount_DEV001G001):
+            for i in range(val_conf_min[1], self.ammount_DEV001G001):
                 is_on = btn_states_FNKT[3] and (perc_DEV001G001 >= i + 1)
                 img = l_img13 if is_on else l_img14
 
                 if self.old_signal_leds.get(i) != img:
-                    led_DEV001G001[i].config(image=img)
+                    self.led_DEV001G001[i].config(image=img)
                     self.old_signal_leds[i] = img              
             #------------------------------------------------------------------------------
             # UPDATE DEV001G002 (TUNING)
@@ -2640,20 +2520,20 @@ class P01_DASH(tk.Frame):
                 seven_seg_DEV001G002 = val_cnt_sim[2]
 
             # Wert auf Bereich normalisieren
-            val_DEV001G002 = seven_seg_DEV001G002 / ammount_DEV001G002
+            val_DEV001G002 = seven_seg_DEV001G002 / self.ammount_DEV001G002
 
             # LED-Grenze berechnen
-            perc_DEV001G002 = int(val_DEV001G002 - val_min[2]) * (ammount_DEV001G002 - val_conf_min[2]) / (ammount_DEV001G002 - val_conf_min[2]) + val_conf_min[2]
+            perc_DEV001G002 = int(val_DEV001G002 - val_min[2]) * (self.ammount_DEV001G002 - val_conf_min[2]) / (self.ammount_DEV001G002 - val_conf_min[2]) + val_conf_min[2]
 
             # ----------------------------------------------------------------------
             # LEDs zeichnen – aber nur bei Änderung
             # ----------------------------------------------------------------------
-            for i in range(val_conf_min[1], ammount_DEV001G002):
+            for i in range(val_conf_min[2], self.ammount_DEV001G002):
                 is_on = btn_states_FNKT[3] and (perc_DEV001G002 >= i + 1)
                 img = l_img13 if is_on else l_img14
 
                 if self.old_tuning_leds.get(i) != img:
-                    led_DEV001G002[i].config(image=img)
+                    self.led_DEV001G002[i].config(image=img)
                     self.old_tuning_leds[i] = img
             #------------------------------------------------------------------------------
             # DEV001VBS34 (VOICEBOX)
@@ -2665,179 +2545,163 @@ class P01_DASH(tk.Frame):
                 DEV001VBS34 = random.randint(0, 8)
                 DEV001VBOTTO = random.randint(0, 8)
                 DEV001VBMAX = random.randint(0, 8)
-                if theme in THEME_B_txt[1:7]: # THEME 1 to 6 or 8
-                    for i in range(ammount_VB):
-                        distance_from_middle = abs(i - middle_index)
+                if theme == THEME_B_txt[0]:
+                    if not hasattr(self, "voicebox_blink_level"):
+                        self.voicebox_blink_level = 0
+                        self.voicebox_blink_direction = 1
+
+                    self.voicebox_blink_level += self.voicebox_blink_direction
+                    if self.voicebox_blink_level >= 3:
+                        self.voicebox_blink_level = 3
+                        self.voicebox_blink_direction = -1
+                    elif self.voicebox_blink_level <= 0:
+                        self.voicebox_blink_level = 0
+                        self.voicebox_blink_direction = 1
+
+                    voicebox_bulb_images = [l_img23, l_img20, l_img19, l_img18]
+                    self.led_DEV001VBS34L01[0].config(image=voicebox_bulb_images[self.voicebox_blink_level])
+                elif theme in THEME_B_txt[1:7]: # THEME 1 to 6 or 8
+                    for i in range(self.ammount_VB):
+                        distance_from_middle = abs(i - self.middle_index)
                         if style == STYLE_B_txt[0]:
                             #LEFT
                             if distance_from_middle-4 >= (DEV001VBS34):
-                                led_DEV001VBS34L01[i].config(image=l_img18)
+                                self.led_DEV001VBS34L01[i].config(image=l_img18)
                             elif distance_from_middle-3 == DEV001VBS34:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
+                                self.led_DEV001VBS34L01[i].config(image=l_img19)
                             elif distance_from_middle-2 == DEV001VBS34:
-                                led_DEV001VBS34L01[i].config(image=l_img20)
+                                self.led_DEV001VBS34L01[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
+                                self.led_DEV001VBS34L01[i].config(image=l_img23)
                             #RIGHT
                             if distance_from_middle-4 >= (DEV001VBS34):
-                                led_DEV001VBS34L03[i].config(image=l_img18)
+                                self.led_DEV001VBS34L03[i].config(image=l_img18)
                             elif distance_from_middle-3 == DEV001VBS34:
-                                led_DEV001VBS34L03[i].config(image=l_img19)
+                                self.led_DEV001VBS34L03[i].config(image=l_img19)
                             elif distance_from_middle-2 == DEV001VBS34:
-                                led_DEV001VBS34L03[i].config(image=l_img20)
+                                self.led_DEV001VBS34L03[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
+                                self.led_DEV001VBS34L03[i].config(image=l_img23)
                             #MIDDLE
                             if distance_from_middle <= DEV001VBS34-4:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
+                                self.led_DEV001VBS34L02[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 -3:
-                                led_DEV001VBS34L02[i].config(image=l_img19)
+                                self.led_DEV001VBS34L02[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBS34 -2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
+                                self.led_DEV001VBS34L02[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L02[i].config(image=l_img23)
+                                self.led_DEV001VBS34L02[i].config(image=l_img23)
                         elif style == STYLE_B_txt[1]:
                             #LEFT
                             if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L01[i].config(image=l_img18)
+                                self.led_DEV001VBS34L01[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
+                                self.led_DEV001VBS34L01[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBS34 - 2:
-                                led_DEV001VBS34L01[i].config(image=l_img20)
+                                self.led_DEV001VBS34L01[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
+                                self.led_DEV001VBS34L01[i].config(image=l_img23)
                             #RIGHT
                             if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L03[i].config(image=l_img18)
+                                self.led_DEV001VBS34L03[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L03[i].config(image=l_img19)
+                                self.led_DEV001VBS34L03[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBS34 - 2:
-                                led_DEV001VBS34L03[i].config(image=l_img20)
+                                self.led_DEV001VBS34L03[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
+                                self.led_DEV001VBS34L03[i].config(image=l_img23)
                             #MIDDLE
                             if distance_from_middle <= DEV001VBS34:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
+                                self.led_DEV001VBS34L02[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 + 1:
-                                led_DEV001VBS34L02[i].config(image=l_img19)
+                                self.led_DEV001VBS34L02[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBS34 + 2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
+                                self.led_DEV001VBS34L02[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L02[i].config(image=l_img23)
+                                self.led_DEV001VBS34L02[i].config(image=l_img23)
                 elif theme == THEME_B_txt[8]:
-                    for i in range(ammount_VB):
-                        distance_from_middle = abs(i - middle_index)
+                    for i in range(self.ammount_VB):
+                        distance_from_middle = abs(i - self.middle_index)
                         if style == STYLE_B_txt[0]:
                             #LEFT
                             if distance_from_middle >= (DEV001VBS34-6):
-                                led_DEV001VBS34L01[i].config(image=l_img18)
+                                self.led_DEV001VBS34L01[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
+                                self.led_DEV001VBS34L01[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBMAX:
-                                led_DEV001VBS34L01[i].config(image=l_img20)
+                                self.led_DEV001VBS34L01[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
+                                self.led_DEV001VBS34L01[i].config(image=l_img23)
                             #RIGHT
                             if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L03[i].config(image=l_img23)
+                                self.led_DEV001VBS34L03[i].config(image=l_img23)
                             else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
+                                self.led_DEV001VBS34L03[i].config(image=l_img23)
                             #MIDDLE
                             if distance_from_middle <= DEV001VBMAX:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
+                                self.led_DEV001VBS34L02[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 + 1:
-                                led_DEV001VBS34L02[i].config(image=l_img19)
+                                self.led_DEV001VBS34L02[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBOTTO + 2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
+                                self.led_DEV001VBS34L02[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L02[i].config(image=l_img23)
+                                self.led_DEV001VBS34L02[i].config(image=l_img23)
                         elif style == STYLE_B_txt[1]:
                             #LEFT
                             if distance_from_middle <= (DEV001VBS34-6):
-                                led_DEV001VBS34L01[i].config(image=l_img18)
+                                self.led_DEV001VBS34L01[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 - 3:
-                                led_DEV001VBS34L01[i].config(image=l_img19)
+                                self.led_DEV001VBS34L01[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBMAX:
-                                led_DEV001VBS34L01[i].config(image=l_img20)
+                                self.led_DEV001VBS34L01[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L01[i].config(image=l_img23)
+                                self.led_DEV001VBS34L01[i].config(image=l_img23)
                             #RIGHT
                             if distance_from_middle <= (DEV001VBS34-4):
-                                led_DEV001VBS34L03[i].config(image=l_img23)
+                                self.led_DEV001VBS34L03[i].config(image=l_img23)
                             else:
-                                led_DEV001VBS34L03[i].config(image=l_img23)
+                                self.led_DEV001VBS34L03[i].config(image=l_img23)
                             #MIDDLE
                             if distance_from_middle <= DEV001VBMAX:
-                                led_DEV001VBS34L02[i].config(image=l_img18)
+                                self.led_DEV001VBS34L02[i].config(image=l_img18)
                             elif distance_from_middle == DEV001VBS34 + 1:
-                                led_DEV001VBS34L02[i].config(image=l_img19)
+                                self.led_DEV001VBS34L02[i].config(image=l_img19)
                             elif distance_from_middle == DEV001VBOTTO + 2:
-                                led_DEV001VBS34L02[i].config(image=l_img20)
+                                self.led_DEV001VBS34L02[i].config(image=l_img20)
                             else:
-                                led_DEV001VBS34L02[i].config(image=l_img23)
+                                self.led_DEV001VBS34L02[i].config(image=l_img23)
                 elif theme == THEME_B_txt[7]:
                     for i in range (0, 8):
                         if DEV001VBS34 <= i:
-                            led_DEV001VBS34L01[i].config(image=l_img18)
+                            self.led_DEV001VBS34L01[i].config(image=l_img18)
                         else:
-                            led_DEV001VBS34L01[i].config(image=l_img20)
+                            self.led_DEV001VBS34L01[i].config(image=l_img20)
                         if DEV001VBOTTO <= i:
-                            led_DEV001VBS34L02[i].config(image=l_img19)
+                            self.led_DEV001VBS34L02[i].config(image=l_img19)
                         else:
-                            led_DEV001VBS34L02[i].config(image=l_img23)
+                            self.led_DEV001VBS34L02[i].config(image=l_img23)
             else:
                 #----------------------------------------------------------------------
                 # ALL 20 LEDs OFF FOR FASTER CYCLE TIME
                 #----------------------------------------------------------------------
-                if theme in THEME_B_txt[1:9]: # THEME 1 to 8
-                    for i in range(ammount_VB):
-                        led_DEV001VBS34L01[i].config(image=l_img23)
-                        led_DEV001VBS34L02[i].config(image=l_img23)
-                        led_DEV001VBS34L03[i].config(image=l_img23)
+                if theme == THEME_B_txt[0]:
+                    self.voicebox_blink_level = 0
+                    self.voicebox_blink_direction = 1
+                    if self.led_DEV001VBS34L01:
+                        self.led_DEV001VBS34L01[0].config(image=l_img23)
+                elif theme in THEME_B_txt[1:9]: # THEME 1 to 8
+                    for i in range(self.ammount_VB):
+                        self.led_DEV001VBS34L01[i].config(image=l_img23)
+                        self.led_DEV001VBS34L02[i].config(image=l_img23)
+                        self.led_DEV001VBS34L03[i].config(image=l_img23)
                 elif theme == THEME_B_txt[7]:
                     for i in range(0, 8):
-                        led_DEV001VBS34L01[i].config(image=l_img20)
-                        led_DEV001VBS34L02[i].config(image=l_img23)
+                        self.led_DEV001VBS34L01[i].config(image=l_img20)
+                        self.led_DEV001VBS34L02[i].config(image=l_img23)
             #------------------------------------------------------------------------------
             # VOICEBOX STATUS BUTTONS (3)
             #------------------------------------------------------------------------------ 
-            # Initialisieren beim ersten Aufruf
-            if not hasattr(self, "old_vbst_images"):
-                self.old_vbst_images = [None, None, None]
-
-            if theme in THEME_B_txt[:9]:
-                if btn_states_FNKT[3]:
-                    # ----------------------------------------
-                    # LED 0 (speed ≤ 55)
-                    # ----------------------------------------
-                    img0 = localimagelist01[14] if speed_int <= 55 else localimagelist02[14]
-                    if self.old_vbst_images[0] != img0:
-                        btns_DEV001VBSTBTN[0].config(image=img0)
-                        self.old_vbst_images[0] = img0
-
-                    # ----------------------------------------
-                    # LED 1 (55 ≤ speed ≤ 100)
-                    # ----------------------------------------
-                    img1 = localimagelist01[15] if 55 <= speed_int <= 100 else localimagelist02[15]
-                    if self.old_vbst_images[1] != img1:
-                        btns_DEV001VBSTBTN[1].config(image=img1)
-                        self.old_vbst_images[1] = img1
-
-                    # ----------------------------------------
-                    # LED 2 (speed ≥ 100)
-                    # ----------------------------------------
-                    img2 = localimagelist01[16] if speed_int >= 100 else localimagelist02[16]
-                    if self.old_vbst_images[2] != img2:
-                        btns_DEV001VBSTBTN[2].config(image=img2)
-                        self.old_vbst_images[2] = img2
-
-                else:
-                    # Alles aus (wenn Funktion deaktiviert)
-                    for i, idx in enumerate([14, 15, 16]):
-                        img = localimagelist02[idx]
-                        if self.old_vbst_images[i] != img:
-                            btns_DEV001VBSTBTN[i].config(image=img)
-                            self.old_vbst_images[i] = img
+            update_voicebox_status(self, theme, THEME_B_txt, btn_states_FNKT, speed_int, localimagelist01, localimagelist02)
         #----------------------------------------------------------------------------------
         # DEV002 GAUGES
         #----------------------------------------------------------------------------------
@@ -2890,12 +2754,12 @@ class P01_DASH(tk.Frame):
 
             val_DEV002 = [0,1,2,3,4,5,6]
             for i in range(len(val_DEV002)):
-                val_DEV002[i] = seg_DEV002[i]/quantity[i]
+                val_DEV002[i] = seg_DEV002[i]/self.quantity_DEV002[i]
             
             # CONVERT VALUE FOR xx LEDS
             perc_DEV002 = [0,1,2,3,4,5,6]
             for i in range(len(perc_DEV002)):
-                perc_DEV002[i] = int (val_DEV002[i] - val_min[i]) * (quantity[i] - val_conf_min[i]) / (quantity[i] - val_conf_min[i]) + val_conf_min[i]
+                perc_DEV002[i] = int (val_DEV002[i] - val_min[i]) * (self.quantity_DEV002[i] - val_conf_min[i]) / (self.quantity_DEV002[i] - val_conf_min[i]) + val_conf_min[i]
             #------------------------------------------------------------------------------
             # UPDATE DEV002G000 (RPM)  #todo
             #------------------------------------------------------------------------------
@@ -2936,15 +2800,15 @@ class P01_DASH(tk.Frame):
             
             if btn_states_FNKT[3]:
                 for param_index, img1_low, img2_low, img1_high, img2_high in parameters:
-                    for i in range(val_conf_min[param_index], quantity[param_index]):
+                    for i in range(val_conf_min[param_index], self.quantity_DEV002[param_index]):
                         if perc_DEV002[param_index] >= i + 1:
-                            led_DEV002[param_index][i].config(image=img1_low if i < 8 else img2_low)
+                            self.led_DEV002[param_index][i].config(image=img1_low if i < 8 else img2_low)
                         else:
-                            led_DEV002[param_index][i].config(image=img1_high if i < 8 else img2_high)
+                            self.led_DEV002[param_index][i].config(image=img1_high if i < 8 else img2_high)
             else:
                 for param_index, img1_low, img2_low, img1_high, img2_high in parameters:
-                    for i in range(val_conf_min[param_index], quantity[param_index]):
-                        led_DEV002[param_index][i].config(image=img1_high if i < 8 else img2_high)
+                    for i in range(val_conf_min[param_index], self.quantity_DEV002[param_index]):
+                        self.led_DEV002[param_index][i].config(image=img1_high if i < 8 else img2_high)
             #------------------------------------------------------------------------------
             # UPDATE DEV002G007 (VDC)
             #------------------------------------------------------------------------------

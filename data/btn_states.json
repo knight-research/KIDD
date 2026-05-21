@@ -1,14 +1,14 @@
 {
     "main_config": {
-        "device": "DEV002",
-        "style": "KARR",
-        "theme": "K2_S05",
+        "device": "DEV001",
+        "style": "KITT",
+        "theme": "PILOT",
         "system": "GREEN",
         "language": "DEU"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb01",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,
