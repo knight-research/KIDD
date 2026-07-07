@@ -1,4 +1,5 @@
 from pages.page_context import sync_context, update_context
+from image_loader import LazyImageList
 
 sync_context(globals())
 
@@ -10,6 +11,7 @@ class P00_BOOT(tk.Frame):
     _total_count = 0  # wird dynamisch gezÃƒÆ’Ã‚Â¤hlt
     def __init__(self, master):
         sync_context(globals())
+        P00_BOOT._loaded_count = 0
         P00_BOOT._total_count = sum([
             2,  # background (normal + dash)
             4,  # led (OF, LO, MI, FU)
@@ -85,11 +87,10 @@ class P00_BOOT(tk.Frame):
             states_txt_act = states_txt_de
 
     def load_images_from_folder(self, path, suffix=".jpg"):
-        images = [ImageTk.PhotoImage(Image.open(os.path.join(path, f)))
-                  for f in sorted(os.listdir(path), key=str.lower) if f.endswith(suffix)]
+        images = LazyImageList(path, suffix)
         P00_BOOT._loaded_count += 1
         percent = int((P00_BOOT._loaded_count / P00_BOOT._total_count) * 100)
-        print(f"{percent}% geladen... ({os.path.basename(path)})")
+        print(f"{percent}% vorbereitet... ({os.path.basename(path)})")
         return images
 
     def load_background_images(self):

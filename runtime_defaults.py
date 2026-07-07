@@ -18,13 +18,8 @@ def load_runtime_default_symbols(sys_linux, socket):
         "mp3files_list": None,
         "snd_folders": [],
         "snd_btn_txt": "",
-        "lbls_sysinfo": [],
         "carno": carno,
         "devno": devno,
-        "count_ctr_SIM_DEV001G000": 0,
-        "val_cnt_sim": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "val_cnt_sim_updn": [True, True, True, True, True, True, True, True, True, True, True, True],
-        "update_duration": 0.0,
         "time_cnt": 1000,  # in ms
         "time_digital": 100,
         "time_conf": 500,
@@ -114,9 +109,4 @@ def load_runtime_default_symbols(sys_linux, socket):
         "sys_memmax": "8.88",
         "sys_cputemp": "88.88",
         "sys_cpuload": "88.88",
-        "vinfo": None,
-        "vtext": None,
-        "activation_word_info": None,
-        "activation_word_heard": False,
-        "command_word_heard": False,
     }

@@ -26,6 +26,7 @@
     <Compile Include="btn_state_manager.py" />
     <Compile Include="config_state.py" />
     <Compile Include="hardware_setup.py" />
+    <Compile Include="image_loader.py" />
     <Compile Include="image_paths.py" />
     <Compile Include="import_all.py" />
     <Compile Include="import_linux.py" />

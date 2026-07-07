@@ -2,7 +2,7 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "PILOT",
+        "theme": "K2_S05",
         "system": "GREEN",
         "language": "DEU"
     },
@@ -183,7 +183,7 @@
             ]
         },
         "DEV002": {
-            "PB": "pb06",
+            "PB": "pb09",
             "FNKT": [
                 false,
                 false,

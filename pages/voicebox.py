@@ -1,4 +1,9 @@
+import random
 import tkinter as tk
+
+
+def _set_image(page, widget, image):
+    page._set_widget_image(("voicebox", id(widget)), widget, image)
 
 
 def create_voicebox_controls(page, theme, theme_names, btn_style_imgbtn, on_images):
@@ -156,3 +161,130 @@ def update_voicebox_status(page, theme, theme_names, btn_states_FNKT, speed_int,
                 if page.old_vbst_images[i] != img:
                     page.btns_DEV001VBSTBTN[i].config(image=img)
                     page.old_vbst_images[i] = img
+
+
+def update_voicebox_animation(page, theme, theme_names, style, style_names, enabled, full_image, mid_image, low_image, off_image):
+    if not enabled:
+        page.voicebox_blink_level = 0
+        if theme == theme_names[0]:
+            if page.led_DEV001VBS34L01:
+                _set_image(page, page.led_DEV001VBS34L01[0], off_image)
+        elif theme == theme_names[7]:
+            for i in range(8):
+                _set_image(page, page.led_DEV001VBS34L01[i], low_image)
+                _set_image(page, page.led_DEV001VBS34L02[i], off_image)
+        elif theme in theme_names[1:9]:
+            for i in range(page.ammount_VB):
+                _set_image(page, page.led_DEV001VBS34L01[i], off_image)
+                _set_image(page, page.led_DEV001VBS34L02[i], off_image)
+                _set_image(page, page.led_DEV001VBS34L03[i], off_image)
+        return
+
+    DEV001VBS34 = random.randint(0, 8)
+    DEV001VBOTTO = random.randint(0, 8)
+    DEV001VBMAX = random.randint(0, 8)
+
+    if theme == theme_names[0]:
+        if not hasattr(page, "voicebox_blink_level"):
+            page.voicebox_blink_level = 0
+
+        target_level = min(3, DEV001VBS34 // 2)
+        if page.voicebox_blink_level < target_level:
+            page.voicebox_blink_level += 1
+        elif page.voicebox_blink_level > target_level:
+            page.voicebox_blink_level -= 1
+
+        bulb_images = [off_image, low_image, mid_image, full_image]
+        _set_image(page, page.led_DEV001VBS34L01[0], bulb_images[page.voicebox_blink_level])
+        return
+
+    if theme in theme_names[1:7]:
+        for i in range(page.ammount_VB):
+            distance_from_middle = abs(i - page.middle_index)
+            if style == style_names[0]:
+                if distance_from_middle - 4 >= DEV001VBS34:
+                    _set_image(page, page.led_DEV001VBS34L01[i], full_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], full_image)
+                elif distance_from_middle - 3 == DEV001VBS34:
+                    _set_image(page, page.led_DEV001VBS34L01[i], mid_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], mid_image)
+                elif distance_from_middle - 2 == DEV001VBS34:
+                    _set_image(page, page.led_DEV001VBS34L01[i], low_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], low_image)
+                else:
+                    _set_image(page, page.led_DEV001VBS34L01[i], off_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], off_image)
+
+                if distance_from_middle <= DEV001VBS34 - 4:
+                    _set_image(page, page.led_DEV001VBS34L02[i], full_image)
+                elif distance_from_middle == DEV001VBS34 - 3:
+                    _set_image(page, page.led_DEV001VBS34L02[i], mid_image)
+                elif distance_from_middle == DEV001VBS34 - 2:
+                    _set_image(page, page.led_DEV001VBS34L02[i], low_image)
+                else:
+                    _set_image(page, page.led_DEV001VBS34L02[i], off_image)
+            elif style == style_names[1]:
+                if distance_from_middle <= DEV001VBS34 - 4:
+                    _set_image(page, page.led_DEV001VBS34L01[i], full_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], full_image)
+                elif distance_from_middle == DEV001VBS34 - 3:
+                    _set_image(page, page.led_DEV001VBS34L01[i], mid_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], mid_image)
+                elif distance_from_middle == DEV001VBS34 - 2:
+                    _set_image(page, page.led_DEV001VBS34L01[i], low_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], low_image)
+                else:
+                    _set_image(page, page.led_DEV001VBS34L01[i], off_image)
+                    _set_image(page, page.led_DEV001VBS34L03[i], off_image)
+
+                if distance_from_middle <= DEV001VBS34:
+                    _set_image(page, page.led_DEV001VBS34L02[i], full_image)
+                elif distance_from_middle == DEV001VBS34 + 1:
+                    _set_image(page, page.led_DEV001VBS34L02[i], mid_image)
+                elif distance_from_middle == DEV001VBS34 + 2:
+                    _set_image(page, page.led_DEV001VBS34L02[i], low_image)
+                else:
+                    _set_image(page, page.led_DEV001VBS34L02[i], off_image)
+        return
+
+    if theme == theme_names[8]:
+        for i in range(page.ammount_VB):
+            distance_from_middle = abs(i - page.middle_index)
+            if style == style_names[0]:
+                left_on = distance_from_middle >= DEV001VBS34 - 6
+            else:
+                left_on = distance_from_middle <= DEV001VBS34 - 6
+
+            if left_on:
+                _set_image(page, page.led_DEV001VBS34L01[i], full_image)
+            elif distance_from_middle == DEV001VBS34 - 3:
+                _set_image(page, page.led_DEV001VBS34L01[i], mid_image)
+            elif distance_from_middle == DEV001VBMAX:
+                _set_image(page, page.led_DEV001VBS34L01[i], low_image)
+            else:
+                _set_image(page, page.led_DEV001VBS34L01[i], off_image)
+
+            _set_image(page, page.led_DEV001VBS34L03[i], off_image)
+
+            if distance_from_middle <= DEV001VBMAX:
+                _set_image(page, page.led_DEV001VBS34L02[i], full_image)
+            elif distance_from_middle == DEV001VBS34 + 1:
+                _set_image(page, page.led_DEV001VBS34L02[i], mid_image)
+            elif distance_from_middle == DEV001VBOTTO + 2:
+                _set_image(page, page.led_DEV001VBS34L02[i], low_image)
+            else:
+                _set_image(page, page.led_DEV001VBS34L02[i], off_image)
+        return
+
+    if theme == theme_names[7]:
+        for i in range(8):
+            _set_image(
+                page,
+                page.led_DEV001VBS34L01[i],
+                full_image if DEV001VBS34 <= i else low_image,
+            )
+            _set_image(
+                page,
+                page.led_DEV001VBS34L02[i],
+                mid_image if DEV001VBOTTO <= i else off_image,
+            )
