@@ -14,10 +14,10 @@ def load_platform_symbols(sys_win, sys_linux, sys_pi):
     symbols = {}
 
     if sys_win:
-        symbols.update(_public_symbols("import_win"))
+        symbols.update(_public_symbols("setup.import_win"))
     elif sys_linux:
-        symbols.update(_public_symbols("import_linux"))
+        symbols.update(_public_symbols("setup.import_linux"))
         if sys_pi:
-            symbols.update(_public_symbols("import_pi"))
+            symbols.update(_public_symbols("setup.import_pi"))
 
     return symbols

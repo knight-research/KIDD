@@ -22,16 +22,20 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app_version.py" />
-    <Compile Include="btn_state_manager.py" />
-    <Compile Include="config_state.py" />
-    <Compile Include="hardware_setup.py" />
-    <Compile Include="image_loader.py" />
-    <Compile Include="image_paths.py" />
-    <Compile Include="import_all.py" />
-    <Compile Include="import_linux.py" />
-    <Compile Include="import_pi.py" />
-    <Compile Include="import_win.py" />
+    <Compile Include="functions\app_controller.py" />
+    <Compile Include="functions\app_version.py" />
+    <Compile Include="functions\btn_state_manager.py" />
+    <Compile Include="functions\favorite_manager.py" />
+    <Compile Include="functions\image_loader.py" />
+    <Compile Include="functions\image_paths.py" />
+    <Compile Include="functions\text_lists.py" />
+    <Compile Include="functions\__init__.py" />
+    <Compile Include="setup\config_state.py" />
+    <Compile Include="setup\hardware_setup.py" />
+    <Compile Include="setup\import_all.py" />
+    <Compile Include="setup\import_linux.py" />
+    <Compile Include="setup\import_pi.py" />
+    <Compile Include="setup\import_win.py" />
     <Compile Include="main.py" />
     <Compile Include="pages\P00_BOOT.py" />
     <Compile Include="pages\P02_QOPT.py" />
@@ -47,17 +51,18 @@
     <Compile Include="pages\page_context.py" />
     <Compile Include="pages\voicebox.py" />
     <Compile Include="pages\__init__.py" />
-    <Compile Include="platform_detection.py" />
-    <Compile Include="platform_imports.py" />
-    <Compile Include="runtime_defaults.py" />
-    <Compile Include="style_config.py" />
-    <Compile Include="text_lists.py" />
-    <Compile Include="update.py" />
-    <Compile Include="_fake_GPIO.py" />
+    <Compile Include="setup\platform_detection.py" />
+    <Compile Include="setup\platform_imports.py" />
+    <Compile Include="setup\runtime_defaults.py" />
+    <Compile Include="setup\style_config.py" />
+    <Compile Include="setup\update.py" />
+    <Compile Include="setup\_fake_GPIO.py" />
+    <Compile Include="setup\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data\" />
     <Folder Include="fonts\" />
+    <Folder Include="functions\" />
     <Folder Include="images\" />
     <Folder Include="images\000_bg\" />
     <Folder Include="images\000_bg\DEV001\" />
@@ -128,6 +133,7 @@
     <Folder Include="images\sys_new\not_used\" />
     <Folder Include="images\sys_new\not_used\speed\" />
     <Folder Include="pages\" />
+    <Folder Include="setup\" />
     <Folder Include="SOUND\" />
     <Folder Include="SOUND\BTTF\" />
     <Folder Include="SOUND\DTMF\" />

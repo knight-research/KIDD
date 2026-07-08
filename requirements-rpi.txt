@@ -1,0 +1,8 @@
+# Raspberry Pi / I2C hardware support
+smbus2
+RPi.GPIO
+adafruit-ads1x15
+adafruit-circuitpython-ads1x15
+adafruit-circuitpython-aw9523
+adafruit-circuitpython-mcp230xx
+Adafruit-PCA9685

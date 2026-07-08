@@ -16,7 +16,7 @@ import time
 import threading
 import websocket
 
-from btn_state_manager import ButtonStateManager
+from functions.btn_state_manager import ButtonStateManager
 from datetime import timedelta
 from PIL import ImageTk, Image
 import speech_recognition as sr

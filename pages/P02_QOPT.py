@@ -151,8 +151,12 @@ class P02_QOPT(tk.Frame):
         # QOPT BUTTONS
         #----------------------------------------------------------------------------------
         for i in range(btn_qopt_place):
-            if btn_states_qopt[i]:
-                btns_qopt[i].config(text=states_txt_act[1], fg=sys_clr[10])
+            favorite = qopt_favorites[i]
+            status = read._favorite_status(favorite["fav_index"])
+            lbls_qopt[i].config(text=favorite["label"])
+            btns_qopt[i].config(text=status)
+            if status == states_txt_act[1]:
+                btns_qopt[i].config(fg=sys_clr[10])
             else:
-                btns_qopt[i].config(text=states_txt_act[0], fg=sys_clr[11])
+                btns_qopt[i].config(fg=sys_clr[11])
         self.update_job = self.after(1000, self.update_page)

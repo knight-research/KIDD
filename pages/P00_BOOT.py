@@ -1,5 +1,5 @@
 from pages.page_context import sync_context, update_context
-from image_loader import LazyImageList
+from functions.image_loader import LazyImageList
 
 sync_context(globals())
 

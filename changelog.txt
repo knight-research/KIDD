@@ -1,0 +1,74 @@
+# Changelog
+
+## v2.2.20 - 2026-07-07-1537
+
+- Cleaned up the project root by moving reusable helpers into `functions/` and setup/platform modules into `setup/`.
+- Updated imports and `KIDD.pyproj` compile entries for the new folder structure.
+- Updated README project layout documentation for the new folders.
+
+## v2.2.19 - 2026-07-07-1529
+
+- Moved QOPT favorite mapping, labeling, status, and target resolution into `favorite_manager.py`.
+- Added regression tests for device-specific favorite limits, DEV002 relay favorites, source status text, and original action mapping.
+
+## v2.2.18 - 2026-07-07-1523
+
+- Limited QOPT favorite discovery to the active device's valid favorite range so DEV002 relay favorites are not shown on DEV001.
+- Synchronized all button state lists when switching devices from the theme/setup controls.
+
+## v2.2.17 - 2026-07-07-1520
+
+- Fixed Setup favorite buttons reverting after being disabled by synchronizing the page-local favorite state immediately after toggles.
+
+## v2.2.16 - 2026-07-07-1518
+
+- Fixed first-click Setup favorite button recoloring by using the new state returned from the controller toggle.
+- Published the loaded sound folder and sound file lists back to the shared context for Quicksound button setup.
+
+## v2.2.15 - 2026-07-07-1514
+
+- Fixed QOPT status text lookup when `states_txt_act` is not present in the controller namespace.
+- Updated Setup favorite buttons to recolor immediately when toggled.
+
+## v2.2.14 - 2026-07-07-1511
+
+- Fixed QOPT favorite mapping so it no longer depends on Setup page `quant_btns_*` globals.
+- Updated Setup favorite `F` buttons to use an active background color when enabled.
+
+## v2.2.13 - 2026-07-07-1508
+
+- Added QOPT favorite mapping so active setup `F` buttons populate the next free QOPT slots.
+- QOPT slots now show the source function label above the button and the current status on the button.
+- QOPT favorite buttons now trigger the original HW, SW, or DEV002 relay function.
+
+## v2.2.12 - 2026-07-07-1504
+
+- Fixed QOPT page state after controller extraction by publishing generated QOPT buttons and count back to the shared page context.
+
+## v2.2.11 - 2026-07-07-1501
+
+- Fixed DEV002 sysinfo meter updates by ensuring the secondary 7-segment label exists before updating it.
+
+## v2.2.10 - 2026-07-07-1459
+
+- Fixed button callbacks after controller extraction by publishing changed button and relay state back to the shared page context.
+
+## v2.2.9 - 2026-07-07-1454
+
+- Published the active style color palette back to the main page context after style changes.
+
+## v2.2.8 - 2026-07-07-1454
+
+- Moved the former `myfunctions` controller out of `main.py` into `app_controller.py`.
+- Replaced direct controller references to `kidd` and `read` with `self.app` and `self`.
+- Refreshed page context after controller creation and page imports.
+- Converted navigation button lists and counters from module globals to controller instance state.
+- Reduced `main.py` from 3921 lines to 3133 lines.
+
+## v2.2.7 - 2026-07-07-1448
+
+- Added dependency files for base, optional audio, and Raspberry Pi hardware installs.
+- Reworked README installation, run, test, and project layout documentation.
+- Fixed GPS odometer persistence so values are written to `odo_config`.
+- Removed stale odometer data from the generic `config` section.
+- Added smoke tests for platform detection, config/text/style loading, and odometer persistence.

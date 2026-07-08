@@ -1,0 +1,13 @@
+# Core runtime dependencies
+Pillow
+pygame
+pynmea2
+pyserial
+SpeechRecognition
+websocket-client
+
+pydub
+python-vlc
+
+# Updater
+requests

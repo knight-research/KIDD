@@ -1,113 +1,82 @@
-<br/>
-<p align="center">
-  <a href="https://github.com/knight-research/KIDD">
-    <img src="https://github.com/knight-research/KIDD/assets/67843900/e3148c3d-fb5c-4ec1-b307-826be0a08438" alt="Logo" width="1280" height="600">
-  </a>
+# Knight Industries Digital Dash
 
-  <h3 align="center">Knight Industries Digital Dash</h3>
+One man can make a difference...
 
-  <p align="center">
-    One man can make a difference...
-    <br/>
-    <br/>
-    <a href="https://github.com/knight-research/KIDD"><strong>Explore the docs »</strong></a>
-    <br/>
-    <br/>
-    <a href="https://github.com/knight-research/KIDD">View Demo</a>
-    .
-    <a href="https://github.com/knight-research/KIDD/issues">Report Bug</a>
-    .
-    <a href="https://github.com/knight-research/KIDD/issues">Request Feature</a>
-  </p>
-</p>
+KIDD is a Python/Tkinter dashboard for Knight Rider replica projects. It can display dashboard graphics, switch between multiple themes, play sounds, show GPS/vehicle data, and talk to Raspberry Pi based input and relay hardware.
 
-![Downloads](https://img.shields.io/github/downloads/knight-research/KIDD/total) ![Contributors](https://img.shields.io/github/contributors/knight-research/KIDD?color=dark-green) ![Issues](https://img.shields.io/github/issues/knight-research/KIDD) ![License](https://img.shields.io/github/license/knight-research/KIDD) 
+## Features
 
-## Table Of Contents
-
-* [About the Project](#about-the-project)
-* [Built With](#built-with)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-* [Usage](#usage)
-* [Contributing](#contributing)
-* [Authors](#authors)
-* [Acknowledgements](#acknowledgements)
-
-## About The Project
-
-This is my attempt to create a programm that you can use for your Knight RIder replica. It will show the same data as the real KightRider electronics that are out there. You can connect inputs and relays and show your ALDL data from the car.
-The plan is to put 2 Raspberry PI4´s with 4 Monitors into the car.
-I still build 2 cars and works fine.
-For the car you also need some more hardware (Relayboards and Inputboards)...
-But I diddn´t made a nice description about that until now.
-All soundfiles are german, but I will add a bit of code that you can change
-between englsh and german or other languages you want.
-
-The software has some special features.
-The hardware (Displays) are ment to be mounted on a 4th Season Dash.
-But you can change between different themes...
+- Tkinter dashboard UI with multiple KITT/KARR inspired themes
+- Windows mode for development and testing
+- Linux/Raspberry Pi mode for in-car hardware
+- GPS, relay board, input board, sound, video, and speech-control hooks
+- Local asset folders for fonts, images, sound, video, and wallpapers
 
 ## Built With
 
-This is a simple python program with tkinter as visualisation.
+- Python 3.11+
+- Tkinter
+- Pillow
+- pygame
+- Raspberry Pi and Adafruit I2C libraries for hardware builds
 
 ## Getting Started
 
-It´s posibble to use the software on Windows (for testing) and Linux
-
 ### Prerequisites
 
-To run and test this on Windows you have to:
-1. Install fonts from fonts folder.
-2. Install Visual Studio (free)
-3. Install python-3.11.4-amd64 or newer
+1. Install Python 3.11 or newer.
+2. Install the fonts from the `fonts` folder.
+3. On Windows, Visual Studio can be used to open `KIDD.pyproj`.
+4. On Raspberry Pi/Linux, enable the required hardware interfaces such as I2C and serial before using the hardware features.
 
 ### Installation
 
-Open a console/Windows Terminal and install these:
+Install the Python dependencies from the project root:
 
-I2C Relaisboard:
-sudo pip3 install adafruit-circuitpython-mcp230xx
+```bash
+python -m pip install -r requirements.txt
+```
 
-I2C AD WANDLER:
-sudo pip3 install adafruit-ads1x15
-sudo pip3 install adafruit-circuitpython-ads1x15
+Optional microphone and Raspberry Pi hardware packages are split out because they often need platform-specific system libraries:
 
-I2C PWM SCANNER (16x)
-sudo pip3 install Adafruit-PCA9685
+```bash
+python -m pip install -r requirements-audio.txt
+python -m pip install -r requirements-rpi.txt
+```
 
-I2C 16xDIDO BOARD
-sudo pip3 install adafruit-circuitpython-aw9523
+### Run
 
-SPEECH
-sudo pip3 install SpeechRecognition
+Start the app from the project root:
 
-WEBSOCKET KOMMUNIKATION
-pip3 install websocket-client
+```bash
+python main.py
+```
 
-VLC PYTHON:
-sudo pip3 install python-vlc
+On Windows you can also open `KIDD.pyproj` in Visual Studio and run the project from there.
 
-Pynmea2 (GPS):
-sudo pip3 install pynmea2
+### Tests
 
-AUDIO:
-sudo pip3 install pydub
-sudo pip3 install pygame
-sudo pip3 install pyaudio
+Run the smoke tests with:
 
-Pillow:
-sudo pip3 install Pillow
+```bash
+python -m unittest discover -s tests
+```
 
-That should be everything to run it on Windows.
+The smoke tests check that platform detection, JSON/text/style loading, and odometer state persistence still work.
 
-## Usage
+## Project Layout
 
-For WIndows:
-Open "KIDD.pypro" Visual Studio and press the "Run" button.
+- `main.py` - main Tkinter app and dashboard page
+- `functions/` - controllers, managers, loaders, and reusable application helpers
+- `setup/` - platform imports, hardware setup, runtime defaults, style/config loading, and updater
+- `pages/` - exported page modules
+- `data/` - configuration and text JSON files
+- `images/`, `fonts/`, `sound/`, `video/`, `wallpaper/` - local UI/media assets
 
-## Authors
+## Roadmap
 
-* **Marcel Anke** - ** - [Marcel Anke](knight-research.de) - **
+Current open ideas are tracked in `todo.txt`, including OBD2/ALDL support, scanner functions, voicebox/microphone sync, and improved switchpod communication.
+
+## Author
+
+Marcel Anke - [knight-research.de](https://knight-research.de)

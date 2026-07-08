@@ -2,13 +2,13 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "K2_S05",
+        "theme": "K2_S04",
         "system": "GREEN",
         "language": "DEU"
     },
     "buttons": {
         "DEV001": {
-            "PB": "pb00",
+            "PB": "pb01",
             "FNKT": [
                 false,
                 false,
@@ -55,7 +55,7 @@
             ],
             "HW": [
                 true,
-                true,
+                false,
                 false,
                 false,
                 false,
@@ -66,10 +66,10 @@
                 false
             ],
             "SW": [
-                true,
-                1,
-                0,
-                true,
+                false,
+                false,
+                false,
+                false,
                 true,
                 0,
                 0,
@@ -78,6 +78,7 @@
                 0
             ],
             "QOPT": [
+                true,
                 false,
                 false,
                 false,
@@ -87,9 +88,8 @@
                 false,
                 false,
                 false,
-                false,
-                false,
-                false,
+                true,
+                true,
                 false,
                 false,
                 false,
@@ -100,6 +100,7 @@
                 false
             ],
             "FAV": [
+                true,
                 false,
                 false,
                 false,
@@ -109,6 +110,7 @@
                 false,
                 false,
                 false,
+                true,
                 false,
                 false,
                 false,
@@ -118,9 +120,7 @@
                 false,
                 false,
                 false,
-                false,
-                false,
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -183,7 +183,7 @@
             ]
         },
         "DEV002": {
-            "PB": "pb09",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,
@@ -229,7 +229,7 @@
                 false
             ],
             "HW": [
-                true,
+                false,
                 true,
                 false,
                 false,
@@ -242,10 +242,10 @@
             ],
             "SW": [
                 true,
-                true,
+                false,
                 0,
                 true,
-                false,
+                true,
                 0,
                 0,
                 0,
@@ -285,6 +285,7 @@
                 false,
                 false,
                 false,
+                true,
                 false,
                 false,
                 false,
@@ -294,8 +295,7 @@
                 false,
                 false,
                 false,
-                false,
-                false,
+                true,
                 false,
                 false,
                 false,
@@ -740,7 +740,5 @@
         "odo_total_aldl_imperial": 118160.0,
         "odo_total_aldl_metric": 190146.0
     },
-    "config": {
-        "odo_trip_gps_metric": 0.01
-    }
+    "config": {}
 }

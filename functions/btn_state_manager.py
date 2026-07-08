@@ -46,6 +46,14 @@ class ButtonStateManager:
     def set_odometer(self, value):
         self.data["gps"]["odo_metric_cnt_old"] = value
 
+    def get_odo_value(self, key, fallback=None):
+        return self.data.get("odo_config", {}).get(key, fallback)
+
+    def set_odo_value(self, key, value):
+        if "odo_config" not in self.data:
+            self.data["odo_config"] = {}
+        self.data["odo_config"][key] = value
+
     def get_current_button_states(self, key):
         dev = self.get_device()
         return self.get_button_states(dev, key)

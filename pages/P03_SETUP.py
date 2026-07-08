@@ -600,9 +600,18 @@ class P03_SETUP(tk.Frame):
             quant_btns_FAV = quant_btns_HW + quant_btns_SW
         elif device == DEVICE_B_txt[8]:
             quant_btns_FAV = quant_btns_HW + quant_btns_SW
+
+        def _toggle_fav_button(index, button):
+            is_active = read.toggle_btn_FAV(index)
+            btn_states_FAV[index] = is_active
+            if is_active:
+                button.config(bg=sys_clr[10], fg=sys_clr[8])
+            else:
+                button.config(bg=sys_clr[8], fg=sys_clr[11])
             
         for i in range(quant_btns_FAV):
-            btn_FAV = tk.Button(canvas, bg=sys_clr[8], text="F", font=(fonts[1], 20), command=lambda i=i: read.toggle_btn_FAV(i))
+            btn_FAV = tk.Button(canvas, bg=sys_clr[8], text="F", font=(fonts[1], 20))
+            btn_FAV.config(command=lambda i=i, button=btn_FAV: _toggle_fav_button(i, button))
                 
             if i < 10:
                 btn_FAV.place(x=x_pos, y=y_l3, width=btn_f_w, height=btn_h)
@@ -655,9 +664,9 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         for i in range(quant_btns_FAV):
             if btn_states_FAV[i]:
-                btns_FAV[i].config(fg=sys_clr[10])
+                btns_FAV[i].config(bg=sys_clr[10], fg=sys_clr[8])
             else:
-                btns_FAV[i].config(fg=sys_clr[11])
+                btns_FAV[i].config(bg=sys_clr[8], fg=sys_clr[11])
         #----------------------------------------------------------------------------------
         # RB BUTTONS
         #----------------------------------------------------------------------------------
