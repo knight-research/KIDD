@@ -8,10 +8,6 @@
 ehthumbs.db
 Thumbs.db
 
-#  Copyright files  #
-#####################
-*.mp3
-
 # Logs and Temp #
 ######################
 __pycache__

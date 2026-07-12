@@ -1,5 +1,33 @@
 # Changelog
 
+## v2.2.34 - 2026-07-12-1548
+
+- Removed the `.gitignore` rule that excluded MP3 files so the `sound` folder contents can be tracked.
+
+## v2.2.33 - 2026-07-12-1545
+
+- Added Raspberry Pi autostart setup to `install.sh` using a `kidd.service` systemd service for `main.py`.
+- Added `--no-autostart` to skip service creation when installing dependencies only.
+- Added display/session environment values to the Raspberry Pi autostart service for GUI and audio startup.
+
+## v2.2.32 - 2026-07-12-1542
+
+- Added `install.sh` for installing KIDD system packages and Python modules on Linux and Raspberry Pi.
+- Added installer options for Raspberry Pi hardware modules, optional audio dependencies, custom Python executables, and local virtual environments.
+- Changed `install.sh` to use a local `.venv` by default so current Raspberry Pi OS/Debian installations do not hit the externally managed Python environment error.
+
+## v2.2.31 - 2026-07-12-1529
+
+- Added an updater button for a complete KIDD installation from GitHub into the current user's `KIDD` folder on Windows and Raspberry Pi.
+- Added install-folder backup handling before a complete install replaces an existing user `KIDD` folder.
+
+## v2.2.30 - 2026-07-12-1527
+
+- Moved `update.py` back into the project root.
+- Updated the Visual Studio project entry for the root-level updater.
+- Reworked the updater to use an explicit app root, remove the global sound checkbox state, add request timeouts, and extract release ZIP files with path safety checks.
+- Fixed Windows GUI updates so Tkinter widget options like `state` and `text` are passed correctly from the updater worker thread.
+
 ## v2.2.29 - 2026-07-08-1051
 
 - Added `AUTOPLAY` as a QuickSound button mode.
