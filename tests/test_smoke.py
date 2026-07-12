@@ -8,6 +8,13 @@ from setup.config_state import load_config_state_symbols
 from setup.platform_detection import detect_platform
 from setup.style_config import load_style_symbols
 from functions.text_lists import load_text_list_symbols
+from functions.quicksound_config import (
+    QUICKSOUND_COLORS,
+    list_quicksound_files,
+    list_quicksound_folders,
+    normalize_quicksound_settings,
+    normalize_quicksound_config,
+)
 
 
 class SmokeTests(unittest.TestCase):
@@ -65,6 +72,41 @@ class SmokeTests(unittest.TestCase):
             saved = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertEqual(saved["odo_config"]["odo_trip_gps_metric"], 12.5)
             self.assertNotIn("odo_trip_gps_metric", saved["config"])
+
+    def test_quicksound_config_normalizes_invalid_values(self):
+        config = normalize_quicksound_config([
+            {"folder": "sfx", "file": "A.mp3", "mode": "bad", "color": "bad"},
+            {"mode": "loop", "color": "aq"},
+            {"mode": "autoplay"},
+            {"mode": "autoplay"},
+        ])
+
+        self.assertEqual(config[0]["file"], "A.mp3")
+        self.assertEqual(config[0]["mode"], "LOOP")
+        self.assertEqual(config[0]["color"], "YE")
+        self.assertEqual(config[1]["mode"], "LOOP")
+        self.assertEqual(config[1]["color"], "AQ")
+        self.assertEqual(config[2]["mode"], "AUTOPLAY")
+        self.assertEqual(config[3]["mode"], "1X")
+
+    def test_quicksound_colors_include_all_led_button_colors(self):
+        self.assertEqual(QUICKSOUND_COLORS, ("AQ", "BU", "GN", "OR", "RD", "WH", "YE"))
+
+    def test_quicksound_settings_normalize_label_visibility(self):
+        self.assertEqual(normalize_quicksound_settings({})["labels_visible"], True)
+        self.assertEqual(normalize_quicksound_settings({"labels_visible": False})["labels_visible"], False)
+
+    def test_quicksound_lists_sound_folders_and_mp3_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "sfx").mkdir()
+            (root / "sfx" / "B.mp3").write_text("", encoding="utf-8")
+            (root / "sfx" / "A.MP3").write_text("", encoding="utf-8")
+            (root / "sfx" / "ignore.txt").write_text("", encoding="utf-8")
+            (root / "voice").mkdir()
+
+            self.assertEqual(list_quicksound_folders(str(root)), ["sfx", "voice"])
+            self.assertEqual(list_quicksound_files(str(root), "sfx"), ["A.MP3", "B.mp3"])
 
 
 if __name__ == "__main__":

@@ -1,4 +1,14 @@
 from pages.page_context import sync_context
+from functions.quicksound_config import (
+    QUICKSOUND_COLORS,
+    QUICKSOUND_MODES,
+    list_quicksound_files,
+    list_quicksound_folders,
+    load_quicksound_config,
+    load_quicksound_settings,
+    save_quicksound_config,
+    save_quicksound_settings,
+)
 
 sync_context(globals())
 
@@ -466,6 +476,192 @@ class P03_SETUP(tk.Frame):
         _refresh_value("ODO")
         _refresh_value("OTHER")
         self._active_section.set("ODO")
+
+        #----------------------------------------------------------------------------------
+        # QUICKSOUND SETUP
+        #----------------------------------------------------------------------------------
+        if "snd_fldr" not in globals() or not snd_fldr:
+            read.load_soundfolder()
+            sync_context(globals())
+        self._quicksound_config = load_quicksound_config(datadir)
+        self._quicksound_settings = load_quicksound_settings(datadir)
+        quicksound_folders = list_quicksound_folders(snd_fldr)
+        quicksound_color_fg = {
+            "AQ": "#44FFFF",
+            "BU": "#4488FF",
+            "GN": "#44FF44",
+            "OR": "#FF9900",
+            "RD": "#FF4444",
+            "WH": "#FFFFFF",
+            "YE": "#FFF862",
+        }
+
+        def _cycle_quicksound_value(index, key, values):
+            current = self._quicksound_config[index][key]
+            next_index = (values.index(current) + 1) % len(values) if current in values else 0
+            self._quicksound_config[index][key] = values[next_index]
+            if key == "mode" and self._quicksound_config[index][key] == "AUTOPLAY":
+                for other_index, quicksound in enumerate(self._quicksound_config):
+                    if other_index != index and quicksound["mode"] == "AUTOPLAY":
+                        quicksound["mode"] = "1X"
+            save_quicksound_config(datadir, self._quicksound_config)
+            self.master.switch_frame(P03_SETUP)
+
+        def _set_quicksound_folder(index, selected_folder):
+            files = list_quicksound_files(snd_fldr, selected_folder)
+            self._quicksound_config[index]["folder"] = selected_folder
+            if files and self._quicksound_config[index]["file"] not in files:
+                self._quicksound_config[index]["file"] = files[0]
+            save_quicksound_config(datadir, self._quicksound_config)
+            self.master.switch_frame(P03_SETUP)
+
+        def _set_quicksound_file(index, selected_file):
+            self._quicksound_config[index]["file"] = selected_file
+            save_quicksound_config(datadir, self._quicksound_config)
+            self.master.switch_frame(P03_SETUP)
+
+        def _sound_display_name(filename):
+            return os.path.splitext(os.path.basename(filename))[0]
+
+        def _toggle_quicksound_labels():
+            self._quicksound_settings["labels_visible"] = not self._quicksound_settings["labels_visible"]
+            save_quicksound_settings(datadir, self._quicksound_settings)
+            self.master.switch_frame(P03_SETUP)
+
+        canvas.create_text(690, 294, **txt_style_pageinfo, fill=sys_clr[9], text="QUICKSOUND")
+        canvas.create_text(1030, 294, **txt_style_pageinfo, fill=sys_clr[9], text="SELECT")
+        qs_labels_text = "LBL ON" if self._quicksound_settings["labels_visible"] else "LBL OFF"
+        qs_labels_fg = sys_clr[10] if self._quicksound_settings["labels_visible"] else sys_clr[11]
+        btn_qs_labels = tk.Button(
+            self,
+            bg=sys_clr[8],
+            fg=qs_labels_fg,
+            activebackground=sys_clr[8],
+            activeforeground=sys_clr[10],
+            bd=4,
+            font=(fonts[6], 16),
+            text=qs_labels_text,
+            command=_toggle_quicksound_labels,
+        )
+        btn_qs_labels.place(x=890, y=286, width=120, height=32)
+
+        self._qs_select_target = {"options": [], "command": None}
+        qs_select_frame = tk.Frame(self, bg=sys_clr[8], bd=4, relief="raised")
+        qs_select_frame.place(x=1030, y=322, width=220, height=285)
+        qs_scroll_style = ttk.Style()
+        qs_scroll_style.configure(
+            "QuickSound.Vertical.TScrollbar",
+            background=sys_clr[10],
+            darkcolor=sys_clr[10],
+            lightcolor=sys_clr[10],
+            troughcolor=sys_clr[8],
+            bordercolor=sys_clr[8],
+            arrowcolor=sys_clr[9],
+            relief="flat",
+            width=24,
+        )
+        qs_scroll_style.map(
+            "QuickSound.Vertical.TScrollbar",
+            background=[("active", sys_clr[9]), ("pressed", sys_clr[10])],
+            arrowcolor=[("active", sys_clr[8]), ("pressed", sys_clr[8])],
+        )
+        qs_select_scroll = ttk.Scrollbar(
+            qs_select_frame,
+            orient="vertical",
+            style="QuickSound.Vertical.TScrollbar",
+        )
+        qs_select_list = tk.Listbox(
+            qs_select_frame,
+            bg=sys_clr[8],
+            fg=sys_clr[9],
+            selectbackground=sys_clr[10],
+            selectforeground=sys_clr[8],
+            font=(fonts[6], 20),
+            activestyle="none",
+            yscrollcommand=qs_select_scroll.set,
+            borderwidth=0,
+            highlightthickness=0,
+        )
+        qs_select_scroll.config(command=qs_select_list.yview)
+        qs_select_scroll.pack(side="right", fill="y")
+        qs_select_list.pack(side="left", fill="both", expand=True)
+
+        def _show_quicksound_options(index, kind):
+            if kind == "folder":
+                options = quicksound_folders or [self._quicksound_config[index]["folder"]]
+                command = lambda value, index=index: _set_quicksound_folder(index, value)
+            else:
+                folder_name = self._quicksound_config[index]["folder"]
+                options = list_quicksound_files(snd_fldr, folder_name) or [self._quicksound_config[index]["file"]]
+                command = lambda value, index=index: _set_quicksound_file(index, value)
+
+            self._qs_select_target = {"options": options, "command": command}
+            qs_select_list.delete(0, "end")
+            for option in options:
+                qs_select_list.insert("end", _sound_display_name(option) if kind == "file" else option)
+
+        def _select_quicksound_option(_event=None):
+            selection = qs_select_list.curselection()
+            if not selection:
+                return
+            value = self._qs_select_target["options"][selection[0]]
+            self._qs_select_target["command"](value)
+
+        qs_select_list.bind("<ButtonRelease-1>", _select_quicksound_option)
+        qs_select_list.bind("<Return>", _select_quicksound_option)
+        for i, quicksound in enumerate(self._quicksound_config):
+            y_pos = 322 + i * 72
+            lbl_qs_name = tk.Label(self, **lbl_style_setup_btns_small, text=f"Q{i + 1}", bg=sys_clr[8], fg=sys_clr[9])
+            lbl_qs_name.place(x=690, y=y_pos, width=320, height=18)
+
+            btn_qs_folder = tk.Button(
+                self,
+                bg=sys_clr[8],
+                fg=sys_clr[9],
+                activebackground=sys_clr[8],
+                activeforeground=sys_clr[10],
+                bd=4,
+                font=(fonts[6], 14),
+                text=quicksound["folder"],
+                anchor="w",
+                command=lambda i=i: _show_quicksound_options(i, "folder"),
+            )
+            btn_qs_folder.place(x=690, y=y_pos + 19, width=100, height=25)
+
+            btn_qs_file = tk.Button(
+                self,
+                bg=sys_clr[8],
+                fg=sys_clr[9],
+                activebackground=sys_clr[8],
+                activeforeground=sys_clr[10],
+                bd=4,
+                font=(fonts[6], 14),
+                text=_sound_display_name(quicksound["file"]),
+                anchor="w",
+                command=lambda i=i: _show_quicksound_options(i, "file"),
+            )
+            btn_qs_file.place(x=795, y=y_pos + 19, width=220, height=25)
+
+            btn_qs_mode = tk.Button(
+                self,
+                bg=sys_clr[8],
+                fg=sys_clr[9],
+                font=(fonts[6], 18),
+                text=quicksound["mode"],
+                command=lambda i=i: _cycle_quicksound_value(i, "mode", QUICKSOUND_MODES),
+            )
+            btn_qs_mode.place(x=690, y=y_pos + 46, width=105, height=25)
+
+            btn_qs_color = tk.Button(
+                self,
+                bg=sys_clr[8],
+                fg=quicksound_color_fg.get(quicksound["color"], sys_clr[9]),
+                font=(fonts[6], 18),
+                text=quicksound["color"],
+                command=lambda i=i: _cycle_quicksound_value(i, "color", QUICKSOUND_COLORS),
+            )
+            btn_qs_color.place(x=805, y=y_pos + 46, width=80, height=25)
+        _show_quicksound_options(0, "file")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------

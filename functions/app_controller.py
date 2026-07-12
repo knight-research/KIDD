@@ -29,6 +29,21 @@ class KIDDController:
         self.btn_theme_place = 0
         self.btn_sys_place = 0
         self.btn_menu_place = 0
+        self.autoplay_active = False
+        self.autoplay_playlist = []
+        self.autoplay_current_index = 0
+        self.autoplay_track_started = 0
+        self.autoplay_track_length = 0
+        self.autoplay_pause_started = 0
+        self.autoplay_pause_length = 30
+        self.autoplay_waiting_for_next = False
+        self.autoplay_after_id = None
+        self.autoplay_current_file = None
+        self.autoplay_next_file = None
+        self.autoplay_button = None
+        self.autoplay_current_label = None
+        self.autoplay_next_label = None
+        self.autoplay_time_label = None
     #--------------------------------------------------------------------------------------
     # MAIN APP FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -618,6 +633,161 @@ class KIDDController:
         mp3files_count = len(mp3files)
         return mp3files_count, mp3files
     #----------------------------------------------------------------------------------
+    # CREATE THE RANDOM SOUND BUTTONS
+    #----------------------------------------------------------------------------------
+    def snd_random_btns(self):
+        autoplay_label_style = {"font": (fonts[6], 18), "anchor": "w", "borderwidth": 0, "highlightthickness": 0}
+        autoplay_time_style = {"font": (fonts[6], 20), "anchor": "c", "borderwidth": 0, "highlightthickness": 0}
+
+        self.autoplay_current_label = tk.Label(**autoplay_label_style, bg=sys_clr[8], fg=sys_clr[9], text=self._short_audio_name(self.autoplay_current_file))
+        self.autoplay_current_label.place(x=300, y=50, width=360, height=22)
+
+        self.autoplay_next_label = tk.Label(**autoplay_label_style, bg=sys_clr[8], fg=sys_clr[9], text=self._short_audio_name(self.autoplay_next_file))
+        self.autoplay_next_label.place(x=700, y=50, width=360, height=22)
+
+        self.autoplay_time_label = tk.Label(**autoplay_time_style, bg=sys_clr[8], fg=sys_clr[9], text="")
+        self.autoplay_time_label.place(x=1178, y=33, width=55, height=26)
+
+        btn_text = "AUTO STOP" if self.autoplay_active else "AUTO START"
+        btn_fg = sys_clr[10] if self.autoplay_active else sys_clr[9]
+        self.autoplay_button = tk.Button(bg=sys_clr[8], fg=btn_fg, font=(fonts[1], 24), text=btn_text, command=self.toggle_random_autoplay)
+        self.autoplay_button.place(x=128, y=21, width=160, height=50)
+        self._update_autoplay_display()
+
+    def _short_audio_name(self, path, max_len=30):
+        if not path:
+            return "---"
+        name = os.path.basename(path)
+        name = os.path.splitext(name)[0]
+        return name if len(name) <= max_len else name[:max_len - 1] + "."
+
+    def _audio_display_name(self, filename, max_len=None):
+        name = os.path.splitext(os.path.basename(filename))[0]
+        if max_len and len(name) > max_len:
+            return name[:max_len - 1] + "."
+        return name
+
+    def _autoplay_label_config(self, label, text):
+        if label is not None and label.winfo_exists():
+            label.config(text=text)
+
+    def _build_random_playlist(self):
+        playlist = []
+        excluded = ("time", "states_dev")
+        if not snd_fldr or not os.path.isdir(snd_fldr):
+            return playlist
+        for root_folder, _, files in os.walk(snd_fldr):
+            root_lower = root_folder.lower()
+            if any(excluded_name in root_lower for excluded_name in excluded):
+                continue
+            for file in files:
+                if file.lower().endswith(".mp3"):
+                    playlist.append(os.path.join(root_folder, file))
+        random.shuffle(playlist)
+        return playlist
+
+    def _get_audio_length(self, path):
+        try:
+            return max(1.0, pygame.mixer.Sound(path).get_length())
+        except Exception:
+            return 30.0
+
+    def _update_autoplay_display(self):
+        self._autoplay_label_config(self.autoplay_current_label, self._short_audio_name(self.autoplay_current_file))
+        self._autoplay_label_config(self.autoplay_next_label, self._short_audio_name(self.autoplay_next_file))
+        if self.autoplay_button is not None and self.autoplay_button.winfo_exists():
+            if self.autoplay_active:
+                self.autoplay_button.config(text="AUTO STOP", fg=sys_clr[10])
+            else:
+                self.autoplay_button.config(text="AUTO START", fg=sys_clr[9])
+
+    def toggle_random_autoplay(self):
+        if self.autoplay_active:
+            self.stop_random_autoplay()
+        else:
+            self.start_random_autoplay()
+
+    def start_random_autoplay(self):
+        self.autoplay_playlist = self._build_random_playlist()
+        self.autoplay_current_index = 0
+        self.autoplay_waiting_for_next = False
+        if not self.autoplay_playlist:
+            self.autoplay_current_file = None
+            self.autoplay_next_file = None
+            self._autoplay_label_config(self.autoplay_current_label, "NO MP3 FILES")
+            self._autoplay_label_config(self.autoplay_next_label, "---")
+            return
+        self.autoplay_active = True
+        self._play_random_autoplay_track()
+
+    def stop_random_autoplay(self):
+        self.autoplay_active = False
+        self.autoplay_waiting_for_next = False
+        if self.autoplay_after_id is not None:
+            try:
+                self.app.after_cancel(self.autoplay_after_id)
+            except Exception:
+                pass
+            self.autoplay_after_id = None
+        pygame.mixer.music.stop()
+        self._autoplay_label_config(self.autoplay_time_label, "")
+        self._update_autoplay_display()
+
+    def _play_random_autoplay_track(self):
+        if not self.autoplay_active:
+            return
+        if not self.autoplay_playlist:
+            self.stop_random_autoplay()
+            return
+        if self.autoplay_current_index >= len(self.autoplay_playlist):
+            random.shuffle(self.autoplay_playlist)
+            self.autoplay_current_index = 0
+
+        self.autoplay_current_file = self.autoplay_playlist[self.autoplay_current_index]
+        next_index = self.autoplay_current_index + 1
+        if next_index >= len(self.autoplay_playlist):
+            next_index = 0
+        self.autoplay_next_file = self.autoplay_playlist[next_index]
+        self.autoplay_track_started = time.time()
+        self.autoplay_track_length = self._get_audio_length(self.autoplay_current_file)
+        self.autoplay_waiting_for_next = False
+
+        try:
+            pygame.mixer.music.load(self.autoplay_current_file)
+            pygame.mixer.music.play()
+        except Exception as e:
+            print(f"[AUDIO] Autoplay Fehler: {self.autoplay_current_file} -> {e}")
+            self.autoplay_current_index += 1
+            self.autoplay_after_id = self.app.after(250, self._play_random_autoplay_track)
+            return
+
+        self.autoplay_current_index += 1
+        self._update_autoplay_display()
+        self._update_autoplay_countdown()
+
+    def _update_autoplay_countdown(self):
+        if not self.autoplay_active:
+            return
+        remaining = max(self.autoplay_track_length - (time.time() - self.autoplay_track_started), 0)
+        self._autoplay_label_config(self.autoplay_time_label, str(int(round(remaining))))
+        if not pygame.mixer.music.get_busy() or remaining <= 0:
+            self.autoplay_pause_started = time.time()
+            self.autoplay_waiting_for_next = True
+            self.autoplay_after_id = self.app.after(250, self._update_autoplay_pause_countdown)
+        else:
+            self.autoplay_after_id = self.app.after(250, self._update_autoplay_countdown)
+
+    def _update_autoplay_pause_countdown(self):
+        if not self.autoplay_active:
+            return
+        remaining = max(self.autoplay_pause_length - (time.time() - self.autoplay_pause_started), 0)
+        self._autoplay_label_config(self.autoplay_time_label, str(int(round(remaining))))
+        if remaining <= 0:
+            self.autoplay_waiting_for_next = False
+            self.autoplay_after_id = self.app.after(100, self._play_random_autoplay_track)
+        else:
+            self.autoplay_after_id = self.app.after(250, self._update_autoplay_pause_countdown)
+    #----------------------------------------------------------------------------------
     # CREATE THE SOUND MENU BUTTONS
     #----------------------------------------------------------------------------------
     def snd_menu_btns(self):
@@ -664,7 +834,7 @@ class KIDDController:
         rows_displayed = 0  # Variable to keep track of the number of rows displayed
 
         for i in range(snd_mp3_btn_place):
-            snd_mp3_btn = tk.Button(bg="#000044", fg=sty_clr[0], font=("lcars", 16), text=mp3files_list[i], wraplength=100)
+            snd_mp3_btn = tk.Button(bg="#000044", fg=sty_clr[0], font=("lcars", 16), text=self._audio_display_name(mp3files_list[i]), wraplength=100)
             snd_mp3_btn.config(command=lambda i=i: self.play_mp3(act_mp3_files_path, mp3files_list[i]))
             snd_mp3_btns.append(snd_mp3_btn)
 
@@ -747,6 +917,8 @@ class KIDDController:
     # OPEN AND PLAY THE MP3 FILE
     #----------------------------------------------------------------------------------
     def play_mp3(self, path, file):
+        if self.autoplay_active:
+            self.stop_random_autoplay()
         full_path = os.path.join(path, file)
         try:
             pygame.mixer.music.load(full_path)

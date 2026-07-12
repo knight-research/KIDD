@@ -1,6 +1,7 @@
 #------------------------------------------------------------------------------------------
 # TODO
 #------------------------------------------------------------------------------------------
+TODO: DASH UNTERES DISPLAY AUFTEILEN SPEECH / STATUS (MUSIC) / ODOMETER
 TODO: OBD2 CONNECTION FOR DEV031
 TODO: Switchpod communication with sending labels texts (S34) from here
 TODO: Connect the Favoritebuttons with the spare buttons on qopt page (max 20 buttons)

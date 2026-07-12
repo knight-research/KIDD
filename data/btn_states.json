@@ -2,13 +2,42 @@
     "main_config": {
         "device": "DEV001",
         "style": "KITT",
-        "theme": "K2_S04",
+        "theme": "K2_S05",
         "system": "GREEN",
         "language": "DEU"
     },
+    "quicksound_config": [
+        {
+            "folder": "sfx",
+            "file": "001_SCANNER_08.mp3",
+            "mode": "LOOP",
+            "color": "RD"
+        },
+        {
+            "folder": "sfx",
+            "file": "STARTUP_001.mp3",
+            "mode": "1X",
+            "color": "YE"
+        },
+        {
+            "folder": "notouch",
+            "file": "NICHT_BERUEHREN_00.mp3",
+            "mode": "1X",
+            "color": "YE"
+        },
+        {
+            "folder": "introduce",
+            "file": "VORSTELLUNG_MITTEL.mp3",
+            "mode": "AUTOPLAY",
+            "color": "YE"
+        }
+    ],
+    "quicksound_settings": {
+        "labels_visible": false
+    },
     "buttons": {
         "DEV001": {
-            "PB": "pb01",
+            "PB": "pb00",
             "FNKT": [
                 false,
                 false,
@@ -69,8 +98,8 @@
                 false,
                 false,
                 false,
-                false,
                 true,
+                false,
                 0,
                 0,
                 0,

@@ -13,6 +13,7 @@ debug = True # PRINT INFORMATIONS TO CONSOLE
 #--------------------
 from functions.app_version import load_version
 version, last_change = load_version()
+from functions.quicksound_config import QUICKSOUND_COLOR_INDEX, load_quicksound_config, load_quicksound_settings
 # endregion
 
 #--------------------
@@ -154,7 +155,9 @@ class P01_DASH(tk.Frame):
         self.btn_units = None
         self.btn_SELECT = []
         self.audio_buttons = []
+        self.audio_labels = []
         self.audio_definitions = []
+        self.audio_label_states = []
         self.btn_FNKT = []
         self.led_DEV002IC = []
         self.led_DEV002 = []
@@ -697,12 +700,10 @@ class P01_DASH(tk.Frame):
         self.audio_off_img = l_img81
 
         self.audio_buttons = []
-        self.audio_definitions = [
-            ("sfx", "SCANNER_1x.mp3", True),
-            ("sfx", "STARTUP_001.mp3", False),
-            ("notouch", "NICHT_BERUEHREN_00.mp3", False),
-            ("introduce", "VORSTELLUNG_MITTEL.mp3", False)
-        ]
+        self.audio_labels = []
+        self.audio_label_states = []
+        self.audio_definitions = load_quicksound_config(datadir)
+        self.audio_settings = load_quicksound_settings(datadir)
 
         try:
             theme_index = THEME_B_txt.index(theme)
@@ -711,15 +712,46 @@ class P01_DASH(tk.Frame):
             special_pos = self.positions["BUTTON_POSITIONS"][device][theme_key]
             x_btns = special_pos.get("x_btn_QUICKSOUND", [])
             y_btns = special_pos.get("y_btn_QUICKSOUND", [])
+            audio_btn_width = self.audio_off_img.width()
+            audio_btn_height = self.audio_off_img.height()
 
-            for i, (subfolder, filename, loop_mode) in enumerate(self.audio_definitions):
+            for i, definition in enumerate(self.audio_definitions):
+                subfolder = definition["folder"]
+                filename = definition["file"]
+                quicksound_mode = definition["mode"]
+                loop_mode = quicksound_mode == "LOOP"
+                color_index = QUICKSOUND_COLOR_INDEX.get(definition["color"], QUICKSOUND_COLOR_INDEX["YE"])
+                audio_on_img = ledFU_img_list[color_index]
+                audio_off_img = ledOF_img_list[color_index]
                 filepath = os.path.join(snd_fldr, subfolder, filename)
-                btn = tk.Button(self, **btn_style_imgbtn, image=self.audio_off_img,
-                                command=lambda path=filepath, idx=i, loop=loop_mode: self.toggle_audio(idx, path, loop))
+                label_text = "AUTOPLAY" if quicksound_mode == "AUTOPLAY" else os.path.splitext(filename)[0]
+                lbl = tk.Label(
+                    self,
+                    **lbl_style_setup_btns_small,
+                    bg=sys_clr[8],
+                    fg=sys_clr[9],
+                )
+                btn = tk.Button(
+                    self,
+                    **btn_style_imgbtn,
+                    image=audio_off_img,
+                    command=lambda path=filepath, idx=i, loop=loop_mode, mode=quicksound_mode: self.toggle_audio(idx, path, loop, mode),
+                )
+                btn.audio_on_img = audio_on_img
+                btn.audio_off_img = audio_off_img
                 if i < len(x_btns) and i < len(y_btns):
                     btn.place(x=x_btns[i], y=y_btns[i])
+                    if self.audio_settings["labels_visible"]:
+                        lbl.place(
+                            x=x_btns[i],
+                            y=y_btns[i] + audio_btn_height + 1,
+                            width=audio_btn_width,
+                            height=22,
+                        )
                 else:
                     print(f"[WARN] Missing QUICKSOUND button position for index {i}")
+                self.audio_labels.append(lbl)
+                self.audio_label_states.append({"text": label_text, "offset": 0})
                 self.audio_buttons.append(btn)
         except Exception as e:
             print(f"[ERROR] Failed to place QUICKSOUND buttons for {device}/{theme_key}: {e}")
@@ -1306,18 +1338,46 @@ class P01_DASH(tk.Frame):
             self.lbls_sysinfo.append(lbl)
         return True
 
-    def toggle_audio(self, idx, filepath, loop):
+    def _update_audio_labels(self):
+        visible_chars = 11
+        for label, state in zip(self.audio_labels, self.audio_label_states):
+            text = state["text"]
+            if len(text) <= visible_chars:
+                label.config(text=text)
+                continue
+
+            scroll_text = f"{text}   "
+            offset = state["offset"] % len(scroll_text)
+            doubled = scroll_text + scroll_text
+            label.config(text=doubled[offset:offset + visible_chars])
+            state["offset"] = offset + 1
+
+    def _update_audio_button_states(self):
+        for idx, definition in enumerate(self.audio_definitions):
+            if definition["mode"] == "AUTOPLAY" and idx < len(self.audio_buttons):
+                image = self.audio_buttons[idx].audio_on_img if read.autoplay_active else self.audio_buttons[idx].audio_off_img
+                self.audio_buttons[idx].config(image=image)
+
+    def toggle_audio(self, idx, filepath, loop, mode="1X"):
+        if mode == "AUTOPLAY":
+            read.toggle_random_autoplay()
+            if read.autoplay_active:
+                self.audio_buttons[idx].config(image=self.audio_buttons[idx].audio_on_img)
+            else:
+                self.audio_buttons[idx].config(image=self.audio_buttons[idx].audio_off_img)
+            return
+
         result = read.toggle_audio_loop(filepath, loop)
         if loop:
             # Bei Loop: ON/OFF je nach Zustand
             if result is True:
-                self.audio_buttons[idx].config(image=self.audio_on_img)
+                self.audio_buttons[idx].config(image=self.audio_buttons[idx].audio_on_img)
             elif result is False:
-                self.audio_buttons[idx].config(image=self.audio_off_img)
+                self.audio_buttons[idx].config(image=self.audio_buttons[idx].audio_off_img)
         else:
             # Bei einmaliger Wiedergabe: Bild kurz auf ON, dann zurück
-            self.audio_buttons[idx].config(image=self.audio_on_img)
-            self.after(500, lambda: self.audio_buttons[idx].config(image=self.audio_off_img))
+            self.audio_buttons[idx].config(image=self.audio_buttons[idx].audio_on_img)
+            self.after(500, lambda: self.audio_buttons[idx].config(image=self.audio_buttons[idx].audio_off_img))
 
     #--------------------------------------------------------------------------------------
     # THREAD LISTEN_FOR_ACTIVATION_WORD #todo move to myfunctions
@@ -2992,6 +3052,8 @@ class P01_DASH(tk.Frame):
             return
         self.update_job = None
         start_time = time.time()
+        self._update_audio_labels()
+        self._update_audio_button_states()
         #----------------------------------------------------------------------------------
         # Dictionary chechen if not, create
         #----------------------------------------------------------------------------------

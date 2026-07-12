@@ -1,5 +1,71 @@
 # Changelog
 
+## v2.2.29 - 2026-07-08-1051
+
+- Added `AUTOPLAY` as a QuickSound button mode.
+- Allowed only one QuickSound button to use `AUTOPLAY` at a time.
+- Updated dashboard QuickSound buttons so an `AUTOPLAY` button toggles Audio Autoplay and reflects its ON/OFF state.
+
+## v2.2.28 - 2026-07-08-1046
+
+- Restored Audio page Autoplay controls for random MP3 playback.
+- Added current track, next track, and countdown display for Autoplay.
+- Reworked Autoplay to use `pygame.mixer.music` with shuffled playlists from the active sound folder.
+- Stopped Autoplay automatically when a manual MP3 button is played.
+- Changed Autoplay button text to `AUTO START` / `AUTO STOP`.
+- Added a 30 second pause between Autoplay tracks.
+- Reduced Audio Autoplay display label sizes to avoid overlapping headers and frame borders.
+- Updated Audio Autoplay label colors to use the active system theme colors.
+- Changed Audio Autoplay countdown to whole seconds and reduced the countdown label size.
+- Hid `.mp3` extensions from visible Audio and QuickSound file labels while keeping stored filenames unchanged.
+
+## v2.2.27 - 2026-07-08-0949
+
+- Added a Setup toggle for showing or hiding only the four dashboard QuickSound labels.
+- Stored QuickSound label visibility in `quicksound_settings`.
+- Updated dashboard QuickSound rendering to skip only QuickSound labels when disabled.
+
+## v2.2.26 - 2026-07-08-0907
+
+- Added Setup dropdowns to choose the QuickSound subfolder and MP3 file per dashboard sound button.
+- Added QuickSound helpers for listing available sound folders and MP3 files from the active sound set.
+- Removed the extra QuickSound filename label from Setup.
+- Replaced QuickSound sound selectors with themed popup lists capped at 600px height.
+- Changed QuickSound selector popups to embedded Setup listboxes so dropdowns open reliably on the dashboard display.
+- Removed QuickSound dropdowns and added a fixed-size selection list beside the QuickSound controls.
+- Enlarged QuickSound select list rows and restyled the scrollbar for touchscreen use.
+- Moved QuickSound section titles upward and applied a dedicated themed scrollbar style.
+
+## v2.2.25 - 2026-07-08-0843
+
+- Added persistent QuickSound setup entries for the four dashboard sound buttons.
+- Added Setup controls to switch each QuickSound button between LOOP and 1X playback.
+- Added Setup controls to switch each QuickSound button color between YE, GN, and RD.
+- Updated dashboard QuickSound buttons to use their configured mode and color.
+- Expanded QuickSound color selection to AQ, BU, GN, OR, RD, WH, and YE.
+
+## v2.2.24 - 2026-07-08-0831
+
+- Moved QuickSound labels below their dashboard buttons.
+- Changed QuickSound labels to use the smaller setup/HW label style.
+- Placed QuickSound labels exactly 1px below their dashboard buttons.
+- Limited QuickSound label width to the actual button image width.
+
+## v2.2.23 - 2026-07-08-0827
+
+- Added labels above the four dashboard QuickSound buttons.
+- Added marquee scrolling for long QuickSound labels so long filenames remain readable.
+
+## v2.2.22 - 2026-07-08-0823
+
+- Reverted the QuickSound fallback resolver and restored the original explicit QuickSound filenames.
+- Verified the reported KITT2000 `notouch` and `introduce` MP3 files exist at the exact paths used by the app.
+
+## v2.2.21 - 2026-07-08-0803
+
+- Added QuickSound filename fallback resolution so dashboard sound buttons use existing files across sound folders.
+- Replaced hardcoded missing QuickSound filenames with candidate lists for `notouch` and `introduce` sounds.
+
 ## v2.2.20 - 2026-07-07-1537
 
 - Cleaned up the project root by moving reusable helpers into `functions/` and setup/platform modules into `setup/`.
