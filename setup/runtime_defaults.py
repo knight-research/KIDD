@@ -1,11 +1,19 @@
+def parse_host_device_name(hostname):
+    if not hostname or "dev" not in hostname:
+        return "carxxx", "devxxx"
+
+    carno, _, dev_suffix = hostname.partition("dev")
+    if not dev_suffix:
+        return carno or "carxxx", "devxxx"
+
+    return carno or "carxxx", "dev" + dev_suffix
+
+
 def load_runtime_default_symbols(sys_linux, socket):
     carno = "carxxx"
     devno = "devxxx"
     if sys_linux:
-        hostname = socket.gethostname()
-        parts = hostname.split("dev")
-        carno = parts[0]
-        devno = "dev" + parts[1]
+        carno, devno = parse_host_device_name(socket.gethostname())
 
     aldl_vehicle_speed = 123.4  # MPH
     f_aldl_vehicle_speed = float(aldl_vehicle_speed)

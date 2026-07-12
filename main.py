@@ -151,6 +151,7 @@ class P01_DASH(tk.Frame):
         self.sysinfo_text_states = {}
         self.voice_text_states = {}
         self.last_system_data_update = 0.0
+        self.system_data_refresh_interval = 10.0
         self.btn_setup = None
         self.btn_units = None
         self.btn_SELECT = []
@@ -158,6 +159,7 @@ class P01_DASH(tk.Frame):
         self.audio_labels = []
         self.audio_definitions = []
         self.audio_label_states = []
+        self.last_audio_label_update = 0.0
         self.btn_FNKT = []
         self.led_DEV002IC = []
         self.led_DEV002 = []
@@ -185,6 +187,9 @@ class P01_DASH(tk.Frame):
         self.ammount_DEV002G007 = 0
         self.ammount_DEV002G008 = 0
         self.ammount_DEV002G009 = 0
+        self.dev002_update_phase = 0
+        self.dev002_pb_value_labels = []
+        self.dev002_pb_value_label_states = {}
         self.canvas = tk.Canvas(self, bg='black', highlightthickness=0)
         self.canvas.pack(fill='both', expand=True)
         self.create_widgets()
@@ -229,10 +234,27 @@ class P01_DASH(tk.Frame):
 
     def _refresh_system_data(self):
         now = time.monotonic()
-        if now - self.last_system_data_update < 1.0:
+        if now - self.last_system_data_update < self.system_data_refresh_interval:
             return
         read.get_system_data()
         self.last_system_data_update = now
+
+    def _trace_step(self, timings, name):
+        timings.append((name, time.perf_counter()))
+
+    def _log_slow_update(self, timings):
+        if len(timings) < 2:
+            return
+        total = timings[-1][1] - timings[0][1]
+        if total < 0.05:
+            return
+        sections = []
+        for index in range(1, len(timings)):
+            elapsed = timings[index][1] - timings[index - 1][1]
+            if elapsed >= 0.02:
+                sections.append(f"{timings[index - 1][0]}->{timings[index][0]}={elapsed:.4f}s")
+        detail = ", ".join(sections) if sections else "no single section >=0.02s"
+        print(f"[PERF] dash update {total:.4f}s: {detail}")
 
     def _place_label_7SEG002(self):
         if self.label_7SEG002 is None:
@@ -677,6 +699,7 @@ class P01_DASH(tk.Frame):
 
             for i in range(quant_btn):
                 self.btn_SELECT[i].place(x=x_btn[i], y=y_btn[i])
+            self._create_dev002_pb_value_labels(x_btn, y_btn)
         except (KeyError, ValueError) as e:
             print(f"⚠️ Keine PB-Button-Positionen für {device} / {theme_key}: {e}")
         #--------------------------------------------------------------------------
@@ -714,8 +737,9 @@ class P01_DASH(tk.Frame):
             y_btns = special_pos.get("y_btn_QUICKSOUND", [])
             audio_btn_width = self.audio_off_img.width()
             audio_btn_height = self.audio_off_img.height()
+            has_quicksound_positions = len(x_btns) >= len(self.audio_definitions) and len(y_btns) >= len(self.audio_definitions)
 
-            for i, definition in enumerate(self.audio_definitions):
+            for i, definition in enumerate(self.audio_definitions if has_quicksound_positions else []):
                 subfolder = definition["folder"]
                 filename = definition["file"]
                 quicksound_mode = definition["mode"]
@@ -751,7 +775,7 @@ class P01_DASH(tk.Frame):
                 else:
                     print(f"[WARN] Missing QUICKSOUND button position for index {i}")
                 self.audio_labels.append(lbl)
-                self.audio_label_states.append({"text": label_text, "offset": 0})
+                self.audio_label_states.append({"text": label_text, "offset": 0, "display": None})
                 self.audio_buttons.append(btn)
         except Exception as e:
             print(f"[ERROR] Failed to place QUICKSOUND buttons for {device}/{theme_key}: {e}")
@@ -1339,24 +1363,59 @@ class P01_DASH(tk.Frame):
         return True
 
     def _update_audio_labels(self):
+        if not self.audio_settings.get("labels_visible", True):
+            return
+
+        now = time.monotonic()
+        if now - self.last_audio_label_update < 0.25:
+            return
+        self.last_audio_label_update = now
+
         visible_chars = 11
         for label, state in zip(self.audio_labels, self.audio_label_states):
             text = state["text"]
             if len(text) <= visible_chars:
-                label.config(text=text)
+                if state.get("display") != text:
+                    label.config(text=text)
+                    state["display"] = text
                 continue
 
             scroll_text = f"{text}   "
             offset = state["offset"] % len(scroll_text)
             doubled = scroll_text + scroll_text
-            label.config(text=doubled[offset:offset + visible_chars])
+            display_text = doubled[offset:offset + visible_chars]
+            if state.get("display") != display_text:
+                label.config(text=display_text)
+                state["display"] = display_text
             state["offset"] = offset + 1
 
     def _update_audio_button_states(self):
         for idx, definition in enumerate(self.audio_definitions):
             if definition["mode"] == "AUTOPLAY" and idx < len(self.audio_buttons):
                 image = self.audio_buttons[idx].audio_on_img if read.autoplay_active else self.audio_buttons[idx].audio_off_img
-                self.audio_buttons[idx].config(image=image)
+                self._set_widget_image(("quicksound_autoplay", idx), self.audio_buttons[idx], image)
+
+    def _create_dev002_pb_value_labels(self, x_btn, y_btn):
+        if device != DEVICE_B_txt[2] or theme != "K2_S05":
+            return
+
+        label_style = {"font": (fonts[6], 24), "anchor": "c", "borderwidth": 0, "highlightthickness": 0}
+        self.dev002_pb_value_labels = []
+        self.dev002_pb_value_label_states = {}
+        for i in range(min(9, len(x_btn), len(y_btn))):
+            lbl = tk.Label(self, **label_style, bg=sty_clr[3], fg=sty_clr[1])
+            lbl.place(x=x_btn[i] + 100, y=y_btn[i] + 3, width=110, height=34)
+            self.dev002_pb_value_labels.append(lbl)
+
+    def _update_dev002_pb_value_labels(self, dev002_values):
+        if not self.dev002_pb_value_labels:
+            return
+
+        for index, pb_key in enumerate(btn_SELECT_txt[:len(self.dev002_pb_value_labels)]):
+            text = str(dev002_values.get(pb_key, "---"))
+            if self.dev002_pb_value_label_states.get(index) != text:
+                self.dev002_pb_value_labels[index].config(text=text)
+                self.dev002_pb_value_label_states[index] = text
 
     def toggle_audio(self, idx, filepath, loop, mode="1X"):
         if mode == "AUTOPLAY":
@@ -1536,7 +1595,7 @@ class P01_DASH(tk.Frame):
         #--------------------------------------------------------------------------
         # GET NEW GPS DATA
         #--------------------------------------------------------------------------
-        if btn_states_HW[0] == True:  #HW0 = GPS MODUL
+        if btn_states_HW[0] == True and not btn_states_SW[3]:  #HW0 = GPS MODUL
             if gps_port is not None:
                 read.gps_data()
         #--------------------------------------------------------------------------
@@ -1668,6 +1727,12 @@ class P01_DASH(tk.Frame):
         return seven_seg_speed
 
     def _update_dev002(self, images):
+        def scaled_led_count(value, minimum, maximum, amount):
+            if amount <= 0 or maximum <= minimum:
+                return 0
+            ratio = (float(value) - minimum) / (maximum - minimum)
+            return max(0, min(amount, int(ratio * amount)))
+
         l_img16 = images["rpm_on"]
         l_img17 = images["rpm_off"]
         l_img30 = images["gauge_1_off_low"]
@@ -1723,25 +1788,26 @@ class P01_DASH(tk.Frame):
             seg_DEV002[5] = self.val_cnt_sim[5]
             seg_DEV002[6] = self.val_cnt_sim[6]
 
-        val_DEV002 = [0,1,2,3,4,5,6]
-        for i in range(len(val_DEV002)):
-            val_DEV002[i] = seg_DEV002[i]/self.quantity_DEV002[i]
+        perc_DEV002 = [0] * 7
+        perc_DEV002[0] = scaled_led_count(seg_DEV002[0], val_min[0], val_max[0], self.ammount_DEV002G000)
+        for i in range(1, len(perc_DEV002)):
+            perc_DEV002[i] = scaled_led_count(seg_DEV002[i], val_min[i], val_max[i], self.quantity_DEV002[i])
 
-        perc_DEV002 = [0,1,2,3,4,5,6]
-        for i in range(len(perc_DEV002)):
-            perc_DEV002[i] = int (val_DEV002[i] - val_min[i]) * (self.quantity_DEV002[i] - val_conf_min[i]) / (self.quantity_DEV002[i] - val_conf_min[i]) + val_conf_min[i]
+        phase = self.dev002_update_phase
+        self.dev002_update_phase = (self.dev002_update_phase + 1) % 4
 
         # DEV002G000 (RPM)
-        if theme in [THEME_B_txt[0], THEME_B_txt[1], THEME_B_txt[2]]:
-            for i in range(val_conf_min[0], self.ammount_DEV002G000):
-                is_on = btn_states_FNKT[3] and perc_DEV002[0] >= i + 1
-                image = l_img16 if is_on else l_img17
-                self._set_widget_image(("dev002_g000", i), self.led_DEV002G000[i], image)
-        else:
-            for i in range(val_conf_min[0], self.ammount_DEV002G000):
-                is_on = btn_states_FNKT[3] and perc_DEV002[0] >= i + 1
-                image = l_img16[i] if is_on else l_img17[i]
-                self._set_widget_image(("dev002_g000", i), self.led_DEV002G000[i], image)
+        if phase == 0:
+            if theme in [THEME_B_txt[0], THEME_B_txt[1], THEME_B_txt[2]]:
+                for i in range(val_conf_min[0], self.ammount_DEV002G000):
+                    is_on = btn_states_FNKT[3] and perc_DEV002[0] >= i + 1
+                    image = l_img16 if is_on else l_img17
+                    self._set_widget_image(("dev002_g000", i), self.led_DEV002G000[i], image)
+            else:
+                for i in range(val_conf_min[0], self.ammount_DEV002G000):
+                    is_on = btn_states_FNKT[3] and perc_DEV002[0] >= i + 1
+                    image = l_img16[i] if is_on else l_img17[i]
+                    self._set_widget_image(("dev002_g000", i), self.led_DEV002G000[i], image)
 
         # DEV002 GAUGES 1-6
         parameters = [
@@ -1753,8 +1819,16 @@ class P01_DASH(tk.Frame):
             (6, l_img43, l_img42, l_img41, l_img40),
         ]
 
+        active_parameters = parameters
+        if phase == 1:
+            active_parameters = parameters[:3]
+        elif phase == 2:
+            active_parameters = parameters[3:]
+        else:
+            active_parameters = []
+
         if btn_states_FNKT[3]:
-            for param_index, img1_low, img2_low, img1_high, img2_high in parameters:
+            for param_index, img1_low, img2_low, img1_high, img2_high in active_parameters:
                 for i in range(val_conf_min[param_index], self.quantity_DEV002[param_index]):
                     if perc_DEV002[param_index] >= i + 1:
                         image = img1_low if i < 8 else img2_low
@@ -1766,7 +1840,7 @@ class P01_DASH(tk.Frame):
                         image,
                     )
         else:
-            for param_index, img1_low, img2_low, img1_high, img2_high in parameters:
+            for param_index, img1_low, img2_low, img1_high, img2_high in active_parameters:
                 for i in range(val_conf_min[param_index], self.quantity_DEV002[param_index]):
                     image = img1_high if i < 8 else img2_high
                     self._set_widget_image(
@@ -1784,29 +1858,29 @@ class P01_DASH(tk.Frame):
             seven_seg_DEV002G008 = self.val_cnt_sim[8]
             seven_seg_DEV002G009 = self.val_cnt_sim[9]
 
-        aux_gauges = [
-            (seven_seg_DEV002G007, self.ammount_DEV002G007, self.led_DEV002G007, 7),
-            (seven_seg_DEV002G008, self.ammount_DEV002G008, self.led_DEV002G008, 8),
-            (seven_seg_DEV002G009, self.ammount_DEV002G009, self.led_DEV002G009, 9),
-        ]
-        for value, amount, leds, value_index in aux_gauges:
-            normalized_value = value / amount
-            percentage = int(normalized_value - val_min[value_index]) * (amount - val_conf_min[value_index]) / (amount - val_conf_min[value_index]) + val_conf_min[value_index]
-            for i in range(val_conf_min[value_index], amount):
-                is_on = btn_states_FNKT[3] and percentage >= i + 1
-                if i == 0:
-                    image = l_img32 if is_on else l_img30
-                elif i == 1:
-                    image = l_img44 if is_on else l_img34
-                else:
-                    image = l_img42 if is_on else l_img40
-                self._set_widget_image(("dev002_aux", value_index, i), leds[i], image)
+        if phase == 3:
+            aux_gauges = [
+                (seven_seg_DEV002G007, self.ammount_DEV002G007, self.led_DEV002G007, 7),
+                (seven_seg_DEV002G008, self.ammount_DEV002G008, self.led_DEV002G008, 8),
+                (seven_seg_DEV002G009, self.ammount_DEV002G009, self.led_DEV002G009, 9),
+            ]
+            for value, amount, leds, value_index in aux_gauges:
+                percentage = scaled_led_count(value, val_min[value_index], val_max[value_index], amount)
+                for i in range(val_conf_min[value_index], amount):
+                    is_on = btn_states_FNKT[3] and percentage >= i + 1
+                    if i == 0:
+                        image = l_img32 if is_on else l_img30
+                    elif i == 1:
+                        image = l_img44 if is_on else l_img34
+                    else:
+                        image = l_img42 if is_on else l_img40
+                    self._set_widget_image(("dev002_aux", value_index, i), leds[i], image)
 
-        # DEV002 INFORMATION CENTER
-        infocenter_states = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
-        for i, is_on in enumerate(infocenter_states):
-            image = infocenterON_img_list[i] if is_on else infocenterOF_img_list[i]
-            self._set_widget_image(("dev002_infocenter", i), self.led_DEV002IC[i], image)
+            # DEV002 INFORMATION CENTER
+            infocenter_states = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
+            for i, is_on in enumerate(infocenter_states):
+                image = infocenterON_img_list[i] if is_on else infocenterOF_img_list[i]
+                self._set_widget_image(("dev002_infocenter", i), self.led_DEV002IC[i], image)
 
         # UPDATE DEV002 DIGITAL I/O todo
         #button_pin = aw001.get_pin(0)  # Button on AW io 1
@@ -1829,8 +1903,7 @@ class P01_DASH(tk.Frame):
         if device == DEVICE_B_txt[1]:
             if btn_states_PB == "pb00":
                 if sys_linux:
-                    if btn_states_FNKT[2] == True:
-                        self._refresh_system_data()
+                    self._refresh_system_data()
                     values = [
                         sys_diskused,
                         sys_diskmax,
@@ -1886,6 +1959,8 @@ class P01_DASH(tk.Frame):
 
         if device != DEVICE_B_txt[2] or dev002_values is None:
             return
+
+        self._update_dev002_pb_value_labels(dev002_values)
 
         if btn_states_PB != "pb09" and labels_changed:
             self._place_label_7SEG002()
@@ -3052,8 +3127,11 @@ class P01_DASH(tk.Frame):
             return
         self.update_job = None
         start_time = time.time()
+        timings = [("start", time.perf_counter())]
         self._update_audio_labels()
+        self._trace_step(timings, "audio_labels")
         self._update_audio_button_states()
+        self._trace_step(timings, "audio_buttons")
         #----------------------------------------------------------------------------------
         # Dictionary chechen if not, create
         #----------------------------------------------------------------------------------
@@ -3063,6 +3141,7 @@ class P01_DASH(tk.Frame):
         # UPDATE STYLES
         #----------------------------------------------------------------------------------
         images = self._get_theme_assets()["updates"]
+        self._trace_step(timings, "theme_assets")
         l_img10 = images["l_img10"]
         l_img11 = images["l_img11"]
         l_img12 = images["l_img12"]
@@ -3109,6 +3188,7 @@ class P01_DASH(tk.Frame):
                 localimagelist01,
                 localimagelist02,
             )
+            self._trace_step(timings, "dev001")
         #----------------------------------------------------------------------------------
         # DEV002 GAUGES
         #----------------------------------------------------------------------------------
@@ -3133,6 +3213,7 @@ class P01_DASH(tk.Frame):
                 seven_seg_DEV002G008,
                 seven_seg_DEV002G009,
             ) = self._update_dev002(dev002_images)
+            self._trace_step(timings, "dev002")
         #----------------------------------------------------------------------------------
         # UPDATE SYSINFO MTR DISPLAY
         #----------------------------------------------------------------------------------
@@ -3151,6 +3232,7 @@ class P01_DASH(tk.Frame):
             self._update_sysinfo(dev002_values)
         else:
             self._update_sysinfo()
+        self._trace_step(timings, "sysinfo")
         #----------------------------------------------------------------------------------
         # UPDATE ONLY IF SOMETHING CHANGED // 7 SEGMENT SPEED AND TOTAL RPM PROGNO DISPLAY
         #----------------------------------------------------------------------------------
@@ -3158,12 +3240,15 @@ class P01_DASH(tk.Frame):
             self._update_digital_displays(seven_seg_speed=seven_seg_speed)
         elif device == DEVICE_B_txt[2]:
             self._update_digital_displays(seg_DEV002=seg_DEV002)
+        self._trace_step(timings, "digital")
         #----------------------------------------------------------------------------------
         # END UPDATE LABEL
         #----------------------------------------------------------------------------------
         end_time = time.time()
         elapsed_time = end_time - start_time
         self.update_duration = f"{elapsed_time:.4f}"
+        self._trace_step(timings, "end")
+        self._log_slow_update(timings)
         self._schedule_update()
 
 #------------------------------------------------------------------------------------------

@@ -28,6 +28,7 @@
     <Compile Include="functions\favorite_manager.py" />
     <Compile Include="functions\image_loader.py" />
     <Compile Include="functions\image_paths.py" />
+    <Compile Include="functions\network_info.py" />
     <Compile Include="functions\text_lists.py" />
     <Compile Include="functions\__init__.py" />
     <Compile Include="setup\config_state.py" />

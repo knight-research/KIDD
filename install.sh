@@ -4,6 +4,8 @@ set -euo pipefail
 APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 MAIN_PATH="$APP_DIR/main.py"
+LAUNCHER_PATH="$APP_DIR/start.sh"
+FONT_SOURCE_DIR="$APP_DIR/fonts"
 SERVICE_NAME="kidd"
 
 INSTALL_RPI=0
@@ -88,6 +90,11 @@ if [[ ! -f "$MAIN_PATH" ]]; then
   exit 1
 fi
 
+if [[ ! -f "$LAUNCHER_PATH" ]]; then
+  echo "KIDD start.sh not found: $LAUNCHER_PATH" >&2
+  exit 1
+fi
+
 run_sudo() {
   if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
     "$@"
@@ -111,6 +118,7 @@ install_apt_packages() {
     python3-venv
     git
     ffmpeg
+    fontconfig
     vlc
   )
 
@@ -186,6 +194,67 @@ install_requirements() {
   fi
 }
 
+install_fonts() {
+  if [[ ! -d "$FONT_SOURCE_DIR" ]]; then
+    echo "Font directory not found, skipping font installation: $FONT_SOURCE_DIR"
+    return
+  fi
+
+  local font_target_dir="${HOME}/.local/share/fonts/KIDD"
+  mkdir -p "$font_target_dir"
+
+  echo "Installing KIDD fonts..."
+  find "$FONT_SOURCE_DIR" -type f \( -iname "*.ttf" -o -iname "*.otf" \) -exec cp -f {} "$font_target_dir/" \;
+
+  if command -v fc-cache >/dev/null 2>&1; then
+    fc-cache -f "$font_target_dir"
+  else
+    echo "fc-cache not found, fonts were copied but the font cache was not refreshed."
+  fi
+}
+
+check_python_imports() {
+  "$PYTHON_BIN" - <<'PY'
+import importlib
+
+modules = [
+    "PIL",
+    "pygame",
+    "pynmea2",
+    "serial",
+    "speech_recognition",
+    "websocket",
+    "requests",
+]
+
+for module_name in modules:
+    importlib.import_module(module_name)
+
+print("Core Python imports OK")
+PY
+
+  if [[ "$INSTALL_RPI" -eq 1 ]]; then
+    "$PYTHON_BIN" - <<'PY'
+import importlib
+
+modules = [
+    "psutil",
+    "smbus2",
+    "RPi.GPIO",
+    "adafruit_ads1x15.ads1115",
+    "adafruit_aw9523",
+    "board",
+    "busio",
+]
+
+for module_name in modules:
+    importlib.import_module(module_name)
+
+print("Raspberry Pi Python imports OK")
+PY
+  fi
+}
+
 install_pi_autostart() {
   if [[ "$INSTALL_RPI" -ne 1 || "$INSTALL_AUTOSTART" -ne 1 ]]; then
     return
@@ -195,6 +264,8 @@ install_pi_autostart() {
     echo "systemctl not found, skipping Raspberry Pi autostart service."
     return
   fi
+
+  chmod +x "$LAUNCHER_PATH"
 
   local service_path="/etc/systemd/system/${SERVICE_NAME}.service"
   local run_user="${SUDO_USER:-${USER}}"
@@ -221,7 +292,7 @@ Environment=PYTHONUNBUFFERED=1
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=${run_home}/.Xauthority
 Environment=XDG_RUNTIME_DIR=/run/user/${run_uid}
-ExecStart=${PYTHON_BIN} ${MAIN_PATH}
+ExecStart=${LAUNCHER_PATH}
 Restart=always
 RestartSec=10
 
@@ -245,13 +316,16 @@ echo "System install: $SYSTEM_INSTALL"
 echo "Pi autostart: $INSTALL_AUTOSTART"
 
 install_apt_packages
+install_fonts
 prepare_python
 install_requirements
+check_python_imports
+chmod +x "$LAUNCHER_PATH"
 install_pi_autostart
 
 echo "KIDD dependencies installed."
 if [[ "$CREATE_VENV" -eq 1 ]]; then
-  echo "Start KIDD with: $VENV_DIR/bin/python $APP_DIR/main.py"
+  echo "Start KIDD with: $LAUNCHER_PATH"
 fi
 if [[ "$INSTALL_RPI" -eq 1 && "$INSTALL_AUTOSTART" -eq 1 ]]; then
   echo "Autostart service: systemctl status ${SERVICE_NAME}"

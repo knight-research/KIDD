@@ -4,8 +4,10 @@ import unittest
 from pathlib import Path
 
 from functions.btn_state_manager import ButtonStateManager
+from functions.network_info import read_wlan0_ip
 from setup.config_state import load_config_state_symbols
 from setup.platform_detection import detect_platform
+from setup.runtime_defaults import parse_host_device_name
 from setup.style_config import load_style_symbols
 from functions.text_lists import load_text_list_symbols
 from functions.quicksound_config import (
@@ -107,6 +109,14 @@ class SmokeTests(unittest.TestCase):
 
             self.assertEqual(list_quicksound_folders(str(root)), ["sfx", "voice"])
             self.assertEqual(list_quicksound_files(str(root), "sfx"), ["A.MP3", "B.mp3"])
+
+    def test_runtime_hostname_parser_handles_missing_dev_marker(self):
+        self.assertEqual(parse_host_device_name("22-180-PI"), ("carxxx", "devxxx"))
+        self.assertEqual(parse_host_device_name("car001dev002"), ("car001", "dev002"))
+        self.assertEqual(parse_host_device_name("car001dev"), ("car001", "devxxx"))
+
+    def test_setup_wlan_ip_falls_back_without_ip_command(self):
+        self.assertEqual(read_wlan0_ip(), "127.0.0.1")
 
 
 if __name__ == "__main__":

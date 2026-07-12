@@ -1,4 +1,6 @@
 from pages.page_context import set_context, sync_context
+import subprocess
+import threading
 from functions.favorite_manager import (
     build_qopt_favorites,
     favorite_label,
@@ -44,6 +46,8 @@ class KIDDController:
         self.autoplay_current_label = None
         self.autoplay_next_label = None
         self.autoplay_time_label = None
+        self.system_data_lock = threading.Lock()
+        self.system_data_refreshing = False
     #--------------------------------------------------------------------------------------
     # MAIN APP FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -520,24 +524,54 @@ class KIDDController:
     #----------------------------------------------------------------------------------
     # LOAD SYSTEMDATA IF THE SYSTEM IS A RASPBERRY PI
     #----------------------------------------------------------------------------------
-    def get_system_data(self):
-        global sys_diskused
-        global sys_diskmax
-        global sys_memused
-        global sys_memmax
-        global sys_cpuload
-        global sys_cputemp
-        global power_info
-
+    def _collect_system_data(self):
         disk_usage = psutil.disk_usage('/')
         memory = psutil.virtual_memory()
-        sys_diskused = str(round(disk_usage.used / (1024.0 ** 3), 2))
-        sys_diskmax = str(round(disk_usage.total / (1024.0 ** 3), 2))
-        sys_memused = str(memory.percent)
-        sys_memmax = str(round(memory.total / (1024.0 ** 3), 2))
-        sys_cpuload = str(psutil.cpu_percent())
-        res01 = os.popen('vcgencmd measure_temp').readline()
-        sys_cputemp = res01.replace("temp=","").replace("'C\n","")
+        values = {
+            "sys_diskused": str(round(disk_usage.used / (1024.0 ** 3), 2)),
+            "sys_diskmax": str(round(disk_usage.total / (1024.0 ** 3), 2)),
+            "sys_memused": str(memory.percent),
+            "sys_memmax": str(round(memory.total / (1024.0 ** 3), 2)),
+            "sys_cpuload": str(psutil.cpu_percent(interval=None)),
+            "sys_cputemp": "--.--",
+        }
+
+        try:
+            res01 = subprocess.check_output(
+                ["vcgencmd", "measure_temp"],
+                stderr=subprocess.DEVNULL,
+                timeout=0.25,
+            ).decode("utf-8", errors="ignore")
+            sys_cputemp = res01.replace("temp=","").replace("'C\n","").strip()
+        except (subprocess.SubprocessError, FileNotFoundError):
+            sys_cputemp = ""
+
+        if sys_cputemp:
+            values["sys_cputemp"] = sys_cputemp
+        else:
+            temps = psutil.sensors_temperatures()
+            for entries in temps.values():
+                if entries:
+                    values["sys_cputemp"] = str(round(entries[0].current, 2))
+                    break
+
+        return values
+
+    def _system_data_worker(self):
+        try:
+            self._publish_state(**self._collect_system_data())
+        finally:
+            with self.system_data_lock:
+                self.system_data_refreshing = False
+
+    def get_system_data(self):
+        with self.system_data_lock:
+            if self.system_data_refreshing:
+                return
+            self.system_data_refreshing = True
+
+        thread = threading.Thread(target=self._system_data_worker, daemon=True)
+        thread.start()
     #--------------------------------------------------------------------------------------
     # STYLING FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -992,10 +1026,17 @@ class KIDDController:
 
         last_gps_time = time.time()
         try:
-            gps_raw = gps_serial.readline().decode('ascii', errors='replace')
-            parsed = pynmea2.parse(gps_raw)
+            gps_raw = gps_serial.readline().decode('ascii', errors='replace').strip()
+            if not gps_raw or not gps_raw.startswith("$"):
+                return
+            try:
+                parsed = pynmea2.parse(gps_raw)
+            except pynmea2.ParseError:
+                return
 
             if gps_raw.startswith('$GPRMC'):
+                if getattr(parsed, "status", None) == "V":
+                    return
                 gps_date = parsed.datestamp
                 if parsed.spd_over_grnd:
                     knots = parsed.spd_over_grnd
@@ -1033,6 +1074,8 @@ class KIDDController:
 
             elif gps_raw.startswith('$GPGGA'):
                 gps_time_raw = parsed.timestamp
+                if gps_time_raw is None:
+                    return
 
                 from datetime import datetime, timedelta
                 if 'time_zone_offset' in globals():
@@ -1050,7 +1093,8 @@ class KIDDController:
                     gps_altitude_units = parsed.altitude_units
 
         except Exception as e:
-            print("no GPS data:", e)
+            if debug:
+                print("GPS data skipped:", e)
 
         save_needed = False
 

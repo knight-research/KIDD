@@ -44,6 +44,7 @@ def setup_hardware(sys_linux, sys_pi, btn_states_HW, device, device_names, depen
                     response = hardware["gps_serial"].readline().decode("utf-8")
                     print(response)
                     if "u-blox" in response:
+                        hardware["gps_serial"].timeout = 0
                         break
                 except serial.SerialException:
                     print("no GPS")

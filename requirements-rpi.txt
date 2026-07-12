@@ -1,5 +1,6 @@
 # Raspberry Pi / I2C hardware support
 smbus2
+psutil
 RPi.GPIO
 adafruit-ads1x15
 adafruit-circuitpython-ads1x15

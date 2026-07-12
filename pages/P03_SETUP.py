@@ -1,4 +1,5 @@
 from pages.page_context import sync_context
+from functions.network_info import read_wlan0_ip
 from functions.quicksound_config import (
     QUICKSOUND_COLORS,
     QUICKSOUND_MODES,
@@ -217,9 +218,7 @@ class P03_SETUP(tk.Frame):
         # STATIC TEXT
         #----------------------------------------------------------------------------------
         if sys_linux and sys_pi:
-            ip_address = subprocess.check_output(["ip", "address", "show", "wlan0"]).decode("utf-8")
-            ip_line = [line.strip() for line in ip_address.split("\n") if "inet " in line][0]
-            wlan0_ip = ip_line.split()[1]
+            wlan0_ip = read_wlan0_ip()
         else:
             wlan0_ip = "127.0.0.1"
         canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="SETUP")

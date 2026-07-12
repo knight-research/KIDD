@@ -1,5 +1,86 @@
 # Changelog
 
+## v2.2.51 - 2026-07-12-1702
+
+- Added DEV002 `K2_S05` value labels next to the first nine PB buttons so each powerboard display shows its current value directly beside the button.
+- Adjusted the DEV002 `K2_S05` PB value labels 10px to the right and 5px upward.
+
+## v2.2.50 - 2026-07-12-1656
+
+- Fixed DEV002 LED scaling so RPM and other gauges map their real value ranges to the available LED count instead of using placeholder quantities.
+- Applied the corrected value-to-LED scaling to DEV002 RPM, main gauges, and AUX gauges.
+
+## v2.2.49 - 2026-07-12-1651
+
+- Replaced the coarse DEV002 frame limiter with phased gauge rendering so DEV002 values stay responsive while heavy image groups are spread across frames.
+
+## v2.2.48 - 2026-07-12-1648
+
+- Increased the DEV002 dashboard gauge frame limiter so heavy image updates run less often on Raspberry Pi.
+
+## v2.2.47 - 2026-07-12-1645
+
+- Skipped dashboard QuickSound widget creation entirely when the active device/theme has no QuickSound button positions, such as DEV002.
+
+## v2.2.46 - 2026-07-12-1645
+
+- Added a DEV002 dashboard frame limiter so heavy gauge image updates are capped and cached between fast update cycles.
+
+## v2.2.45 - 2026-07-12-1640
+
+- Ignored void/no-fix GPS NMEA sentences without raising timestamp errors when GPS has no reception.
+- Reduced GPS journal spam by silently skipping empty, invalid, or incomplete NMEA data.
+
+## v2.2.44 - 2026-07-12-1634
+
+- Reduced dashboard QuickSound label updates by caching rendered text and scrolling labels at a fixed slower interval.
+- Cached AUTOPLAY QuickSound button image updates to avoid redundant Tkinter image configuration in the fast dashboard loop.
+
+## v2.2.43 - 2026-07-12-1627
+
+- Reduced dashboard system-data refresh frequency to avoid frequent Raspberry Pi stalls from hardware/system probes.
+- Added lightweight slow-update logging to show which dashboard section causes frame hitches in the systemd journal.
+
+## v2.2.42 - 2026-07-12-1626
+
+- Skipped GPS reads while DEV001 simulation mode is active so simulated gauges do not block on serial input.
+- Changed the GPS serial port to non-blocking mode after detection to prevent `readline()` from stalling the dashboard update loop.
+
+## v2.2.41 - 2026-07-12-1621
+
+- Moved Raspberry Pi system data collection off the Tkinter update loop so psutil/vcgencmd refreshes no longer stall the dashboard once per second.
+- Added a short timeout for `vcgencmd measure_temp` and kept the psutil temperature fallback.
+
+## v2.2.40 - 2026-07-12-1614
+
+- Published refreshed Raspberry Pi system data back to the dashboard context so psutil values replace the default `88...` placeholders.
+- Updated DEV001 sysinfo refresh to collect Linux system data without requiring the function toggle first.
+- Added a CPU temperature fallback through `psutil.sensors_temperatures()` when `vcgencmd` returns no value.
+
+## v2.2.39 - 2026-07-12-1610
+
+- Made Setup page WLAN IP display tolerant when `wlan0` has no IPv4 address or the `ip` command cannot return interface data.
+
+## v2.2.38 - 2026-07-12-1600
+
+- Updated `install.sh` to install bundled KIDD `.ttf` and `.otf` fonts into the current user's Linux font directory.
+- Added `fontconfig` to Linux/Pi system packages so the font cache can be refreshed during installation.
+
+## v2.2.37 - 2026-07-12-1556
+
+- Made Linux hostname parsing tolerant when the Raspberry Pi hostname does not contain a `dev` marker.
+- Added regression coverage for runtime device-name parsing fallbacks.
+
+## v2.2.36 - 2026-07-12-1554
+
+- Added missing Raspberry Pi dependency `psutil` to `requirements-rpi.txt`.
+- Added installer import checks so missing Python modules are reported during installation before KIDD starts.
+
+## v2.2.35 - 2026-07-12-1551
+
+- Added `start.sh` so KIDD starts with the local `.venv` Python and finds installed modules such as `pynmea2`.
+- Updated the Raspberry Pi autostart service to launch KIDD through `start.sh`.
+
 ## v2.2.34 - 2026-07-12-1548
 
 - Removed the `.gitignore` rule that excluded MP3 files so the `sound` folder contents can be tracked.
