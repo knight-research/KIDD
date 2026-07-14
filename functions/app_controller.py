@@ -1063,6 +1063,8 @@ class KIDDController:
             gps_lon_dir=gps_lon_dir,
             gps_altitude=gps_altitude,
             gps_altitude_units=gps_altitude_units,
+            gps_num_sats=gps_num_sats,
+            gps_fix_quality=gps_fix_quality,
             gps_kph_0=gps_kph_0,
             gps_mph_0=gps_mph_0,
         )
@@ -1074,6 +1076,7 @@ class KIDDController:
         global gps_odo_metric_0str, gps_odo_imperial_0str
         global gps_time, gps_lat_str, gps_lat_dir, gps_long_str, gps_lon_dir
         global gps_altitude, gps_altitude_units
+        global gps_num_sats, gps_fix_quality
         global gps_kph_0, gps_mph_0, time_zone_offset
         global reset_trip
 
@@ -1161,10 +1164,10 @@ class KIDDController:
                 if parsed.altitude is not None:
                     gps_altitude = f"{parsed.altitude:.1f}"
                     gps_altitude_units = parsed.altitude_units
-                sats = getattr(parsed, "num_sats", "-")
-                fix_quality = getattr(parsed, "gps_qual", "-")
+                gps_num_sats = str(getattr(parsed, "num_sats", "00") or "00").zfill(2)
+                gps_fix_quality = str(getattr(parsed, "gps_qual", "0") or "0")
                 self._log_gps_debug(
-                    f"[GPS] GGA OK time={gps_time} lat={gps_lat_str}{gps_lat_dir} lon={gps_long_str}{gps_lon_dir} alt={gps_altitude}{gps_altitude_units} sats={sats} fix={fix_quality}",
+                    f"[GPS] GGA OK time={gps_time} lat={gps_lat_str}{gps_lat_dir} lon={gps_long_str}{gps_lon_dir} alt={gps_altitude}{gps_altitude_units} sats={gps_num_sats} fix={gps_fix_quality}",
                     interval=5.0,
                     key="gga_fix",
                 )

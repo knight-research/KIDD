@@ -90,6 +90,8 @@ def load_runtime_default_symbols(sys_linux, socket):
         "gps_lon_dir": "E",
         "gps_altitude": "000",
         "gps_altitude_units": "M",
+        "gps_num_sats": "00",
+        "gps_fix_quality": "0",
         "gps_kph_0": "000",
         "gps_mph_0": "000",
         "odo_gps_metric_old": 0.0,

@@ -1918,8 +1918,9 @@ class P01_DASH(tk.Frame):
                 else:
                     values = ["--.--", "--.--", "--.--", "--.--", "--.--", "--.--", self.update_duration]
             elif btn_states_PB == "pb01":
+                gps_time_status = f"{gps_time} S{gps_num_sats} F{gps_fix_quality}"
                 values = [
-                    gps_time,
+                    gps_time_status,
                     gps_date,
                     gps_altitude,
                     gps_lat_str,

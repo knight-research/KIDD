@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.64 - 2026-07-14-1611
+
+- Added GPS satellite count and fix-quality state from GGA parsing.
+- Displayed compact GPS reception status after the Dash GPS time as `Sxx Fq`.
+
 ## v2.2.63 - 2026-07-14-1603
 
 - Published parsed GPS values back to the shared app context so Dash GPS fields update from GGA/RMC reads.
