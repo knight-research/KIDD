@@ -204,7 +204,7 @@ class P03_SETUP(tk.Frame):
             self._create_dev001_device_status()
             self._create_dev001_submenu()
         elif device == DEVICE_B_txt[2]:
-            self._dev002_scale_area = (620, 90, 700, 530)
+            self._dev002_scale_area = (15, 90, 1245, 530)
             self._dev002_scale_frame = tk.Frame(self, bg=sys_clr[0], highlightthickness=0)
             self._create_dev002_submenu()
             self._create_setup_console("DEV002", 30, 265, 560, 28, 30, 295, 560, 315, 18)
