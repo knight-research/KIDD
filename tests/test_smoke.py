@@ -42,6 +42,7 @@ class SmokeTests(unittest.TestCase):
 
         self.assertIn("MENU_B_txt", text_symbols)
         self.assertIn("btn_states_HW", config_symbols)
+        self.assertIn("states_txt_act", config_symbols)
         self.assertIn("kidd_width", style_symbols)
 
     def test_button_state_manager_writes_odo_config(self):

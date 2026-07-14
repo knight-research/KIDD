@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.3.2 - 2026-07-14-1957
+
+- Restored startup initialization of the active state texts so Setup can open after removing the Boot page.
+- Fixed main menu navigation after removing the Boot page so menu buttons open the matching pages again.
+- Fixed Audio folder buttons so they refresh the MP3 button list in place instead of opening the Video page.
+- Rebuild Audio MP3 buttons cleanly when changing folders.
+- Added a smoke test covering the active state text initialization.
+
 ## v2.3.1 - 2026-07-14-1940
 
 - Restored image list initialization after removing the Boot page so Dash can start directly without empty image lists.

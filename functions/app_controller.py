@@ -306,7 +306,7 @@ class KIDDController:
         x_pos_r1 = max(20, int((bggrid[1] - row_width) / 2))
         for i in range(self.btn_menu_place):
             btn_menu = tk.Button(text=MENU_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
-            btn_menu.config(command=lambda i=i: self.app.switch_frame(i + 1))
+            btn_menu.config(command=lambda i=i: self.app.switch_frame(i))
             self.btns_menu.append(btn_menu)
             self.btns_menu[i].place(x=x_pos_r1, y=frm05_YPOS+45, width=btn_w, height=btn_h)
             x_pos_r1 += +(btn_w+15)
@@ -889,7 +889,7 @@ class KIDDController:
         x_pos_ssb_r1 = 20
         for i in range(snd_menu_btn_place):
             snd_menu_btn = tk.Button(bg=sys_clr[8], fg=sty_clr[0], font=(fonts[1], 24), text=subfolders_list[i])
-            snd_menu_btn.config(command=lambda i=i: (self.get_snd_menu_btn_txt(snd_menu_btns[i]), self.load_soundfolder(), self.snd_mp3_btns(), self.app.switch_frame(7))) #todo variablen name ändern damit sich ordnername snd ändert
+            snd_menu_btn.config(command=lambda i=i: (self.get_snd_menu_btn_txt(snd_menu_btns[i]), self.load_soundfolder(), self.snd_mp3_btns())) #todo variablen name ändern damit sich ordnername snd ändert
             snd_menu_btns.append(snd_menu_btn)
             snd_menu_btns[i].place(x=x_pos_ssb_r1, y=90, width=115, height=55)
             x_pos_ssb_r1 += +120
@@ -915,8 +915,16 @@ class KIDDController:
     def snd_mp3_btns(self):
         global snd_mp3_btns
         global snd_mp3_btn_place
+        for old_button in getattr(self, "snd_mp3_buttons", []):
+            old_button.destroy()
+        old_slider = getattr(self, "slider_snd_mp3_btns", None)
+        if old_slider is not None:
+            old_slider.destroy()
+            self.slider_snd_mp3_btns = None
+
         snd_mp3_btn_place = mp3files_count  # Number of Buttons
         snd_mp3_btns = []
+        self.snd_mp3_buttons = snd_mp3_btns
         x_pos_mp3_r0 = 22
         y_pos_mp3 = 200  # Starting y-position
         num_rows = 5  # Number of rows to display
@@ -942,11 +950,11 @@ class KIDDController:
 
         if snd_mp3_btn_place > num_rows * row_length:
             # Add a vertical slider when there are more buttons than can be displayed
-            slider_snd_mp3_btns = tk.Scale(from_=0, to=snd_mp3_btn_place - row_length, command=self.show_snd_mp3_btns,
+            self.slider_snd_mp3_btns = tk.Scale(from_=0, to=snd_mp3_btn_place - row_length, command=self.show_snd_mp3_btns,
                                             showvalue=0, length=400, orient='vertical', sliderlength=50,
                                             troughcolor="#000000", highlightbackground=sys_clr[6], bg='#00ffff')
-            slider_snd_mp3_btns.set(0)
-            slider_snd_mp3_btns.place(x=1220, y=200)  # Adjust the x and y positions accordingly
+            self.slider_snd_mp3_btns.set(0)
+            self.slider_snd_mp3_btns.place(x=1220, y=200)  # Adjust the x and y positions accordingly
     def show_snd_mp3_btns(self, value):
         start_index_mp3 = int(float(value))  # Convert float value to integer
         num_rows = 4  # Number of rows to display
