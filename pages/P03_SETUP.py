@@ -54,7 +54,7 @@ class P03_SETUP(tk.Frame):
             [90, 255],  #1 MAIN FRAME
             [(bggrid[4]-138), (bggrid[4]-48)]  #2 MENU FRAME
         ]
-        overlay_frames = [frames[0], frames[2]] if device == DEVICE_B_txt[1] else frames
+        overlay_frames = [frames[0], frames[2]]
         coordinates = []
         for frame_bounds in overlay_frames:
             coordinates.append((bggrid[0] + xlinborder, bggrid[3] + frame_bounds[0], bggrid[1] - xlinborder, bggrid[3] + frame_bounds[0]))
@@ -101,51 +101,6 @@ class P03_SETUP(tk.Frame):
         #------------------------------------------------------------------------------
         # CREATE BACKGROUND GRID OVERLAYS
         #------------------------------------------------------------------------------
-        if device != DEVICE_B_txt[1]:
-            #--------------------------------------------------------------------------
-            # CREATE MAIN CORNERS
-            #--------------------------------------------------------------------------
-            canvas.create_line(15, 90, 25, 90, fill=colors_corner[0], width=1)      #LT_X
-            canvas.create_line(15, 90, 15, 100, fill=colors_corner[1], width=1)     #LT_Y
-            canvas.create_line(1250, 90, 1260, 90, fill=colors_corner[0], width=1)  #RT_X
-            canvas.create_line(1260, 90, 1260, 100, fill=colors_corner[1], width=1) #RT_Y
-            canvas.create_line(15, 255, 25, 255, fill=colors_corner[0], width=1)    #LB_X
-            canvas.create_line(15, 255, 15, 245, fill=colors_corner[1], width=1)    #LB_Y
-            canvas.create_line(1250, 255, 1260, 255, fill=colors_corner[0], width=1)#RB_X
-            canvas.create_line(1260, 255, 1260, 245, fill=colors_corner[1], width=1)#RB_Y
-            #--------------------------------------------------------------------------
-            # CREATE ADJUST CORNERS
-            #--------------------------------------------------------------------------
-            canvas.create_line(15, 285, 25, 285, fill=colors_corner[0], width=1)   #LT_X
-            canvas.create_line(15, 285, 15, 295, fill=colors_corner[1], width=1)   #LT_Y
-            canvas.create_line(290, 285, 300, 285, fill=colors_corner[0], width=1) #RT_X
-            canvas.create_line(300, 285, 300, 295, fill=colors_corner[1], width=1) #RT_Y
-            canvas.create_line(15, 615, 25, 615, fill=colors_corner[0], width=1)   #LB_X
-            canvas.create_line(15, 605, 15, 615, fill=colors_corner[1], width=1)   #LB_Y
-            canvas.create_line(290, 615, 300, 615, fill=colors_corner[0], width=1) #RB_X
-            canvas.create_line(300, 605, 300, 615, fill=colors_corner[1], width=1) #RB_Y
-            #--------------------------------------------------------------------------
-            # CREATE KEYPAD CORNERS
-            #--------------------------------------------------------------------------
-            canvas.create_line(330, 285, 340, 285, fill=colors_corner[0], width=1) #LT_X
-            canvas.create_line(330, 285, 330, 295, fill=colors_corner[1], width=1) #LT_Y
-            canvas.create_line(650, 285, 660, 285, fill=colors_corner[0], width=1) #RT_X
-            canvas.create_line(660, 285, 660, 295, fill=colors_corner[1], width=1) #RT_Y
-            canvas.create_line(330, 615, 340, 615, fill=colors_corner[0], width=1) #LB_X
-            canvas.create_line(330, 605, 330, 615, fill=colors_corner[1], width=1) #LB_Y
-            canvas.create_line(650, 615, 660, 615, fill=colors_corner[0], width=1) #RB_X
-            canvas.create_line(660, 605, 660, 615, fill=colors_corner[1], width=1) #RB_Y
-            #--------------------------------------------------------------------------
-            # CREATE SPARE CORNERS
-            #--------------------------------------------------------------------------
-            canvas.create_line(690, 285, 700, 285, fill=colors_corner[0], width=1) #LT_X
-            canvas.create_line(690, 285, 690, 295, fill=colors_corner[1], width=1) #LT_Y
-            canvas.create_line(1010, 285, 1020, 285, fill=colors_corner[0], width=1) #RT_X
-            canvas.create_line(1020, 285, 1020, 295, fill=colors_corner[1], width=1) #RT_Y
-            canvas.create_line(690, 615, 700, 615, fill=colors_corner[0], width=1) #LB_X
-            canvas.create_line(690, 605, 690, 615, fill=colors_corner[1], width=1) #LB_Y
-            canvas.create_line(1010, 615, 1020, 615, fill=colors_corner[0], width=1) #RB_X
-            canvas.create_line(1020, 605, 1020, 615, fill=colors_corner[1], width=1) #RB_Y
         #--------------------------------------------------------------------------
         # CREATE FRAME 02 (MENU) CORNERS LEFT/TOP DISPLAY
         #--------------------------------------------------------------------------
