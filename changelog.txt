@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.84 - 2026-07-14-1901
+
+- Changed gauge LED scaling to use shifted LED thresholds so the last LED turns on before the configured maximum.
+- Applied the same threshold calculation to DEV001 and DEV002 gauge bars, including DEV002 VDC/FUEL PMP/TPS V.
+
 ## v2.2.83 - 2026-07-14-1853
 
 - Added gauge scale revision tracking so changed SCALE values force the Dash LED indicators to redraw with the new scaling.

@@ -234,6 +234,22 @@ class P01_DASH(tk.Frame):
                 getattr(self, cache_name).clear()
         return True
 
+    def _scaled_led_count(self, value, minimum, maximum, amount):
+        if amount <= 0 or maximum <= minimum:
+            return 0
+        try:
+            value = float(value)
+            minimum = float(minimum)
+            maximum = float(maximum)
+        except (TypeError, ValueError):
+            return 0
+        if value < minimum:
+            return 0
+        step = (maximum - minimum) / amount
+        if step <= 0:
+            return 0
+        return max(0, min(amount, int((value - minimum) / step) + 1))
+
     def _set_sysinfo_text(self, index, value):
         if self.sysinfo_text_states.get(index) == value:
             return
@@ -1687,11 +1703,7 @@ class P01_DASH(tk.Frame):
 
         speed_int = int(seven_seg_speed)
 
-        if btn_states_FNKT[3] and val_max[0] > val_min[0]:
-            speed_ratio = (speed_int - val_min[0]) / (val_max[0] - val_min[0])
-            val_DEV001G000 = max(0, min(self.ammount_DEV001G000, speed_ratio * self.ammount_DEV001G000))
-        else:
-            val_DEV001G000 = 0
+        val_DEV001G000 = self._scaled_led_count(speed_int, val_min[0], val_max[0], self.ammount_DEV001G000)
 
         def get_led_image(i, on):
             if i < 7:
@@ -1701,7 +1713,7 @@ class P01_DASH(tk.Frame):
             return l_img80 if on else l_img10
 
         for i in range(val_conf_min[0], self.ammount_DEV001G000):
-            is_on = btn_states_FNKT[3] and (val_DEV001G000 >= i + 1)
+            is_on = btn_states_FNKT[3] and val_DEV001G000 >= i + 1
             img = get_led_image(i, is_on)
             if self.old_bar_leds.get(i) != img:
                 self.led_DEV001G000[i].config(image=img)
@@ -1717,8 +1729,7 @@ class P01_DASH(tk.Frame):
         else:
             seven_seg_DEV001G001 = self.val_cnt_sim[1]
 
-        signal_ratio = (seven_seg_DEV001G001 - val_min[1]) / (val_max[1] - val_min[1])
-        perc_DEV001G001 = max(0, min(1, signal_ratio)) * self.ammount_DEV001G001
+        perc_DEV001G001 = self._scaled_led_count(seven_seg_DEV001G001, val_min[1], val_max[1], self.ammount_DEV001G001)
 
         for i in range(val_conf_min[1], self.ammount_DEV001G001):
             is_on = btn_states_FNKT[3] and (perc_DEV001G001 >= i + 1)
@@ -1737,8 +1748,7 @@ class P01_DASH(tk.Frame):
         else:
             seven_seg_DEV001G002 = self.val_cnt_sim[2]
 
-        tuning_ratio = (seven_seg_DEV001G002 - val_min[2]) / (val_max[2] - val_min[2])
-        perc_DEV001G002 = max(0, min(1, tuning_ratio)) * self.ammount_DEV001G002
+        perc_DEV001G002 = self._scaled_led_count(seven_seg_DEV001G002, val_min[2], val_max[2], self.ammount_DEV001G002)
 
         for i in range(val_conf_min[2], self.ammount_DEV001G002):
             is_on = btn_states_FNKT[3] and (perc_DEV001G002 >= i + 1)
@@ -1774,12 +1784,6 @@ class P01_DASH(tk.Frame):
         return seven_seg_speed
 
     def _update_dev002(self, images):
-        def scaled_led_count(value, minimum, maximum, amount):
-            if amount <= 0 or maximum <= minimum:
-                return 0
-            ratio = (float(value) - minimum) / (maximum - minimum)
-            return max(0, min(amount, int(ratio * amount)))
-
         l_img16 = images["rpm_on"]
         l_img17 = images["rpm_off"]
         l_img30 = images["gauge_1_off_low"]
@@ -1838,9 +1842,9 @@ class P01_DASH(tk.Frame):
             seg_DEV002[6] = self.val_cnt_sim[6]
 
         perc_DEV002 = [0] * 7
-        perc_DEV002[0] = scaled_led_count(seg_DEV002[0], val_min[0], val_max[0], self.ammount_DEV002G000)
+        perc_DEV002[0] = self._scaled_led_count(seg_DEV002[0], val_min[0], val_max[0], self.ammount_DEV002G000)
         for i in range(1, len(perc_DEV002)):
-            perc_DEV002[i] = scaled_led_count(seg_DEV002[i], val_min[i], val_max[i], self.quantity_DEV002[i])
+            perc_DEV002[i] = self._scaled_led_count(seg_DEV002[i], val_min[i], val_max[i], self.quantity_DEV002[i])
 
         phase = self.dev002_update_phase
         self.dev002_update_phase = 1 if force_gauge_refresh else (self.dev002_update_phase + 1) % 4
@@ -1916,7 +1920,7 @@ class P01_DASH(tk.Frame):
                 (seven_seg_DEV002G009, self.ammount_DEV002G009, self.led_DEV002G009, 9),
             ]
             for value, amount, leds, value_index in aux_gauges:
-                percentage = scaled_led_count(value, val_min[value_index], val_max[value_index], amount)
+                percentage = self._scaled_led_count(value, val_min[value_index], val_max[value_index], amount)
                 for i in range(val_conf_min[value_index], amount):
                     is_on = btn_states_FNKT[3] and percentage >= i + 1
                     if i == 0:
