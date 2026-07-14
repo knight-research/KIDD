@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.63 - 2026-07-14-1603
+
+- Published parsed GPS values back to the shared app context so Dash GPS fields update from GGA/RMC reads.
+- Initialized the GPS save flag before parsing so GPS odometer updates cannot reference it before assignment.
+
 ## v2.2.62 - 2026-07-14-1558
 
 - Marked `start.sh` executable in Git so the Raspberry Pi systemd service can launch KIDD without `Permission denied`.

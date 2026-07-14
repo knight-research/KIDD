@@ -1045,6 +1045,28 @@ class KIDDController:
             log(message)
             self.last_gps_debug_log[log_key] = now
 
+    def _publish_gps_state(self):
+        self._publish_state(
+            gps_date=gps_date,
+            gps_odo_metric_cnt=gps_odo_metric_cnt,
+            gps_odo_imperial_cnt=gps_odo_imperial_cnt,
+            odo_trip_gps_metric_old=odo_trip_gps_metric_old,
+            odo_trip_gps_imperial_old=odo_trip_gps_imperial_old,
+            odo_total_gps_metric_old=odo_total_gps_metric_old,
+            odo_total_gps_imperial_old=odo_total_gps_imperial_old,
+            gps_odo_metric_0str=gps_odo_metric_0str,
+            gps_odo_imperial_0str=gps_odo_imperial_0str,
+            gps_time=gps_time,
+            gps_lat_str=gps_lat_str,
+            gps_lat_dir=gps_lat_dir,
+            gps_long_str=gps_long_str,
+            gps_lon_dir=gps_lon_dir,
+            gps_altitude=gps_altitude,
+            gps_altitude_units=gps_altitude_units,
+            gps_kph_0=gps_kph_0,
+            gps_mph_0=gps_mph_0,
+        )
+
     def gps_data(self):
         global gps_date, gps_odo_metric_cnt, gps_odo_imperial_cnt
         global odo_trip_gps_metric_old, odo_trip_gps_imperial_old
@@ -1064,6 +1086,7 @@ class KIDDController:
         odo_total_gps_metric_old = data["odo_config"]["odo_total_gps_metric"]
 
         last_gps_time = time.time()
+        save_needed = False
         try:
             gps_raw = gps_serial.readline().decode('ascii', errors='replace').strip()
             if not gps_raw or not gps_raw.startswith("$"):
@@ -1113,6 +1136,7 @@ class KIDDController:
                     if odo_trip_gps_imperial_new != odo_trip_gps_imperial_old:
                         bsm.set_odo_value("odo_trip_gps_imperial", odo_trip_gps_imperial_new)
                         save_needed = True
+                self._publish_gps_state()
                 self._log_gps_debug(f"[GPS] RMC Fix OK date={gps_date} speed={gps_kph_0}km/h", interval=5.0, key="rmc_fix")
 
             elif gps_raw.startswith('$GPGGA'):
@@ -1144,12 +1168,11 @@ class KIDDController:
                     interval=5.0,
                     key="gga_fix",
                 )
+                self._publish_gps_state()
 
         except Exception as e:
             if debug:
                 self._log_gps_debug(f"[GPS] data skipped: {e}", key="exception")
-
-        save_needed = False
 
         # Trip zurücksetzen falls gewünscht
         if reset_trip:
