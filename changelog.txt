@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2.69 - 2026-07-14-1702
+
+- Added DEV001 setup subpages for `HW/SW`, `AUDIO`, and `ODOMETER`.
+- Moved DEV001 HW/SW buttons and favorite toggles into the `HW/SW` setup subpage.
+- Moved DEV001 quicksound controls into the `AUDIO` setup subpage.
+- Moved DEV001 odometer/config selectors and numpad into the `ODOMETER` setup subpage.
+
 ## v2.2.68 - 2026-07-14-1647
 
 - Fixed GPS odometer distance timing so RMC distance uses the previous valid GPS cycle instead of resetting the timer every read.

@@ -20,6 +20,8 @@ sync_context(globals())
 # PAGE 03: SETUP
 #------------------------------------------------------------------------------------------
 class P03_SETUP(tk.Frame):
+    dev001_setup_subpage = "HW/SW"
+
     if debug == True:
         print (MENU_B_txt[3])
     def __init__(self, master):
@@ -229,7 +231,14 @@ class P03_SETUP(tk.Frame):
         canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=setup_info)
         canvas.create_text(20, (bggrid[4]-135), **txt_style_pagename, fill=sys_clr[9], text="MENU")
         if device == DEVICE_B_txt[1]:
+            self._dev001_setup_area = (15, 90, 1245, 525)
+            self._dev001_setup_frames = {
+                "HW/SW": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
+                "AUDIO": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
+                "ODOMETER": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
+            }
             self._create_dev001_console()
+            self._create_dev001_submenu()
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
@@ -247,30 +256,30 @@ class P03_SETUP(tk.Frame):
         lbls_btnhw_info_txt_DEV002 = ["---", "---", "---", "---", "---", "---", "---", "---", "---", "---"]        
         x_pos = x_start
         for i in range(quant_btns_HW):
-            lbls_btnhw = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
+            lbls_btnhw = tk.Label(self._setup_parent("HW/SW"), **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
             if device == DEVICE_B_txt[1]:
                 lbls_btnhw.config(text=btnhw_DEV001_txt[i])
             elif device == DEVICE_B_txt[2]:
                 lbls_btnhw.config(text=btnhw_DEV002_txt[i])
-            lbls_btnhw.place(x=x_pos, y=y_l1, width=lbl_w, height=lbl_f_h)
+            self._setup_place(lbls_btnhw, "HW/SW", x_pos, y_l1, lbl_w, lbl_f_h)
             x_pos += +px_to_next
         x_pos = x_start
         for i in range(quant_btns_HW):
-            lbls_btnhw_info = tk.Label(self, **lbl_style_setup_btns_small, bg=sys_clr[8], fg=sys_clr[9])
+            lbls_btnhw_info = tk.Label(self._setup_parent("HW/SW"), **lbl_style_setup_btns_small, bg=sys_clr[8], fg=sys_clr[9])
             if device == DEVICE_B_txt[1]:
                 lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV001[i])
             elif device == DEVICE_B_txt[2]:
                 lbls_btnhw_info.config(text=lbls_btnhw_info_txt_DEV002[i])
-            lbls_btnhw_info.place(x=x_pos, y=y_l2, width=lbl_w, height=lbl_i_h)
+            self._setup_place(lbls_btnhw_info, "HW/SW", x_pos, y_l2, lbl_w, lbl_i_h)
             x_pos += +px_to_next
         x_pos = x_start
         for i in range(quant_btns_SW):
-            lbls_btnsw = tk.Label(self, **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
+            lbls_btnsw = tk.Label(self._setup_parent("HW/SW"), **lbl_style_setup_btns, bg=sys_clr[8], fg=sys_clr[9])
             if device == DEVICE_B_txt[1]:
                 lbls_btnsw.config(text=lbl_btnsw_DEV001_txt[i])
             elif device == DEVICE_B_txt[2]:
                 lbls_btnsw.config(text=lbl_btnsw_DEV002_txt[i])
-            lbls_btnsw.place(x=x_pos, y=y_l4, width=lbl_w, height=lbl_f_h)
+            self._setup_place(lbls_btnsw, "HW/SW", x_pos, y_l4, lbl_w, lbl_f_h)
             x_pos += +px_to_next
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTONS
@@ -282,8 +291,8 @@ class P03_SETUP(tk.Frame):
         self.hw_button_render_state = {}
         x_pos = x_start
         for i in range(quant_btns_HW):
-            btn_HW = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_hw_button(i))
-            btn_HW.place(x=x_pos, y=y_l3, width=btn_w, height=btn_h)
+            btn_HW = tk.Button(self._setup_parent("HW/SW", canvas), bg=sys_clr[8], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_hw_button(i))
+            self._setup_place(btn_HW, "HW/SW", x_pos, y_l3, btn_w, btn_h)
             x_pos += +px_to_next
             self.btns_HW.append(btn_HW)
         #--------------------------------------------------------------------------
@@ -293,8 +302,8 @@ class P03_SETUP(tk.Frame):
         self.sw_button_render_state = {}
         x_pos = x_start
         for i in range(quant_btns_SW):
-            btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_sw_button(i))
-            btn_SW.place(x=x_pos, y=y_l5, width=btn_w, height=btn_h)
+            btn_SW = tk.Button(self._setup_parent("HW/SW", canvas), bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_sw_button(i))
+            self._setup_place(btn_SW, "HW/SW", x_pos, y_l5, btn_w, btn_h)
             x_pos += +px_to_next
             self.btns_SW.append(btn_SW)
         #----------------------------------------------------------------------------------
@@ -416,43 +425,43 @@ class P03_SETUP(tk.Frame):
             self.after(1200, lambda: self._status_var.set(""))
 
         # ODO dropdown
-        opt_odo = tk.OptionMenu(self, self._odo_selected_key, *self._odo_keys, command=lambda *_: _on_select_odo())
+        opt_odo = tk.OptionMenu(self._setup_parent("ODOMETER"), self._odo_selected_key, *self._odo_keys, command=lambda *_: _on_select_odo())
         opt_odo.config(bg=sys_clr[8], fg=sys_clr[3], font=(fonts[6], 22))
-        opt_odo.place(x=30, y=300, width=250, height=30)
+        self._setup_place(opt_odo, "ODOMETER", 30, 300, 250, 30)
 
         # Current/Edit (odo)
-        lbl_curr_odo = tk.Label(self, **lbl_style_setup_btns, text="ACTUAL", bg=sys_clr[8], fg=sys_clr[3])
-        lbl_curr_odo.place(x=30, y=345, width=120, height=30)
-        val_curr_odo = tk.Label(self, **lbl_style_setup_btns, textvariable=self._odo_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
-        val_curr_odo.place(x=165, y=345, width=120, height=30)
+        lbl_curr_odo = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, text="ACTUAL", bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(lbl_curr_odo, "ODOMETER", 30, 345, 120, 30)
+        val_curr_odo = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, textvariable=self._odo_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(val_curr_odo, "ODOMETER", 165, 345, 120, 30)
 
-        lbl_edit_odo = tk.Label(self, **lbl_style_setup_btns, text="NEW", bg=sys_clr[8], fg=sys_clr[3])
-        lbl_edit_odo.place(x=30, y=390, width=120, height=30)
-        val_edit_odo = tk.Label(self, **lbl_style_setup_btns, textvariable=self._odo_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
-        val_edit_odo.place(x=165, y=390, width=120, height=30)
+        lbl_edit_odo = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, text="NEW", bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(lbl_edit_odo, "ODOMETER", 30, 390, 120, 30)
+        val_edit_odo = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, textvariable=self._odo_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(val_edit_odo, "ODOMETER", 165, 390, 120, 30)
 
         # OTHER dropdown
-        opt_other = tk.OptionMenu(self, self._other_selected_key, *self._other_keys, command=lambda *_: _on_select_other())
+        opt_other = tk.OptionMenu(self._setup_parent("ODOMETER"), self._other_selected_key, *self._other_keys, command=lambda *_: _on_select_other())
         opt_other.config(bg=sys_clr[8], fg=sys_clr[3], font=(fonts[6], 22))
-        opt_other.place(x=30, y=435, width=250, height=30)
+        self._setup_place(opt_other, "ODOMETER", 30, 435, 250, 30)
 
         # Current/Edit (other)
-        lbl_curr_other = tk.Label(self, **lbl_style_setup_btns, text="ACTUAL", bg=sys_clr[8], fg=sys_clr[3])
-        lbl_curr_other.place(x=30, y=480, width=120, height=30)
-        val_curr_other = tk.Label(self, **lbl_style_setup_btns, textvariable=self._other_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
-        val_curr_other.place(x=165, y=480, width=120, height=30)
+        lbl_curr_other = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, text="ACTUAL", bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(lbl_curr_other, "ODOMETER", 30, 480, 120, 30)
+        val_curr_other = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, textvariable=self._other_current_value_var, bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(val_curr_other, "ODOMETER", 165, 480, 120, 30)
 
-        lbl_edit_other = tk.Label(self, **lbl_style_setup_btns, text="NEW", bg=sys_clr[8], fg=sys_clr[3])
-        lbl_edit_other.place(x=30, y=525, width=120, height=30)
-        val_edit_other = tk.Label(self, **lbl_style_setup_btns, textvariable=self._other_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
-        val_edit_other.place(x=165, y=525, width=120, height=30)
+        lbl_edit_other = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, text="NEW", bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(lbl_edit_other, "ODOMETER", 30, 525, 120, 30)
+        val_edit_other = tk.Label(self._setup_parent("ODOMETER"), **lbl_style_setup_btns, textvariable=self._other_edit_value_var, bg=sys_clr[8], fg=sys_clr[3])
+        self._setup_place(val_edit_other, "ODOMETER", 165, 525, 120, 30)
 
         # Active hint + status
-        lbl_active = tk.Label(self, font=(fonts[6], 22), textvariable=self._active_section, bg=sys_clr[8], fg=sys_clr[3], anchor="c")
-        lbl_active.place(x=30, y=570, width=60, height=30)
+        lbl_active = tk.Label(self._setup_parent("ODOMETER"), font=(fonts[6], 22), textvariable=self._active_section, bg=sys_clr[8], fg=sys_clr[3], anchor="c")
+        self._setup_place(lbl_active, "ODOMETER", 30, 570, 60, 30)
 
-        lbl_status = tk.Label(self, font=(fonts[6], 22), textvariable=self._status_var, bg=sys_clr[8], fg=sys_clr[3], anchor="c")
-        lbl_status.place(x=110, y=570, width=175, height=30)
+        lbl_status = tk.Label(self._setup_parent("ODOMETER"), font=(fonts[6], 22), textvariable=self._status_var, bg=sys_clr[8], fg=sys_clr[3], anchor="c")
+        self._setup_place(lbl_status, "ODOMETER", 110, 570, 175, 30)
 
         # One keypad for both
         keypad_layout = [
@@ -470,10 +479,10 @@ class P03_SETUP(tk.Frame):
                 if not token:
                     continue
                 if token == "SAVE":
-                    btn = tk.Button(self, **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=_save_active_value)
+                    btn = tk.Button(self._setup_parent("ODOMETER"), **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=_save_active_value)
                 else:
-                    btn = tk.Button(self, **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=lambda t=token: _on_keypad_press(t))
-                btn.place(x=x0 + c*dx, y=y0 + r*dy, width=w, height=h)
+                    btn = tk.Button(self._setup_parent("ODOMETER"), **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=lambda t=token: _on_keypad_press(t))
+                self._setup_place(btn, "ODOMETER", x0 + c*dx, y0 + r*dy, w, h)
 
         # Initialize
         _refresh_value("ODO")
@@ -531,12 +540,14 @@ class P03_SETUP(tk.Frame):
             save_quicksound_settings(datadir, self._quicksound_settings)
             self.master.switch_frame(P03_SETUP)
 
-        canvas.create_text(690, 294, **txt_style_pageinfo, fill=sys_clr[9], text="QUICKSOUND")
-        canvas.create_text(1030, 294, **txt_style_pageinfo, fill=sys_clr[9], text="SELECT")
+        lbl_qs_title = tk.Label(self._setup_parent("AUDIO"), text="QUICKSOUND", font=(fonts[6], 18), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
+        self._setup_place(lbl_qs_title, "AUDIO", 690, 286, 190, 24)
+        lbl_qs_select_title = tk.Label(self._setup_parent("AUDIO"), text="SELECT", font=(fonts[6], 18), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
+        self._setup_place(lbl_qs_select_title, "AUDIO", 1030, 286, 120, 24)
         qs_labels_text = "LBL ON" if self._quicksound_settings["labels_visible"] else "LBL OFF"
         qs_labels_fg = sys_clr[10] if self._quicksound_settings["labels_visible"] else sys_clr[11]
         btn_qs_labels = tk.Button(
-            self,
+            self._setup_parent("AUDIO"),
             bg=sys_clr[8],
             fg=qs_labels_fg,
             activebackground=sys_clr[8],
@@ -546,11 +557,11 @@ class P03_SETUP(tk.Frame):
             text=qs_labels_text,
             command=_toggle_quicksound_labels,
         )
-        btn_qs_labels.place(x=890, y=286, width=120, height=32)
+        self._setup_place(btn_qs_labels, "AUDIO", 890, 286, 120, 32)
 
         self._qs_select_target = {"options": [], "command": None}
-        qs_select_frame = tk.Frame(self, bg=sys_clr[8], bd=4, relief="raised")
-        qs_select_frame.place(x=1030, y=322, width=220, height=285)
+        qs_select_frame = tk.Frame(self._setup_parent("AUDIO"), bg=sys_clr[8], bd=4, relief="raised")
+        self._setup_place(qs_select_frame, "AUDIO", 1030, 322, 220, 285)
         qs_scroll_style = ttk.Style()
         qs_scroll_style.configure(
             "QuickSound.Vertical.TScrollbar",
@@ -614,11 +625,11 @@ class P03_SETUP(tk.Frame):
         qs_select_list.bind("<Return>", _select_quicksound_option)
         for i, quicksound in enumerate(self._quicksound_config):
             y_pos = 322 + i * 72
-            lbl_qs_name = tk.Label(self, **lbl_style_setup_btns_small, text=f"Q{i + 1}", bg=sys_clr[8], fg=sys_clr[9])
-            lbl_qs_name.place(x=690, y=y_pos, width=320, height=18)
+            lbl_qs_name = tk.Label(self._setup_parent("AUDIO"), **lbl_style_setup_btns_small, text=f"Q{i + 1}", bg=sys_clr[8], fg=sys_clr[9])
+            self._setup_place(lbl_qs_name, "AUDIO", 690, y_pos, 320, 18)
 
             btn_qs_folder = tk.Button(
-                self,
+                self._setup_parent("AUDIO"),
                 bg=sys_clr[8],
                 fg=sys_clr[9],
                 activebackground=sys_clr[8],
@@ -629,10 +640,10 @@ class P03_SETUP(tk.Frame):
                 anchor="w",
                 command=lambda i=i: _show_quicksound_options(i, "folder"),
             )
-            btn_qs_folder.place(x=690, y=y_pos + 19, width=100, height=25)
+            self._setup_place(btn_qs_folder, "AUDIO", 690, y_pos + 19, 100, 25)
 
             btn_qs_file = tk.Button(
-                self,
+                self._setup_parent("AUDIO"),
                 bg=sys_clr[8],
                 fg=sys_clr[9],
                 activebackground=sys_clr[8],
@@ -643,27 +654,27 @@ class P03_SETUP(tk.Frame):
                 anchor="w",
                 command=lambda i=i: _show_quicksound_options(i, "file"),
             )
-            btn_qs_file.place(x=795, y=y_pos + 19, width=220, height=25)
+            self._setup_place(btn_qs_file, "AUDIO", 795, y_pos + 19, 220, 25)
 
             btn_qs_mode = tk.Button(
-                self,
+                self._setup_parent("AUDIO"),
                 bg=sys_clr[8],
                 fg=sys_clr[9],
                 font=(fonts[6], 18),
                 text=quicksound["mode"],
                 command=lambda i=i: _cycle_quicksound_value(i, "mode", QUICKSOUND_MODES),
             )
-            btn_qs_mode.place(x=690, y=y_pos + 46, width=105, height=25)
+            self._setup_place(btn_qs_mode, "AUDIO", 690, y_pos + 46, 105, 25)
 
             btn_qs_color = tk.Button(
-                self,
+                self._setup_parent("AUDIO"),
                 bg=sys_clr[8],
                 fg=quicksound_color_fg.get(quicksound["color"], sys_clr[9]),
                 font=(fonts[6], 18),
                 text=quicksound["color"],
                 command=lambda i=i: _cycle_quicksound_value(i, "color", QUICKSOUND_COLORS),
             )
-            btn_qs_color.place(x=805, y=y_pos + 46, width=80, height=25)
+            self._setup_place(btn_qs_color, "AUDIO", 805, y_pos + 46, 80, 25)
         _show_quicksound_options(0, "file")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
@@ -810,38 +821,86 @@ class P03_SETUP(tk.Frame):
                 button.config(bg=sys_clr[8], fg=sys_clr[11])
             
         for i in range(quant_btns_FAV):
-            btn_FAV = tk.Button(canvas, bg=sys_clr[8], text="F", font=(fonts[1], 20))
+            btn_FAV = tk.Button(self._setup_parent("HW/SW", canvas), bg=sys_clr[8], text="F", font=(fonts[1], 20))
             btn_FAV.config(command=lambda i=i, button=btn_FAV: _toggle_fav_button(i, button))
                 
             if i < 10:
-                btn_FAV.place(x=x_pos, y=y_l3, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos, y_l3, btn_f_w, btn_h)
                 x_pos += +px_to_next
             elif i < 20:
-                btn_FAV.place(x=x_pos2, y=y_l5, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos2, y_l5, btn_f_w, btn_h)
                 x_pos2 += +px_to_next
             elif i < 28:
-                btn_FAV.place(x=x_pos11, y=y_l11, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos11, y_l11, btn_f_w, btn_h)
                 x_pos11 += +px_to_next
             elif i < 36:
-                btn_FAV.place(x=x_pos13, y=y_l13, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos13, y_l13, btn_f_w, btn_h)
                 x_pos13 += +px_to_next
             elif i < 44:
-                btn_FAV.place(x=x_pos15, y=y_l15, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos15, y_l15, btn_f_w, btn_h)
                 x_pos15 += +px_to_next
             elif i < 52:
-                btn_FAV.place(x=x_pos17, y=y_l17, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos17, y_l17, btn_f_w, btn_h)
                 x_pos17 += +px_to_next
             elif i < 60:
-                btn_FAV.place(x=x_pos19, y=y_l19, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos19, y_l19, btn_f_w, btn_h)
                 x_pos19 += +px_to_next
             elif i < 68:
-                btn_FAV.place(x=x_pos21, y=y_l21, width=btn_f_w, height=btn_h)
+                self._setup_place(btn_FAV, "HW/SW", x_pos21, y_l21, btn_f_w, btn_h)
                 x_pos21 += +px_to_next
             btns_FAV.append(btn_FAV)
         #----------------------------------------------------------------------------------
         # END INIT
         #----------------------------------------------------------------------------------
+        if device == DEVICE_B_txt[1]:
+            self._show_dev001_setup_subpage(P03_SETUP.dev001_setup_subpage)
         self.update_page()
+
+    def _setup_parent(self, section, fallback_parent=None):
+        if device == DEVICE_B_txt[1] and hasattr(self, "_dev001_setup_frames"):
+            return self._dev001_setup_frames[section]
+        return fallback_parent if fallback_parent is not None else self
+
+    def _setup_place(self, widget, section, x, y, width, height):
+        if device == DEVICE_B_txt[1] and hasattr(self, "_dev001_setup_area"):
+            area_x, area_y, _, _ = self._dev001_setup_area
+            widget.place(x=x - area_x, y=y - area_y, width=width, height=height)
+        else:
+            widget.place(x=x, y=y, width=width, height=height)
+
+    def _create_dev001_submenu(self):
+        self.dev001_submenu_buttons = {}
+        items = [("HW/SW", 230), ("AUDIO", 360), ("ODOMETER", 490)]
+        for name, x_pos in items:
+            btn = tk.Button(
+                self,
+                bg=sys_clr[8],
+                fg=sys_clr[9],
+                activebackground=sys_clr[8],
+                activeforeground=sys_clr[10],
+                bd=4,
+                font=(fonts[6], 18),
+                text=name,
+                command=lambda name=name: self._show_dev001_setup_subpage(name),
+            )
+            btn.place(x=x_pos, y=18, width=115, height=32)
+            self.dev001_submenu_buttons[name] = btn
+
+    def _show_dev001_setup_subpage(self, name):
+        if not hasattr(self, "_dev001_setup_frames"):
+            return
+        P03_SETUP.dev001_setup_subpage = name
+        area_x, area_y, area_w, area_h = self._dev001_setup_area
+        for frame_name, frame in self._dev001_setup_frames.items():
+            if frame_name == name:
+                frame.place(x=area_x, y=area_y, width=area_w, height=area_h)
+            else:
+                frame.place_forget()
+        for frame_name, button in getattr(self, "dev001_submenu_buttons", {}).items():
+            if frame_name == name:
+                button.config(bg=sys_clr[10], fg=sys_clr[8])
+            else:
+                button.config(bg=sys_clr[8], fg=sys_clr[9])
 
     def _create_dev001_console(self):
         log("[SETUP] DEV001 console ready")
