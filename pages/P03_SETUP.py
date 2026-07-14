@@ -497,10 +497,12 @@ class P03_SETUP(tk.Frame):
             save_quicksound_settings(datadir, self._quicksound_settings)
             self.master.switch_frame(P03_SETUP)
 
-        lbl_qs_title = tk.Label(self._setup_parent("AUDIO"), text="QUICKSOUND", font=(fonts[6], 28), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
-        self._setup_place(lbl_qs_title, "AUDIO", 40, 112, 360, 38)
-        lbl_qs_select_title = tk.Label(self._setup_parent("AUDIO"), text="SELECT", font=(fonts[6], 28), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
-        self._setup_place(lbl_qs_select_title, "AUDIO", 700, 112, 220, 38)
+        qs_button_font = ("Bebas Neue Bold", 26)
+        qs_button_font_small = ("Bebas Neue Bold", 22)
+        lbl_qs_title = tk.Label(self._setup_parent("AUDIO"), text="QUICKSOUND", font=(fonts[6], 25), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
+        self._setup_place(lbl_qs_title, "AUDIO", 35, 112, 270, 34)
+        lbl_qs_select_title = tk.Label(self._setup_parent("AUDIO"), text="SELECT", font=(fonts[6], 25), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
+        self._setup_place(lbl_qs_select_title, "AUDIO", 380, 112, 180, 34)
         qs_labels_text = "LBL ON" if self._quicksound_settings["labels_visible"] else "LBL OFF"
         qs_labels_fg = sys_clr[10] if self._quicksound_settings["labels_visible"] else sys_clr[11]
         btn_qs_labels = tk.Button(
@@ -511,36 +513,25 @@ class P03_SETUP(tk.Frame):
             activeforeground=sys_clr[10],
             bd=4,
             highlightthickness=0,
-            font=(fonts[6], 22),
+            font=qs_button_font_small,
             text=qs_labels_text,
             command=_toggle_quicksound_labels,
         )
-        self._setup_place(btn_qs_labels, "AUDIO", 470, 108, 165, 48)
+        self._setup_place(btn_qs_labels, "AUDIO", 205, 108, 145, 44)
 
         self._qs_select_target = {"options": [], "command": None}
         qs_select_frame = tk.Frame(self._setup_parent("AUDIO"), bg=sys_clr[8], bd=4, relief="raised")
-        self._setup_place(qs_select_frame, "AUDIO", 700, 165, 535, 445)
-        qs_scroll_style = ttk.Style()
-        qs_scroll_style.configure(
-            "QuickSound.Vertical.TScrollbar",
-            background=sys_clr[10],
-            darkcolor=sys_clr[10],
-            lightcolor=sys_clr[10],
-            troughcolor=sys_clr[8],
-            bordercolor=sys_clr[8],
-            arrowcolor=sys_clr[9],
-            relief="flat",
-            width=34,
-        )
-        qs_scroll_style.map(
-            "QuickSound.Vertical.TScrollbar",
-            background=[("active", sys_clr[9]), ("pressed", sys_clr[10])],
-            arrowcolor=[("active", sys_clr[8]), ("pressed", sys_clr[8])],
-        )
-        qs_select_scroll = ttk.Scrollbar(
+        self._setup_place(qs_select_frame, "AUDIO", 380, 165, 270, 445)
+        qs_select_scroll = tk.Scrollbar(
             qs_select_frame,
             orient="vertical",
-            style="QuickSound.Vertical.TScrollbar",
+            bg=sys_clr[10],
+            activebackground=sys_clr[9],
+            troughcolor=sys_clr[8],
+            relief="flat",
+            borderwidth=0,
+            highlightthickness=0,
+            width=34,
         )
         qs_select_list = tk.Listbox(
             qs_select_frame,
@@ -548,7 +539,7 @@ class P03_SETUP(tk.Frame):
             fg=sys_clr[9],
             selectbackground=sys_clr[10],
             selectforeground=sys_clr[8],
-            font=(fonts[6], 28),
+            font=(fonts[6], 24),
             activestyle="none",
             yscrollcommand=qs_select_scroll.set,
             borderwidth=0,
@@ -583,8 +574,8 @@ class P03_SETUP(tk.Frame):
         qs_select_list.bind("<Return>", _select_quicksound_option)
         for i, quicksound in enumerate(self._quicksound_config):
             y_pos = 165 + i * 105
-            lbl_qs_name = tk.Label(self._setup_parent("AUDIO"), font=(fonts[6], 24), text=f"Q{i + 1}", bg=sys_clr[8], fg=sys_clr[9], anchor="w")
-            self._setup_place(lbl_qs_name, "AUDIO", 40, y_pos, 600, 30)
+            lbl_qs_name = tk.Label(self._setup_parent("AUDIO"), font=(fonts[6], 22), text=f"Q{i + 1}", bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+            self._setup_place(lbl_qs_name, "AUDIO", 35, y_pos, 320, 28)
 
             btn_qs_folder = tk.Button(
                 self._setup_parent("AUDIO"),
@@ -594,12 +585,12 @@ class P03_SETUP(tk.Frame):
                 activeforeground=sys_clr[10],
                 bd=4,
                 highlightthickness=0,
-                font=(fonts[6], 21),
+                font=qs_button_font_small,
                 text=quicksound["folder"],
                 anchor="w",
                 command=lambda i=i: _show_quicksound_options(i, "folder"),
             )
-            self._setup_place(btn_qs_folder, "AUDIO", 40, y_pos + 34, 185, 42)
+            self._setup_place(btn_qs_folder, "AUDIO", 35, y_pos + 32, 115, 40)
 
             btn_qs_file = tk.Button(
                 self._setup_parent("AUDIO"),
@@ -609,12 +600,12 @@ class P03_SETUP(tk.Frame):
                 activeforeground=sys_clr[10],
                 bd=4,
                 highlightthickness=0,
-                font=(fonts[6], 21),
+                font=qs_button_font_small,
                 text=_sound_display_name(quicksound["file"]),
                 anchor="w",
                 command=lambda i=i: _show_quicksound_options(i, "file"),
             )
-            self._setup_place(btn_qs_file, "AUDIO", 235, y_pos + 34, 405, 42)
+            self._setup_place(btn_qs_file, "AUDIO", 158, y_pos + 32, 200, 40)
 
             btn_qs_mode = tk.Button(
                 self._setup_parent("AUDIO"),
@@ -624,11 +615,11 @@ class P03_SETUP(tk.Frame):
                 activeforeground=sys_clr[10],
                 bd=4,
                 highlightthickness=0,
-                font=(fonts[6], 24),
+                font=qs_button_font,
                 text=quicksound["mode"],
                 command=lambda i=i: _cycle_quicksound_value(i, "mode", QUICKSOUND_MODES),
             )
-            self._setup_place(btn_qs_mode, "AUDIO", 40, y_pos + 80, 185, 42)
+            self._setup_place(btn_qs_mode, "AUDIO", 35, y_pos + 76, 150, 40)
 
             btn_qs_color = tk.Button(
                 self._setup_parent("AUDIO"),
@@ -638,11 +629,11 @@ class P03_SETUP(tk.Frame):
                 activeforeground=sys_clr[10],
                 bd=4,
                 highlightthickness=0,
-                font=(fonts[6], 24),
+                font=qs_button_font,
                 text=quicksound["color"],
                 command=lambda i=i: _cycle_quicksound_value(i, "color", QUICKSOUND_COLORS),
             )
-            self._setup_place(btn_qs_color, "AUDIO", 235, y_pos + 80, 135, 42)
+            self._setup_place(btn_qs_color, "AUDIO", 195, y_pos + 76, 90, 40)
         _show_quicksound_options(0, "file")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS

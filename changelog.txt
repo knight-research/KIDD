@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.71 - 2026-07-14-1724
+
+- Constrained the DEV001 `AUDIO` setup content to the left half of the setup page to keep right-side reserve space free.
+- Switched quicksound setup buttons to the same `Bebas Neue Bold` font family as the HW/SW buttons.
+- Replaced the quicksound selection scrollbar with a themed Tk scrollbar so theme colors apply more reliably.
+
 ## v2.2.70 - 2026-07-14-1718
 
 - Enlarged the DEV001 `AUDIO` setup subpage for better touch operation.
