@@ -273,30 +273,26 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         # FUNCTION BUTTONS
         #----------------------------------------------------------------------------------
-        global btns_HW
-        global btns_SW
-        global btn_HW
-        global btn_SW
         #--------------------------------------------------------------------------
         # HW BUTTONS
         #--------------------------------------------------------------------------
-        btns_HW = []
+        self.btns_HW = []
         x_pos = x_start
         for i in range(quant_btns_HW):
-            btn_HW = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 28), command=lambda i=i: [read.toggle_btn_HW(i),self.master.switch_frame(P03_SETUP)])
+            btn_HW = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_hw_button(i))
             btn_HW.place(x=x_pos, y=y_l3, width=btn_w, height=btn_h)
             x_pos += +px_to_next
-            btns_HW.append(btn_HW)
+            self.btns_HW.append(btn_HW)
         #--------------------------------------------------------------------------
         # SW BUTTONS
         #--------------------------------------------------------------------------
-        btns_SW = []
+        self.btns_SW = []
         x_pos = x_start
         for i in range(quant_btns_SW):
-            btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28),  command=lambda i=i: [read.toggle_btn_SW(i),self.master.switch_frame(P03_SETUP)])
+            btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_sw_button(i))
             btn_SW.place(x=x_pos, y=y_l5, width=btn_w, height=btn_h)
             x_pos += +px_to_next
-            btns_SW.append(btn_SW)
+            self.btns_SW.append(btn_SW)
         #----------------------------------------------------------------------------------
         # KEYPAD BUTTONS
         #----------------------------------------------------------------------------------
@@ -866,6 +862,15 @@ class P03_SETUP(tk.Frame):
     def _update_dev001_console(self):
         if not hasattr(self, "console_text"):
             return
+        self._render_dev001_console()
+        self.after(500, self._update_dev001_console)
+
+    def _refresh_console_now(self):
+        if hasattr(self, "console_text"):
+            self.console_text_state = None
+            self._render_dev001_console()
+
+    def _render_dev001_console(self):
         lines = "\n".join(get_console_lines(65))
         if self.console_text_state != lines:
             self.console_text.configure(state="normal")
@@ -874,25 +879,44 @@ class P03_SETUP(tk.Frame):
             self.console_text.see("end")
             self.console_text.configure(state="disabled")
             self.console_text_state = lines
-        self.after(500, self._update_dev001_console)
+
+    def _update_hw_button(self, index):
+        if btn_states_HW[index]:
+            self.btns_HW[index].config(text=states_txt_act[1], fg=sys_clr[10])
+        else:
+            self.btns_HW[index].config(text=states_txt_act[0], fg=sys_clr[11])
+
+    def _update_sw_button(self, index):
+        on_texts = btnsw_DEV002_txt_1 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_1
+        off_texts = btnsw_DEV002_txt_0 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_0
+        if btn_states_SW[index]:
+            self.btns_SW[index].config(text=on_texts[index])
+        else:
+            self.btns_SW[index].config(text=off_texts[index])
+
+    def _toggle_hw_button(self, index):
+        read.toggle_btn_HW(index)
+        sync_context(globals())
+        self._update_hw_button(index)
+        self._refresh_console_now()
+
+    def _toggle_sw_button(self, index):
+        read.toggle_btn_SW(index)
+        sync_context(globals())
+        self._update_sw_button(index)
+        self._refresh_console_now()
 
     def update_page(self):
         #----------------------------------------------------------------------------------
         # HW BUTTONS
         #----------------------------------------------------------------------------------
         for i in range(quant_btns_HW):              
-            if btn_states_HW[i]:
-                btns_HW[i].config(text=states_txt_act[1], fg=sys_clr[10])
-            else:
-                btns_HW[i].config(text=states_txt_act[0], fg=sys_clr[11])
+            self._update_hw_button(i)
         #----------------------------------------------------------------------------------
         # SW BUTTONS
         #----------------------------------------------------------------------------------
         for i in range(quant_btns_SW):
-            if btn_states_SW[i]:
-                btns_SW[i].config(text=btnsw_DEV001_txt_1[i])
-            else:
-                btns_SW[i].config(text=btnsw_DEV001_txt_0[i])
+            self._update_sw_button(i)
         #----------------------------------------------------------------------------------
         # FAV BUTTONS
         #----------------------------------------------------------------------------------

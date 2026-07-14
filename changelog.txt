@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.58 - 2026-07-14-1547
+
+- Removed Setup HW/SW button globals and stored those widgets on the Setup frame instance.
+- Updated Setup HW/SW buttons live after toggles instead of reloading the whole Setup page.
+- Refreshed the Setup console immediately after HW/SW toggles so new log lines appear without waiting for a page rebuild.
+
 ## v2.2.57 - 2026-07-14-1545
 
 - Made Setup HW/SW console logging independent from direct global text-list access.
