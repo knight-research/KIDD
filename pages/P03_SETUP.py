@@ -197,7 +197,8 @@ class P03_SETUP(tk.Frame):
             self._create_setup_console("DEV001", 1310, 25, 420, 30, 1310, 60, 425, 600, 21)
             self._create_dev001_submenu()
         elif device == DEVICE_B_txt[2]:
-            self._create_setup_console("DEV002", 30, 265, 1120, 28, 30, 295, 1120, 315, 18)
+            self._create_setup_console("DEV002", 30, 265, 560, 28, 30, 295, 560, 315, 18)
+            self._create_dev002_i2c_status()
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
@@ -900,6 +901,84 @@ class P03_SETUP(tk.Frame):
         if device_key == "DEV001":
             self._poll_dev001_gps_console()
 
+    def _create_dev002_i2c_status(self):
+        self.dev002_i2c_probe_at = 0.0
+        self.dev002_i2c_reachable_state = {}
+        self.dev002_i2c_status_labels = {}
+        title = tk.Label(self, text="I2C STATUS", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+        title.place(x=620, y=265, width=520, height=28)
+
+        headers = [("DEVICE", 620, 295, 150), ("ON", 780, 295, 70), ("OK", 860, 295, 70), ("ADDR", 940, 295, 90)]
+        for text, x_pos, y_pos, width in headers:
+            tk.Label(self, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
+                x=x_pos, y=y_pos, width=width, height=24
+            )
+
+        rows = self._dev002_i2c_rows()
+        for row_index, row in enumerate(rows):
+            y_pos = 325 + row_index * 34
+            tk.Label(self, text=row["name"], font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[9], anchor="w").place(
+                x=620, y=y_pos, width=150, height=28
+            )
+            on_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
+            ok_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
+            addr_label = tk.Label(self, text=row["addr"], font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
+            on_label.place(x=780, y=y_pos, width=70, height=28)
+            ok_label.place(x=860, y=y_pos, width=70, height=28)
+            addr_label.place(x=940, y=y_pos, width=90, height=28)
+            self.dev002_i2c_status_labels[row["name"]] = {"on": on_label, "ok": ok_label}
+
+    def _dev002_i2c_rows(self):
+        return [
+            {"name": "RB01", "hw": 0, "kind": "rb", "rb": 0, "addr": f"0x{i2c_addr_dev02rb[0]:02X}"},
+            {"name": "RB02", "hw": 1, "kind": "rb", "rb": 1, "addr": f"0x{i2c_addr_dev02rb[1]:02X}"},
+            {"name": "RB03", "hw": 2, "kind": "rb", "rb": 2, "addr": f"0x{i2c_addr_dev02rb[2]:02X}"},
+            {"name": "AI01", "hw": 6, "kind": "obj", "obj": "ads", "addr": f"0x{i2cAI01:02X}"},
+            {"name": "DI01", "hw": 7, "kind": "obj", "obj": "aw001", "addr": f"0x{i2cDI01:02X}"},
+            {"name": "DI02", "hw": 8, "kind": "obj", "obj": "aw002", "addr": f"0x{i2cDI02:02X}"},
+        ]
+
+    def _probe_dev002_i2c(self):
+        now = time.time()
+        if now < getattr(self, "dev002_i2c_probe_at", 0.0):
+            return
+        self.dev002_i2c_probe_at = now + 2.0
+        reachable = {}
+        for row in self._dev002_i2c_rows():
+            active = bool(btn_states_HW[row["hw"]]) if row["hw"] < len(btn_states_HW) else False
+            if not active:
+                reachable[row["name"]] = None
+            elif row["kind"] == "rb":
+                reachable[row["name"]] = self._probe_dev002_relay_board(row["rb"])
+            else:
+                reachable[row["name"]] = globals().get(row["obj"]) is not None
+        self.dev002_i2c_reachable_state = reachable
+
+    def _probe_dev002_relay_board(self, board_index):
+        if not (sys_linux and sys_pi):
+            return None
+        try:
+            bus = buses[board_index]
+            address = i2c_addr_dev02rb[board_index]
+            bus.read_byte(address)
+            return True
+        except Exception:
+            return False
+
+    def _update_dev002_i2c_status(self):
+        if not hasattr(self, "dev002_i2c_status_labels"):
+            return
+        self._probe_dev002_i2c()
+        for row in self._dev002_i2c_rows():
+            labels = self.dev002_i2c_status_labels[row["name"]]
+            active = bool(btn_states_HW[row["hw"]]) if row["hw"] < len(btn_states_HW) else False
+            reachable = self.dev002_i2c_reachable_state.get(row["name"])
+            labels["on"].config(text="ON" if active else "OFF", fg=sys_clr[10] if active else sys_clr[11])
+            if reachable is None:
+                labels["ok"].config(text="N/A" if active else "--", fg=sys_clr[9] if active else sys_clr[11])
+            else:
+                labels["ok"].config(text="YES" if reachable else "NO", fg=sys_clr[10] if reachable else sys_clr[11])
+
     def _update_setup_console(self):
         if not hasattr(self, "console_text"):
             return
@@ -1007,6 +1086,7 @@ class P03_SETUP(tk.Frame):
         # RB BUTTONS
         #----------------------------------------------------------------------------------
         if device == DEVICE_B_txt[2]:
+            self._update_dev002_i2c_status()
             #------------------------------------------------------------------------------
             # DEV002 BTNRB01
             #------------------------------------------------------------------------------

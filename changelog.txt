@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.79 - 2026-07-14-1827
+
+- Reduced the DEV002 setup console width to half size.
+- Added a DEV002 I2C status display next to the setup console showing enabled and reachable states for RB01/RB02/RB03/AI01/DI01/DI02.
+
 ## v2.2.78 - 2026-07-14-1821
 
 - Added a DEV002 setup console below the HW/SW controls.
