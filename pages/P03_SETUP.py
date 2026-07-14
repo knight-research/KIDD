@@ -194,7 +194,8 @@ class P03_SETUP(tk.Frame):
                 "AUDIO": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
                 "ODOMETER": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
             }
-            self._create_setup_console("DEV001", 1310, 25, 420, 30, 1310, 60, 425, 600, 21)
+            self._create_setup_console("DEV001", 1310, 25, 420, 30, 1310, 60, 425, 355, 21)
+            self._create_dev001_device_status()
             self._create_dev001_submenu()
         elif device == DEVICE_B_txt[2]:
             self._create_setup_console("DEV002", 30, 265, 560, 28, 30, 295, 560, 315, 18)
@@ -901,6 +902,72 @@ class P03_SETUP(tk.Frame):
         if device_key == "DEV001":
             self._poll_dev001_gps_console()
 
+    def _create_dev001_device_status(self):
+        self.dev001_device_probe_at = 0.0
+        self.dev001_device_reachable_state = {}
+        self.dev001_device_status_labels = {}
+        title = tk.Label(self, text="DEVICE STATUS", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+        title.place(x=1310, y=435, width=420, height=28)
+
+        headers = [("DEVICE", 1310, 465, 130), ("ON", 1450, 465, 70), ("OK", 1530, 465, 70), ("ADDR", 1610, 465, 120)]
+        for text, x_pos, y_pos, width in headers:
+            tk.Label(self, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
+                x=x_pos, y=y_pos, width=width, height=24
+            )
+
+        for row_index, row in enumerate(self._dev001_device_rows()):
+            y_pos = 495 + row_index * 34
+            tk.Label(self, text=row["name"], font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[9], anchor="w").place(
+                x=1310, y=y_pos, width=130, height=28
+            )
+            on_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
+            ok_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
+            addr_label = tk.Label(self, text=row["addr"], font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
+            on_label.place(x=1450, y=y_pos, width=70, height=28)
+            ok_label.place(x=1530, y=y_pos, width=70, height=28)
+            addr_label.place(x=1610, y=y_pos, width=120, height=28)
+            self.dev001_device_status_labels[row["name"]] = {"on": on_label, "ok": ok_label, "addr": addr_label}
+
+    def _dev001_device_rows(self):
+        return [
+            {"name": "GPS", "hw": 0, "kind": "gps", "addr": gps_port or "---"},
+            {"name": "MICRO", "hw": 1, "kind": "mic", "addr": "AUDIO"},
+            {"name": "TANK", "hw": 6, "kind": "obj", "obj": "ads", "addr": f"0x{i2cAI01:02X}"},
+        ]
+
+    def _probe_dev001_devices(self):
+        now = time.time()
+        if now < getattr(self, "dev001_device_probe_at", 0.0):
+            return
+        self.dev001_device_probe_at = now + 2.0
+        reachable = {}
+        for row in self._dev001_device_rows():
+            active = bool(btn_states_HW[row["hw"]]) if row["hw"] < len(btn_states_HW) else False
+            if not active:
+                reachable[row["name"]] = None
+            elif row["kind"] == "gps":
+                reachable[row["name"]] = gps_serial is not None
+            elif row["kind"] == "mic":
+                reachable[row["name"]] = None
+            else:
+                reachable[row["name"]] = globals().get(row["obj"]) is not None
+        self.dev001_device_reachable_state = reachable
+
+    def _update_dev001_device_status(self):
+        if not hasattr(self, "dev001_device_status_labels"):
+            return
+        self._probe_dev001_devices()
+        for row in self._dev001_device_rows():
+            labels = self.dev001_device_status_labels[row["name"]]
+            active = bool(btn_states_HW[row["hw"]]) if row["hw"] < len(btn_states_HW) else False
+            reachable = self.dev001_device_reachable_state.get(row["name"])
+            labels["on"].config(text="ON" if active else "OFF", fg=sys_clr[10] if active else sys_clr[11])
+            labels["addr"].config(text=row["addr"])
+            if reachable is None:
+                labels["ok"].config(text="N/A" if active else "--", fg=sys_clr[9] if active else sys_clr[11])
+            else:
+                labels["ok"].config(text="YES" if reachable else "NO", fg=sys_clr[10] if reachable else sys_clr[11])
+
     def _create_dev002_i2c_status(self):
         self.dev002_i2c_probe_at = 0.0
         self.dev002_i2c_reachable_state = {}
@@ -992,7 +1059,7 @@ class P03_SETUP(tk.Frame):
 
     def _render_setup_console(self):
         device_key = getattr(self, "setup_console_device", None)
-        line_limit = 45 if device_key == "DEV001" else 30
+        line_limit = 25 if device_key == "DEV001" else 30
         lines = "\n".join(get_console_lines(line_limit, device=device_key))
         if self.console_text_state != lines:
             self.console_text.configure(state="normal")
@@ -1082,6 +1149,8 @@ class P03_SETUP(tk.Frame):
             if self.fav_button_render_state.get(i) != state:
                 btns_FAV[i].config(bg=state[0], fg=state[1])
                 self.fav_button_render_state[i] = state
+        if device == DEVICE_B_txt[1]:
+            self._update_dev001_device_status()
         #----------------------------------------------------------------------------------
         # RB BUTTONS
         #----------------------------------------------------------------------------------

@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.80 - 2026-07-14-1833
+
+- Added a DEV001 setup device status display below the setup console.
+- Show DEV001 GPS, MICRO, and TANK/AI01 enabled/reachable states.
+- Restored the DEV001 tank hardware button label for the existing ADS tank input.
+
 ## v2.2.79 - 2026-07-14-1827
 
 - Reduced the DEV002 setup console width to half size.
