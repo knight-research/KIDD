@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.54 - 2026-07-14-1534
+
+- Restored the MP3 ignore rule so audio files are no longer added to Git.
+- Removed already tracked MP3 files from the Git index while keeping the local files in place.
+
 ## v2.2.53 - 2026-07-14-1530
 
 - Fixed version loading so `version.txt` is read from the project root again.
