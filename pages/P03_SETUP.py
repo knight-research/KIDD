@@ -2,6 +2,11 @@ import time
 
 from pages.page_context import sync_context
 from functions.console_log import get_console_lines, log
+from functions.gauge_scale_config import (
+    DEFAULT_GAUGE_SCALE,
+    ensure_gauge_scale_config,
+    save_gauge_scale_value,
+)
 from functions.network_info import read_wlan0_ip
 from functions.quicksound_config import (
     QUICKSOUND_COLORS,
@@ -193,11 +198,15 @@ class P03_SETUP(tk.Frame):
                 "HW/SW": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
                 "AUDIO": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
                 "ODOMETER": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
+                "SCALE": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
             }
             self._create_setup_console("DEV001", 1310, 25, 420, 30, 1310, 60, 425, 355, 21)
             self._create_dev001_device_status()
             self._create_dev001_submenu()
         elif device == DEVICE_B_txt[2]:
+            self._dev002_scale_area = (620, 60, 700, 620)
+            self._dev002_scale_frame = tk.Frame(self, bg=sys_clr[0], highlightthickness=0)
+            self._create_dev002_submenu()
             self._create_setup_console("DEV002", 30, 265, 560, 28, 30, 295, 560, 315, 18)
             self._create_dev002_i2c_status()
         #----------------------------------------------------------------------------------
@@ -642,6 +651,7 @@ class P03_SETUP(tk.Frame):
                 font=qs_button_font,
             )
         _show_quicksound_options(0, "file")
+        self._create_scale_setup()
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -820,12 +830,16 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         if device == DEVICE_B_txt[1]:
             self._show_dev001_setup_subpage(P03_SETUP.dev001_setup_subpage)
+        elif device == DEVICE_B_txt[2]:
+            self._show_dev002_setup_subpage(getattr(P03_SETUP, "dev002_setup_subpage", "HW/SW"))
         self.update_page()
 
     def _setup_parent(self, section, fallback_parent=None):
         if device == DEVICE_B_txt[1] and hasattr(self, "_dev001_setup_frames"):
             return self._dev001_setup_frames[section]
-        if section in ("AUDIO", "ODOMETER"):
+        if device == DEVICE_B_txt[2] and section == "SCALE" and hasattr(self, "_dev002_scale_frame"):
+            return self._dev002_scale_frame
+        if section in ("AUDIO", "ODOMETER", "SCALE"):
             if not hasattr(self, "_hidden_setup_frames"):
                 self._hidden_setup_frames = {}
             if section not in self._hidden_setup_frames:
@@ -837,14 +851,17 @@ class P03_SETUP(tk.Frame):
         if device == DEVICE_B_txt[1] and hasattr(self, "_dev001_setup_area"):
             area_x, area_y, _, _ = self._dev001_setup_area
             widget.place(x=x - area_x, y=y - area_y, width=width, height=height)
-        elif section in ("AUDIO", "ODOMETER"):
+        elif device == DEVICE_B_txt[2] and section == "SCALE" and hasattr(self, "_dev002_scale_area"):
+            area_x, area_y, _, _ = self._dev002_scale_area
+            widget.place(x=x - area_x, y=y - area_y, width=width, height=height)
+        elif section in ("AUDIO", "ODOMETER", "SCALE"):
             return
         else:
             widget.place(x=x, y=y, width=width, height=height)
 
     def _create_dev001_submenu(self):
         self.dev001_submenu_buttons = {}
-        items = [("HW/SW", 230), ("AUDIO", 360), ("ODOMETER", 490)]
+        items = [("HW/SW", 230), ("AUDIO", 360), ("ODOMETER", 490), ("SCALE", 620)]
         for name, x_pos in items:
             btn = tk.Button(
                 self,
@@ -861,6 +878,25 @@ class P03_SETUP(tk.Frame):
             btn.place(x=x_pos, y=18, width=115, height=32)
             self.dev001_submenu_buttons[name] = btn
 
+    def _create_dev002_submenu(self):
+        self.dev002_submenu_buttons = {}
+        items = [("HW/SW", 620), ("SCALE", 750)]
+        for name, x_pos in items:
+            btn = tk.Button(
+                self,
+                bg=sys_clr[8],
+                fg=sys_clr[9],
+                activebackground=sys_clr[8],
+                activeforeground=sys_clr[9],
+                bd=4,
+                highlightthickness=0,
+                font=(fonts[0], 16),
+                text=name,
+                command=lambda name=name: self._show_dev002_setup_subpage(name),
+            )
+            btn.place(x=x_pos, y=18, width=115, height=32)
+            self.dev002_submenu_buttons[name] = btn
+
     def _show_dev001_setup_subpage(self, name):
         if not hasattr(self, "_dev001_setup_frames"):
             return
@@ -876,6 +912,99 @@ class P03_SETUP(tk.Frame):
                 button.config(bg=sys_clr[8], fg=sys_clr[9], relief="sunken")
             else:
                 button.config(bg=sys_clr[8], fg=sys_clr[11], relief="raised")
+
+    def _show_dev002_setup_subpage(self, name):
+        if not hasattr(self, "_dev002_scale_frame"):
+            return
+        P03_SETUP.dev002_setup_subpage = name
+        if name == "SCALE":
+            area_x, area_y, area_w, area_h = self._dev002_scale_area
+            self._dev002_scale_frame.place(x=area_x, y=area_y, width=area_w, height=area_h)
+        else:
+            self._dev002_scale_frame.place_forget()
+        for frame_name, button in getattr(self, "dev002_submenu_buttons", {}).items():
+            if frame_name == name:
+                button.config(bg=sys_clr[8], fg=sys_clr[9], relief="sunken")
+            else:
+                button.config(bg=sys_clr[8], fg=sys_clr[11], relief="raised")
+
+    def _create_scale_setup(self):
+        if device not in (DEVICE_B_txt[1], DEVICE_B_txt[2]):
+            return
+        device_key = device
+        scale_data = ensure_gauge_scale_config(datadir)
+        rows = scale_data.get(device_key, DEFAULT_GAUGE_SCALE.get(device_key, []))
+        if not rows:
+            return
+
+        parent = self._setup_parent("SCALE")
+        for child in parent.winfo_children():
+            child.destroy()
+
+        title = tk.Label(parent, text="SCALE", font=(fonts[6], 26), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
+        title.place(x=20, y=20, width=180, height=34)
+        headers = [("GAUGE", 20, 65, 145), ("MIN", 175, 65, 120), ("MAX", 365, 65, 120)]
+        for text, x_pos, y_pos, width in headers:
+            tk.Label(parent, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
+                x=x_pos, y=y_pos, width=width, height=24
+            )
+
+        def _fmt(value):
+            try:
+                number = float(value)
+            except (TypeError, ValueError):
+                return str(value)
+            return str(int(number)) if number.is_integer() else f"{number:.1f}"
+
+        def _change(row, field, direction, value_var):
+            step = float(row.get("step", 1))
+            value = float(row.get(field, 0)) + (step * direction)
+            other = float(row.get("max" if field == "min" else "min", 0))
+            if field == "min":
+                value = min(value, other - step)
+            else:
+                value = max(value, other + step)
+            value = int(value) if float(value).is_integer() else round(value, 2)
+            row[field] = value
+            save_gauge_scale_value(datadir, device_key, row["key"], field, value)
+            value_var.set(_fmt(value))
+
+        max_visible_rows = 10 if device_key == DEVICE_B_txt[2] else 6
+        row_height = 42 if device_key == DEVICE_B_txt[2] else 54
+        button_w = 42 if device_key == DEVICE_B_txt[2] else 54
+        value_w = 76
+        font_size = 19 if device_key == DEVICE_B_txt[2] else 22
+        for row_index, row in enumerate(rows[:max_visible_rows]):
+            y_pos = 95 + row_index * row_height
+            label = tk.Label(parent, text=row["label"], font=(fonts[6], font_size), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+            label.place(x=20, y=y_pos, width=145, height=row_height - 6)
+
+            min_var = tk.StringVar(value=_fmt(row["min"]))
+            max_var = tk.StringVar(value=_fmt(row["max"]))
+            for field, x_pos, var in (("min", 175, min_var), ("max", 365, max_var)):
+                tk.Button(
+                    parent,
+                    text="-",
+                    bg=sys_clr[8],
+                    fg=sys_clr[9],
+                    activebackground=sys_clr[8],
+                    activeforeground=sys_clr[9],
+                    font=(fonts[0], 16),
+                    command=lambda r=row, f=field, v=var: _change(r, f, -1, v),
+                ).place(x=x_pos, y=y_pos, width=button_w, height=row_height - 6)
+                tk.Label(parent, textvariable=var, font=(fonts[6], font_size), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
+                    x=x_pos + button_w + 4, y=y_pos, width=value_w, height=row_height - 6
+                )
+                tk.Button(
+                    parent,
+                    text="+",
+                    bg=sys_clr[8],
+                    fg=sys_clr[9],
+                    activebackground=sys_clr[8],
+                    activeforeground=sys_clr[9],
+                    font=(fonts[0], 16),
+                    command=lambda r=row, f=field, v=var: _change(r, f, 1, v),
+                ).place(x=x_pos + button_w + value_w + 8, y=y_pos, width=button_w, height=row_height - 6)
 
     def _create_setup_console(self, device_key, title_x, title_y, title_w, title_h, text_x, text_y, text_w, text_h, font_size):
         self.setup_console_device = device_key

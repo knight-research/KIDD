@@ -13,6 +13,7 @@ debug = True # PRINT INFORMATIONS TO CONSOLE
 #--------------------
 from functions.app_version import load_version
 version, last_change = load_version()
+from functions.gauge_scale_config import get_gauge_scale_lists
 from functions.quicksound_config import QUICKSOUND_COLOR_INDEX, load_quicksound_config, load_quicksound_settings
 # endregion
 
@@ -1616,6 +1617,7 @@ class P01_DASH(tk.Frame):
         #               #00  #01  #02
         val_min      = [  0,   0,   0]
         val_max      = [310, 100, 200]
+        val_min, val_max = get_gauge_scale_lists(datadir, DEVICE_B_txt[1], val_min, val_max)
         val_sim      = [ 5,  10,  14] #HIGHER NUMBER FASTER SIMULATION
         val_conf_min = [  0,   0,   0]
         if btn_states_SW[3] == True:
@@ -1672,15 +1674,11 @@ class P01_DASH(tk.Frame):
 
         speed_int = int(seven_seg_speed)
 
-        if btn_states_FNKT[3]:
-            if speed_int < 5:
-                val_DEV001G000 = 0
-            elif speed_int <= 100:
-                val_DEV001G000 = ((speed_int - 5) / (100 - 5)) * 7
-            elif speed_int <= 119:
-                val_DEV001G000 = 7 + ((speed_int - 100) / 19)
-            else:
-                val_DEV001G000 = 8 + ((min(speed_int, 310) - 120) / (310 - 120)) * 6
+        if btn_states_FNKT[3] and val_max[0] > val_min[0]:
+            speed_ratio = (speed_int - val_min[0]) / (val_max[0] - val_min[0])
+            val_DEV001G000 = max(0, min(self.ammount_DEV001G000, speed_ratio * self.ammount_DEV001G000))
+        else:
+            val_DEV001G000 = 0
 
         def get_led_image(i, on):
             if i < 7:
@@ -1785,6 +1783,7 @@ class P01_DASH(tk.Frame):
         #               #00  #01  #02  #03  #04  #05  #06  #07  #08  #09
         val_min      = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
         val_max      = [990, 160, 160, 160, 160,  57, 160, 600, 150, 100]
+        val_min, val_max = get_gauge_scale_lists(datadir, DEVICE_B_txt[2], val_min, val_max)
         val_sim      = [ 20,  10,  14,   8,   2,   6,  10,   7,   8,   9] #HIGHER NUMBER FASTER SIMULATION
         val_conf_min = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
 

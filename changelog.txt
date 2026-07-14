@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.81 - 2026-07-14-1838
+
+- Added SCALE setup controls for DEV001 and DEV002 bar gauges.
+- Stored gauge min/max scale values in `data/btn_states.json`.
+- Updated Dash gauge rendering to use the configured scale values.
+
 ## v2.2.80 - 2026-07-14-1833
 
 - Added a DEV001 setup device status display below the setup console.

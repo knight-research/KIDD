@@ -769,5 +769,102 @@
         "odo_total_aldl_imperial": 118160.0,
         "odo_total_aldl_metric": 190146.0
     },
-    "config": {}
+    "config": {},
+    "gauge_scale": {
+        "DEV001": [
+            {
+                "key": "speed",
+                "label": "SPEED",
+                "min": 0,
+                "max": 310,
+                "step": 5
+            },
+            {
+                "key": "signal",
+                "label": "SIGNAL",
+                "min": 0,
+                "max": 100,
+                "step": 5
+            },
+            {
+                "key": "tuning",
+                "label": "TUNING",
+                "min": 0,
+                "max": 200,
+                "step": 5
+            }
+        ],
+        "DEV002": [
+            {
+                "key": "rpm",
+                "label": "RPM",
+                "min": 0,
+                "max": 990,
+                "step": 10
+            },
+            {
+                "key": "inlet",
+                "label": "INLET",
+                "min": 0,
+                "max": 160,
+                "step": 5
+            },
+            {
+                "key": "oil_1",
+                "label": "OIL 1",
+                "min": 0,
+                "max": 160,
+                "step": 5
+            },
+            {
+                "key": "egt",
+                "label": "EGT",
+                "min": 0,
+                "max": 160,
+                "step": 5
+            },
+            {
+                "key": "oil_2",
+                "label": "OIL 2",
+                "min": 0,
+                "max": 160,
+                "step": 5
+            },
+            {
+                "key": "fuel",
+                "label": "FUEL",
+                "min": 0,
+                "max": 57,
+                "step": 1
+            },
+            {
+                "key": "tps",
+                "label": "TPS",
+                "min": 0,
+                "max": 160,
+                "step": 5
+            },
+            {
+                "key": "vdc",
+                "label": "VDC",
+                "min": 0,
+                "max": 600,
+                "step": 5
+            },
+            {
+                "key": "fuel_pump",
+                "label": "FUEL PMP",
+                "min": 0,
+                "max": 150,
+                "step": 5
+            },
+            {
+                "key": "tps_v",
+                "label": "TPS V",
+                "min": 0,
+                "max": 100,
+                "step": 5
+            }
+        ]
+    }
 }
