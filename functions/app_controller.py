@@ -486,6 +486,12 @@ class KIDDController:
         bsm.save()
         self._publish_state(btn_states_PBFNKT=btn_states_PBFNKT)
 
+    def _safe_setup_text(self, values, index, fallback):
+        try:
+            return values[index]
+        except Exception:
+            return fallback
+
     def toggle_btn_HW(self, i):
         if btn_states_HW[i] == True:
             btn_states_HW[i] = False
@@ -493,10 +499,12 @@ class KIDDController:
             btn_states_HW[i] = True
         bsm.set_current_button_states("HW", btn_states_HW)
         bsm.save()
-        label = btnhw_DEV002_txt[i] if device == DEVICE_B_txt[2] else btnhw_DEV001_txt[i]
-        state = states_txt_act[1] if btn_states_HW[i] else states_txt_act[0]
-        log(f"[SETUP] HW {i:02d} {label}: {state}")
         self._publish_state(btn_states_HW=btn_states_HW)
+        labels = btnhw_DEV002_txt if device == DEVICE_B_txt[2] else btnhw_DEV001_txt
+        label = self._safe_setup_text(labels, i, f"HW{i:02d}")
+        state_index = 1 if btn_states_HW[i] else 0
+        state = self._safe_setup_text(states_txt_act, state_index, str(btn_states_HW[i]))
+        log(f"[SETUP] HW {i:02d} {label}: {state}")
 
     def toggle_btn_SW(self, i):
         global btn_states_SW
@@ -506,12 +514,13 @@ class KIDDController:
             btn_states_SW[i] = True
         bsm.set_current_button_states("SW", btn_states_SW)
         bsm.save()
-        label = lbl_btnsw_DEV002_txt[i] if device == DEVICE_B_txt[2] else lbl_btnsw_DEV001_txt[i]
+        self._publish_state(btn_states_SW=btn_states_SW)
+        labels = lbl_btnsw_DEV002_txt if device == DEVICE_B_txt[2] else lbl_btnsw_DEV001_txt
+        label = self._safe_setup_text(labels, i, f"SW{i:02d}")
         on_texts = btnsw_DEV002_txt_1 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_1
         off_texts = btnsw_DEV002_txt_0 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_0
-        state = on_texts[i] if btn_states_SW[i] else off_texts[i]
+        state = self._safe_setup_text(on_texts if btn_states_SW[i] else off_texts, i, str(btn_states_SW[i]))
         log(f"[SETUP] SW {i:02d} {label}: {state}")
-        self._publish_state(btn_states_SW=btn_states_SW)
 
     def toggle_btn_qopt(self, i):
         if btn_states_qopt[i] == True:

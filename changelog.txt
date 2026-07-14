@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.56 - 2026-07-14-1541
+
+- Fixed Setup HW/SW toggles so console logging cannot prevent state publishing.
+- Made Setup console button log labels tolerant when a device text list is missing or shorter than expected.
+
 ## v2.2.55 - 2026-07-14-1536
 
 - Added direct Setup console log entries when the DEV001 console opens.
