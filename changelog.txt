@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.70 - 2026-07-14-1718
+
+- Enlarged the DEV001 `AUDIO` setup subpage for better touch operation.
+- Increased quicksound button, list, scrollbar, and label sizes.
+- Applied consistent theme colors and highlight handling to the new setup/audio controls.
+
 ## v2.2.69 - 2026-07-14-1702
 
 - Added DEV001 setup subpages for `HW/SW`, `AUDIO`, and `ODOMETER`.
