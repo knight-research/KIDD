@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2.75 - 2026-07-14-1803
+
+- Removed the Boot entry from the main menu while keeping the Boot page as the internal startup screen.
+- Removed unused reserve menu entries and deleted the reserve page modules.
+- Updated main menu page mapping so the visible menu starts at Dash and no longer opens at offset position 2.
+- Hid the main menu scrollbar when all menu buttons fit on screen.
+
 ## v2.2.74 - 2026-07-14-1738
 
 - Matched the DEV001 setup subpage button font to the smaller odometer keypad font.

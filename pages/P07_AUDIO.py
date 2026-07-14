@@ -7,7 +7,7 @@ sync_context(globals())
 #------------------------------------------------------------------------------------------
 class P07_AUDIO(tk.Frame):
     if debug == True:
-        print (MENU_B_txt[7])
+        print (MENU_B_txt[6])
     def __init__(self, master):
         sync_context(globals())
         tk.Frame.__init__(self, master)
@@ -145,5 +145,5 @@ class P07_AUDIO(tk.Frame):
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (MENU_B_txt[7])
+            print (MENU_B_txt[6])
         self.after(time_conf, self.update_page)

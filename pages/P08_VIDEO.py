@@ -7,7 +7,7 @@ sync_context(globals())
 #------------------------------------------------------------------------------------------
 class P08_VIDEO(tk.Frame):
     if debug == True:
-        print (MENU_B_txt[8])
+        print (MENU_B_txt[7])
     def __init__(self, master):
         sync_context(globals())
         tk.Frame.__init__(self, master)
@@ -135,5 +135,5 @@ class P08_VIDEO(tk.Frame):
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (MENU_B_txt[8])
+            print (MENU_B_txt[7])
         self.after(time_conf, self.update_page)

@@ -113,10 +113,7 @@ class MainApplication(tk.Tk):
             5: P05_CARFUNCTIONS,
             6: P06_KNIGHTFUNCTIONS,
             7: P07_AUDIO,
-            8: P08_VIDEO,
-            9: P09_RES,
-            10: P10_RES,
-            11: P11_RES
+            8: P08_VIDEO
         }
         newframe = frame_mapping.get(frame_class, frame_class)
         if self.current_frame is not None:
@@ -3332,9 +3329,6 @@ from pages.P05_CARFUNCTIONS import P05_CARFUNCTIONS
 from pages.P06_KNIGHTFUNCTIONS import P06_KNIGHTFUNCTIONS
 from pages.P07_AUDIO import P07_AUDIO
 from pages.P08_VIDEO import P08_VIDEO
-from pages.P09_RES import P09_RES
-from pages.P10_RES import P10_RES
-from pages.P11_RES import P11_RES
 set_context(globals())
 #------------------------------------------------------------------------------------------
 # LOAD CONTROLLER

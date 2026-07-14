@@ -7,7 +7,7 @@ sync_context(globals())
 #------------------------------------------------------------------------------------------
 class P04_THEMES(tk.Frame):
     if debug == True:
-        print (MENU_B_txt[4])
+        print (MENU_B_txt[3])
     def __init__(self, master):
         sync_context(globals())
         tk.Frame.__init__(self, master)
@@ -241,5 +241,5 @@ class P04_THEMES(tk.Frame):
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (MENU_B_txt[4])
+            print (MENU_B_txt[3])
         self.after(time_conf, self.update_page)

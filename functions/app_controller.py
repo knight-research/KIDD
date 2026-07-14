@@ -278,6 +278,13 @@ class KIDDController:
     # MENU BUTTONS
     #------------------------------------------------------------------------------
     def buttons_menu(self):
+        for old_button in getattr(self, "btns_menu", []):
+            old_button.destroy()
+        old_slider = getattr(self, "btns_menu_slider", None)
+        if old_slider is not None:
+            old_slider.destroy()
+            self.btns_menu_slider = None
+
         self.btn_menu_place = len(MENU_B_txt)
         self.btns_menu = []
         x_pos_r1 = 20
@@ -285,7 +292,7 @@ class KIDDController:
         btn_h = 40
         for i in range(self.btn_menu_place):
             btn_menu = tk.Button(text=MENU_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
-            btn_menu.config(command=lambda i=i: self.app.switch_frame(i))
+            btn_menu.config(command=lambda i=i: self.app.switch_frame(i + 1))
             self.btns_menu.append(btn_menu)
             self.btns_menu[i].place(x=x_pos_r1, y=frm05_YPOS+45, width=btn_w, height=btn_h)
             x_pos_r1 += +(btn_w+15)
@@ -294,9 +301,10 @@ class KIDDController:
         #        self.btns_menu[i].config(fg=sys_clr[10])
         #    else:
         #        self.btns_menu[i].config(fg=sys_clr[11])
-        self.btns_menu_slider = tk.Scale(from_=0, to=self.btn_menu_place-5, command=self.buttons_menu_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
-        self.btns_menu_slider.set(1)
-        self.btns_menu_slider.place(x=107, y=frm05_YPOS+2)
+        if self.btn_menu_place > 8:
+            self.btns_menu_slider = tk.Scale(from_=0, to=self.btn_menu_place-8, command=self.buttons_menu_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+            self.btns_menu_slider.set(0)
+            self.btns_menu_slider.place(x=107, y=frm05_YPOS+2)
     #------------------------------------------------------------------------------
     # SHOW MENU BUTTONS IN SLIDER
     #------------------------------------------------------------------------------

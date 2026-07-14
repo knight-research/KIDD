@@ -23,7 +23,7 @@ class P03_SETUP(tk.Frame):
     dev001_setup_subpage = "HW/SW"
 
     if debug == True:
-        print (MENU_B_txt[3])
+        print (MENU_B_txt[2])
     def __init__(self, master):
         sync_context(globals())
         tk.Frame.__init__(self, master)

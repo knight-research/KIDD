@@ -7,7 +7,7 @@ sync_context(globals())
 #------------------------------------------------------------------------------------------
 class P06_KNIGHTFUNCTIONS(tk.Frame):
     if debug == True:
-        print (MENU_B_txt[6])
+        print (MENU_B_txt[5])
     def __init__(self, master):
         sync_context(globals())
         tk.Frame.__init__(self, master)

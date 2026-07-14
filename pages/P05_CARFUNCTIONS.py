@@ -7,7 +7,7 @@ sync_context(globals())
 #------------------------------------------------------------------------------------------
 class P05_CARFUNCTIONS(tk.Frame):
     if debug == True:
-        print (MENU_B_txt[5])
+        print (MENU_B_txt[4])
     def __init__(self, master):
         sync_context(globals())
         tk.Frame.__init__(self, master)
@@ -29,5 +29,5 @@ class P05_CARFUNCTIONS(tk.Frame):
         self.update_page()
     def update_page(self):
         if debug == True:
-            print (MENU_B_txt[5])
+            print (MENU_B_txt[4])
         self.after(time_conf, self.update_page)
