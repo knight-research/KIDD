@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.77 - 2026-07-14-1814
+
+- Hid DEV001-only setup/audio and setup/odometer controls on non-DEV001 setup pages so DEV002 no longer shows them over HW/SW controls.
+
 ## v2.2.76 - 2026-07-14-1809
 
 - Hid Style and System sliders on the Themes page when all buttons fit without scrolling.

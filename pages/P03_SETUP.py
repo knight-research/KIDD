@@ -821,12 +821,20 @@ class P03_SETUP(tk.Frame):
     def _setup_parent(self, section, fallback_parent=None):
         if device == DEVICE_B_txt[1] and hasattr(self, "_dev001_setup_frames"):
             return self._dev001_setup_frames[section]
+        if section in ("AUDIO", "ODOMETER"):
+            if not hasattr(self, "_hidden_setup_frames"):
+                self._hidden_setup_frames = {}
+            if section not in self._hidden_setup_frames:
+                self._hidden_setup_frames[section] = tk.Frame(self, bg=sys_clr[0], highlightthickness=0)
+            return self._hidden_setup_frames[section]
         return fallback_parent if fallback_parent is not None else self
 
     def _setup_place(self, widget, section, x, y, width, height):
         if device == DEVICE_B_txt[1] and hasattr(self, "_dev001_setup_area"):
             area_x, area_y, _, _ = self._dev001_setup_area
             widget.place(x=x - area_x, y=y - area_y, width=width, height=height)
+        elif section in ("AUDIO", "ODOMETER"):
+            return
         else:
             widget.place(x=x, y=y, width=width, height=height)
 
