@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.65 - 2026-07-14-1614
+
+- Replaced the Dash GPS `Sxx Fq` text with a phone-style ASCII reception bar display.
+- Kept the satellite count next to the GPS reception bars for quick diagnostics.
+
 ## v2.2.64 - 2026-07-14-1611
 
 - Added GPS satellite count and fix-quality state from GGA parsing.

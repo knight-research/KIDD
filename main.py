@@ -1896,6 +1896,30 @@ class P01_DASH(tk.Frame):
             seven_seg_DEV002G009,
         )
 
+    def _gps_reception_bars(self):
+        try:
+            sats = int(gps_num_sats)
+        except (TypeError, ValueError):
+            sats = 0
+        try:
+            fix_quality = int(gps_fix_quality)
+        except (TypeError, ValueError):
+            fix_quality = 0
+
+        if fix_quality <= 0 or sats <= 0:
+            level = 0
+        elif sats >= 8:
+            level = 4
+        elif sats >= 6:
+            level = 3
+        elif sats >= 4:
+            level = 2
+        else:
+            level = 1
+
+        bars = "|" * level + " " * (4 - level)
+        return f"[{bars}] {sats:02d}"
+
     def _update_sysinfo(self, dev002_values=None):
         # Initialisiere 8 Labels für sysinfo global und leer
         labels_changed = self.update_labels()
@@ -1918,7 +1942,7 @@ class P01_DASH(tk.Frame):
                 else:
                     values = ["--.--", "--.--", "--.--", "--.--", "--.--", "--.--", self.update_duration]
             elif btn_states_PB == "pb01":
-                gps_time_status = f"{gps_time} S{gps_num_sats} F{gps_fix_quality}"
+                gps_time_status = f"{gps_time} {self._gps_reception_bars()}"
                 values = [
                     gps_time_status,
                     gps_date,
