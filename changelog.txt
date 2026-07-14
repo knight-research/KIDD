@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.82 - 2026-07-14-1845
+
+- Hid DEV002 HW/SW controls, relay controls, console, and I2C status while the SCALE setup subpage is active.
+- Hid the DEV001 device status while non-HW/SW setup subpages are active.
+- Aligned DEV002 setup subpage buttons with the DEV001 subpage button positions.
+
 ## v2.2.81 - 2026-07-14-1838
 
 - Added SCALE setup controls for DEV001 and DEV002 bar gauges.

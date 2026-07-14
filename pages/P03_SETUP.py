@@ -671,9 +671,11 @@ class P03_SETUP(tk.Frame):
                 lbls_btnrb01.config(text=rb01_DEV002_txt[i])
                 if i < (quant_btns_RB01/2):
                     lbls_btnrb01.place(x=x_pos, y=y_l10, width=lbl_w, height=lbl_f_h)
+                    self._remember_visible_widget("dev002_hw_sw", lbls_btnrb01)
                     x_pos += +px_to_next
                 else:
                     lbls_btnrb01.place(x=x_pos2, y=y_l12, width=lbl_w, height=lbl_f_h)
+                    self._remember_visible_widget("dev002_hw_sw", lbls_btnrb01)
                     x_pos2 += +px_to_next
         #--------------------------------------------------------------------------
         # RB02
@@ -687,9 +689,11 @@ class P03_SETUP(tk.Frame):
                 lbls_btnRB02.config(text=rb02_DEV002_txt[i])
                 if i < (quant_btns_RB02/2):
                     lbls_btnRB02.place(x=x_pos, y=y_l14, width=lbl_w, height=lbl_f_h)
+                    self._remember_visible_widget("dev002_hw_sw", lbls_btnRB02)
                     x_pos += +px_to_next
                 else:
                     lbls_btnRB02.place(x=x_pos2, y=y_l16, width=lbl_w, height=lbl_f_h)
+                    self._remember_visible_widget("dev002_hw_sw", lbls_btnRB02)
                     x_pos2 += +px_to_next
         #--------------------------------------------------------------------------
         # RB03
@@ -703,9 +707,11 @@ class P03_SETUP(tk.Frame):
                 lbls_btnRB03.config(text=rb03_DEV002_txt[i])
                 if i < (quant_btns_RB03/2):
                     lbls_btnRB03.place(x=x_pos, y=y_l18, width=lbl_w, height=lbl_f_h)
+                    self._remember_visible_widget("dev002_hw_sw", lbls_btnRB03)
                     x_pos += +px_to_next
                 else:
                     lbls_btnRB03.place(x=x_pos2, y=y_l20, width=lbl_w, height=lbl_f_h)
+                    self._remember_visible_widget("dev002_hw_sw", lbls_btnRB03)
                     x_pos2 += +px_to_next
         #----------------------------------------------------------------------------------
         # RB BUTTONS
@@ -727,9 +733,11 @@ class P03_SETUP(tk.Frame):
                 btn_RB01 = tk.Button(canvas, bg=sys_clr[8], font=(fonts[1], 28), command=lambda i=i: read.toggle_relay(i))
                 if i < (quant_btns_RB01/2):
                     btn_RB01.place(x=x_pos, y=y_l11, width=btn_w, height=btn_h)
+                    self._remember_visible_widget("dev002_hw_sw", btn_RB01)
                     x_pos += +px_to_next
                 else:
                     btn_RB01.place(x=x_pos2, y=y_l13, width=btn_w, height=btn_h)
+                    self._remember_visible_widget("dev002_hw_sw", btn_RB01)
                     x_pos2 += +px_to_next
                 btns_RB01.append(btn_RB01)
             #--------------------------------------------------------------------------
@@ -742,9 +750,11 @@ class P03_SETUP(tk.Frame):
                 btn_RB02 = tk.Button(canvas, bg=sys_clr[8], font=(fonts[1], 28), command=lambda i=i: read.toggle_relay(i+16))
                 if i < (quant_btns_RB02/2):
                     btn_RB02.place(x=x_pos, y=y_l15, width=btn_w, height=btn_h)
+                    self._remember_visible_widget("dev002_hw_sw", btn_RB02)
                     x_pos += +px_to_next
                 else:
                     btn_RB02.place(x=x_pos2, y=y_l17, width=btn_w, height=btn_h)
+                    self._remember_visible_widget("dev002_hw_sw", btn_RB02)
                     x_pos2 += +px_to_next
                 btns_RB02.append(btn_RB02)
             #--------------------------------------------------------------------------
@@ -757,9 +767,11 @@ class P03_SETUP(tk.Frame):
                 btn_RB03 = tk.Button(canvas, bg=sys_clr[8], font=(fonts[1], 28), command=lambda i=i: read.toggle_relay(i+32))
                 if i < (quant_btns_RB03/2):
                     btn_RB03.place(x=x_pos, y=y_l19, width=btn_w, height=btn_h)
+                    self._remember_visible_widget("dev002_hw_sw", btn_RB03)
                     x_pos += +px_to_next
                 else:
                     btn_RB03.place(x=x_pos2, y=y_l21, width=btn_w, height=btn_h)
+                    self._remember_visible_widget("dev002_hw_sw", btn_RB03)
                     x_pos2 += +px_to_next
                 btns_RB03.append(btn_RB03)
         #----------------------------------------------------------------------------------
@@ -858,6 +870,25 @@ class P03_SETUP(tk.Frame):
             return
         else:
             widget.place(x=x, y=y, width=width, height=height)
+            if device == DEVICE_B_txt[2] and section == "HW/SW":
+                self._remember_visible_widget("dev002_hw_sw", widget)
+
+    def _remember_visible_widget(self, group, widget):
+        if not hasattr(self, "_visible_widget_groups"):
+            self._visible_widget_groups = {}
+        widgets = self._visible_widget_groups.setdefault(group, [])
+        if widget not in widgets:
+            widgets.append(widget)
+        widget._kidd_place_info = widget.place_info()
+
+    def _set_visible_group(self, group, visible):
+        for widget in getattr(self, "_visible_widget_groups", {}).get(group, []):
+            if visible:
+                place_info = getattr(widget, "_kidd_place_info", None)
+                if place_info:
+                    widget.place(**place_info)
+            else:
+                widget.place_forget()
 
     def _create_dev001_submenu(self):
         self.dev001_submenu_buttons = {}
@@ -880,7 +911,7 @@ class P03_SETUP(tk.Frame):
 
     def _create_dev002_submenu(self):
         self.dev002_submenu_buttons = {}
-        items = [("HW/SW", 620), ("SCALE", 750)]
+        items = [("HW/SW", 230), ("SCALE", 620)]
         for name, x_pos in items:
             btn = tk.Button(
                 self,
@@ -907,6 +938,7 @@ class P03_SETUP(tk.Frame):
                 frame.place(x=area_x, y=area_y, width=area_w, height=area_h)
             else:
                 frame.place_forget()
+        self._set_visible_group("dev001_device_status", name == "HW/SW")
         for frame_name, button in getattr(self, "dev001_submenu_buttons", {}).items():
             if frame_name == name:
                 button.config(bg=sys_clr[8], fg=sys_clr[9], relief="sunken")
@@ -918,10 +950,12 @@ class P03_SETUP(tk.Frame):
             return
         P03_SETUP.dev002_setup_subpage = name
         if name == "SCALE":
+            self._set_visible_group("dev002_hw_sw", False)
             area_x, area_y, area_w, area_h = self._dev002_scale_area
             self._dev002_scale_frame.place(x=area_x, y=area_y, width=area_w, height=area_h)
         else:
             self._dev002_scale_frame.place_forget()
+            self._set_visible_group("dev002_hw_sw", True)
         for frame_name, button in getattr(self, "dev002_submenu_buttons", {}).items():
             if frame_name == name:
                 button.config(bg=sys_clr[8], fg=sys_clr[9], relief="sunken")
@@ -1011,6 +1045,8 @@ class P03_SETUP(tk.Frame):
         log(f"[SETUP] {device_key} console ready", device=device_key)
         title = tk.Label(self, text="CONSOLE", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
         title.place(x=title_x, y=title_y, width=title_w, height=title_h)
+        if device_key == "DEV002":
+            self._remember_visible_widget("dev002_hw_sw", title)
 
         self.console_text = tk.Text(
             self,
@@ -1025,6 +1061,8 @@ class P03_SETUP(tk.Frame):
             state="disabled",
         )
         self.console_text.place(x=text_x, y=text_y, width=text_w, height=text_h)
+        if device_key == "DEV002":
+            self._remember_visible_widget("dev002_hw_sw", self.console_text)
         self.console_text_state = None
         self.setup_gps_log_times = {}
         self._update_setup_console()
@@ -1037,24 +1075,26 @@ class P03_SETUP(tk.Frame):
         self.dev001_device_status_labels = {}
         title = tk.Label(self, text="DEVICE STATUS", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
         title.place(x=620, y=265, width=520, height=28)
+        self._remember_visible_widget("dev001_device_status", title)
 
         headers = [("DEVICE", 620, 295, 150), ("ON", 780, 295, 70), ("OK", 860, 295, 70), ("ADDR", 940, 295, 120)]
         for text, x_pos, y_pos, width in headers:
-            tk.Label(self, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
-                x=x_pos, y=y_pos, width=width, height=24
-            )
+            header = tk.Label(self, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
+            header.place(x=x_pos, y=y_pos, width=width, height=24)
+            self._remember_visible_widget("dev001_device_status", header)
 
         for row_index, row in enumerate(self._dev001_device_rows()):
             y_pos = 325 + row_index * 34
-            tk.Label(self, text=row["name"], font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[9], anchor="w").place(
-                x=620, y=y_pos, width=150, height=28
-            )
+            name_label = tk.Label(self, text=row["name"], font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+            name_label.place(x=620, y=y_pos, width=150, height=28)
             on_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
             ok_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
             addr_label = tk.Label(self, text=row["addr"], font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
             on_label.place(x=780, y=y_pos, width=70, height=28)
             ok_label.place(x=860, y=y_pos, width=70, height=28)
             addr_label.place(x=940, y=y_pos, width=120, height=28)
+            for widget in (name_label, on_label, ok_label, addr_label):
+                self._remember_visible_widget("dev001_device_status", widget)
             self.dev001_device_status_labels[row["name"]] = {"on": on_label, "ok": ok_label, "addr": addr_label}
 
     def _dev001_device_rows(self):
@@ -1103,25 +1143,27 @@ class P03_SETUP(tk.Frame):
         self.dev002_i2c_status_labels = {}
         title = tk.Label(self, text="I2C STATUS", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
         title.place(x=620, y=265, width=520, height=28)
+        self._remember_visible_widget("dev002_hw_sw", title)
 
         headers = [("DEVICE", 620, 295, 150), ("ON", 780, 295, 70), ("OK", 860, 295, 70), ("ADDR", 940, 295, 90)]
         for text, x_pos, y_pos, width in headers:
-            tk.Label(self, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
-                x=x_pos, y=y_pos, width=width, height=24
-            )
+            header = tk.Label(self, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
+            header.place(x=x_pos, y=y_pos, width=width, height=24)
+            self._remember_visible_widget("dev002_hw_sw", header)
 
         rows = self._dev002_i2c_rows()
         for row_index, row in enumerate(rows):
             y_pos = 325 + row_index * 34
-            tk.Label(self, text=row["name"], font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[9], anchor="w").place(
-                x=620, y=y_pos, width=150, height=28
-            )
+            name_label = tk.Label(self, text=row["name"], font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+            name_label.place(x=620, y=y_pos, width=150, height=28)
             on_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
             ok_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
             addr_label = tk.Label(self, text=row["addr"], font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
             on_label.place(x=780, y=y_pos, width=70, height=28)
             ok_label.place(x=860, y=y_pos, width=70, height=28)
             addr_label.place(x=940, y=y_pos, width=90, height=28)
+            for widget in (name_label, on_label, ok_label, addr_label):
+                self._remember_visible_widget("dev002_hw_sw", widget)
             self.dev002_i2c_status_labels[row["name"]] = {"on": on_label, "ok": ok_label}
 
     def _dev002_i2c_rows(self):
