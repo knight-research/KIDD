@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.74 - 2026-07-14-1738
+
+- Matched the DEV001 setup subpage button font to the smaller odometer keypad font.
+- Reduced the DEV001 odometer keypad font size for cleaner button text.
+- Fixed the DEV001 setup/audio quicksound list scroll callback used when opening the audio subpage.
+
 ## v2.2.73 - 2026-07-14-1732
 
 - Removed the green accent from DEV001 setup subpage buttons and the quicksound selection highlight.

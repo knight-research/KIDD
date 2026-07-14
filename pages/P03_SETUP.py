@@ -430,15 +430,17 @@ class P03_SETUP(tk.Frame):
         x0, y0 = 345, 300
         dx, dy = 77, 77
         w, h = 70, 70
+        setup_keypad_style = dict(keypad_style)
+        setup_keypad_style["font"] = (fonts[0], 16)
 
         for r, row in enumerate(keypad_layout):
             for c, token in enumerate(row):
                 if not token:
                     continue
                 if token == "SAVE":
-                    btn = tk.Button(self._setup_parent("ODOMETER"), **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=_save_active_value)
+                    btn = tk.Button(self._setup_parent("ODOMETER"), **setup_keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=_save_active_value)
                 else:
-                    btn = tk.Button(self._setup_parent("ODOMETER"), **keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=lambda t=token: _on_keypad_press(t))
+                    btn = tk.Button(self._setup_parent("ODOMETER"), **setup_keypad_style, text=token, bg=sys_clr[8], fg=sys_clr[9], command=lambda t=token: _on_keypad_press(t))
                 self._setup_place(btn, "ODOMETER", x0 + c*dx, y0 + r*dy, w, h)
 
         # Initialize
@@ -548,6 +550,9 @@ class P03_SETUP(tk.Frame):
             borderwidth=0,
             highlightthickness=0,
         )
+        def _sync_qs_scroll(first, _last=None):
+            qs_select_scroll.set(float(first) * 100.0)
+
         qs_select_list = tk.Listbox(
             qs_select_frame,
             bg=sys_clr[8],
@@ -556,7 +561,7 @@ class P03_SETUP(tk.Frame):
             selectforeground=sys_clr[8],
             font=(fonts[6], 24),
             activestyle="none",
-            yscrollcommand=qs_select_scroll.set,
+            yscrollcommand=_sync_qs_scroll,
             borderwidth=0,
             highlightthickness=0,
         )
@@ -837,7 +842,7 @@ class P03_SETUP(tk.Frame):
                 activeforeground=sys_clr[9],
                 bd=4,
                 highlightthickness=0,
-                font=(fonts[6], 18),
+                font=(fonts[0], 16),
                 text=name,
                 command=lambda name=name: self._show_dev001_setup_subpage(name),
             )
