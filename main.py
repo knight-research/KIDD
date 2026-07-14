@@ -1653,9 +1653,9 @@ class P01_DASH(tk.Frame):
             for i in range(3):
                 self.val_cnt_sim[i] += val_sim[i] if self.val_cnt_sim_updn[i] else -val_sim[i]
                 if self.val_cnt_sim[i] > val_max[i]:
-                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = False, self.val_cnt_sim[i] - val_sim[i]
+                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = False, val_max[i]
                 elif self.val_cnt_sim[i] < val_min[i]:
-                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = True, self.val_cnt_sim[i] + val_sim[i]
+                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = True, val_min[i]
         #------------------------------------------------------------------------------
         # UPDATE GPS DATA AND WRITE SPEED DATA
         #------------------------------------------------------------------------------
@@ -1809,9 +1809,9 @@ class P01_DASH(tk.Frame):
             for i in range(len(val_sim)):
                 self.val_cnt_sim[i] += val_sim[i] if self.val_cnt_sim_updn[i] else -val_sim[i]
                 if self.val_cnt_sim[i] > val_max[i]:
-                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = False, self.val_cnt_sim[i] - val_sim[i]
+                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = False, val_max[i]
                 elif self.val_cnt_sim[i] < val_min[i]:
-                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = True, self.val_cnt_sim[i] + val_sim[i]
+                    self.val_cnt_sim_updn[i], self.val_cnt_sim[i] = True, val_min[i]
 
         # ADS MODULE 0to100 = [30, 35, 40, 45, 50, 55, 57] # if LG06V >= val 43=50%
         if btn_states_HW[6] == True:

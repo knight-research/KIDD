@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.87 - 2026-07-14-1915
+
+- Clamped simulated gauge values to the configured minimum/maximum so small ranges like FUEL GALS can reach the final LED.
+
 ## v2.2.86 - 2026-07-14-1912
 
 - Added a SIM column to the DEV001/DEV002 SCALE setup pages for configuring simulation speed per gauge.
