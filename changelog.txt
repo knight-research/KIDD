@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.67 - 2026-07-14-1632
+
+- Reduced and shifted the Dash GPS reception label so it ends shortly after the satellite count and stays within the red panel.
+
 ## v2.2.66 - 2026-07-14-1618
 
 - Moved the Dash GPS reception bars into their own fixed-width label next to the GPS time field.

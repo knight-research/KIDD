@@ -1394,9 +1394,9 @@ class P01_DASH(tk.Frame):
 
         base_width = self.wh_lbl_sysinfo[0] if hasattr(self, "wh_lbl_sysinfo") and self.wh_lbl_sysinfo else 180
         base_height = self.wh_lbl_sysinfo[1] if hasattr(self, "wh_lbl_sysinfo") and len(self.wh_lbl_sysinfo) > 1 else 42
-        x_pos = self.x_lbl_sysinfo[0] + base_width + 8
+        x_pos = self.x_lbl_sysinfo[0] + base_width - 42
         y_pos = self.y_lbl_sysinfo[0]
-        label_width = max(170, int(base_width * 0.9))
+        label_width = 120
 
         self.gps_reception_label = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
         self.gps_reception_label.place(x=x_pos, y=y_pos, width=label_width, height=base_height)
