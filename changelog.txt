@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.61 - 2026-07-14-1554
+
+- Added persistent console logging to `data/console.log` so Setup console output can be inspected after runtime.
+- Limited the console log file size and ignored the runtime log file in Git.
+
 ## v2.2.60 - 2026-07-14-1551
 
 - Cached Setup HW/SW/FAV button render states so the periodic Setup refresh only touches widgets when their visual state changes.

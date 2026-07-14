@@ -1,3 +1,4 @@
+import os
 import sys
 import threading
 import time
@@ -5,19 +6,51 @@ from collections import deque
 
 
 _MAX_LINES = 300
+_MAX_LOG_BYTES = 512 * 1024
 _lines = deque(maxlen=_MAX_LINES)
 _lock = threading.Lock()
 _installed = False
 _original_stdout = None
 _original_stderr = None
+_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_log_path = os.path.join(_project_root, "data", "console.log")
+
+
+def get_console_log_path():
+    return _log_path
+
+
+def _trim_log_file_if_needed():
+    try:
+        if not os.path.exists(_log_path) or os.path.getsize(_log_path) <= _MAX_LOG_BYTES:
+            return
+        with open(_log_path, "rb") as f:
+            f.seek(-_MAX_LOG_BYTES // 2, os.SEEK_END)
+            data = f.read()
+        with open(_log_path, "wb") as f:
+            f.write(data)
+    except OSError:
+        pass
+
+
+def _write_log_file(line):
+    try:
+        os.makedirs(os.path.dirname(_log_path), exist_ok=True)
+        _trim_log_file_if_needed()
+        with open(_log_path, "a", encoding="utf-8") as f:
+            f.write(line + "\n")
+    except OSError:
+        pass
 
 
 def _append_line(text):
     if not text:
         return
     timestamp = time.strftime("%H:%M:%S")
+    line = f"{timestamp} {text}"
     with _lock:
-        _lines.append(f"{timestamp} {text}")
+        _lines.append(line)
+        _write_log_file(line)
 
 
 def log(message):
