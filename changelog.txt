@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.60 - 2026-07-14-1551
+
+- Cached Setup HW/SW/FAV button render states so the periodic Setup refresh only touches widgets when their visual state changes.
+- Reduced visible Setup flicker after HW/SW button presses by avoiding redundant Tkinter `config()` calls.
+
 ## v2.2.59 - 2026-07-14-1549
 
 - Added a DEV001 Setup GPS diagnostic poll so the Setup console shows whether NMEA data is arriving while GPS HW is enabled.

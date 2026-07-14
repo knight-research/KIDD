@@ -279,6 +279,7 @@ class P03_SETUP(tk.Frame):
         # HW BUTTONS
         #--------------------------------------------------------------------------
         self.btns_HW = []
+        self.hw_button_render_state = {}
         x_pos = x_start
         for i in range(quant_btns_HW):
             btn_HW = tk.Button(canvas, bg=sys_clr[8], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_hw_button(i))
@@ -289,6 +290,7 @@ class P03_SETUP(tk.Frame):
         # SW BUTTONS
         #--------------------------------------------------------------------------
         self.btns_SW = []
+        self.sw_button_render_state = {}
         x_pos = x_start
         for i in range(quant_btns_SW):
             btn_SW = tk.Button(canvas, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: self._toggle_sw_button(i))
@@ -788,6 +790,7 @@ class P03_SETUP(tk.Frame):
         x_pos17 = x_start_RB_FAV
         x_pos19 = x_start_RB_FAV
         x_pos21 = x_start_RB_FAV
+        self.fav_button_render_state = {}
 
         if device == DEVICE_B_txt[1]:
             quant_btns_FAV = quant_btns_HW + quant_btns_SW
@@ -912,17 +915,23 @@ class P03_SETUP(tk.Frame):
 
     def _update_hw_button(self, index):
         if btn_states_HW[index]:
-            self.btns_HW[index].config(text=states_txt_act[1], fg=sys_clr[10])
+            state = (states_txt_act[1], sys_clr[10])
         else:
-            self.btns_HW[index].config(text=states_txt_act[0], fg=sys_clr[11])
+            state = (states_txt_act[0], sys_clr[11])
+        if self.hw_button_render_state.get(index) != state:
+            self.btns_HW[index].config(text=state[0], fg=state[1])
+            self.hw_button_render_state[index] = state
 
     def _update_sw_button(self, index):
         on_texts = btnsw_DEV002_txt_1 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_1
         off_texts = btnsw_DEV002_txt_0 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_0
         if btn_states_SW[index]:
-            self.btns_SW[index].config(text=on_texts[index])
+            state = on_texts[index]
         else:
-            self.btns_SW[index].config(text=off_texts[index])
+            state = off_texts[index]
+        if self.sw_button_render_state.get(index) != state:
+            self.btns_SW[index].config(text=state)
+            self.sw_button_render_state[index] = state
 
     def _toggle_hw_button(self, index):
         read.toggle_btn_HW(index)
@@ -952,9 +961,12 @@ class P03_SETUP(tk.Frame):
         #----------------------------------------------------------------------------------
         for i in range(quant_btns_FAV):
             if btn_states_FAV[i]:
-                btns_FAV[i].config(bg=sys_clr[10], fg=sys_clr[8])
+                state = (sys_clr[10], sys_clr[8])
             else:
-                btns_FAV[i].config(bg=sys_clr[8], fg=sys_clr[11])
+                state = (sys_clr[8], sys_clr[11])
+            if self.fav_button_render_state.get(i) != state:
+                btns_FAV[i].config(bg=state[0], fg=state[1])
+                self.fav_button_render_state[i] = state
         #----------------------------------------------------------------------------------
         # RB BUTTONS
         #----------------------------------------------------------------------------------
