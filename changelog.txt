@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.53 - 2026-07-14-1530
+
+- Fixed version loading so `version.txt` is read from the project root again.
+- Restored the Setup page version line with explicit version, change date, platform, car number, device number, and IP text.
+
 ## v2.2.52 - 2026-07-14-1513
 
 - Added a DEV001 Setup console panel in the existing right-side frame that mirrors recent console output.

@@ -223,7 +223,8 @@ class P03_SETUP(tk.Frame):
         else:
             wlan0_ip = "127.0.0.1"
         canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="SETUP")
-        canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=(version, last_change, sys.platform, carno, devno, wlan0_ip))
+        setup_info = f"VERSION {version} | CHANGE {last_change} | {sys.platform} | {carno} | {devno} | {wlan0_ip}"
+        canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=setup_info)
         canvas.create_text(20, (bggrid[4]-135), **txt_style_pagename, fill=sys_clr[9], text="MENU")
         if device == DEVICE_B_txt[1]:
             self._create_dev001_console()
