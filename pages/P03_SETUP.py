@@ -499,39 +499,54 @@ class P03_SETUP(tk.Frame):
 
         qs_button_font = ("Bebas Neue Bold", 26)
         qs_button_font_small = ("Bebas Neue Bold", 22)
+        qs_button_bg = sys_clr[8]
+        qs_button_fg = sys_clr[9]
+        qs_button_active_fg = sys_clr[9]
+        qs_button_off_fg = sys_clr[11]
+
+        def _make_qs_button(text, x, y, width, height, command, fg=None, font=None, anchor="c"):
+            button = tk.Label(
+                self._setup_parent("AUDIO"),
+                bg=qs_button_bg,
+                fg=fg or qs_button_fg,
+                font=font or qs_button_font,
+                text=text,
+                anchor=anchor,
+                bd=4,
+                relief="raised",
+            )
+            button.bind("<ButtonPress-1>", lambda _event, b=button: b.config(relief="sunken"))
+            button.bind("<ButtonRelease-1>", lambda _event, b=button, cmd=command: (b.config(relief="raised"), cmd()))
+            self._setup_place(button, "AUDIO", x, y, width, height)
+            return button
+
         lbl_qs_title = tk.Label(self._setup_parent("AUDIO"), text="QUICKSOUND", font=(fonts[6], 25), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
         self._setup_place(lbl_qs_title, "AUDIO", 35, 112, 270, 34)
         lbl_qs_select_title = tk.Label(self._setup_parent("AUDIO"), text="SELECT", font=(fonts[6], 25), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
         self._setup_place(lbl_qs_select_title, "AUDIO", 380, 112, 180, 34)
         qs_labels_text = "LBL ON" if self._quicksound_settings["labels_visible"] else "LBL OFF"
-        qs_labels_fg = sys_clr[10] if self._quicksound_settings["labels_visible"] else sys_clr[11]
-        btn_qs_labels = tk.Button(
-            self._setup_parent("AUDIO"),
-            bg=sys_clr[8],
-            fg=qs_labels_fg,
-            activebackground=sys_clr[8],
-            activeforeground=sys_clr[10],
-            bd=4,
-            highlightthickness=0,
-            font=qs_button_font_small,
-            text=qs_labels_text,
-            command=_toggle_quicksound_labels,
-        )
-        self._setup_place(btn_qs_labels, "AUDIO", 205, 108, 145, 44)
+        qs_labels_fg = qs_button_active_fg if self._quicksound_settings["labels_visible"] else qs_button_off_fg
+        _make_qs_button(qs_labels_text, 205, 108, 145, 44, _toggle_quicksound_labels, fg=qs_labels_fg, font=qs_button_font_small)
 
         self._qs_select_target = {"options": [], "command": None}
         qs_select_frame = tk.Frame(self._setup_parent("AUDIO"), bg=sys_clr[8], bd=4, relief="raised")
         self._setup_place(qs_select_frame, "AUDIO", 380, 165, 270, 445)
-        qs_select_scroll = tk.Scrollbar(
+        qs_select_scroll = tk.Scale(
             qs_select_frame,
+            from_=0,
+            to=100,
             orient="vertical",
-            bg=sys_clr[10],
-            activebackground=sys_clr[9],
+            showvalue=0,
+            sliderlength=80,
+            width=28,
+            bg=qs_button_fg,
+            activebackground=qs_button_fg,
             troughcolor=sys_clr[8],
+            highlightbackground=sys_clr[8],
+            highlightcolor=sys_clr[8],
             relief="flat",
             borderwidth=0,
             highlightthickness=0,
-            width=34,
         )
         qs_select_list = tk.Listbox(
             qs_select_frame,
@@ -545,7 +560,7 @@ class P03_SETUP(tk.Frame):
             borderwidth=0,
             highlightthickness=0,
         )
-        qs_select_scroll.config(command=qs_select_list.yview)
+        qs_select_scroll.config(command=lambda value: qs_select_list.yview_moveto(float(value) / 100.0))
         qs_select_scroll.pack(side="right", fill="y")
         qs_select_list.pack(side="left", fill="both", expand=True)
 
@@ -562,6 +577,7 @@ class P03_SETUP(tk.Frame):
             qs_select_list.delete(0, "end")
             for option in options:
                 qs_select_list.insert("end", _sound_display_name(option) if kind == "file" else option)
+            qs_select_scroll.set(0)
 
         def _select_quicksound_option(_event=None):
             selection = qs_select_list.curselection()
@@ -577,63 +593,45 @@ class P03_SETUP(tk.Frame):
             lbl_qs_name = tk.Label(self._setup_parent("AUDIO"), font=(fonts[6], 22), text=f"Q{i + 1}", bg=sys_clr[8], fg=sys_clr[9], anchor="w")
             self._setup_place(lbl_qs_name, "AUDIO", 35, y_pos, 320, 28)
 
-            btn_qs_folder = tk.Button(
-                self._setup_parent("AUDIO"),
-                bg=sys_clr[8],
-                fg=sys_clr[9],
-                activebackground=sys_clr[8],
-                activeforeground=sys_clr[10],
-                bd=4,
-                highlightthickness=0,
+            _make_qs_button(
+                quicksound["folder"],
+                35,
+                y_pos + 32,
+                115,
+                40,
+                lambda i=i: _show_quicksound_options(i, "folder"),
                 font=qs_button_font_small,
-                text=quicksound["folder"],
                 anchor="w",
-                command=lambda i=i: _show_quicksound_options(i, "folder"),
             )
-            self._setup_place(btn_qs_folder, "AUDIO", 35, y_pos + 32, 115, 40)
-
-            btn_qs_file = tk.Button(
-                self._setup_parent("AUDIO"),
-                bg=sys_clr[8],
-                fg=sys_clr[9],
-                activebackground=sys_clr[8],
-                activeforeground=sys_clr[10],
-                bd=4,
-                highlightthickness=0,
+            _make_qs_button(
+                _sound_display_name(quicksound["file"]),
+                158,
+                y_pos + 32,
+                200,
+                40,
+                lambda i=i: _show_quicksound_options(i, "file"),
                 font=qs_button_font_small,
-                text=_sound_display_name(quicksound["file"]),
                 anchor="w",
-                command=lambda i=i: _show_quicksound_options(i, "file"),
             )
-            self._setup_place(btn_qs_file, "AUDIO", 158, y_pos + 32, 200, 40)
-
-            btn_qs_mode = tk.Button(
-                self._setup_parent("AUDIO"),
-                bg=sys_clr[8],
-                fg=sys_clr[9],
-                activebackground=sys_clr[8],
-                activeforeground=sys_clr[10],
-                bd=4,
-                highlightthickness=0,
+            _make_qs_button(
+                quicksound["mode"],
+                35,
+                y_pos + 76,
+                150,
+                40,
+                lambda i=i: _cycle_quicksound_value(i, "mode", QUICKSOUND_MODES),
                 font=qs_button_font,
-                text=quicksound["mode"],
-                command=lambda i=i: _cycle_quicksound_value(i, "mode", QUICKSOUND_MODES),
             )
-            self._setup_place(btn_qs_mode, "AUDIO", 35, y_pos + 76, 150, 40)
-
-            btn_qs_color = tk.Button(
-                self._setup_parent("AUDIO"),
-                bg=sys_clr[8],
+            _make_qs_button(
+                quicksound["color"],
+                195,
+                y_pos + 76,
+                90,
+                40,
+                lambda i=i: _cycle_quicksound_value(i, "color", QUICKSOUND_COLORS),
                 fg=quicksound_color_fg.get(quicksound["color"], sys_clr[9]),
-                activebackground=sys_clr[8],
-                activeforeground=sys_clr[10],
-                bd=4,
-                highlightthickness=0,
                 font=qs_button_font,
-                text=quicksound["color"],
-                command=lambda i=i: _cycle_quicksound_value(i, "color", QUICKSOUND_COLORS),
             )
-            self._setup_place(btn_qs_color, "AUDIO", 195, y_pos + 76, 90, 40)
         _show_quicksound_options(0, "file")
         #----------------------------------------------------------------------------------
         # MENU BUTTONS

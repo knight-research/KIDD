@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.72 - 2026-07-14-1728
+
+- Removed the always-green `sys_clr[10]` accent from DEV001 setup/audio buttons and scroll controls.
+- Rebuilt quicksound setup buttons as theme-colored label buttons so their colors render reliably.
+- Replaced the native quicksound scrollbar with a theme-colored vertical slider.
+
 ## v2.2.71 - 2026-07-14-1724
 
 - Constrained the DEV001 `AUDIO` setup content to the left half of the setup page to keep right-side reserve space free.
