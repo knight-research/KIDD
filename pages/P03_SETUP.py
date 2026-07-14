@@ -204,7 +204,7 @@ class P03_SETUP(tk.Frame):
             self._create_dev001_device_status()
             self._create_dev001_submenu()
         elif device == DEVICE_B_txt[2]:
-            self._dev002_scale_area = (620, 60, 700, 620)
+            self._dev002_scale_area = (620, 75, 700, 575)
             self._dev002_scale_frame = tk.Frame(self, bg=sys_clr[0], highlightthickness=0)
             self._create_dev002_submenu()
             self._create_setup_console("DEV002", 30, 265, 560, 28, 30, 295, 560, 315, 18)
@@ -975,9 +975,10 @@ class P03_SETUP(tk.Frame):
         for child in parent.winfo_children():
             child.destroy()
 
+        y_offset = -15 if device_key == DEVICE_B_txt[2] else 0
         title = tk.Label(parent, text="SCALE", font=(fonts[6], 26), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
-        title.place(x=20, y=20, width=180, height=34)
-        headers = [("GAUGE", 20, 65, 145), ("MIN", 175, 65, 120), ("MAX", 365, 65, 120)]
+        title.place(x=20, y=20 + y_offset, width=180, height=34)
+        headers = [("GAUGE", 20, 65 + y_offset, 145), ("MIN", 175, 65 + y_offset, 120), ("MAX", 365, 65 + y_offset, 120)]
         for text, x_pos, y_pos, width in headers:
             tk.Label(parent, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
                 x=x_pos, y=y_pos, width=width, height=24
@@ -1009,7 +1010,7 @@ class P03_SETUP(tk.Frame):
         value_w = 76
         font_size = 19 if device_key == DEVICE_B_txt[2] else 22
         for row_index, row in enumerate(rows[:max_visible_rows]):
-            y_pos = 95 + row_index * row_height
+            y_pos = 95 + y_offset + row_index * row_height
             label = tk.Label(parent, text=row["label"], font=(fonts[6], font_size), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
             label.place(x=20, y=y_pos, width=145, height=row_height - 6)
 
