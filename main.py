@@ -137,6 +137,8 @@ class P01_DASH(tk.Frame):
         self._destroyed = False
         self.lbls_sysinfo = []
         self.lbls_voicecmd = []
+        self.gps_reception_label = None
+        self.gps_reception_state = None
         self.label_7SEG001 = None
         self.label_7SEG002 = None
         self.label_7SEG003 = None
@@ -227,6 +229,19 @@ class P01_DASH(tk.Frame):
             return
         self.lbls_sysinfo[index].config(text=value)
         self.sysinfo_text_states[index] = value
+
+    def _set_gps_reception_text(self, value):
+        if self.gps_reception_label is None:
+            return
+        if self.gps_reception_state == value:
+            return
+        self.gps_reception_label.config(text=value)
+        self.gps_reception_state = value
+
+    def _hide_gps_reception_label(self):
+        if self.gps_reception_label is not None:
+            self.gps_reception_label.place_forget()
+        self.gps_reception_state = None
 
     def _set_voice_text(self, index, value):
         if self.voice_text_states.get(index) == value:
@@ -1332,6 +1347,10 @@ class P01_DASH(tk.Frame):
         for lbl in self.lbls_sysinfo:
             lbl.destroy()
         self.lbls_sysinfo.clear()
+        if self.gps_reception_label is not None:
+            self.gps_reception_label.destroy()
+            self.gps_reception_label = None
+            self.gps_reception_state = None
 
         # Prüfen, ob Positionen vorhanden sind
         if not hasattr(self, "x_lbl_sysinfo") or not hasattr(self, "y_lbl_sysinfo") or not hasattr(self, "wh_lbl_sysinfo"):
@@ -1362,7 +1381,25 @@ class P01_DASH(tk.Frame):
             lbl = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
             lbl.place_forget()
             self.lbls_sysinfo.append(lbl)
+        self._place_gps_reception_label()
         return True
+
+    def _place_gps_reception_label(self):
+        if device != DEVICE_B_txt[1] or btn_states_PB != "pb01":
+            return
+        if not hasattr(self, "x_lbl_sysinfo") or not self.x_lbl_sysinfo:
+            return
+        if not hasattr(self, "y_lbl_sysinfo") or not self.y_lbl_sysinfo:
+            return
+
+        base_width = self.wh_lbl_sysinfo[0] if hasattr(self, "wh_lbl_sysinfo") and self.wh_lbl_sysinfo else 180
+        base_height = self.wh_lbl_sysinfo[1] if hasattr(self, "wh_lbl_sysinfo") and len(self.wh_lbl_sysinfo) > 1 else 42
+        x_pos = self.x_lbl_sysinfo[0] + base_width + 8
+        y_pos = self.y_lbl_sysinfo[0]
+        label_width = max(170, int(base_width * 0.9))
+
+        self.gps_reception_label = tk.Label(self.canvas, **lbl_style_sysinfo, bg=sty_clr[3], fg=sty_clr[1])
+        self.gps_reception_label.place(x=x_pos, y=y_pos, width=label_width, height=base_height)
 
     def _update_audio_labels(self):
         if not self.audio_settings.get("labels_visible", True):
@@ -1927,6 +1964,8 @@ class P01_DASH(tk.Frame):
             return
 
         if device == DEVICE_B_txt[1]:
+            if btn_states_PB != "pb01":
+                self._hide_gps_reception_label()
             if btn_states_PB == "pb00":
                 if sys_linux:
                     self._refresh_system_data()
@@ -1942,9 +1981,8 @@ class P01_DASH(tk.Frame):
                 else:
                     values = ["--.--", "--.--", "--.--", "--.--", "--.--", "--.--", self.update_duration]
             elif btn_states_PB == "pb01":
-                gps_time_status = f"{gps_time} {self._gps_reception_bars()}"
                 values = [
-                    gps_time_status,
+                    gps_time,
                     gps_date,
                     gps_altitude,
                     gps_lat_str,
@@ -1982,6 +2020,8 @@ class P01_DASH(tk.Frame):
 
             for index, value in enumerate(values):
                 self._set_sysinfo_text(index, value)
+            if btn_states_PB == "pb01":
+                self._set_gps_reception_text(self._gps_reception_bars())
             return
 
         if device != DEVICE_B_txt[2] or dev002_values is None:

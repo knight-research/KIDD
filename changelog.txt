@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.66 - 2026-07-14-1618
+
+- Moved the Dash GPS reception bars into their own fixed-width label next to the GPS time field.
+- Kept the GPS time label stable so the reception display no longer shifts with changing seconds.
+
 ## v2.2.65 - 2026-07-14-1614
 
 - Replaced the Dash GPS `Sxx Fq` text with a phone-style ASCII reception bar display.
