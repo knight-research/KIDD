@@ -204,7 +204,7 @@ class P03_SETUP(tk.Frame):
             self._create_dev001_device_status()
             self._create_dev001_submenu()
         elif device == DEVICE_B_txt[2]:
-            self._dev002_scale_area = (620, 75, 700, 575)
+            self._dev002_scale_area = (620, 90, 700, 530)
             self._dev002_scale_frame = tk.Frame(self, bg=sys_clr[0], highlightthickness=0)
             self._create_dev002_submenu()
             self._create_setup_console("DEV002", 30, 265, 560, 28, 30, 295, 560, 315, 18)
@@ -975,7 +975,7 @@ class P03_SETUP(tk.Frame):
         for child in parent.winfo_children():
             child.destroy()
 
-        y_offset = -15 if device_key == DEVICE_B_txt[2] else 0
+        y_offset = 0
         title = tk.Label(parent, text="SCALE", font=(fonts[6], 26), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
         title.place(x=20, y=20 + y_offset, width=180, height=34)
         headers = [("GAUGE", 20, 65 + y_offset, 145), ("MIN", 175, 65 + y_offset, 120), ("MAX", 365, 65 + y_offset, 120)]

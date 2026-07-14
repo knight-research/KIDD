@@ -24,6 +24,7 @@ DEFAULT_GAUGE_SCALE = {
 }
 
 _CACHE = {"path": None, "data": None}
+_REVISION = 0
 
 
 def _state_path(datadir):
@@ -36,9 +37,11 @@ def _read_state(datadir):
 
 
 def _write_state(datadir, data):
+    global _REVISION
     with open(_state_path(datadir), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     _CACHE.update({"path": None, "data": None})
+    _REVISION += 1
 
 
 def _merged_scale(data):
@@ -65,6 +68,10 @@ def load_gauge_scale(datadir):
     scale = _merged_scale(data)
     _CACHE.update({"path": path, "data": scale})
     return scale
+
+
+def get_gauge_scale_revision():
+    return _REVISION
 
 
 def ensure_gauge_scale_config(datadir):

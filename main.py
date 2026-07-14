@@ -13,7 +13,7 @@ debug = True # PRINT INFORMATIONS TO CONSOLE
 #--------------------
 from functions.app_version import load_version
 version, last_change = load_version()
-from functions.gauge_scale_config import get_gauge_scale_lists
+from functions.gauge_scale_config import get_gauge_scale_lists, get_gauge_scale_revision
 from functions.quicksound_config import QUICKSOUND_COLOR_INDEX, load_quicksound_config, load_quicksound_settings
 # endregion
 
@@ -150,6 +150,7 @@ class P01_DASH(tk.Frame):
         self.theme_assets = None
         self.theme_assets_key = None
         self.widget_image_states = {}
+        self.gauge_scale_revision = get_gauge_scale_revision()
         self.sysinfo_text_states = {}
         self.voice_text_states = {}
         self.last_system_data_update = 0.0
@@ -221,6 +222,17 @@ class P01_DASH(tk.Frame):
             return
         widget.config(image=image)
         self.widget_image_states[key] = image
+
+    def _consume_gauge_scale_refresh(self):
+        revision = get_gauge_scale_revision()
+        if revision == self.gauge_scale_revision:
+            return False
+        self.gauge_scale_revision = revision
+        self.widget_image_states.clear()
+        for cache_name in ("old_bar_leds", "old_signal_leds", "old_tuning_leds"):
+            if hasattr(self, cache_name):
+                getattr(self, cache_name).clear()
+        return True
 
     def _set_sysinfo_text(self, index, value):
         if self.sysinfo_text_states.get(index) == value:
@@ -1618,6 +1630,7 @@ class P01_DASH(tk.Frame):
         val_min      = [  0,   0,   0]
         val_max      = [310, 100, 200]
         val_min, val_max = get_gauge_scale_lists(datadir, DEVICE_B_txt[1], val_min, val_max)
+        self._consume_gauge_scale_refresh()
         val_sim      = [ 5,  10,  14] #HIGHER NUMBER FASTER SIMULATION
         val_conf_min = [  0,   0,   0]
         if btn_states_SW[3] == True:
@@ -1688,7 +1701,7 @@ class P01_DASH(tk.Frame):
             return l_img80 if on else l_img10
 
         for i in range(val_conf_min[0], self.ammount_DEV001G000):
-            is_on = btn_states_FNKT[3] and (val_DEV001G000 >= i)
+            is_on = btn_states_FNKT[3] and (val_DEV001G000 >= i + 1)
             img = get_led_image(i, is_on)
             if self.old_bar_leds.get(i) != img:
                 self.led_DEV001G000[i].config(image=img)
@@ -1784,6 +1797,7 @@ class P01_DASH(tk.Frame):
         val_min      = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
         val_max      = [990, 160, 160, 160, 160,  57, 160, 600, 150, 100]
         val_min, val_max = get_gauge_scale_lists(datadir, DEVICE_B_txt[2], val_min, val_max)
+        force_gauge_refresh = self._consume_gauge_scale_refresh()
         val_sim      = [ 20,  10,  14,   8,   2,   6,  10,   7,   8,   9] #HIGHER NUMBER FASTER SIMULATION
         val_conf_min = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
 
@@ -1829,10 +1843,10 @@ class P01_DASH(tk.Frame):
             perc_DEV002[i] = scaled_led_count(seg_DEV002[i], val_min[i], val_max[i], self.quantity_DEV002[i])
 
         phase = self.dev002_update_phase
-        self.dev002_update_phase = (self.dev002_update_phase + 1) % 4
+        self.dev002_update_phase = 1 if force_gauge_refresh else (self.dev002_update_phase + 1) % 4
 
         # DEV002G000 (RPM)
-        if phase == 0:
+        if force_gauge_refresh or phase == 0:
             if theme in [THEME_B_txt[0], THEME_B_txt[1], THEME_B_txt[2]]:
                 for i in range(val_conf_min[0], self.ammount_DEV002G000):
                     is_on = btn_states_FNKT[3] and perc_DEV002[0] >= i + 1
@@ -1855,7 +1869,9 @@ class P01_DASH(tk.Frame):
         ]
 
         active_parameters = parameters
-        if phase == 1:
+        if force_gauge_refresh:
+            active_parameters = parameters
+        elif phase == 1:
             active_parameters = parameters[:3]
         elif phase == 2:
             active_parameters = parameters[3:]
@@ -1893,7 +1909,7 @@ class P01_DASH(tk.Frame):
             seven_seg_DEV002G008 = self.val_cnt_sim[8]
             seven_seg_DEV002G009 = self.val_cnt_sim[9]
 
-        if phase == 3:
+        if force_gauge_refresh or phase == 3:
             aux_gauges = [
                 (seven_seg_DEV002G007, self.ammount_DEV002G007, self.led_DEV002G007, 7),
                 (seven_seg_DEV002G008, self.ammount_DEV002G008, self.led_DEV002G008, 8),
