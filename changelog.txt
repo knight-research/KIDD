@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.76 - 2026-07-14-1809
+
+- Hid Style and System sliders on the Themes page when all buttons fit without scrolling.
+- Centered the visible main menu button row so the reduced menu no longer starts too far left.
+
 ## v2.2.75 - 2026-07-14-1803
 
 - Removed the Boot entry from the main menu while keeping the Boot page as the internal startup screen.

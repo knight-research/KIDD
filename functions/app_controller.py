@@ -146,6 +146,11 @@ class KIDDController:
     # STYLE BUTTONS
     #------------------------------------------------------------------------------
     def buttons_style(self):
+        old_slider = getattr(self, "btns_style_slider", None)
+        if old_slider is not None:
+            old_slider.destroy()
+            self.btns_style_slider = None
+
         self.btn_style_place = len(STYLE_B_txt)
         self.btns_style = []
         x_pos_r1 = 20
@@ -167,9 +172,10 @@ class KIDDController:
         self.btns_style[2].config(state=tk.DISABLED)
         self.btns_style[3].config(state=tk.DISABLED)
         self.btns_style[4].config(state=tk.DISABLED)
-        self.btns_style_slider = tk.Scale(from_=0, to=self.btn_style_place, command=self.buttons_style_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
-        self.btns_style_slider.set(0)
-        self.btns_style_slider.place(x=145, y=frm02_YPOS+2)
+        if self.btn_style_place > 8:
+            self.btns_style_slider = tk.Scale(from_=0, to=self.btn_style_place-8, command=self.buttons_style_show, showvalue=0, length=(bggrid[1]-175), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+            self.btns_style_slider.set(0)
+            self.btns_style_slider.place(x=145, y=frm02_YPOS+2)
     #------------------------------------------------------------------------------
     # SHOW STYLE BUTTONS IN SLIDER
     #------------------------------------------------------------------------------
@@ -242,6 +248,11 @@ class KIDDController:
     # SYS BUTTONS
     #------------------------------------------------------------------------------
     def buttons_sys(self):
+        old_slider = getattr(self, "btns_sys_slider", None)
+        if old_slider is not None:
+            old_slider.destroy()
+            self.btns_sys_slider = None
+
         self.btn_sys_place = len(SYS_B_txt)
         self.btns_sys = []
         x_pos_r1 = 20
@@ -257,9 +268,10 @@ class KIDDController:
                 self.btns_sys[i].config(fg=sys_clr[10])
             else:
                 self.btns_sys[i].config(fg=sys_clr[11])
-        self.btns_sys_slider = tk.Scale(from_=0, to=self.btn_sys_place, command=self.buttons_sys_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
-        self.btns_sys_slider.set(0)
-        self.btns_sys_slider.place(x=107, y=frm04_YPOS+2)
+        if self.btn_sys_place > 8:
+            self.btns_sys_slider = tk.Scale(from_=0, to=self.btn_sys_place-8, command=self.buttons_sys_show, showvalue=0, length=(bggrid[1]-140), orient='horizontal', width=22, sliderlength=40, troughcolor="#000000", highlightbackground=sys_clr[8], bg=sys_clr[4])
+            self.btns_sys_slider.set(0)
+            self.btns_sys_slider.place(x=107, y=frm04_YPOS+2)
     #------------------------------------------------------------------------------
     # SHOW SYS BUTTONS IN SLIDER
     #------------------------------------------------------------------------------
@@ -287,9 +299,11 @@ class KIDDController:
 
         self.btn_menu_place = len(MENU_B_txt)
         self.btns_menu = []
-        x_pos_r1 = 20
         btn_w = 130
         btn_h = 40
+        visible_buttons = min(self.btn_menu_place, 8)
+        row_width = (visible_buttons * btn_w) + max(0, visible_buttons - 1) * 15
+        x_pos_r1 = max(20, int((bggrid[1] - row_width) / 2))
         for i in range(self.btn_menu_place):
             btn_menu = tk.Button(text=MENU_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28))
             btn_menu.config(command=lambda i=i: self.app.switch_frame(i + 1))
@@ -310,9 +324,11 @@ class KIDDController:
     #------------------------------------------------------------------------------
     def buttons_menu_show(self, value):
         start_index = int(float(value))  # Convert float value to integer
-        x_pos_r1 = 20
         btn_w = 130
         btn_h = 40
+        visible_buttons = min(self.btn_menu_place - start_index, 8)
+        row_width = (visible_buttons * btn_w) + max(0, visible_buttons - 1) * 15
+        x_pos_r1 = max(20, int((bggrid[1] - row_width) / 2))
         for i in range(self.btn_menu_place):
             if i < start_index or i >= start_index + 8:
                 self.btns_menu[i].place_forget()  # Hide the self.btns_menu outside the range
