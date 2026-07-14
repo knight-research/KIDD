@@ -25,6 +25,7 @@
     <Compile Include="functions\app_controller.py" />
     <Compile Include="functions\app_version.py" />
     <Compile Include="functions\btn_state_manager.py" />
+    <Compile Include="functions\console_log.py" />
     <Compile Include="functions\favorite_manager.py" />
     <Compile Include="functions\image_loader.py" />
     <Compile Include="functions\image_paths.py" />

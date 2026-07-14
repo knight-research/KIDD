@@ -1,4 +1,5 @@
 from pages.page_context import sync_context
+from functions.console_log import get_console_lines
 from functions.network_info import read_wlan0_ip
 from functions.quicksound_config import (
     QUICKSOUND_COLORS,
@@ -224,6 +225,8 @@ class P03_SETUP(tk.Frame):
         canvas.create_text(20, 20, **txt_style_pagename, fill=sys_clr[9], text="SETUP")
         canvas.create_text(20, 50, **txt_style_pageinfo, fill=sys_clr[9], text=(version, last_change, sys.platform, carno, devno, wlan0_ip))
         canvas.create_text(20, (bggrid[4]-135), **txt_style_pagename, fill=sys_clr[9], text="MENU")
+        if device == DEVICE_B_txt[1]:
+            self._create_dev001_console()
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
@@ -837,6 +840,40 @@ class P03_SETUP(tk.Frame):
         # END INIT
         #----------------------------------------------------------------------------------
         self.update_page()
+
+    def _create_dev001_console(self):
+        title = tk.Label(self, text="CONSOLE", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+        title.place(x=1310, y=25, width=420, height=30)
+
+        self.console_text = tk.Text(
+            self,
+            bg=sys_clr[8],
+            fg=sys_clr[9],
+            insertbackground=sys_clr[9],
+            relief="flat",
+            borderwidth=0,
+            highlightthickness=0,
+            font=(fonts[6], 15),
+            wrap="word",
+            state="disabled",
+        )
+        self.console_text.place(x=1310, y=60, width=425, height=600)
+        self.console_text_state = None
+        self._update_dev001_console()
+
+    def _update_dev001_console(self):
+        if not hasattr(self, "console_text"):
+            return
+        lines = "\n".join(get_console_lines(65))
+        if self.console_text_state != lines:
+            self.console_text.configure(state="normal")
+            self.console_text.delete("1.0", "end")
+            self.console_text.insert("1.0", lines)
+            self.console_text.see("end")
+            self.console_text.configure(state="disabled")
+            self.console_text_state = lines
+        self.after(500, self._update_dev001_console)
+
     def update_page(self):
         #----------------------------------------------------------------------------------
         # HW BUTTONS

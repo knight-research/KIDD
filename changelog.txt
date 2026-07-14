@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.52 - 2026-07-14-1513
+
+- Added a DEV001 Setup console panel in the existing right-side frame that mirrors recent console output.
+- Captured stdout and stderr in a lightweight ring buffer while preserving normal terminal output.
+- Added throttled GPS diagnostics for missing NMEA data, invalid NMEA lines, and missing GPS fix/position data.
+
 ## v2.2.51 - 2026-07-12-1702
 
 - Added DEV002 `K2_S05` value labels next to the first nine PB buttons so each powerboard display shows its current value directly beside the button.

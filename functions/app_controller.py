@@ -48,6 +48,7 @@ class KIDDController:
         self.autoplay_time_label = None
         self.system_data_lock = threading.Lock()
         self.system_data_refreshing = False
+        self.last_gps_debug_log = 0.0
     #--------------------------------------------------------------------------------------
     # MAIN APP FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -1006,6 +1007,12 @@ class KIDDController:
     #------------------------------------------------------------------------------
     # GPS MODULE
     #------------------------------------------------------------------------------
+    def _log_gps_debug(self, message, interval=2.0):
+        now = time.time()
+        if now - self.last_gps_debug_log >= interval:
+            print(message)
+            self.last_gps_debug_log = now
+
     def gps_data(self):
         global gps_date, gps_odo_metric_cnt, gps_odo_imperial_cnt
         global odo_trip_gps_metric_old, odo_trip_gps_imperial_old
@@ -1028,14 +1035,17 @@ class KIDDController:
         try:
             gps_raw = gps_serial.readline().decode('ascii', errors='replace').strip()
             if not gps_raw or not gps_raw.startswith("$"):
+                self._log_gps_debug("[GPS] Keine NMEA-Daten vom Modul")
                 return
             try:
                 parsed = pynmea2.parse(gps_raw)
             except pynmea2.ParseError:
+                self._log_gps_debug(f"[GPS] Ungueltige NMEA-Zeile: {gps_raw[:70]}")
                 return
 
             if gps_raw.startswith('$GPRMC'):
                 if getattr(parsed, "status", None) == "V":
+                    self._log_gps_debug("[GPS] RMC ohne gueltigen Fix")
                     return
                 gps_date = parsed.datestamp
                 if parsed.spd_over_grnd:
@@ -1075,6 +1085,7 @@ class KIDDController:
             elif gps_raw.startswith('$GPGGA'):
                 gps_time_raw = parsed.timestamp
                 if gps_time_raw is None:
+                    self._log_gps_debug("[GPS] GGA ohne Zeitstempel")
                     return
 
                 from datetime import datetime, timedelta
@@ -1088,6 +1099,8 @@ class KIDDController:
                 gps_lat_dir = parsed.lat_dir
                 gps_long_str = f"{parsed.longitude:.5f}"
                 gps_lon_dir = parsed.lon_dir
+                if not parsed.latitude or not parsed.longitude:
+                    self._log_gps_debug("[GPS] GGA empfangen, aber noch keine Position")
                 if parsed.altitude is not None:
                     gps_altitude = f"{parsed.altitude:.1f}"
                     gps_altitude_units = parsed.altitude_units

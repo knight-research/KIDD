@@ -22,9 +22,11 @@ from functions.quicksound_config import QUICKSOUND_COLOR_INDEX, load_quicksound_
 from setup.import_all import *
 from setup.platform_detection import detect_platform
 from setup.platform_imports import load_platform_symbols
+from functions.console_log import install_console_capture
 
 sys_win, sys_linux, sys_pi = detect_platform()
 globals().update(load_platform_symbols(sys_win, sys_linux, sys_pi))
+install_console_capture()
 #--------------------
 # DATA FOLDERS
 #--------------------
