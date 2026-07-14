@@ -243,7 +243,7 @@ class P01_DASH(tk.Frame):
             maximum = float(maximum)
         except (TypeError, ValueError):
             return 0
-        if value < minimum:
+        if value <= minimum:
             return 0
         step = (maximum - minimum) / amount
         if step <= 0:

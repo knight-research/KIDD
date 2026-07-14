@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.85 - 2026-07-14-1905
+
+- Updated all gauge LED scaling so values equal to the configured minimum keep the first LED off.
+
 ## v2.2.84 - 2026-07-14-1901
 
 - Changed gauge LED scaling to use shifted LED thresholds so the last LED turns on before the configured maximum.
