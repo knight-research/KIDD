@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.1 - 2026-07-14-1940
+
+- Restored image list initialization after removing the Boot page so Dash can start directly without empty image lists.
+
 ## v2.3.0 - 2026-07-14-1932
 
 - Removed the obsolete Boot screen and now start directly on Dash.

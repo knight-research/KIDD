@@ -1,5 +1,7 @@
 import os
 
+from functions.image_loader import LazyImageList
+
 
 IMAGE_PATHS = {
     "bgDEV001": ("000_bg", "DEV001"),
@@ -52,8 +54,9 @@ def load_image_path_symbols(folder):
 
     for name, parts in IMAGE_PATHS.items():
         image_dir = os.path.join(image_root, *parts)
+        suffix = ".jpg" if name.startswith("bgDEV") else ".png"
         symbols[f"{name}_img_dir"] = image_dir
         symbols[f"{name}_img_dir_srt"] = sorted(os.listdir(image_dir), key=str.lower)
-        symbols[f"{name}_img_list"] = []
+        symbols[f"{name}_img_list"] = LazyImageList(image_dir, suffix)
 
     return symbols
