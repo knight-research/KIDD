@@ -1,3 +1,5 @@
+import time
+
 from pages.page_context import sync_context
 from functions.console_log import get_console_lines, log
 from functions.network_info import read_wlan0_ip
@@ -857,7 +859,9 @@ class P03_SETUP(tk.Frame):
         )
         self.console_text.place(x=1310, y=60, width=425, height=600)
         self.console_text_state = None
+        self.setup_gps_log_times = {}
         self._update_dev001_console()
+        self._poll_dev001_gps_console()
 
     def _update_dev001_console(self):
         if not hasattr(self, "console_text"):
@@ -879,6 +883,32 @@ class P03_SETUP(tk.Frame):
             self.console_text.see("end")
             self.console_text.configure(state="disabled")
             self.console_text_state = lines
+
+    def _log_setup_gps(self, message, interval=5.0):
+        now = time.time()
+        if now - self.setup_gps_log_times.get(message, 0.0) >= interval:
+            log(message)
+            self.setup_gps_log_times[message] = now
+
+    def _poll_dev001_gps_console(self):
+        if not hasattr(self, "console_text"):
+            return
+        try:
+            sync_context(globals())
+            gps_enabled = bool(btn_states_HW[0]) if btn_states_HW else False
+            if gps_enabled:
+                if gps_port is None:
+                    self._log_setup_gps("[GPS] HW aktiv, aber kein GPS-Port erkannt")
+                elif gps_serial is None:
+                    self._log_setup_gps(f"[GPS] HW aktiv, Port {gps_port}, aber Serial nicht offen")
+                else:
+                    read.gps_data()
+                    sync_context(globals())
+                self._refresh_console_now()
+        except Exception as e:
+            log(f"[GPS] Setup Diagnose Fehler: {e}")
+            self._refresh_console_now()
+        self.after(1000, self._poll_dev001_gps_console)
 
     def _update_hw_button(self, index):
         if btn_states_HW[index]:

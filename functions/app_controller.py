@@ -49,7 +49,7 @@ class KIDDController:
         self.autoplay_time_label = None
         self.system_data_lock = threading.Lock()
         self.system_data_refreshing = False
-        self.last_gps_debug_log = 0.0
+        self.last_gps_debug_log = {}
     #--------------------------------------------------------------------------------------
     # MAIN APP FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -1036,11 +1036,14 @@ class KIDDController:
     #------------------------------------------------------------------------------
     # GPS MODULE
     #------------------------------------------------------------------------------
-    def _log_gps_debug(self, message, interval=2.0):
+    def _log_gps_debug(self, message, interval=2.0, key=None):
         now = time.time()
-        if now - self.last_gps_debug_log >= interval:
-            print(message)
-            self.last_gps_debug_log = now
+        if not isinstance(self.last_gps_debug_log, dict):
+            self.last_gps_debug_log = {}
+        log_key = key or message
+        if now - self.last_gps_debug_log.get(log_key, 0.0) >= interval:
+            log(message)
+            self.last_gps_debug_log[log_key] = now
 
     def gps_data(self):
         global gps_date, gps_odo_metric_cnt, gps_odo_imperial_cnt
@@ -1064,17 +1067,17 @@ class KIDDController:
         try:
             gps_raw = gps_serial.readline().decode('ascii', errors='replace').strip()
             if not gps_raw or not gps_raw.startswith("$"):
-                self._log_gps_debug("[GPS] Keine NMEA-Daten vom Modul")
+                self._log_gps_debug("[GPS] Keine NMEA-Daten vom Modul", key="no_data")
                 return
             try:
                 parsed = pynmea2.parse(gps_raw)
             except pynmea2.ParseError:
-                self._log_gps_debug(f"[GPS] Ungueltige NMEA-Zeile: {gps_raw[:70]}")
+                self._log_gps_debug(f"[GPS] Ungueltige NMEA-Zeile: {gps_raw[:70]}", key="parse_error")
                 return
 
             if gps_raw.startswith('$GPRMC'):
                 if getattr(parsed, "status", None) == "V":
-                    self._log_gps_debug("[GPS] RMC ohne gueltigen Fix")
+                    self._log_gps_debug("[GPS] RMC ohne gueltigen Fix", key="rmc_no_fix")
                     return
                 gps_date = parsed.datestamp
                 if parsed.spd_over_grnd:
@@ -1110,11 +1113,12 @@ class KIDDController:
                     if odo_trip_gps_imperial_new != odo_trip_gps_imperial_old:
                         bsm.set_odo_value("odo_trip_gps_imperial", odo_trip_gps_imperial_new)
                         save_needed = True
+                self._log_gps_debug(f"[GPS] RMC Fix OK date={gps_date} speed={gps_kph_0}km/h", interval=5.0, key="rmc_fix")
 
             elif gps_raw.startswith('$GPGGA'):
                 gps_time_raw = parsed.timestamp
                 if gps_time_raw is None:
-                    self._log_gps_debug("[GPS] GGA ohne Zeitstempel")
+                    self._log_gps_debug("[GPS] GGA ohne Zeitstempel", key="gga_no_time")
                     return
 
                 from datetime import datetime, timedelta
@@ -1129,14 +1133,21 @@ class KIDDController:
                 gps_long_str = f"{parsed.longitude:.5f}"
                 gps_lon_dir = parsed.lon_dir
                 if not parsed.latitude or not parsed.longitude:
-                    self._log_gps_debug("[GPS] GGA empfangen, aber noch keine Position")
+                    self._log_gps_debug("[GPS] GGA empfangen, aber noch keine Position", key="gga_no_position")
                 if parsed.altitude is not None:
                     gps_altitude = f"{parsed.altitude:.1f}"
                     gps_altitude_units = parsed.altitude_units
+                sats = getattr(parsed, "num_sats", "-")
+                fix_quality = getattr(parsed, "gps_qual", "-")
+                self._log_gps_debug(
+                    f"[GPS] GGA OK time={gps_time} lat={gps_lat_str}{gps_lat_dir} lon={gps_long_str}{gps_lon_dir} alt={gps_altitude}{gps_altitude_units} sats={sats} fix={fix_quality}",
+                    interval=5.0,
+                    key="gga_fix",
+                )
 
         except Exception as e:
             if debug:
-                print("GPS data skipped:", e)
+                self._log_gps_debug(f"[GPS] data skipped: {e}", key="exception")
 
         save_needed = False
 

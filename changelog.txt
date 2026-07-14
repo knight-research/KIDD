@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.59 - 2026-07-14-1549
+
+- Added a DEV001 Setup GPS diagnostic poll so the Setup console shows whether NMEA data is arriving while GPS HW is enabled.
+- Logged throttled GPS RMC/GGA success details including time, position, altitude, satellites, and fix quality.
+- Split GPS diagnostic throttling by message type so no-data, no-fix, and valid-fix messages do not suppress each other.
+
 ## v2.2.58 - 2026-07-14-1547
 
 - Removed Setup HW/SW button globals and stored those widgets on the Setup frame instance.
