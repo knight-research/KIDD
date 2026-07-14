@@ -589,7 +589,7 @@ class P03_SETUP(tk.Frame):
         qs_select_list.bind("<ButtonRelease-1>", _select_quicksound_option)
         qs_select_list.bind("<Return>", _select_quicksound_option)
         for i, quicksound in enumerate(self._quicksound_config):
-            y_pos = 165 + i * 105
+            y_pos = 155 + i * 112
             lbl_qs_name = tk.Label(self._setup_parent("AUDIO"), font=(fonts[6], 22), text=f"Q{i + 1}", bg=sys_clr[8], fg=sys_clr[9], anchor="w")
             self._setup_place(lbl_qs_name, "AUDIO", 35, y_pos, 320, 28)
 
@@ -598,7 +598,7 @@ class P03_SETUP(tk.Frame):
                 35,
                 y_pos + 32,
                 115,
-                40,
+                36,
                 lambda i=i: _show_quicksound_options(i, "folder"),
                 font=qs_button_font_small,
                 anchor="w",
@@ -608,7 +608,7 @@ class P03_SETUP(tk.Frame):
                 158,
                 y_pos + 32,
                 200,
-                40,
+                36,
                 lambda i=i: _show_quicksound_options(i, "file"),
                 font=qs_button_font_small,
                 anchor="w",
@@ -618,7 +618,7 @@ class P03_SETUP(tk.Frame):
                 35,
                 y_pos + 76,
                 150,
-                40,
+                36,
                 lambda i=i: _cycle_quicksound_value(i, "mode", QUICKSOUND_MODES),
                 font=qs_button_font,
             )
@@ -627,7 +627,7 @@ class P03_SETUP(tk.Frame):
                 195,
                 y_pos + 76,
                 90,
-                40,
+                36,
                 lambda i=i: _cycle_quicksound_value(i, "color", QUICKSOUND_COLORS),
                 fg=quicksound_color_fg.get(quicksound["color"], sys_clr[9]),
                 font=qs_button_font,
