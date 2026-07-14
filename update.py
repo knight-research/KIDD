@@ -163,6 +163,16 @@ def extract_zip_to_base(zip_bytes: bytes, base_path: Path, include_sound: bool) 
                 shutil.copyfileobj(source, target)
 
 
+def ensure_launcher_permissions(base_path: Path) -> None:
+    if os.name == "nt":
+        return
+
+    for script_name in ("start.sh", "install.sh"):
+        script_path = base_path / script_name
+        if script_path.exists():
+            script_path.chmod(script_path.stat().st_mode | 0o755)
+
+
 def run_gui() -> None:
     base_path = APP_ROOT
 
@@ -258,6 +268,7 @@ def run_gui() -> None:
 
             set_status("Dateien entpacken...")
             extract_zip_to_base(zip_data, base_path, include_sound.get())
+            ensure_launcher_permissions(base_path)
 
             now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             write_local_version(base_path, remote_version, now_str)
@@ -303,6 +314,7 @@ def run_gui() -> None:
 
             set_status("KIDD installieren...")
             extract_zip_to_base(zip_data, install_path, include_sound.get())
+            ensure_launcher_permissions(install_path)
 
             now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             write_local_version(install_path, remote_version, now_str)

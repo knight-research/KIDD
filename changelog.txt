@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.73 - 2026-07-14-1732
+
+- Removed the green accent from DEV001 setup subpage buttons and the quicksound selection highlight.
+- Added Linux launcher permission repair after `update.py` release update/install extraction.
+
 ## v2.2.72 - 2026-07-14-1728
 
 - Removed the always-green `sys_clr[10]` accent from DEV001 setup/audio buttons and scroll controls.

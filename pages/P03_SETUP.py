@@ -552,7 +552,7 @@ class P03_SETUP(tk.Frame):
             qs_select_frame,
             bg=sys_clr[8],
             fg=sys_clr[9],
-            selectbackground=sys_clr[10],
+            selectbackground=sys_clr[9],
             selectforeground=sys_clr[8],
             font=(fonts[6], 24),
             activestyle="none",
@@ -834,7 +834,7 @@ class P03_SETUP(tk.Frame):
                 bg=sys_clr[8],
                 fg=sys_clr[9],
                 activebackground=sys_clr[8],
-                activeforeground=sys_clr[10],
+                activeforeground=sys_clr[9],
                 bd=4,
                 highlightthickness=0,
                 font=(fonts[6], 18),
@@ -856,9 +856,9 @@ class P03_SETUP(tk.Frame):
                 frame.place_forget()
         for frame_name, button in getattr(self, "dev001_submenu_buttons", {}).items():
             if frame_name == name:
-                button.config(bg=sys_clr[10], fg=sys_clr[8])
+                button.config(bg=sys_clr[8], fg=sys_clr[9], relief="sunken")
             else:
-                button.config(bg=sys_clr[8], fg=sys_clr[9])
+                button.config(bg=sys_clr[8], fg=sys_clr[11], relief="raised")
 
     def _create_dev001_console(self):
         log("[SETUP] DEV001 console ready")
