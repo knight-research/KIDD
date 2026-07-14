@@ -856,7 +856,7 @@ class P03_SETUP(tk.Frame):
             relief="flat",
             borderwidth=0,
             highlightthickness=0,
-            font=(fonts[6], 15),
+            font=(fonts[6], 21),
             wrap="word",
             state="disabled",
         )
@@ -878,7 +878,7 @@ class P03_SETUP(tk.Frame):
             self._render_dev001_console()
 
     def _render_dev001_console(self):
-        lines = "\n".join(get_console_lines(65))
+        lines = "\n".join(get_console_lines(45))
         if self.console_text_state != lines:
             self.console_text.configure(state="normal")
             self.console_text.delete("1.0", "end")
