@@ -492,6 +492,26 @@ class KIDDController:
         except Exception:
             return fallback
 
+    def _log_setup_toggle(self, group, index, active):
+        try:
+            if group == "HW":
+                labels_name = "btnhw_DEV002_txt" if device == DEVICE_B_txt[2] else "btnhw_DEV001_txt"
+                labels = globals().get(labels_name, [])
+                state_texts = globals().get("states_txt_act", [])
+                state_index = 1 if active else 0
+                state = self._safe_setup_text(state_texts, state_index, str(active))
+            else:
+                labels_name = "lbl_btnsw_DEV002_txt" if device == DEVICE_B_txt[2] else "lbl_btnsw_DEV001_txt"
+                labels = globals().get(labels_name, [])
+                on_name = "btnsw_DEV002_txt_1" if device == DEVICE_B_txt[2] else "btnsw_DEV001_txt_1"
+                off_name = "btnsw_DEV002_txt_0" if device == DEVICE_B_txt[2] else "btnsw_DEV001_txt_0"
+                state_values = globals().get(on_name if active else off_name, [])
+                state = self._safe_setup_text(state_values, index, str(active))
+            label = self._safe_setup_text(labels, index, f"{group}{index:02d}")
+            log(f"[SETUP] {group} {index:02d} {label}: {state}")
+        except Exception as e:
+            log(f"[SETUP] {group} {index:02d}: {active} (log fallback: {e})")
+
     def toggle_btn_HW(self, i):
         if btn_states_HW[i] == True:
             btn_states_HW[i] = False
@@ -500,11 +520,7 @@ class KIDDController:
         bsm.set_current_button_states("HW", btn_states_HW)
         bsm.save()
         self._publish_state(btn_states_HW=btn_states_HW)
-        labels = btnhw_DEV002_txt if device == DEVICE_B_txt[2] else btnhw_DEV001_txt
-        label = self._safe_setup_text(labels, i, f"HW{i:02d}")
-        state_index = 1 if btn_states_HW[i] else 0
-        state = self._safe_setup_text(states_txt_act, state_index, str(btn_states_HW[i]))
-        log(f"[SETUP] HW {i:02d} {label}: {state}")
+        self._log_setup_toggle("HW", i, btn_states_HW[i])
 
     def toggle_btn_SW(self, i):
         global btn_states_SW
@@ -515,12 +531,7 @@ class KIDDController:
         bsm.set_current_button_states("SW", btn_states_SW)
         bsm.save()
         self._publish_state(btn_states_SW=btn_states_SW)
-        labels = lbl_btnsw_DEV002_txt if device == DEVICE_B_txt[2] else lbl_btnsw_DEV001_txt
-        label = self._safe_setup_text(labels, i, f"SW{i:02d}")
-        on_texts = btnsw_DEV002_txt_1 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_1
-        off_texts = btnsw_DEV002_txt_0 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_0
-        state = self._safe_setup_text(on_texts if btn_states_SW[i] else off_texts, i, str(btn_states_SW[i]))
-        log(f"[SETUP] SW {i:02d} {label}: {state}")
+        self._log_setup_toggle("SW", i, btn_states_SW[i])
 
     def toggle_btn_qopt(self, i):
         if btn_states_qopt[i] == True:
