@@ -1,5 +1,5 @@
 from pages.page_context import sync_context
-from functions.console_log import get_console_lines
+from functions.console_log import get_console_lines, log
 from functions.network_info import read_wlan0_ip
 from functions.quicksound_config import (
     QUICKSOUND_COLORS,
@@ -843,6 +843,7 @@ class P03_SETUP(tk.Frame):
         self.update_page()
 
     def _create_dev001_console(self):
+        log("[SETUP] DEV001 console ready")
         title = tk.Label(self, text="CONSOLE", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
         title.place(x=1310, y=25, width=420, height=30)
 

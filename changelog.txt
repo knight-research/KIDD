@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.55 - 2026-07-14-1536
+
+- Added direct Setup console log entries when the DEV001 console opens.
+- Logged HW and SW setup button toggles directly to the console buffer so state changes are visible even without terminal output.
+
 ## v2.2.54 - 2026-07-14-1534
 
 - Restored the MP3 ignore rule so audio files are no longer added to Git.

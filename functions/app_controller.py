@@ -1,6 +1,7 @@
 from pages.page_context import set_context, sync_context
 import subprocess
 import threading
+from functions.console_log import log
 from functions.favorite_manager import (
     build_qopt_favorites,
     favorite_label,
@@ -492,6 +493,9 @@ class KIDDController:
             btn_states_HW[i] = True
         bsm.set_current_button_states("HW", btn_states_HW)
         bsm.save()
+        label = btnhw_DEV002_txt[i] if device == DEVICE_B_txt[2] else btnhw_DEV001_txt[i]
+        state = states_txt_act[1] if btn_states_HW[i] else states_txt_act[0]
+        log(f"[SETUP] HW {i:02d} {label}: {state}")
         self._publish_state(btn_states_HW=btn_states_HW)
 
     def toggle_btn_SW(self, i):
@@ -502,6 +506,11 @@ class KIDDController:
             btn_states_SW[i] = True
         bsm.set_current_button_states("SW", btn_states_SW)
         bsm.save()
+        label = lbl_btnsw_DEV002_txt[i] if device == DEVICE_B_txt[2] else lbl_btnsw_DEV001_txt[i]
+        on_texts = btnsw_DEV002_txt_1 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_1
+        off_texts = btnsw_DEV002_txt_0 if device == DEVICE_B_txt[2] else btnsw_DEV001_txt_0
+        state = on_texts[i] if btn_states_SW[i] else off_texts[i]
+        log(f"[SETUP] SW {i:02d} {label}: {state}")
         self._publish_state(btn_states_SW=btn_states_SW)
 
     def toggle_btn_qopt(self, i):
