@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.62 - 2026-07-14-1558
+
+- Marked `start.sh` executable in Git so the Raspberry Pi systemd service can launch KIDD without `Permission denied`.
+- Marked `install.sh` executable in Git for direct installer use on Linux/Raspberry Pi.
+
 ## v2.2.61 - 2026-07-14-1554
 
 - Added persistent console logging to `data/console.log` so Setup console output can be inspected after runtime.
