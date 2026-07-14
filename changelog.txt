@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.86 - 2026-07-14-1912
+
+- Added a SIM column to the DEV001/DEV002 SCALE setup pages for configuring simulation speed per gauge.
+- Stored simulation speed values in `data/btn_states.json` alongside gauge min/max values.
+- Updated Dash simulation mode to use the configured SIM values instead of hardcoded speed lists.
+
 ## v2.2.85 - 2026-07-14-1905
 
 - Updated all gauge LED scaling so values equal to the configured minimum keep the first LED off.

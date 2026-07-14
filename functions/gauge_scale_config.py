@@ -5,21 +5,21 @@ import os
 
 DEFAULT_GAUGE_SCALE = {
     "DEV001": [
-        {"key": "speed", "label": "SPEED", "min": 0, "max": 310, "step": 5},
-        {"key": "signal", "label": "SIGNAL", "min": 0, "max": 100, "step": 5},
-        {"key": "tuning", "label": "TUNING", "min": 0, "max": 200, "step": 5},
+        {"key": "speed", "label": "SPEED", "min": 0, "max": 310, "step": 5, "sim": 5, "sim_step": 1},
+        {"key": "signal", "label": "SIGNAL", "min": 0, "max": 100, "step": 5, "sim": 10, "sim_step": 1},
+        {"key": "tuning", "label": "TUNING", "min": 0, "max": 200, "step": 5, "sim": 14, "sim_step": 1},
     ],
     "DEV002": [
-        {"key": "rpm", "label": "RPM", "min": 0, "max": 990, "step": 10},
-        {"key": "inlet", "label": "INLET", "min": 0, "max": 160, "step": 5},
-        {"key": "oil_1", "label": "OIL 1", "min": 0, "max": 160, "step": 5},
-        {"key": "egt", "label": "EGT", "min": 0, "max": 160, "step": 5},
-        {"key": "oil_2", "label": "OIL 2", "min": 0, "max": 160, "step": 5},
-        {"key": "fuel", "label": "FUEL", "min": 0, "max": 57, "step": 1},
-        {"key": "tps", "label": "TPS", "min": 0, "max": 160, "step": 5},
-        {"key": "vdc", "label": "VDC", "min": 0, "max": 600, "step": 5},
-        {"key": "fuel_pump", "label": "FUEL PMP", "min": 0, "max": 150, "step": 5},
-        {"key": "tps_v", "label": "TPS V", "min": 0, "max": 100, "step": 5},
+        {"key": "rpm", "label": "RPM", "min": 0, "max": 990, "step": 10, "sim": 20, "sim_step": 1},
+        {"key": "inlet", "label": "INLET", "min": 0, "max": 160, "step": 5, "sim": 10, "sim_step": 1},
+        {"key": "oil_1", "label": "OIL 1", "min": 0, "max": 160, "step": 5, "sim": 14, "sim_step": 1},
+        {"key": "egt", "label": "EGT", "min": 0, "max": 160, "step": 5, "sim": 8, "sim_step": 1},
+        {"key": "oil_2", "label": "OIL 2", "min": 0, "max": 160, "step": 5, "sim": 2, "sim_step": 1},
+        {"key": "fuel", "label": "FUEL", "min": 0, "max": 57, "step": 1, "sim": 6, "sim_step": 1},
+        {"key": "tps", "label": "TPS", "min": 0, "max": 160, "step": 5, "sim": 10, "sim_step": 1},
+        {"key": "vdc", "label": "VDC", "min": 0, "max": 600, "step": 5, "sim": 7, "sim_step": 1},
+        {"key": "fuel_pump", "label": "FUEL PMP", "min": 0, "max": 150, "step": 5, "sim": 8, "sim_step": 1},
+        {"key": "tps_v", "label": "TPS V", "min": 0, "max": 100, "step": 5, "sim": 9, "sim_step": 1},
     ],
 }
 
@@ -56,7 +56,7 @@ def _merged_scale(data):
                 continue
             key = row.get("key")
             if key in by_key:
-                by_key[key].update({k: row[k] for k in ("min", "max", "step") if k in row})
+                by_key[key].update({k: row[k] for k in ("min", "max", "step", "sim", "sim_step") if k in row})
     return scale
 
 
@@ -83,10 +83,11 @@ def ensure_gauge_scale_config(datadir):
     return merged
 
 
-def get_gauge_scale_lists(datadir, device, default_min, default_max):
+def get_gauge_scale_lists(datadir, device, default_min, default_max, default_sim=None):
     rows = load_gauge_scale(datadir).get(device, [])
     mins = list(default_min)
     maxs = list(default_max)
+    sims = list(default_sim) if default_sim is not None else None
     for index, row in enumerate(rows[: len(maxs)]):
         try:
             minimum = float(row.get("min", mins[index]))
@@ -96,6 +97,15 @@ def get_gauge_scale_lists(datadir, device, default_min, default_max):
         if maximum > minimum:
             mins[index] = int(minimum) if minimum.is_integer() else minimum
             maxs[index] = int(maximum) if maximum.is_integer() else maximum
+        if sims is not None and index < len(sims):
+            try:
+                sim = float(row.get("sim", sims[index]))
+            except (TypeError, ValueError):
+                continue
+            if sim >= 0:
+                sims[index] = int(sim) if sim.is_integer() else sim
+    if sims is not None:
+        return mins, maxs, sims
     return mins, maxs
 
 
@@ -103,7 +113,7 @@ def save_gauge_scale_value(datadir, device, key, field, value):
     data = _read_state(datadir)
     data["gauge_scale"] = _merged_scale(data)
     for row in data["gauge_scale"].get(device, []):
-        if row.get("key") == key and field in ("min", "max"):
+        if row.get("key") == key and field in ("min", "max", "sim"):
             row[field] = value
             _write_state(datadir, data)
             return row

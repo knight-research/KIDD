@@ -978,7 +978,7 @@ class P03_SETUP(tk.Frame):
         y_offset = 0
         title = tk.Label(parent, text="SCALE", font=(fonts[6], 26), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
         title.place(x=20, y=20 + y_offset, width=180, height=34)
-        headers = [("GAUGE", 20, 65 + y_offset, 145), ("MIN", 175, 65 + y_offset, 120), ("MAX", 365, 65 + y_offset, 120)]
+        headers = [("GAUGE", 20, 65 + y_offset, 130), ("MIN", 160, 65 + y_offset, 120), ("MAX", 340, 65 + y_offset, 120), ("SIM", 520, 65 + y_offset, 120)]
         for text, x_pos, y_pos, width in headers:
             tk.Label(parent, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
                 x=x_pos, y=y_pos, width=width, height=24
@@ -992,13 +992,17 @@ class P03_SETUP(tk.Frame):
             return str(int(number)) if number.is_integer() else f"{number:.1f}"
 
         def _change(row, field, direction, value_var):
-            step = float(row.get("step", 1))
+            step_key = "sim_step" if field == "sim" else "step"
+            step = float(row.get(step_key, 1))
             value = float(row.get(field, 0)) + (step * direction)
-            other = float(row.get("max" if field == "min" else "min", 0))
-            if field == "min":
-                value = min(value, other - step)
+            if field == "sim":
+                value = max(0, value)
             else:
-                value = max(value, other + step)
+                other = float(row.get("max" if field == "min" else "min", 0))
+                if field == "min":
+                    value = min(value, other - step)
+                else:
+                    value = max(value, other + step)
             value = int(value) if float(value).is_integer() else round(value, 2)
             row[field] = value
             save_gauge_scale_value(datadir, device_key, row["key"], field, value)
@@ -1007,16 +1011,17 @@ class P03_SETUP(tk.Frame):
         max_visible_rows = 10 if device_key == DEVICE_B_txt[2] else 6
         row_height = 42 if device_key == DEVICE_B_txt[2] else 54
         button_w = 42 if device_key == DEVICE_B_txt[2] else 54
-        value_w = 76
+        value_w = 66
         font_size = 19 if device_key == DEVICE_B_txt[2] else 22
         for row_index, row in enumerate(rows[:max_visible_rows]):
             y_pos = 95 + y_offset + row_index * row_height
             label = tk.Label(parent, text=row["label"], font=(fonts[6], font_size), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
-            label.place(x=20, y=y_pos, width=145, height=row_height - 6)
+            label.place(x=20, y=y_pos, width=130, height=row_height - 6)
 
             min_var = tk.StringVar(value=_fmt(row["min"]))
             max_var = tk.StringVar(value=_fmt(row["max"]))
-            for field, x_pos, var in (("min", 175, min_var), ("max", 365, max_var)):
+            sim_var = tk.StringVar(value=_fmt(row["sim"]))
+            for field, x_pos, var in (("min", 160, min_var), ("max", 340, max_var), ("sim", 520, sim_var)):
                 tk.Button(
                     parent,
                     text="-",

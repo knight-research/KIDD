@@ -1645,9 +1645,9 @@ class P01_DASH(tk.Frame):
         #               #00  #01  #02
         val_min      = [  0,   0,   0]
         val_max      = [310, 100, 200]
-        val_min, val_max = get_gauge_scale_lists(datadir, DEVICE_B_txt[1], val_min, val_max)
-        self._consume_gauge_scale_refresh()
         val_sim      = [ 5,  10,  14] #HIGHER NUMBER FASTER SIMULATION
+        val_min, val_max, val_sim = get_gauge_scale_lists(datadir, DEVICE_B_txt[1], val_min, val_max, val_sim)
+        self._consume_gauge_scale_refresh()
         val_conf_min = [  0,   0,   0]
         if btn_states_SW[3] == True:
             for i in range(3):
@@ -1800,9 +1800,9 @@ class P01_DASH(tk.Frame):
         #               #00  #01  #02  #03  #04  #05  #06  #07  #08  #09
         val_min      = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
         val_max      = [990, 160, 160, 160, 160,  57, 160, 600, 150, 100]
-        val_min, val_max = get_gauge_scale_lists(datadir, DEVICE_B_txt[2], val_min, val_max)
-        force_gauge_refresh = self._consume_gauge_scale_refresh()
         val_sim      = [ 20,  10,  14,   8,   2,   6,  10,   7,   8,   9] #HIGHER NUMBER FASTER SIMULATION
+        val_min, val_max, val_sim = get_gauge_scale_lists(datadir, DEVICE_B_txt[2], val_min, val_max, val_sim)
+        force_gauge_refresh = self._consume_gauge_scale_refresh()
         val_conf_min = [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
 
         if btn_states_SW[3] == True:
