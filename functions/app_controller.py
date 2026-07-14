@@ -74,7 +74,7 @@ class KIDDController:
         btn_w = 130
         btn_h = 40
         for i in range(self.btn_device_place):
-            btn_device = tk.Button(text=DEVICE_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [self.toggle_button_device(DEVICE_B_txt[i]),self.app.switch_frame(P00_BOOT)])
+            btn_device = tk.Button(text=DEVICE_B_txt[i], bd=4, bg=sys_clr[8], fg=sys_clr[9], font=("Bebas Neue Bold", 28), command=lambda i=i: [self.toggle_button_device(DEVICE_B_txt[i]),self.app.switch_frame(P01_DASH)])
             self.btns_device.append(btn_device)
             self.btns_device[i].place(x=x_pos_r1, y=frm01_YPOS+45, width=btn_w, height=btn_h)
             x_pos_r1 += +(btn_w+15)

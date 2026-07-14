@@ -95,26 +95,25 @@ class MainApplication(tk.Tk):
         if sys_win:
             self.resizable(0, 0)
             self.current_frame = None
-            self.switch_frame(P00_BOOT)
+            self.switch_frame(P01_DASH)
         elif sys_linux:
             self.overrideredirect(True)
             self.configure(relief="flat")
             self.configure(highlightthickness=0)
             self.wm_attributes("-alpha", 0.5)
             self.current_frame = None
-            self.switch_frame(P00_BOOT)
+            self.switch_frame(P01_DASH)
 
     def switch_frame(self, frame_class):
         frame_mapping = {
-            0: P00_BOOT,
-            1: P01_DASH,
-            2: P02_QOPT,
-            3: P03_SETUP,
-            4: P04_THEMES,
-            5: P05_CARFUNCTIONS,
-            6: P06_KNIGHTFUNCTIONS,
-            7: P07_AUDIO,
-            8: P08_VIDEO
+            0: P01_DASH,
+            1: P02_QOPT,
+            2: P03_SETUP,
+            3: P04_THEMES,
+            4: P05_CARFUNCTIONS,
+            5: P06_KNIGHTFUNCTIONS,
+            6: P07_AUDIO,
+            7: P08_VIDEO,
         }
         newframe = frame_mapping.get(frame_class, frame_class)
         if self.current_frame is not None:
@@ -3340,7 +3339,6 @@ class P01_DASH(tk.Frame):
 from pages.page_context import set_context
 set_context(globals())
 
-from pages.P00_BOOT import P00_BOOT
 from pages.P02_QOPT import P02_QOPT
 from pages.P03_SETUP import P03_SETUP
 from pages.P04_THEMES import P04_THEMES

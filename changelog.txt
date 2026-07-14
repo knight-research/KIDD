@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.3.0 - 2026-07-14-1932
+
+- Removed the obsolete Boot screen and now start directly on Dash.
+- Updated device switching to reload Dash directly instead of routing through Boot.
+- Removed the Boot page module from the project.
+
 ## v2.2.87 - 2026-07-14-1915
 
 - Clamped simulated gauge values to the configured minimum/maximum so small ranges like FUEL GALS can reach the final LED.

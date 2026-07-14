@@ -235,15 +235,11 @@ ai01[4]                             COLOR           PAGE            X3PIM21
 #------------------------------------------------------------------------------------------
 # PAGES
 #------------------------------------------------------------------------------------------
-PAGE 00: BOOT PAGE (LOADING IMAGES...)
-PAGE 01: DASHBOARD
-PAGE 02: QUICK OPTIONS
-PAGE 03: SETUP
-PAGE 04: THEMES
-PAGE 05: AUDIO
-PAGE 06: VIDEO
-PAGE 07: CAR FUCTIONS
-PAGE 08: KNIGHT FUNCTIONS
-PAGE 09: RES
-PAGE 10: RES                                                              
-PAGE 11: RES
+PAGE 00: DASHBOARD
+PAGE 01: QUICK OPTIONS
+PAGE 02: SETUP
+PAGE 03: THEMES
+PAGE 04: CAR FUNCTIONS
+PAGE 05: KNIGHT FUNCTIONS
+PAGE 06: AUDIO
+PAGE 07: VIDEO

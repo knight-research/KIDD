@@ -39,7 +39,6 @@
     <Compile Include="setup\import_pi.py" />
     <Compile Include="setup\import_win.py" />
     <Compile Include="main.py" />
-    <Compile Include="pages\P00_BOOT.py" />
     <Compile Include="pages\P02_QOPT.py" />
     <Compile Include="pages\P03_SETUP.py" />
     <Compile Include="pages\P04_THEMES.py" />
@@ -883,7 +882,6 @@
     <Content Include="images\btn\device\ON\U02_DEV_ON.png" />
     <Content Include="images\btn\device\ON\U03_DEV_ON.png" />
     <Content Include="images\btn\device\ON\U04_DEV_ON.png" />
-    <Content Include="images\btn\menu\OFF\M00_BOOT.png" />
     <Content Include="images\btn\menu\OFF\M01_DASH.png" />
     <Content Include="images\btn\menu\OFF\M02_QOPT.png" />
     <Content Include="images\btn\menu\OFF\M03_SETUP.png" />
@@ -907,7 +905,6 @@
     <Content Include="images\btn\menu\OFF\M21_VOICE.png" />
     <Content Include="images\btn\menu\OFF\M22_YES.png" />
     <Content Include="images\btn\menu\OFF\M23_EXIT.png" />
-    <Content Include="images\btn\menu\ON\M00_BOOT.png" />
     <Content Include="images\btn\menu\ON\M01_DASH.png" />
     <Content Include="images\btn\menu\ON\M02_QOPT.png" />
     <Content Include="images\btn\menu\ON\M03_SETUP.png" />
