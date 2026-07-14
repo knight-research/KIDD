@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.78 - 2026-07-14-1821
+
+- Added a DEV002 setup console below the HW/SW controls.
+- Added device-specific setup console logs via `data/console-dev001.log` and `data/console-dev002.log`.
+- Updated setup consoles to show general console output plus only the matching device-specific setup output.
+
 ## v2.2.77 - 2026-07-14-1814
 
 - Hid DEV001-only setup/audio and setup/odometer controls on non-DEV001 setup pages so DEV002 no longer shows them over HW/SW controls.

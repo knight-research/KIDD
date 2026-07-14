@@ -518,6 +518,7 @@ class KIDDController:
             return fallback
 
     def _log_setup_toggle(self, group, index, active):
+        device_key = "DEV002" if device == DEVICE_B_txt[2] else "DEV001"
         try:
             if group == "HW":
                 labels_name = "btnhw_DEV002_txt" if device == DEVICE_B_txt[2] else "btnhw_DEV001_txt"
@@ -533,9 +534,9 @@ class KIDDController:
                 state_values = globals().get(on_name if active else off_name, [])
                 state = self._safe_setup_text(state_values, index, str(active))
             label = self._safe_setup_text(labels, index, f"{group}{index:02d}")
-            log(f"[SETUP] {group} {index:02d} {label}: {state}")
+            log(f"[SETUP] {group} {index:02d} {label}: {state}", device=device_key)
         except Exception as e:
-            log(f"[SETUP] {group} {index:02d}: {active} (log fallback: {e})")
+            log(f"[SETUP] {group} {index:02d}: {active} (log fallback: {e})", device=device_key)
 
     def toggle_btn_HW(self, i):
         if btn_states_HW[i] == True:

@@ -194,8 +194,10 @@ class P03_SETUP(tk.Frame):
                 "AUDIO": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
                 "ODOMETER": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
             }
-            self._create_dev001_console()
+            self._create_setup_console("DEV001", 1310, 25, 420, 30, 1310, 60, 425, 600, 21)
             self._create_dev001_submenu()
+        elif device == DEVICE_B_txt[2]:
+            self._create_setup_console("DEV002", 30, 265, 1120, 28, 30, 295, 1120, 315, 18)
         #----------------------------------------------------------------------------------
         # EXIT BUTTON
         #----------------------------------------------------------------------------------
@@ -873,10 +875,11 @@ class P03_SETUP(tk.Frame):
             else:
                 button.config(bg=sys_clr[8], fg=sys_clr[11], relief="raised")
 
-    def _create_dev001_console(self):
-        log("[SETUP] DEV001 console ready")
+    def _create_setup_console(self, device_key, title_x, title_y, title_w, title_h, text_x, text_y, text_w, text_h, font_size):
+        self.setup_console_device = device_key
+        log(f"[SETUP] {device_key} console ready", device=device_key)
         title = tk.Label(self, text="CONSOLE", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
-        title.place(x=1310, y=25, width=420, height=30)
+        title.place(x=title_x, y=title_y, width=title_w, height=title_h)
 
         self.console_text = tk.Text(
             self,
@@ -886,29 +889,32 @@ class P03_SETUP(tk.Frame):
             relief="flat",
             borderwidth=0,
             highlightthickness=0,
-            font=(fonts[6], 21),
+            font=(fonts[6], font_size),
             wrap="word",
             state="disabled",
         )
-        self.console_text.place(x=1310, y=60, width=425, height=600)
+        self.console_text.place(x=text_x, y=text_y, width=text_w, height=text_h)
         self.console_text_state = None
         self.setup_gps_log_times = {}
-        self._update_dev001_console()
-        self._poll_dev001_gps_console()
+        self._update_setup_console()
+        if device_key == "DEV001":
+            self._poll_dev001_gps_console()
 
-    def _update_dev001_console(self):
+    def _update_setup_console(self):
         if not hasattr(self, "console_text"):
             return
-        self._render_dev001_console()
-        self.after(500, self._update_dev001_console)
+        self._render_setup_console()
+        self.after(500, self._update_setup_console)
 
     def _refresh_console_now(self):
         if hasattr(self, "console_text"):
             self.console_text_state = None
-            self._render_dev001_console()
+            self._render_setup_console()
 
-    def _render_dev001_console(self):
-        lines = "\n".join(get_console_lines(45))
+    def _render_setup_console(self):
+        device_key = getattr(self, "setup_console_device", None)
+        line_limit = 45 if device_key == "DEV001" else 30
+        lines = "\n".join(get_console_lines(line_limit, device=device_key))
         if self.console_text_state != lines:
             self.console_text.configure(state="normal")
             self.console_text.delete("1.0", "end")
@@ -920,7 +926,7 @@ class P03_SETUP(tk.Frame):
     def _log_setup_gps(self, message, interval=5.0):
         now = time.time()
         if now - self.setup_gps_log_times.get(message, 0.0) >= interval:
-            log(message)
+            log(message, device="DEV001")
             self.setup_gps_log_times[message] = now
 
     def _poll_dev001_gps_console(self):
@@ -939,7 +945,7 @@ class P03_SETUP(tk.Frame):
                     sync_context(globals())
                 self._refresh_console_now()
         except Exception as e:
-            log(f"[GPS] Setup Diagnose Fehler: {e}")
+            log(f"[GPS] Setup Diagnose Fehler: {e}", device="DEV001")
             self._refresh_console_now()
         self.after(1000, self._poll_dev001_gps_console)
 
