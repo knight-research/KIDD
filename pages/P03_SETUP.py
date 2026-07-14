@@ -1036,25 +1036,25 @@ class P03_SETUP(tk.Frame):
         self.dev001_device_reachable_state = {}
         self.dev001_device_status_labels = {}
         title = tk.Label(self, text="DEVICE STATUS", font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
-        title.place(x=1310, y=435, width=420, height=28)
+        title.place(x=620, y=265, width=520, height=28)
 
-        headers = [("DEVICE", 1310, 465, 130), ("ON", 1450, 465, 70), ("OK", 1530, 465, 70), ("ADDR", 1610, 465, 120)]
+        headers = [("DEVICE", 620, 295, 150), ("ON", 780, 295, 70), ("OK", 860, 295, 70), ("ADDR", 940, 295, 120)]
         for text, x_pos, y_pos, width in headers:
             tk.Label(self, text=text, font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c").place(
                 x=x_pos, y=y_pos, width=width, height=24
             )
 
         for row_index, row in enumerate(self._dev001_device_rows()):
-            y_pos = 495 + row_index * 34
+            y_pos = 325 + row_index * 34
             tk.Label(self, text=row["name"], font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[9], anchor="w").place(
-                x=1310, y=y_pos, width=130, height=28
+                x=620, y=y_pos, width=150, height=28
             )
             on_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
             ok_label = tk.Label(self, font=(fonts[6], 20), bg=sys_clr[8], fg=sys_clr[11], anchor="c")
             addr_label = tk.Label(self, text=row["addr"], font=(fonts[6], 18), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
-            on_label.place(x=1450, y=y_pos, width=70, height=28)
-            ok_label.place(x=1530, y=y_pos, width=70, height=28)
-            addr_label.place(x=1610, y=y_pos, width=120, height=28)
+            on_label.place(x=780, y=y_pos, width=70, height=28)
+            ok_label.place(x=860, y=y_pos, width=70, height=28)
+            addr_label.place(x=940, y=y_pos, width=120, height=28)
             self.dev001_device_status_labels[row["name"]] = {"on": on_label, "ok": ok_label, "addr": addr_label}
 
     def _dev001_device_rows(self):
