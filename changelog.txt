@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2.68 - 2026-07-14-1647
+
+- Fixed GPS odometer distance timing so RMC distance uses the previous valid GPS cycle instead of resetting the timer every read.
+- Kept Raspberry Pi power-off safety by writing each valid GPS distance increment directly to saved trip and total odometer values.
+- Fixed GPS trip reset so the in-memory counters and displayed trip values are cleared immediately.
+- Changed GPS odometer runtime counters to start at zero instead of one.
+
 ## v2.2.67 - 2026-07-14-1632
 
 - Reduced and shifted the Dash GPS reception label so it ends shortly after the satellite count and stays within the red panel.

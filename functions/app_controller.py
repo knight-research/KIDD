@@ -50,6 +50,7 @@ class KIDDController:
         self.system_data_lock = threading.Lock()
         self.system_data_refreshing = False
         self.last_gps_debug_log = {}
+        self.last_gps_time = None
     #--------------------------------------------------------------------------------------
     # MAIN APP FUNCTIONS
     #--------------------------------------------------------------------------------------
@@ -1088,22 +1089,43 @@ class KIDDController:
         odo_total_gps_imperial_old = data["odo_config"]["odo_total_gps_imperial"]
         odo_total_gps_metric_old = data["odo_config"]["odo_total_gps_metric"]
 
-        last_gps_time = time.time()
         save_needed = False
+        if reset_trip:
+            gps_odo_metric_cnt = 0.0
+            gps_odo_imperial_cnt = 0.0
+            odo_trip_gps_metric_old = 0.0
+            odo_trip_gps_imperial_old = 0.0
+            gps_odo_metric_0str = "0.00"
+            gps_odo_imperial_0str = "0.00"
+            bsm.set_odo_value("odo_trip_gps_metric", 0.0)
+            bsm.set_odo_value("odo_trip_gps_imperial", 0.0)
+            reset_trip = False
+            save_needed = True
         try:
             gps_raw = gps_serial.readline().decode('ascii', errors='replace').strip()
             if not gps_raw or not gps_raw.startswith("$"):
                 self._log_gps_debug("[GPS] Keine NMEA-Daten vom Modul", key="no_data")
+                self.last_gps_time = None
+                if save_needed:
+                    bsm.save()
+                    self._publish_gps_state()
                 return
             try:
                 parsed = pynmea2.parse(gps_raw)
             except pynmea2.ParseError:
                 self._log_gps_debug(f"[GPS] Ungueltige NMEA-Zeile: {gps_raw[:70]}", key="parse_error")
+                if save_needed:
+                    bsm.save()
+                    self._publish_gps_state()
                 return
 
             if gps_raw.startswith('$GPRMC'):
                 if getattr(parsed, "status", None) == "V":
                     self._log_gps_debug("[GPS] RMC ohne gueltigen Fix", key="rmc_no_fix")
+                    self.last_gps_time = None
+                    if save_needed:
+                        bsm.save()
+                        self._publish_gps_state()
                     return
                 gps_date = parsed.datestamp
                 if parsed.spd_over_grnd:
@@ -1114,8 +1136,11 @@ class KIDDController:
 
                     # Zeitdifferenz zur letzten Messung
                     current_time = time.time()
-                    delta_time = current_time - last_gps_time
-                    last_gps_time = current_time
+                    if self.last_gps_time is None:
+                        delta_time = 0.0
+                    else:
+                        delta_time = current_time - self.last_gps_time
+                    self.last_gps_time = current_time
 
                     # Filter: unrealistische Zeit oder Geschwindigkeit < 2.0 km/h → keine Zählung
                     if delta_time <= 0 or delta_time > 2.0 or gps_speed_kmh < 2.0:
@@ -1123,22 +1148,26 @@ class KIDDController:
                     else:
                         distance_km = gps_speed_kmh * (delta_time / 3600.0)
 
-                    gps_odo_metric_cnt += distance_km * 10000  # intern in "Zehntausendstel km"
+                    gps_odo_metric_cnt += distance_km * 10000
                     gps_odo_imperial_cnt += distance_km * 10000 * 0.621371192
 
-                    gps_odo_metric_0str = f"{(gps_odo_metric_cnt / 10000 + odo_trip_gps_metric_old):.2f}"
-                    gps_odo_imperial_0str = f"{(gps_odo_imperial_cnt / 10000 + odo_trip_gps_imperial_old):.2f}"
-
-                    odo_trip_gps_metric_new = round((gps_odo_metric_cnt / 10000 + odo_trip_gps_metric_old), 2)
-                    odo_trip_gps_imperial_new = round((gps_odo_imperial_cnt / 10000 + odo_trip_gps_imperial_old), 2)
-
-                    if odo_trip_gps_metric_new != odo_trip_gps_metric_old:
+                    if distance_km > 0.0:
+                        distance_mi = distance_km * 0.621371192
+                        odo_trip_gps_metric_new = round(odo_trip_gps_metric_old + distance_km, 3)
+                        odo_trip_gps_imperial_new = round(odo_trip_gps_imperial_old + distance_mi, 3)
+                        odo_total_gps_metric_new = round(odo_total_gps_metric_old + distance_km, 3)
+                        odo_total_gps_imperial_new = round(odo_total_gps_imperial_old + distance_mi, 3)
                         bsm.set_odo_value("odo_trip_gps_metric", odo_trip_gps_metric_new)
-                        save_needed = True
-
-                    if odo_trip_gps_imperial_new != odo_trip_gps_imperial_old:
                         bsm.set_odo_value("odo_trip_gps_imperial", odo_trip_gps_imperial_new)
+                        bsm.set_odo_value("odo_total_gps_metric", odo_total_gps_metric_new)
+                        bsm.set_odo_value("odo_total_gps_imperial", odo_total_gps_imperial_new)
+                        odo_trip_gps_metric_old = odo_trip_gps_metric_new
+                        odo_trip_gps_imperial_old = odo_trip_gps_imperial_new
+                        odo_total_gps_metric_old = odo_total_gps_metric_new
+                        odo_total_gps_imperial_old = odo_total_gps_imperial_new
                         save_needed = True
+                    gps_odo_metric_0str = f"{odo_trip_gps_metric_old:.2f}"
+                    gps_odo_imperial_0str = f"{odo_trip_gps_imperial_old:.2f}"
                 self._publish_gps_state()
                 self._log_gps_debug(f"[GPS] RMC Fix OK date={gps_date} speed={gps_kph_0}km/h", interval=5.0, key="rmc_fix")
 
@@ -1177,37 +1206,9 @@ class KIDDController:
             if debug:
                 self._log_gps_debug(f"[GPS] data skipped: {e}", key="exception")
 
-        # Trip zurücksetzen falls gewünscht
-        if reset_trip:
-            bsm.set_odo_value("odo_trip_gps_metric", 0.0)
-            bsm.set_odo_value("odo_trip_gps_imperial", 0.0)
-            reset_trip = False
-            save_needed = True
-        else:
-            # Final neue Werte berechnen
-            odo_trip_gps_metric_new = round((gps_odo_metric_cnt / 10000) + odo_trip_gps_metric_old, 1)
-            odo_trip_gps_imperial_new = round((gps_odo_imperial_cnt / 10000) + odo_trip_gps_imperial_old, 1)
-            odo_total_gps_metric_new = round((gps_odo_metric_cnt / 10000) + odo_total_gps_metric_old, 1)
-            odo_total_gps_imperial_new = round((gps_odo_imperial_cnt / 10000) + odo_total_gps_imperial_old, 1)
-
-            if odo_trip_gps_metric_new != odo_trip_gps_metric_old:
-                bsm.set_odo_value("odo_trip_gps_metric", odo_trip_gps_metric_new)
-                save_needed = True
-
-            if odo_trip_gps_imperial_new != odo_trip_gps_imperial_old:
-                bsm.set_odo_value("odo_trip_gps_imperial", odo_trip_gps_imperial_new)
-                save_needed = True
-
-            if odo_total_gps_metric_new != odo_total_gps_metric_old:
-                bsm.set_odo_value("odo_total_gps_metric", odo_total_gps_metric_new)
-                save_needed = True
-
-            if odo_total_gps_imperial_new != odo_total_gps_imperial_old:
-                bsm.set_odo_value("odo_total_gps_imperial", odo_total_gps_imperial_new)
-                save_needed = True
-
         if save_needed:
             bsm.save()
+            self._publish_gps_state()
     #--------------------------------------------------------------------------------------
     # DEV002 FUNCTIONS
     #--------------------------------------------------------------------------------------
