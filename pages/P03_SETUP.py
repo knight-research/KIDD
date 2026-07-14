@@ -1009,10 +1009,10 @@ class P03_SETUP(tk.Frame):
             value_var.set(_fmt(value))
 
         max_visible_rows = 10 if device_key == DEVICE_B_txt[2] else 6
-        row_height = 42 if device_key == DEVICE_B_txt[2] else 54
-        button_w = 42 if device_key == DEVICE_B_txt[2] else 54
+        row_height = 42
+        button_w = 42
         value_w = 66
-        font_size = 19 if device_key == DEVICE_B_txt[2] else 22
+        font_size = 19
         for row_index, row in enumerate(rows[:max_visible_rows]):
             y_pos = 95 + y_offset + row_index * row_height
             label = tk.Label(parent, text=row["label"], font=(fonts[6], font_size), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
