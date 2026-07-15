@@ -1103,6 +1103,38 @@ class KIDDController:
             gps_mph_0=gps_mph_0,
         )
 
+    def _nmea_sentence_type(self, gps_raw):
+        sentence = gps_raw.split(",", 1)[0]
+        return sentence[-3:] if len(sentence) >= 3 else ""
+
+    def _format_gps_date(self, value):
+        if value is None:
+            return None
+        if hasattr(value, "isoformat"):
+            return value.isoformat()
+        value = str(value).strip()
+        if not value:
+            return None
+        if "-" in value:
+            return value
+        if len(value) == 6 and value.isdigit():
+            day = value[0:2]
+            month = value[2:4]
+            year = int(value[4:6])
+            century = 2000 if year < 80 else 1900
+            return f"{century + year:04d}-{month}-{day}"
+        return value
+
+    def _format_gps_time(self, value):
+        if value is None:
+            return None
+        try:
+            from datetime import datetime, timedelta
+            gps_time_adjusted = datetime.combine(datetime.today(), value) + timedelta(hours=int(time_zone_offset))
+            return gps_time_adjusted.strftime("%H:%M:%S")
+        except Exception:
+            return str(value).split(".")[0]
+
     def gps_data(self):
         global gps_date, gps_odo_metric_cnt, gps_odo_imperial_cnt
         global odo_trip_gps_metric_old, odo_trip_gps_imperial_old
@@ -1152,15 +1184,21 @@ class KIDDController:
                     self._publish_gps_state()
                 return
 
-            if gps_raw.startswith('$GPRMC'):
+            sentence_type = self._nmea_sentence_type(gps_raw)
+            if sentence_type == 'RMC':
+                parsed_date = self._format_gps_date(getattr(parsed, "datestamp", None))
+                if parsed_date:
+                    gps_date = parsed_date
+                parsed_time = self._format_gps_time(getattr(parsed, "timestamp", None))
+                if parsed_time:
+                    gps_time = parsed_time
                 if getattr(parsed, "status", None) == "V":
                     self._log_gps_debug("[GPS] RMC ohne gueltigen Fix", key="rmc_no_fix")
                     self.last_gps_time = None
-                    if save_needed:
+                    if save_needed or parsed_date or parsed_time:
                         bsm.save()
                         self._publish_gps_state()
                     return
-                gps_date = parsed.datestamp
                 if parsed.spd_over_grnd:
                     knots = parsed.spd_over_grnd
                     gps_speed_kmh = knots * 1.852
@@ -1204,19 +1242,13 @@ class KIDDController:
                 self._publish_gps_state()
                 self._log_gps_debug(f"[GPS] RMC Fix OK date={gps_date} speed={gps_kph_0}km/h", interval=5.0, key="rmc_fix")
 
-            elif gps_raw.startswith('$GPGGA'):
+            elif sentence_type == 'GGA':
                 gps_time_raw = parsed.timestamp
                 if gps_time_raw is None:
                     self._log_gps_debug("[GPS] GGA ohne Zeitstempel", key="gga_no_time")
                     return
 
-                from datetime import datetime, timedelta
-                if 'time_zone_offset' in globals():
-                    gps_time_adjusted = datetime.combine(datetime.today(), gps_time_raw) + timedelta(hours=int(time_zone_offset))
-                else:
-                    gps_time_adjusted = datetime.combine(datetime.today(), gps_time_raw)
-
-                gps_time = gps_time_adjusted.strftime("%H:%M:%S")
+                gps_time = self._format_gps_time(gps_time_raw) or gps_time
                 gps_lat_str = f"{parsed.latitude:.5f}"
                 gps_lat_dir = parsed.lat_dir
                 gps_long_str = f"{parsed.longitude:.5f}"

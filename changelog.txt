@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.3.3 - 2026-07-15-1847
+
+- Improved GPS NMEA parsing so RMC/GGA sentences from different talkers update the Dash correctly.
+- Update GPS date and time from RMC sentences so the date no longer stays at 0000-00-00 and seconds can refresh without waiting for GGA.
+- Keep reading GPS data on the Dash while simulation mode is active so time, date, reception, altitude and coordinates update immediately after startup.
+
 ## v2.3.2 - 2026-07-14-1957
 
 - Restored startup initialization of the active state texts so Setup can open after removing the Boot page.

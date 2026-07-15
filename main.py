@@ -1661,7 +1661,7 @@ class P01_DASH(tk.Frame):
         #--------------------------------------------------------------------------
         # GET NEW GPS DATA
         #--------------------------------------------------------------------------
-        if btn_states_HW[0] == True and not btn_states_SW[3]:  #HW0 = GPS MODUL
+        if btn_states_HW[0] == True:  # HW0 = GPS MODUL
             if gps_port is not None:
                 read.gps_data()
         #--------------------------------------------------------------------------
