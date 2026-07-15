@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.3.7 - 2026-07-15-1908
+
+- Added a RESET TRIP button to the DEV001 ODOMETER setup page.
+- Reset GPS and ALDL trip odometer values in runtime state and `btn_states.json` with one button press.
+
 ## v2.3.6 - 2026-07-15-1902
 
 - Removed repeated `btn_states.json` reads from the fast Dash GPS update loop to avoid periodic cycle-time spikes.

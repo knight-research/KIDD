@@ -395,6 +395,13 @@ class P03_SETUP(tk.Frame):
             self._status_var.set("CONFIG SAVED")
             self.after(1200, lambda: self._status_var.set(""))
 
+        def _reset_trip_values():
+            read.reset_trip_odometer()
+            self._cfg_data = _load_btn_states()
+            _refresh_value("ODO")
+            self._status_var.set("TRIP RESET")
+            self.after(1200, lambda: self._status_var.set(""))
+
         # ODO dropdown
         opt_odo = tk.OptionMenu(self._setup_parent("ODOMETER"), self._odo_selected_key, *self._odo_keys, command=lambda *_: _on_select_odo())
         opt_odo.config(bg=sys_clr[8], fg=sys_clr[3], font=(fonts[6], 22))
@@ -433,6 +440,18 @@ class P03_SETUP(tk.Frame):
 
         lbl_status = tk.Label(self._setup_parent("ODOMETER"), font=(fonts[6], 22), textvariable=self._status_var, bg=sys_clr[8], fg=sys_clr[3], anchor="c")
         self._setup_place(lbl_status, "ODOMETER", 110, 570, 175, 30)
+
+        btn_reset_trip = tk.Button(
+            self._setup_parent("ODOMETER"),
+            text="RESET TRIP",
+            bg=sys_clr[8],
+            fg=sys_clr[9],
+            activebackground=sys_clr[8],
+            activeforeground=sys_clr[9],
+            font=(fonts[0], 18),
+            command=_reset_trip_values,
+        )
+        self._setup_place(btn_reset_trip, "ODOMETER", 690, 300, 220, 70)
 
         # One keypad for both
         keypad_layout = [

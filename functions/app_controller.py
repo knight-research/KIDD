@@ -1103,6 +1103,42 @@ class KIDDController:
             gps_mph_0=gps_mph_0,
         )
 
+    def reset_trip_odometer(self):
+        global gps_odo_metric_cnt, gps_odo_imperial_cnt
+        global odo_trip_gps_metric_old, odo_trip_gps_imperial_old
+        global odo_trip_aldl_metric_old, odo_trip_aldl_imperial_old
+        global gps_odo_metric_0str, gps_odo_imperial_0str
+        global reset_trip
+
+        gps_odo_metric_cnt = 0.0
+        gps_odo_imperial_cnt = 0.0
+        odo_trip_gps_metric_old = 0.0
+        odo_trip_gps_imperial_old = 0.0
+        odo_trip_aldl_metric_old = 0.0
+        odo_trip_aldl_imperial_old = 0.0
+        gps_odo_metric_0str = "0.00"
+        gps_odo_imperial_0str = "0.00"
+        reset_trip = False
+        for key in (
+            "odo_trip_gps_metric",
+            "odo_trip_gps_imperial",
+            "odo_trip_aldl_metric",
+            "odo_trip_aldl_imperial",
+        ):
+            bsm.set_odo_value(key, 0.0)
+        bsm.save()
+        self._publish_state(
+            gps_odo_metric_cnt=gps_odo_metric_cnt,
+            gps_odo_imperial_cnt=gps_odo_imperial_cnt,
+            odo_trip_gps_metric_old=odo_trip_gps_metric_old,
+            odo_trip_gps_imperial_old=odo_trip_gps_imperial_old,
+            odo_trip_aldl_metric_old=odo_trip_aldl_metric_old,
+            odo_trip_aldl_imperial_old=odo_trip_aldl_imperial_old,
+            gps_odo_metric_0str=gps_odo_metric_0str,
+            gps_odo_imperial_0str=gps_odo_imperial_0str,
+            reset_trip=reset_trip,
+        )
+
     def _nmea_sentence_type(self, gps_raw):
         sentence = gps_raw.split(",", 1)[0]
         return sentence[-3:] if len(sentence) >= 3 else ""
