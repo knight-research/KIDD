@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.4 - 2026-07-15-1851
+
+- Trim GPS time display to HH:MM:SS so timezone suffixes like +00:00 no longer appear behind the seconds.
+
 ## v2.3.3 - 2026-07-15-1847
 
 - Improved GPS NMEA parsing so RMC/GGA sentences from different talkers update the Dash correctly.

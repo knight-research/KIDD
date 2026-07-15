@@ -1130,10 +1130,13 @@ class KIDDController:
             return None
         try:
             from datetime import datetime, timedelta
-            gps_time_adjusted = datetime.combine(datetime.today(), value) + timedelta(hours=int(time_zone_offset))
+            offset = int(float(time_zone_offset))
+            gps_time_adjusted = datetime.combine(datetime.today(), value.replace(tzinfo=None)) + timedelta(hours=offset)
             return gps_time_adjusted.strftime("%H:%M:%S")
         except Exception:
-            return str(value).split(".")[0]
+            if all(hasattr(value, name) for name in ("hour", "minute", "second")):
+                return f"{value.hour:02d}:{value.minute:02d}:{value.second:02d}"
+            return str(value).split(".", 1)[0].split("+", 1)[0]
 
     def gps_data(self):
         global gps_date, gps_odo_metric_cnt, gps_odo_imperial_cnt
