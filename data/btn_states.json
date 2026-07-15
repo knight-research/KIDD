@@ -749,7 +749,8 @@
     },
     "other_config": {
         "OTHER": "---",
-        "timezone": -2,
+        "timezone": 2,
+        "clock_format": "24H",
         "examplevalue_02": 2,
         "examplevalue_03": 3,
         "examplevalue_04": 5,

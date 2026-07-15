@@ -1972,6 +1972,19 @@ class P01_DASH(tk.Frame):
         bars = "|" * level + " " * (4 - level)
         return f"[{bars}] {sats:02d}"
 
+    def _gps_time_display(self):
+        value = gps_time
+        if hasattr(value, "hour") and hasattr(value, "minute") and hasattr(value, "second"):
+            text = f"{value.hour:02d}:{value.minute:02d}:{value.second:02d}"
+        else:
+            text = str(value).split(".", 1)[0].split("+", 1)[0].strip()
+        if clock_format == "12H":
+            try:
+                return time.strftime("%I:%M:%S %p", time.strptime(text, "%H:%M:%S"))
+            except ValueError:
+                return text
+        return text
+
     def _update_sysinfo(self, dev002_values=None):
         # Initialisiere 8 Labels für sysinfo global und leer
         labels_changed = self.update_labels()
@@ -1997,7 +2010,7 @@ class P01_DASH(tk.Frame):
                     values = ["--.--", "--.--", "--.--", "--.--", "--.--", "--.--", self.update_duration]
             elif btn_states_PB == "pb01":
                 values = [
-                    gps_time,
+                    self._gps_time_display(),
                     gps_date,
                     gps_altitude,
                     gps_lat_str,

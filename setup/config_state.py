@@ -28,6 +28,8 @@ def load_config_state_symbols(datadir):
         "btn_states_DEV002RB01": [False] * 16,
         "btn_states_DEV002RB02": [False] * 16,
         "btn_states_DEV002RB03": [False] * 16,
+        "time_zone_offset": data.get("other_config", {}).get("timezone", 0),
+        "clock_format": data.get("other_config", {}).get("clock_format", "24H"),
     }
 
     if device in symbols["btns"]:

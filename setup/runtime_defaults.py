@@ -77,6 +77,8 @@ def load_runtime_default_symbols(sys_linux, socket):
         "prev_timestamp": None,
         "gps_port": None,
         "gps_date": "0000-00-00",
+        "time_zone_offset": 0,
+        "clock_format": "24H",
         "gps_odo_metric_cnt": 0.0,
         "gps_odo_imperial_cnt": 0.0,
         "odo_trip_gps_metric_old": 0.0,

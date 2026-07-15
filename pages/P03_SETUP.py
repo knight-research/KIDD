@@ -199,6 +199,7 @@ class P03_SETUP(tk.Frame):
                 "AUDIO": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
                 "ODOMETER": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
                 "SCALE": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
+                "CLOCK": tk.Frame(self, bg=sys_clr[0], highlightthickness=0),
             }
             self._create_setup_console("DEV001", 1310, 25, 420, 30, 1310, 60, 425, 355, 21)
             self._create_dev001_device_status()
@@ -652,6 +653,7 @@ class P03_SETUP(tk.Frame):
             )
         _show_quicksound_options(0, "file")
         self._create_scale_setup()
+        self._create_clock_setup()
         #----------------------------------------------------------------------------------
         # MENU BUTTONS
         #----------------------------------------------------------------------------------
@@ -851,7 +853,7 @@ class P03_SETUP(tk.Frame):
             return self._dev001_setup_frames[section]
         if device == DEVICE_B_txt[2] and section == "SCALE" and hasattr(self, "_dev002_scale_frame"):
             return self._dev002_scale_frame
-        if section in ("AUDIO", "ODOMETER", "SCALE"):
+        if section in ("AUDIO", "ODOMETER", "SCALE", "CLOCK"):
             if not hasattr(self, "_hidden_setup_frames"):
                 self._hidden_setup_frames = {}
             if section not in self._hidden_setup_frames:
@@ -866,7 +868,7 @@ class P03_SETUP(tk.Frame):
         elif device == DEVICE_B_txt[2] and section == "SCALE" and hasattr(self, "_dev002_scale_area"):
             area_x, area_y, _, _ = self._dev002_scale_area
             widget.place(x=x - area_x, y=y - area_y, width=width, height=height)
-        elif section in ("AUDIO", "ODOMETER", "SCALE"):
+        elif section in ("AUDIO", "ODOMETER", "SCALE", "CLOCK"):
             return
         else:
             widget.place(x=x, y=y, width=width, height=height)
@@ -892,7 +894,7 @@ class P03_SETUP(tk.Frame):
 
     def _create_dev001_submenu(self):
         self.dev001_submenu_buttons = {}
-        items = [("HW/SW", 230), ("AUDIO", 360), ("ODOMETER", 490), ("SCALE", 620)]
+        items = [("HW/SW", 230), ("AUDIO", 360), ("ODOMETER", 490), ("SCALE", 620), ("CLOCK", 750)]
         for name, x_pos in items:
             btn = tk.Button(
                 self,
@@ -961,6 +963,79 @@ class P03_SETUP(tk.Frame):
                 button.config(bg=sys_clr[8], fg=sys_clr[9], relief="sunken")
             else:
                 button.config(bg=sys_clr[8], fg=sys_clr[11], relief="raised")
+
+    def _create_clock_setup(self):
+        if device != DEVICE_B_txt[1]:
+            return
+        parent = self._setup_parent("CLOCK")
+        for child in parent.winfo_children():
+            child.destroy()
+
+        def _load_clock_config():
+            with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
+                data = json.load(f)
+            other = data.setdefault("other_config", {})
+            other.setdefault("timezone", 0)
+            other.setdefault("clock_format", "24H")
+            return data
+
+        def _save_clock_config(data):
+            with open(os.path.join(datadir, "btn_states.json"), "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
+
+        data = _load_clock_config()
+        other = data["other_config"]
+        offset_var = tk.StringVar()
+        format_var = tk.StringVar()
+        status_var = tk.StringVar(value="")
+
+        def _refresh():
+            offset = int(float(other.get("timezone", 0)))
+            fmt = str(other.get("clock_format", "24H")).upper()
+            if fmt not in ("12H", "24H"):
+                fmt = "24H"
+            offset_var.set(f"UTC {offset:+d}")
+            format_var.set(fmt)
+
+        def _save(status="CLOCK SAVED"):
+            globals()["time_zone_offset"] = other["timezone"]
+            globals()["clock_format"] = other["clock_format"]
+            _save_clock_config(data)
+            _refresh()
+            status_var.set(status)
+            self.after(1200, lambda: status_var.set(""))
+
+        def _change_offset(direction):
+            offset = int(float(other.get("timezone", 0))) + direction
+            other["timezone"] = max(-12, min(14, offset))
+            _save()
+
+        def _toggle_format():
+            other["clock_format"] = "12H" if str(other.get("clock_format", "24H")).upper() == "24H" else "24H"
+            _save()
+
+        title = tk.Label(parent, text="CLOCK", font=(fonts[6], 30), bg=sys_clr[0], fg=sys_clr[9], anchor="w")
+        title.place(x=35, y=35, width=260, height=44)
+
+        lbl_zone = tk.Label(parent, text="TIMEZONE", font=(fonts[6], 24), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+        lbl_zone.place(x=35, y=125, width=220, height=42)
+        btn_minus = tk.Button(parent, text="-", bg=sys_clr[8], fg=sys_clr[9], activebackground=sys_clr[8], activeforeground=sys_clr[9], font=(fonts[0], 22), command=lambda: _change_offset(-1))
+        btn_minus.place(x=275, y=120, width=75, height=58)
+        val_offset = tk.Label(parent, textvariable=offset_var, font=(fonts[6], 28), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
+        val_offset.place(x=365, y=120, width=150, height=58)
+        btn_plus = tk.Button(parent, text="+", bg=sys_clr[8], fg=sys_clr[9], activebackground=sys_clr[8], activeforeground=sys_clr[9], font=(fonts[0], 22), command=lambda: _change_offset(1))
+        btn_plus.place(x=530, y=120, width=75, height=58)
+
+        lbl_format = tk.Label(parent, text="FORMAT", font=(fonts[6], 24), bg=sys_clr[8], fg=sys_clr[9], anchor="w")
+        lbl_format.place(x=35, y=220, width=220, height=42)
+        btn_format = tk.Button(parent, textvariable=format_var, bg=sys_clr[8], fg=sys_clr[9], activebackground=sys_clr[8], activeforeground=sys_clr[9], font=(fonts[0], 22), command=_toggle_format)
+        btn_format.place(x=275, y=212, width=160, height=58)
+
+        lbl_hint = tk.Label(parent, text="GPS TIME OFFSET", font=(fonts[6], 20), bg=sys_clr[0], fg=sys_clr[11], anchor="w")
+        lbl_hint.place(x=35, y=315, width=300, height=34)
+        lbl_status = tk.Label(parent, textvariable=status_var, font=(fonts[6], 22), bg=sys_clr[8], fg=sys_clr[9], anchor="c")
+        lbl_status.place(x=35, y=370, width=400, height=42)
+        _refresh()
 
     def _create_scale_setup(self):
         if device not in (DEVICE_B_txt[1], DEVICE_B_txt[2]):

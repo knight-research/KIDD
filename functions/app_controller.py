@@ -1132,6 +1132,8 @@ class KIDDController:
             from datetime import datetime, timedelta
             offset = int(float(time_zone_offset))
             gps_time_adjusted = datetime.combine(datetime.today(), value.replace(tzinfo=None)) + timedelta(hours=offset)
+            if clock_format == "12H":
+                return gps_time_adjusted.strftime("%I:%M:%S %p")
             return gps_time_adjusted.strftime("%H:%M:%S")
         except Exception:
             if all(hasattr(value, name) for name in ("hour", "minute", "second")):
@@ -1146,12 +1148,15 @@ class KIDDController:
         global gps_time, gps_lat_str, gps_lat_dir, gps_long_str, gps_lon_dir
         global gps_altitude, gps_altitude_units
         global gps_num_sats, gps_fix_quality
-        global gps_kph_0, gps_mph_0, time_zone_offset
+        global gps_kph_0, gps_mph_0, time_zone_offset, clock_format
         global reset_trip
 
         # Lade alte Werte aus Datei
         with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
             data = json.load(f)
+        other_config = data.get("other_config", {})
+        time_zone_offset = other_config.get("timezone", time_zone_offset)
+        clock_format = other_config.get("clock_format", clock_format)
         odo_trip_gps_imperial_old = data["odo_config"]["odo_trip_gps_imperial"]
         odo_trip_gps_metric_old = data["odo_config"]["odo_trip_gps_metric"]
         odo_total_gps_imperial_old = data["odo_config"]["odo_total_gps_imperial"]

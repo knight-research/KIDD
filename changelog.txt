@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.3.5 - 2026-07-15-1855
+
+- Added a DEV001 Setup CLOCK submenu for GPS timezone offset and 12H/24H time format.
+- Load clock settings from `btn_states.json` and apply them while GPS data is parsed on the Dash.
+- Trim GPS time again at the Dash label output so timezone suffixes cannot appear behind the seconds.
+- Set the default GPS timezone offset to UTC +2 and default clock format to 24H.
+
 ## v2.3.4 - 2026-07-15-1851
 
 - Trim GPS time display to HH:MM:SS so timezone suffixes like +00:00 no longer appear behind the seconds.
