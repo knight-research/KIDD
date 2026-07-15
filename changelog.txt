@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.3.6 - 2026-07-15-1902
+
+- Removed repeated `btn_states.json` reads from the fast Dash GPS update loop to avoid periodic cycle-time spikes.
+- Apply CLOCK setup changes directly to the running Dash state instead of polling the config file every GPS update.
+
 ## v2.3.5 - 2026-07-15-1855
 
 - Added a DEV001 Setup CLOCK submenu for GPS timezone offset and 12H/24H time format.

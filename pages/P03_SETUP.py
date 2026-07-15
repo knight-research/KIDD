@@ -1001,6 +1001,7 @@ class P03_SETUP(tk.Frame):
             globals()["time_zone_offset"] = other["timezone"]
             globals()["clock_format"] = other["clock_format"]
             _save_clock_config(data)
+            read._publish_state(time_zone_offset=other["timezone"], clock_format=other["clock_format"])
             _refresh()
             status_var.set(status)
             self.after(1200, lambda: status_var.set(""))

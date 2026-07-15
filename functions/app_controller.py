@@ -1151,17 +1151,6 @@ class KIDDController:
         global gps_kph_0, gps_mph_0, time_zone_offset, clock_format
         global reset_trip
 
-        # Lade alte Werte aus Datei
-        with open(os.path.join(datadir, "btn_states.json"), encoding="utf-8") as f:
-            data = json.load(f)
-        other_config = data.get("other_config", {})
-        time_zone_offset = other_config.get("timezone", time_zone_offset)
-        clock_format = other_config.get("clock_format", clock_format)
-        odo_trip_gps_imperial_old = data["odo_config"]["odo_trip_gps_imperial"]
-        odo_trip_gps_metric_old = data["odo_config"]["odo_trip_gps_metric"]
-        odo_total_gps_imperial_old = data["odo_config"]["odo_total_gps_imperial"]
-        odo_total_gps_metric_old = data["odo_config"]["odo_total_gps_metric"]
-
         save_needed = False
         if reset_trip:
             gps_odo_metric_cnt = 0.0
