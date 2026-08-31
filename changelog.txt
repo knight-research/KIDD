@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.3.9 - 2026-08-31-0739
+
+- Added a standalone Tkinter ALDL test GUI for listing ports, connecting, reading once or continuously and viewing raw/decoded data.
+- Documented the GUI launch command in the ALDL notes.
+
 ## v2.3.8 - 2026-08-31-0659
 
 - Added an A057 ALDL ADS parser and standalone USB/Bluetooth serial reader for connection testing.

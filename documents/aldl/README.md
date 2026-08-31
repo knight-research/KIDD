@@ -27,4 +27,10 @@ python tools/read_aldl.py --port /dev/rfcomm0 --once --raw
 python tools/read_aldl.py --port /dev/ttyACM0
 ```
 
+GUI test tool:
+
+```bash
+python tools/aldl_gui.py
+```
+
 Bluetooth on Raspberry Pi normally has to be paired first. If it exposes a serial RFCOMM device, pass that device with `--port`, for example `/dev/rfcomm0`.
