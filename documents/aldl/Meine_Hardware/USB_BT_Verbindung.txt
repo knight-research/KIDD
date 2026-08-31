@@ -1,0 +1,7 @@
+1320 Electronics LLC ALDL Bluetooth Adapter USB (MK2)
+--------------------------------BT ANDROID-------------------------------
+NAME: HC05
+PIN_: 1234
+
+--------------------------------USB LINUX--------------------------------
+Bus 001 Device 007: ID 04d8:00dd Microchip Technology, Inc.

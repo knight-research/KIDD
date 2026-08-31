@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.3.8 - 2026-08-31-0659
+
+- Added an A057 ALDL ADS parser and standalone USB/Bluetooth serial reader for connection testing.
+- Added a CLI test tool at `tools/read_aldl.py` to list ports, send the ALDL stream request and print decoded vehicle data.
+- Documented the detected Firebird/1320 Electronics ALDL setup and test commands under `documents/aldl/README.md`.
+- Added tests for A057 request checksum and common decoded ALDL values.
+
 ## v2.3.7 - 2026-07-15-1908
 
 - Added a RESET TRIP button to the DEV001 ODOMETER setup page.

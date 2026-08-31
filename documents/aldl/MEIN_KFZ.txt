@@ -1,0 +1,55 @@
+Pontiac Firebird 1991 3,1l V6
+VIN: 1G2FS23T5ML213167
+
+VIN Aufschlüsselung:
+1 G 2 F W 2 1 H X H L 1 0 0 0 0 1
+ | | | | | | | | | | | +---------+---> Production Sequence
+ | | | | | | | | | | +---------------> Assembly Plant
+ | | | | | | | | | |                       N = Norwood (1987 only)
+ | | | | | | | | | |                       L = Van Nuys
+ | | | | | | | | | +-----------------> Model Year
+ | | | | | | | | |                         H = 1987
+ | | | | | | | | |                         J = 1988
+ | | | | | | | | |                         K = 1989
+ | | | | | | | | |                         L = 1990
+ | | | | | | | | |                         M = 1991
+ | | | | | | | | |                         N = 1992
+ | | | | | | | | +-------------------> Check Digit
+ | | | | | | | +---------------------> Engine Code
+ | | | | | | |                             S = 173 ci V6 LB8 (1987-1989)
+ | | | | | | |                             T = 191 ci V6 LH0 (1990-1992)
+ | | | | | | |                             F = 305 ci V8 LB9 (1987-1992)
+ | | | | | | |                             H = 305 ci V8 LG4 (1987)
+ | | | | | | |                             E = 305 ci V8 L03 (1988-1992)
+ | | | | | | |                             8 = 350 ci V8 B2L/L98 (1987-1992)
+ | | | | | | +-----------------------> Restraint System
+ | | | | | |                               1 = Manual belts
+ | | | | | |                               2 = Manual belts (built in safety)
+ | | | | | |                               3 = Manual belts (driver inflatable)
+ | | | | | |                               4 = Automatic belts
+ | | | | | +-------------------------> Body Type
+ | | | | |                                 2 = 2 door coupe (hatchback)
+ | | | | |                                 3 = 2 door convertible
+ | | | | +---------------------------> Carline Series
+ | | | |                                 Chevrolet:
+ | | | |                                   P = Camaro (all models)
+ | | | |                                 Pontiac:
+ | | | |                                   S = Firebird
+ | | | |                                   W = Formula, Trans Am
+ | | | +-----------------------------> Carline Code
+ | | |                                     F = F-Body
+ | | +-------------------------------> Make
+ | |                                       1 = Chevrolet
+ | |                                       2 = Pontiac
+ | +---------------------------------> Manufacturer
+ |                                         G = General Motors
+ +-----------------------------------> Country
+                                           1 = USA
+                                           2 = Canada
+
+
+Eventuelle ADS Dateien für ECU:
+Software Tuner pro und Android ALDL ScanTool lesen ECU mit A057.ads aus
+
+Evtl andere Files:
+ADS FILE A057, A109, A140, A148, A162, A186, 187, A214
